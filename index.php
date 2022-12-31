@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<link href="/css/unrealircd-admin.css" rel="stylesheet">
+<link href="css/unrealircd-admin.css" rel="stylesheet">
 <body>
 <div id="headerContainer">
 <h2>UnrealIRCd <small>Administration Panel</small></h2><br>
