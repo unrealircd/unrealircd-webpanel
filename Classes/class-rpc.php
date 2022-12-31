@@ -1,7 +1,7 @@
 <?php
 
 if (!defined('UPATH'))
-    die("Access denied");
+	die("Access denied");
 
 
 /** The RPC User name as defined in your unrealircd.conf */
@@ -30,7 +30,7 @@ class RPC
 	public $errcount = 0; // more of a bool check
 	public $content = [];
 	public $body = [];
-    public $result = NULL;
+	public $result = NULL;
 	function __construct()
 	{
 		if (!defined('UNREALIRCD_RPC_USER') ||
@@ -81,7 +81,7 @@ class RPC
 	function execute()
 	{
 		$this->content['body'] = json_encode($this->body);
-        if (!$this->content['body'])
+		if (!$this->content['body'])
 			return;
 		$url = "https://".UNREALIRCD_HOST.":".UNREALIRCD_PORT."/api";
 		$curl = curl_init($url);
@@ -92,7 +92,7 @@ class RPC
 		$headers = array(
 			"Accept: application/json",
 			"Content-Type: application/json",
-            "Authorization: Basic ". base64_encode(UNREALIRCD_RPC_USER.":".UNREALIRCD_RPC_PASSWORD),
+			"Authorization: Basic ". base64_encode(UNREALIRCD_RPC_USER.":".UNREALIRCD_RPC_PASSWORD),
 		);
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
@@ -122,10 +122,10 @@ class RPC
 
 class RPC_List
 {
-    static $user = [];
-    static $channel = [];
-    static $tkl = [];
-    static $spamfilter = [];
+	static $user = [];
+	static $channel = [];
+	static $tkl = [];
+	static $spamfilter = [];
 
 	static $opercount = 0;
 	static $services_count = 0;
