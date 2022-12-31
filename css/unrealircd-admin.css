@@ -69,6 +69,8 @@ tr:nth-child(odd) {
 .topnav {
     background-color: #333;
     overflow: hidden;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+
 }
 
 /* Style the links inside the navigation bar */
