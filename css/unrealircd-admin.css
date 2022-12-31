@@ -6,10 +6,12 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
-.unrealircd_overview thead {
-    background-color: #4e50c2;
-    color: #ffffff;
-    text-align: left;
+.users_overview {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    border-radius: 15px;
+    width: 100%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
 table {
@@ -21,22 +23,26 @@ table {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
-td,
+td {
+    text-align: left;
+    padding: 8px;
+}
+
 th {
     text-align: left;
     padding: 8px;
+    background-color: #4B86EE;
+    color: white;
 }
 
 th:first-of-type {
     border-top-left-radius: 10px;
     color: white;
-    background-color: #4B86EE
 }
 
 th:last-of-type {
     border-top-right-radius: 10px;
     color: white;
-    background-color: #4B86EE
 }
 
 tr:last-of-type td:first-of-type {
@@ -56,6 +62,20 @@ tr:nth-child(odd) {
     background-color: whitesmoke;
 }
 
+.footer {
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    text-align: center;
+}
+
+.footer a {
+    color: #4B86EE;
+}
 
 .row {
     display: flex;

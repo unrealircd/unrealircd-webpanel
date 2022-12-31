@@ -33,7 +33,6 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 
 <div class="tab-content\">
 <div id="overview" data-tab-content class="active">
-	<p>Your shiny IRC overview</p>
 	<table class='unrealircd_overview'>
 	<th>Chat Overview</th><th></th>
 		<tr><td><b>Users</b></td><td><?php echo count(RPC_List::$user); ?></td></tr>
@@ -45,13 +44,13 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 		<tr><td><b>Spamfilter entries</b></td><td><?php echo count(RPC_List::$spamfilter); ?></td></tr></th>
 	</table></div></div>
 
-<div class="tab-content\">
-<div id="Users" data-tab-content>
+	<div class="tab-content\">
+	<div id="Users" data-tab-content>
 	<p></p>
 	<table class='users_overview'>
 	<th>Nick</th>
 	<th>UID</th>
-	<th>IP/Host</th>
+	<th>Host / IP</th>
 	<th>Account</th>
 	<th>Usermodes</th>
 	<th>Oper</th>
@@ -77,8 +76,125 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 			echo "<td>".$user['user']['servername']."</td>";
 			echo "<td>".$user['user']['reputation']."</td>";
 		}
-	?>
+	?></table></div></div>
 
+	<div class="tab-content\">
+	<div id="Channels" data-tab-content>
+	<p></p>
+	<table class='users_overview'>
+	<th>Name</th>
+	<th>Created</th>
+	<th>User count</th>
+	<th>Topic</th>
+	<th>Topic Set</th>
+	<th>Modes</th>
+	
+	<?php
+		foreach(RPC_List::$channel as $channel)
+		{
+			echo "<tr>";
+			echo "<td>".$channel['name']."</td>";
+			echo "<td>".$channel['creation_time']."</td>";
+			echo "<td>".$channel['num_users']."</td>";
+			$topic = (isset($channel['topic'])) ? $channel['topic'] : "";
+			echo "<td>".$topic."</td>";
+			$setby = (isset($channel['topic'])) ? "By ".$channel['topic_set_by'] .", at ".$channel['topic_set_at'] : "";
+			echo "<td>".$setby."</td>";
+			$modes = (isset($channel['modes'])) ? "+" . $channel['modes'] : "<none>";
+			echo "<td>".$modes."</td>";
+		}
+	?></table></div></div>
+
+
+	<div class="tab-content\">
+	<div id="TKL" data-tab-content>
+	<p></p>
+	<table class='users_overview'>
+	<th>Mask</th>
+	<th>Type</th>
+	<th>Set By</th>
+	<th>Set On</th>
+	<th>Expires</th>
+	<th>Duration</th>
+	<th>Reason</th>
+	
+	<?php
+		foreach(RPC_List::$tkl as $tkl)
+		{
+			echo "<tr>";
+			echo "<td>".$tkl['name']."</td>";
+			echo "<td>".$tkl['type_string']."</td>";
+			echo "<td>".$tkl['set_by']."</td>";
+			echo "<td>".$tkl['set_at_string']."</td>";
+			echo "<td>".$tkl['expire_at_string']."</td>";
+			echo "<td>".$tkl['duration_string']."</td>";
+			echo "<td>".$tkl['reason']."</td>";
+		}
+	?></table></div></div>
+	
+
+	<div class="tab-content\">
+	<div id="Spamfilter" data-tab-content>
+	<p></p>
+	<table class='users_overview'>
+	<th>Mask</th>
+	<th>Type</th>
+	<th>Set By</th>
+	<th>Set On</th>
+	<th>Expires</th>
+	<th>Duration</th>
+	<th>Match Type</th>
+	<th>Action</th>
+	<th>Action Duration</th>
+	<th>Target</th>
+	<th>Reason</th>
+	
+	<?php
+		foreach(RPC_List::$spamfilter as $sf)
+		{
+			echo "<tr>";
+			echo "<td>".$sf['name']."</td>";
+			echo "<td>".$sf['type_string']."</td>";
+			echo "<td>".$sf['set_by']."</td>";
+			echo "<td>".$sf['set_at_string']."</td>";
+			echo "<td>".$sf['expire_at_string']."</td>";
+			echo "<td>".$sf['duration_string']."</td>";
+			echo "<td>".$sf['match_type']."</td>";
+			echo "<td>".$sf['ban_action']."</td>";
+			echo "<td>".$sf['ban_duration_string']."</td>";
+			for ($i = 0, $targs = ""; ($c = $sf['spamfilter_targets'][$i]); $i++)
+			{
+				if ($c == "c")
+					$targs .= "Channel, ";
+				else if ($c == "p")
+					$targs .= "Private,";
+				else if ($c == "n")
+					$targs .= "Notice, ";
+				else if ($c == "N")
+					$targs .= "Channel notice, ";
+				else if ($c == "P")
+					$targs .= "Part message, ";
+				else if ($c == "q")
+					$targs .= "Quit message, ";
+				else if ($c == "d")
+					$targs .= "DCC filename, ";
+				else if ($c == "a")
+					$targs .= "Away message, ";
+				else if ($c == "t")
+					$targs .= "Channel topic, ";
+				else if ($c == "T")
+					$targs .= "MessageTag, ";
+				else if ($c == "u")
+					$targs .= "Usermask, ";
+
+				$targs = rtrim($targs,", ");
+			}
+			echo "<td>".$targs."</td>";
+			echo "<td>".$sf['reason']."</td>";
+			
+		}
+	?></table></div></div>
+	
 </body>
 
 <div class="footer"><p>Copyright 2022 © <a href="https://unrealircd.org/">UnrealIRCd</a></p></div>
