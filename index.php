@@ -1,3 +1,8 @@
+<link href="/css/unrealircd-admin.css" rel="stylesheet">
+<body>
+<div id="headerContainer">
+<h2>UnrealIRCd <small>Administration Panel</small></h2><br>
+</div>
 <script src="js/unrealircd-admin.js" defer></script>
 <div class="topnav">
   <a data-tab-target="#overview" class="active" href="#overview">Overview</a>
@@ -23,19 +28,34 @@ define('UPATH', true);
 include "Classes/class-rpc.php";
 
 rpc_pop_lists();
-echo "
-<link href=\"/css/unrealircd-admin.css\" rel=\"stylesheet\">
-<h1>UnrealIRCd</h1>
-<div class=\"tab-content\">
-<div id=\"overview\" data-tab-content class=\"active\">
-    <h2>IRC Overview Panel</h2>
-    <table class='unrealircd_overview'>
-        <tr><td>Users</td><td>".count(RPC_List::$user)."</td></tr>
-        <tr><td>Opers</td><td>".RPC_List::$opercount."</td></tr>
-        <tr><td>Services</td><td>".RPC_List::$services_count."</td></tr>
-        <tr><td>Most popular channel</td><td>".RPC_List::$most_populated_channel." (".RPC_List::$channel_pop_count." users)</td></tr>
-        <tr><td>Channels</td><td>".count(RPC_List::$channel)."</td></tr>
-        <tr><td>Server bans</td><td>".count(RPC_List::$tkl)."</td></tr>
-        <tr><td>Spamfilter entries</td><td>".count(RPC_List::$spamfilter)."</td></tr>
-    </table></div></div>";
 ?>
+
+<div class="tab-content\">
+<div id="overview" data-tab-content class="active">
+    <table class='unrealircd_overview'>
+    <th>Chat Overview</th><th></th>
+        <tr><td><b>Users</b></td><td><?php echo count(RPC_List::$user); ?></td></tr>
+        <tr><td><b>Opers</b></td><td><?php echo RPC_List::$opercount; ?></td></tr>
+        <tr><td><b>Services</b></td><td><?php echo RPC_List::$services_count; ?></td></tr>
+        <tr><td><b>Most popular channel</b></td><td><?php echo RPC_List::$most_populated_channel; ?> (<?php echo RPC_List::$channel_pop_count; ?> users)</td></tr>
+        <tr><td><b>Channels</b></td><td><?php echo count(RPC_List::$channel); ?></td></tr>
+        <tr><td><b>Server bans</b></td><td><?php echo count(RPC_List::$tkl); ?></td></tr>
+        <tr><td><b>Spamfilter entries</b></td><td><?php echo count(RPC_List::$spamfilter); ?></td></tr></th>
+    </table></div></div>
+
+<div class="tab-content\">
+<div id="users" data-tab-content>
+    <h2>Users Overview Panel</h2>
+    <table class='unrealircd_overview'>
+    <th>
+    <tr>
+      <td>
+      </td>
+    </tr>
+</th>
+    <tbody>
+
+    </tbody>
+    </table></div></div>
+
+</body>
