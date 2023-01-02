@@ -28,6 +28,16 @@
 define('UPATH', true);
 include "Classes/class-rpc.php";
 
+if (!empty($_POST['tklch']))
+	foreach ($_POST as $key => $value)
+	{
+		foreach ($value as $tok)
+		{
+			$tok = explode(",",$tok);
+			rpc_tkl_del(base64_decode($tok[0]), base64_decode($tok[1]));
+		}
+	}
+
 rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 ?>
 
@@ -65,7 +75,7 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 			echo "<td>".$user['name']."</td>";
 			echo "<td>".$user['id']."</td>";
 			echo "<td>".$user['hostname']." (".$user['ip'].")</td>";
-			$account = (isset($user['account'])) ? $user['account'] : "";
+			$account = (isset($user['user']['account'])) ? $user['user']['account'] : "";
 			echo "<td>".$account."</td>";
 			$modes = (isset($user['user']['modes'])) ? "+" . $user['user']['modes'] : "<none>";
 			echo "<td>".$modes."</td>";
@@ -108,8 +118,10 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 
 	<div class="tab-content\">
 	<div id="TKL" data-tab-content>
-	<p></p>
+	
 	<table class='users_overview'>
+	<form action="" method="post">
+	<th><input type="checkbox" label='selectall' onClick="toggle(this)" />Select all</th>
 	<th>Mask</th>
 	<th>Type</th>
 	<th>Set By</th>
@@ -122,6 +134,7 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 		foreach(RPC_List::$tkl as $tkl)
 		{
 			echo "<tr>";
+			echo "<td><input type=\"checkbox\" value='" . base64_encode($tkl['name']).",".base64_encode($tkl['type']) . "' name=\"tklch[]\"></td>";
 			echo "<td>".$tkl['name']."</td>";
 			echo "<td>".$tkl['type_string']."</td>";
 			echo "<td>".$tkl['set_by']."</td>";
@@ -130,7 +143,7 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 			echo "<td>".$tkl['duration_string']."</td>";
 			echo "<td>".$tkl['reason']."</td>";
 		}
-	?></table></div></div>
+	?></table><p><input class="cute_button" type="submit" value="Delete selected"></p></form></div></div>
 	
 
 	<div class="tab-content\">
@@ -197,4 +210,4 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 	
 </body>
 
-<div class="footer"><p>Copyright 2022 © <a href="https://unrealircd.org/">UnrealIRCd</a></p></div>
+<div class="footer"><p>Copyright 2022-2023 © <a href="https://unrealircd.org/">UnrealIRCd</a></p></div>

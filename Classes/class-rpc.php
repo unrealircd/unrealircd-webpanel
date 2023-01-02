@@ -75,7 +75,7 @@ class RPC
 
 	function set_params(array $params) : void
 	{
-		array_merge($this->body['params'], $params);
+		$this->body['params'] = $params;
 	}
 
 	function execute()
@@ -215,4 +215,19 @@ function rpc_pop_lists()
 				RPC_List::$spamfilter[] = $r;
 	}
 
+}
+
+
+/** RPC TKL Delete */
+function rpc_tkl_del($name, $type) : bool
+{
+	$rpc = new RPC();
+	$rpc->set_method("server_ban.del");
+	$rpc->set_params(["name" => $name, "type" => $type]);
+	$rpc->execute();
+	foreach($rpc->fetch_assoc() as $r)
+	{
+		highlight_string(var_export($r, true));
+	}
+	return true;
 }
