@@ -15,18 +15,18 @@ You may want to hide this somehow. Well, you definitely should. I don't know how
 
 Please make sure you have [correctly setup UnrealIRCd for use with JSON-RPC](https://www.unrealircd.org/docs/JSON-RPC) before you continue.
 
-1. First, if you have just installed apache2 or something else, remove the `html` directory and navigate to `/var/www/`
+- First, if you have just installed apache2 or something else, remove the `html` directory and navigate to `/var/www/`
 ```
 cd /var/www/
 rm -rf html
 ```
 
-2. Clone this repository to a new directory called `html`
+- Clone this repository to a new directory called `html`
 ```
 git clone https://github.com/ValwareIRC/unrealircd-webpanel html
 ```
 
-3. Move into the `html` directory and edit the configuration file
+- Move into the `html` directory and edit the configuration file
 ```
 cd html
 nano config.php
