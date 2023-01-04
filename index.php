@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+<link rel="icon" type="image/x-icon" href="/img/favicon.ico">
 <link href="css/unrealircd-admin.css" rel="stylesheet">
-<body>
+<body class="body-for-sticky">
 <div id="headerContainer">
-<h2>UnrealIRCd <small>Administration Panel</small></h2><br>
+<h2><a href="">UnrealIRCd</a> <small>Administration Panel</small></h2><br>
 </div>
 <script src="js/unrealircd-admin.js" defer></script>
 <div class="topnav">
@@ -11,32 +12,46 @@
   <a data-tab-target="#Channels" href="#Channels">Channels</a>
   <a data-tab-target="#TKL" href="#TKL">Server Bans</a>
   <a data-tab-target="#Spamfilter" href="#Spamfilter">Spamfilter</a>
+  <a data-tab-target="#News" href="#News">News</a>
 </div> 
 <?php
-/**
- * Provide a admin area view for the plugin
- *
- * This file is used to markup the admin-facing aspects of the plugin.
- *
- * @link	   https://https://github.com/ValwareIRC
- * @since	  1.0.0
- *
- * @package	Unrealircd
- * @subpackage Unrealircd/admin/partials
- */
-
-define('UPATH', true);
+define('UPATH', dirname(__FILE__));
+include "config.php";
+include "Classes/class-log.php";
+include "Classes/class-message.php";
 include "Classes/class-rpc.php";
+do_log($_POST);
 
-if (!empty($_POST['tklch']))
-	foreach ($_POST as $key => $value)
-	{
-		foreach ($value as $tok)
-		{
-			$tok = explode(",",$tok);
-			rpc_tkl_del(base64_decode($tok[0]), base64_decode($tok[1]));
+if (!empty($_POST)) {
+	if (!($bantype = $_POST["bantype"])) {
+
+	} else if (!($users = $_POST["userch"])) {
+		Message::Fail("No user was specified");
+	} else {
+		foreach ($_POST["userch"] as $user) {
+			$user = base64_decode($user);
+			$bantype = $_POST["bantype"];
+			rpc_tkl_add($user, $bantype, "2h", "You have been banned lol");
+			Message::Success($user . " has been banned");
 		}
 	}
+
+	if (!empty($_POST['tklch']))
+		foreach ($_POST as $key => $value) {
+			foreach ($value as $tok) {
+				$tok = explode(",", $tok);
+				rpc_tkl_del(base64_decode($tok[0]), base64_decode($tok[1]));
+			}
+		}
+
+	if (!empty($_POST['sf']))
+		foreach ($_POST as $key => $value) {
+			foreach ($value as $tok) {
+				$tok = explode(",", $tok);
+				rpc_sf_del(base64_decode($tok[0]), base64_decode($tok[1]), base64_decode($tok[2]), base64_decode($tok[3]));
+			}
+		}
+}
 
 rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 ?>
@@ -53,11 +68,12 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 		<tr><td><b>Server bans</b></td><td><?php echo count(RPC_List::$tkl); ?></td></tr>
 		<tr><td><b>Spamfilter entries</b></td><td><?php echo count(RPC_List::$spamfilter); ?></td></tr></th>
 	</table></div></div>
-
+	<form action="" method="post">
 	<div class="tab-content\">
 	<div id="Users" data-tab-content>
 	<p></p>
 	<table class='users_overview'>
+	<th><input type="checkbox" label='selectall' onClick="toggle_user(this)" />Select all</th>
 	<th>Nick</th>
 	<th>UID</th>
 	<th>Host / IP</th>
@@ -66,12 +82,13 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 	<th>Oper</th>
 	<th>Secure</th>
 	<th>Connected to</th>
-	<th>Reputation <a href="https://www.unrealircd.org/docs/Reputation_score"></a>ℹ️</th>
+	<th>Reputation <a href="https://www.unrealircd.org/docs/Reputation_score">ℹ️</a></th>
 	
 	<?php
 		foreach(RPC_List::$user as $user)
 		{
 			echo "<tr>";
+			echo "<td><input type=\"checkbox\" value='" . base64_encode($user['id'])."' name=\"userch[]\"></td>";
 			echo "<td>".$user['name']."</td>";
 			echo "<td>".$user['id']."</td>";
 			echo "<td>".$user['hostname']." (".$user['ip'].")</td>";
@@ -86,7 +103,65 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 			echo "<td>".$user['user']['servername']."</td>";
 			echo "<td>".$user['user']['reputation']."</td>";
 		}
-	?></table></div></div>
+	?></table>
+
+	<label for="bantype">Apply action: 
+	<select name="bantype" id="bantype">
+			<option value=""></option>
+		<optgroup label="Bans">
+			<option value="gline">GLine</option>
+			<option value="gzline">GZLine</option>
+		</optgroup>
+	</select>
+	<br>
+	<label for="banlen_w">Duration: 
+	<select name="banlen_w" id="banlen_w">
+			<?php
+			for ($i = 0; $i <= 56; $i++)
+			{
+				if (!$i)
+					echo "<option value=\"0w\"></option>";
+				else
+				{
+					$w = ($i == 1) ? "week" : "weeks";
+					echo "<option value=\"$i" . "w\">$i $w" . "</option>";
+				}
+			}
+			?>
+	</select>
+	<select name="banlen_d" id="banlen_d">
+			<?php
+			for ($i = 0; $i <= 31; $i++)
+			{
+				if (!$i)
+					echo "<option value=\"0d\"></option>";
+				else
+				{
+					$d = ($i == 1) ? "day" : "days";
+					echo "<option value=\"$i" . "d\">$i $d" . "</option>";
+				}
+			}
+			?>
+	</select>
+	<select name="banlen_h" id="banlen_h">
+			<?php
+			for ($i = 0; $i <= 24; $i++)
+			{
+				if (!$i)
+					echo "<option value=\"0d\"></option>";
+				else
+				{
+					$h = ($i == 1) ? "hour" : "hours";
+					echo "<option value=\"$i" . "h\">$i $h" . "</option>";
+				}
+			}
+			?>
+	</select>
+	<br>
+	<input type="submit" value="Apply">
+	</form>
+	
+	</div></div>
 
 	<div class="tab-content\">
 	<div id="Channels" data-tab-content>
@@ -121,7 +196,7 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 	
 	<table class='users_overview'>
 	<form action="" method="post">
-	<th><input type="checkbox" label='selectall' onClick="toggle(this)" />Select all</th>
+	<th><input type="checkbox" label='selectall' onClick="toggle_tkl(this)" />Select all</th>
 	<th>Mask</th>
 	<th>Type</th>
 	<th>Set By</th>
@@ -150,6 +225,8 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 	<div id="Spamfilter" data-tab-content>
 	<p></p>
 	<table class='users_overview'>
+	<form action="" method="post">
+	<th><input type="checkbox" label='selectall' onClick="toggle_sf(this)" />Select all</th>
 	<th>Mask</th>
 	<th>Type</th>
 	<th>Set By</th>
@@ -166,6 +243,7 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 		foreach(RPC_List::$spamfilter as $sf)
 		{
 			echo "<tr>";
+			echo "<td><input type=\"checkbox\" value='" . base64_encode($sf['name']).",".base64_encode($sf['match_type']).",".base64_encode($sf['spamfilter_targets']).",".base64_encode($sf['ban_action']) . "' name=\"sf[]\"></td>";
 			echo "<td>".$sf['name']."</td>";
 			echo "<td>".$sf['type_string']."</td>";
 			echo "<td>".$sf['set_by']."</td>";
@@ -206,7 +284,15 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 			echo "<td>".$sf['reason']."</td>";
 			
 		}
-	?></table></div></div>
+	?></table><p><input class="cute_button" type="submit" value="Delete selected"></p></form></div></div>
+
+
+
+	<div class="tab-content\">
+	<div id="News" data-tab-content>
+	<iframe style="border:none;" height="1000" width="600" data-tweet-url="https://twitter.com/Unreal_IRCd" src="data:text/html;charset=utf-8,%3Ca%20class%3D%22twitter-timeline%22%20href%3D%22https%3A//twitter.com/Unreal_IRCd%3Fref_src%3Dtwsrc%255Etfw%22%3ETweets%20by%20Unreal_IRCd%3C/a%3E%0A%3Cscript%20async%20src%3D%22https%3A//platform.twitter.com/widgets.js%22%20charset%3D%22utf-8%22%3E%3C/script%3E%0A%3Cstyle%3Ehtml%7Boverflow%3Ahidden%20%21important%3B%7D%3C/style%3E"></iframe>
+	<iframe style="border:none;" height="1000" width="600" data-tweet-url="https://twitter.com/irc_stats" src="data:text/html;charset=utf-8,%3Ca%20class%3D%22twitter-timeline%22%20href%3D%22https%3A//twitter.com/irc_stats%3Fref_src%3Dtwsrc%255Etfw%22%3ETweets%20by%20IRC%20Stats%3C/a%3E%0A%3Cscript%20async%20src%3D%22https%3A//platform.twitter.com/widgets.js%22%20charset%3D%22utf-8%22%3E%3C/script%3E%0A%3Cstyle%3Ehtml%7Boverflow%3Ahidden%20%21important%3B%7D%3C/style%3E"></iframe>
+	</div></div>
 	
 </body>
 

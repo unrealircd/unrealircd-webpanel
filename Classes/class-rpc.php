@@ -1,28 +1,14 @@
 <?php
 
+/**
+ * RPC Functionality for UnrealIRCd Admin Webpanel
+ * License: GPLv3 or later
+ * Author: Valware
+ * 2023
+ */
+
 if (!defined('UPATH'))
 	die("Access denied");
-
-
-/** The RPC User name as defined in your unrealircd.conf */
-define( 'UNREALIRCD_RPC_USER', 'apiuser' );
-
-/** The RPC User password as defined in your unrealircd.conf */
-define( 'UNREALIRCD_RPC_PASSWORD', 'securepassword' );
-
-/** The host of the RPC server */
-define( 'UNREALIRCD_HOST', '127.0.0.1' );
-
-/** The port of your RPC server as defined in your unrealircd.conf */
-define( 'UNREALIRCD_PORT', '8000' );
-
-/* You should only really uncomment this if you are running on 
- * localhost and for some reason don't have a fully valid cert
-*/
-define( 'UNREALIRCD_SSL_VERIFY', false );
-
-/* You should only really need this if you're developing something. */
-define( 'UNREALIRCD_DEBUG', true );
 
 class RPC
 {
@@ -70,11 +56,13 @@ class RPC
 	 */
 	function set_method(String $method) : void
 	{
+		do_log("Set method:", $method);
 		$this->body['method'] = $method;
 	}
 
 	function set_params(array $params) : void
 	{
+		do_log("Set params:", $params);
 		$this->body['params'] = $params;
 	}
 
@@ -110,6 +98,7 @@ class RPC
 
 	function fetch_assoc()
 	{
+		do_log("RPC::fetch_assoc()", $this->result);
 		return json_decode($this->result, true);
 	}
 
@@ -218,6 +207,24 @@ function rpc_pop_lists()
 }
 
 
+/** RPC TKL Add */
+function rpc_tkl_add($name, $type, $expiry, $reason) : bool
+{
+	$rpc = new RPC();
+	$rpc->set_method("server_ban.add");
+	$rpc->set_params(["name" => $name, "type" => $type, "reason" => $reason, "duration_string" => $expiry]);
+	$rpc->execute();
+	$result = $rpc->fetch_assoc();
+	if (isset($result['error']))
+	{
+		$msg = "The $type could not be added: $name - ".$result['error']['message'] . " (" . $result['error']['code'] . ")";
+		Message::Fail($msg);
+		return false;
+	}
+	return true;
+}
+
+
 /** RPC TKL Delete */
 function rpc_tkl_del($name, $type) : bool
 {
@@ -225,9 +232,36 @@ function rpc_tkl_del($name, $type) : bool
 	$rpc->set_method("server_ban.del");
 	$rpc->set_params(["name" => $name, "type" => $type]);
 	$rpc->execute();
-	foreach($rpc->fetch_assoc() as $r)
+	$result = $rpc->fetch_assoc();
+	if (isset($result['error']))
 	{
-		highlight_string(var_export($r, true));
+		$msg = "The $type could not be deleted: $name - ".$result['error']['message'] . " (" . $result['error']['code'] . ")";
+		Message::Fail($msg);
+		return false;
+	}
+	return true;
+}
+
+/** RPC Spamfilter Delete
+ * 
+ */
+function rpc_sf_del($name, $mtype, $targets, $action) : bool
+{
+	$rpc = new RPC();
+	$rpc->set_method("spamfilter.del");
+	$rpc->set_params(["name" => $name, "match_type" => $mtype, "spamfilter_targets" => $targets, "ban_action" => $action, "set_by" => "YoMama"]);
+	$rpc->execute();
+	$result = $rpc->fetch_assoc();
+	if (isset($result['error']))
+	{
+		$msg = "The spamfilter entry could not be deleted: $name - ".$result['error']['message'] . " (" . $result['error']['code'] . ")";
+		Message::Fail($msg);
+		return false;
+	}
+	else
+	{
+		$r = $result['result']['tkl']; 
+		Message::Success($r['name']." [type: ".$r['match_type']."] [targets: ".$r['spamfilter_targets']. "] [action: ".$r['ban_action']."] [reason: ".$r['reason']."] [set by: ".$r['set_by']."]");
 	}
 	return true;
 }

@@ -14,6 +14,11 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
+a {
+    color: white;
+    text-decoration: none;
+}
+
 table {
     border-collapse: collapse;
     margin: 25px 0;
@@ -62,6 +67,30 @@ tr:nth-child(odd) {
     background-color: whitesmoke;
 }
 
+html {
+    height: 100%;
+    /* for the page to take full window height */
+    box-sizing: border-box;
+
+    /* to have the footer displayed at the bottom of the page without scrolling */
+    font-family: arial, sans-serif;
+
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+    /* enable the "border-box effect" everywhere */
+}
+
+.body-for-sticky {
+    position: relative;
+    /* for the footer to move with the page size */
+    min-height: 100%;
+    /* for the footer to be at the bottom */
+}
+
 .footer {
     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
     position: fixed;
@@ -72,6 +101,7 @@ tr:nth-child(odd) {
     color: white;
     text-align: center;
 }
+
 
 .footer a {
     color: #4B86EE;
@@ -165,6 +195,7 @@ tr:nth-child(odd) {
 #headerContainer h2 small {
     color: white !important;
     margin-bottom: 0px;
+
 }
 
 #headerContainer h2 small {
@@ -195,8 +226,11 @@ tr:nth-child(odd) {
     color: #bbb;
 }
 
+
 body {
     background-image: url("/img/linen.png");
+    display: flex;
+    flex-direction: column;
 }
 
 /* CSS */
@@ -229,15 +263,61 @@ body {
     white-space: nowrap;
 }
 
-.button-21:active,
-.button-21:focus {
+.cute_button:active,
+.cute_button:focus {
     outline: none;
 }
 
-.button-21:hover {
+.cute_button:hover {
     background-position: -20px -20px;
+    background-color: #034FD5;
 }
 
-.button-21:focus:not(:active) {
+.cute_button:focus:not(:active) {
     box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
+}
+
+.alert {
+    padding: 10px;
+    background-color: #b62c22;
+    /* Red */
+    color: white;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    border-radius: 7px;
+    width: 100%;
+}
+
+.success {
+    padding: 10px;
+    background-color: #208120;
+    /* Red */
+    color: white;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    border-radius: 7px;
+    width: 100%;
+}
+
+.information-bar {
+    padding: 10px;
+    background-color: #245788;
+    /* Red */
+    color: white;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    border-radius: 7px;
+    width: 100%;
+}
+
+/* The close button */
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
 }
