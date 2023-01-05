@@ -196,7 +196,8 @@ rpc_pop_lists();
 
 			echo "<tr>";
 			echo "<td><input type=\"checkbox\" value='" . base64_encode($user['id'])."' name=\"userch[]\"></td>";
-			echo "<td>".$user['name']."</td>";
+			$isBot = (strpos($user['user']['modes'], "B") !== false) ? ' <span class="label">Bot</span>' : "";
+			echo "<td>".$user['name'].$isBot.'</td>';
 			echo "<td>".$user['id']."</td>";
 			echo "<td>".$user['hostname']." (".$user['ip'].")</td>";
 			$account = (isset($user['user']['account'])) ? '<span class="label">'.$user['user']['account'].'</span>' : '<span class="label noaccount">None</span>';
