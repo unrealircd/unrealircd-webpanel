@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<title>UnrealIRCd Panel</title>
 <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
 <link href="css/unrealircd-admin.css" rel="stylesheet">
 <body class="body-for-sticky">
@@ -111,7 +112,38 @@ rpc_pop_lists();
 	
 	<div class="tab-content\">
 	<div id="Users" data-tab-content>
-	<p></p>
+	<table class='users_filter'>
+	<th class="thuf">Filter by: </th>
+	<th>
+		<form action="" method="post">
+			Nick: <input name="uf_nick" id="uf_nick" type="text">
+			<input class="cute_button2" type="submit" value="Search">
+		</form>
+	</th>
+	<th>
+		<form action="" method="post">
+			Hostname: <input name="uf_host" id="uf_host" type="text">
+			<input class="cute_button2" type="submit" value="Search">
+		</form>
+	</th>
+	<th>
+		<form action="" method="post">
+			IP: <input name="uf_ip" id="uf_ip" type="text">
+			<input class="cute_button2" type="submit" value="Search">
+		</form>
+	</th>
+	<th class="thuffer">
+		<form action="" method="">
+			Account: <input name="uf_account" id="uf_account" type="text">
+			<input class="cute_button2" type="submit" value="Search">
+		</form>
+	</th>
+	</form>
+	</table>
+	<?php
+		if (isset($_POST['uf_nick']) && strlen($_POST['uf_nick']))
+			Message::Info("Listing users which match nick: \"".$_POST['uf_nick']."\"")
+	?>
 	<table class='users_overview'>
 	<th><input type="checkbox" label='selectall' onClick="toggle_user(this)" />Select all</th>
 	<th>Nick</th>
@@ -128,6 +160,13 @@ rpc_pop_lists();
 	<?php
 		foreach(RPC_List::$user as $user)
 		{
+
+			/* Some basic filtering */
+			if (isset($_POST['uf_nick']) && strlen($_POST['uf_nick']) && 
+			strpos(strtolower($user['name']), strtolower($_POST['uf_nick'])) !== 0 &&
+			strpos(strtolower($user['name']), strtolower($_POST['uf_nick'])) == false)
+				continue;
+
 			echo "<tr>";
 			echo "<td><input type=\"checkbox\" value='" . base64_encode($user['id'])."' name=\"userch[]\"></td>";
 			echo "<td>".$user['name']."</td>";

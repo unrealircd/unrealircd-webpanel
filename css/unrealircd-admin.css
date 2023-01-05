@@ -23,6 +23,21 @@ a {
     text-decoration: none;
 }
 
+.thuf {
+    border-bottom-left-radius: 10px;
+}
+
+.thuffer {
+    border-bottom-right-radius: 10px;
+}
+.filter-fields {
+    height: 30px;
+    width: 400px;
+    padding: 5px 5px;
+    margin: 8px 0;
+    border-radius: 7px;
+}
+
 .secure-connection {
     color: darkgreen;
     border: 3px solid darkgreen;
@@ -316,6 +331,47 @@ body {
 }
 
 .cute_button:focus:not(:active) {
+    box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
+}
+
+.cute_button2 {
+    align-items: center;
+    appearance: none;
+    height: 27px;
+    background-color: green;
+    border-radius: 7px;
+    font-weight: bold;
+    border-width: 0;
+    box-shadow: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: CircularStd, sans-serif;
+    font-size: 1rem;
+    justify-content: center;
+    line-height: 1.5;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color .2s, background-position .2s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+}
+
+.cute_button2:active,
+.cute_button2:focus {
+    outline: none;
+}
+
+.cute_button2:hover {
+    background-position: -20px -20px;
+    background-color: #353c47;
+}
+
+.cute_button2:focus:not(:active) {
     box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
 }
 

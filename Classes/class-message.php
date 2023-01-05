@@ -18,4 +18,12 @@ class Message
 		<?php echo $message; ?>
 	  </div> <?php
     }
+    static function Info($message)
+    {
+        ?>
+		<div class="information-bar">
+		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+		<?php echo $message; ?>
+	  </div> <?php
+    }
 }

@@ -143,6 +143,7 @@ function rpc_pop_lists()
 		if ($key == "result")
 			foreach($value['list'] as $r)
 			{
+				
 				RPC_List::$user[] = $r;
 				if (strpos($r['user']['modes'],"o") !== false && strpos($r['user']['modes'],"S") == false)
 					RPC_List::$opercount++;
