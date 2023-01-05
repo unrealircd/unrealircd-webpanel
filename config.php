@@ -38,4 +38,4 @@ define( 'UNREALIRCD_SSL_VERIFY', false );
 /**
  * You should only need this if you're developing something.
 */
-define( 'UNREALIRCD_DEBUG', 0 );
+define( 'UNREALIRCD_DEBUG', true );

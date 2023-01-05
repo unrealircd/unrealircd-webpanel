@@ -66,8 +66,8 @@ if (!empty($_POST)) {
 			}
 
 			$msg_msg = ($duration == 0) ? "permanently" : "for $duration";
-
-			if (rpc_tkl_add($user, $bantype, $duration, "You have been banned lol"))
+			$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
+			if (rpc_tkl_add($user, $bantype, $duration, $reason))
 			{
 				$c = $nick['result']['client'];
 				Message::Success($c['name'] . " (*@".$c['hostname'].") has been $bantype" . "'d $msg_msg");
@@ -109,7 +109,7 @@ rpc_pop_lists();
 		<tr><td><b>Server bans</b></td><td><?php echo count(RPC_List::$tkl); ?></td></tr>
 		<tr><td><b>Spamfilter entries</b></td><td><?php echo count(RPC_List::$spamfilter); ?></td></tr></th>
 	</table></div></div>
-	<form action="" method="post">
+	
 	<div class="tab-content\">
 	<div id="Users" data-tab-content>
 	<p></p>
@@ -125,6 +125,7 @@ rpc_pop_lists();
 	<th>Connected to</th>
 	<th>Reputation <a href="https://www.unrealircd.org/docs/Reputation_score">ℹ️</a></th>
 	
+	<form action="" method="post">
 	<?php
 		foreach(RPC_List::$user as $user)
 		{
@@ -145,7 +146,6 @@ rpc_pop_lists();
 			echo "<td>".$user['user']['reputation']."</td>";
 		}
 	?></table>
-
 	<label for="bantype">Apply action: 
 	<select name="bantype" id="bantype">
 			<option value=""></option>
@@ -155,7 +155,7 @@ rpc_pop_lists();
 		</optgroup>
 	</select>
 	<br>
-	<label for="banlen_w">Duration: 
+	<label for="banlen_w">Duration: </label>
 	<select name="banlen_w" id="banlen_w">
 			<?php
 			for ($i = 0; $i <= 56; $i++)
@@ -199,6 +199,7 @@ rpc_pop_lists();
 			?>
 	</select>
 	<br>
+	<input type="text" name="ban_reason" id="ban_reason" value="No reason"></input><br>
 	<input type="submit" value="Apply">
 	</form>
 	
