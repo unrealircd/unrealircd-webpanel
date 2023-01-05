@@ -4,8 +4,7 @@
 <link href="css/unrealircd-admin.css" rel="stylesheet">
 <body class="body-for-sticky">
 <div id="headerContainer">
-<h2><a href="">UnrealIRCd <small>Administration Panel</small></a> </h2><br>
-</div>
+<h2><a href="">UnrealIRCd <small>Administration Panel</small></a></h2></div>
 <script src="js/unrealircd-admin.js" defer></script>
 <div class="topnav">
   <a data-tab-target="#overview" class="active" href="#overview">Overview</a>
@@ -71,7 +70,7 @@ if (!empty($_POST)) {
 			if (rpc_tkl_add($user, $bantype, $duration, $reason))
 			{
 				$c = $nick['result']['client'];
-				Message::Success($c['name'] . " (*@".$c['hostname'].") has been $bantype" . "'d $msg_msg: $reason");
+				Message::Success($c['name'] . " (*@".$c['hostname'].") has been $bantype" . "d $msg_msg: $reason");
 			}
 		}
 	}
@@ -133,7 +132,7 @@ rpc_pop_lists();
 		</form>
 	</th>
 	<th class="thuffer">
-		<form action="" method="">
+		<form action="" method="post">
 			Account: <input name="uf_account" id="uf_account" type="text">
 			<input class="cute_button2" type="submit" value="Search">
 		</form>
@@ -141,8 +140,18 @@ rpc_pop_lists();
 	</form>
 	</table>
 	<?php
-		if (isset($_POST['uf_nick']) && strlen($_POST['uf_nick']))
-			Message::Info("Listing users which match nick: \"".$_POST['uf_nick']."\"")
+	if (isset($_POST['uf_nick']) && strlen($_POST['uf_nick']))
+		Message::Info("Listing users which match nick: \"" . $_POST['uf_nick'] . "\"");
+
+	if (isset($_POST['uf_ip']) && strlen($_POST['uf_ip']))
+		Message::Info("Listing users which match IP: \"" . $_POST['uf_nick'] . "\"");
+
+	if (isset($_POST['uf_host']) && strlen($_POST['uf_host']))
+		Message::Info("Listing users which match hostmask: \"" . $_POST['uf_host'] . "\"");
+
+	if (isset($_POST['uf_account']) && strlen($_POST['uf_account']))
+		Message::Info("Listing users which match account: \"" . $_POST['uf_account'] . "\"");
+
 	?>
 	<table class='users_overview'>
 	<th><input type="checkbox" label='selectall' onClick="toggle_user(this)" />Select all</th>
@@ -161,10 +170,28 @@ rpc_pop_lists();
 		foreach(RPC_List::$user as $user)
 		{
 
-			/* Some basic filtering */
+			/* Some basic filtering for NICK */
 			if (isset($_POST['uf_nick']) && strlen($_POST['uf_nick']) && 
 			strpos(strtolower($user['name']), strtolower($_POST['uf_nick'])) !== 0 &&
 			strpos(strtolower($user['name']), strtolower($_POST['uf_nick'])) == false)
+				continue;
+
+			/* Some basic filtering for HOST */
+			if (isset($_POST['uf_host']) && strlen($_POST['uf_host']) && 
+			strpos(strtolower($user['hostname']), strtolower($_POST['uf_host'])) !== 0 &&
+			strpos(strtolower($user['hostname']), strtolower($_POST['uf_host'])) == false)
+				continue;
+
+			/* Some basic filtering for IP */
+			if (isset($_POST['uf_ip']) && strlen($_POST['uf_ip']) && 
+			strpos(strtolower($user['ip']), strtolower($_POST['uf_ip'])) !== 0 &&
+			strpos(strtolower($user['ip']), strtolower($_POST['uf_ip'])) == false)
+				continue;
+
+			/* Some basic filtering for ACCOUNT */
+			if (isset($_POST['uf_account']) && strlen($_POST['uf_account']) && 
+			strpos(strtolower($user['user']['account']), strtolower($_POST['uf_account'])) !== 0 &&
+			strpos(strtolower($user['user']['account']), strtolower($_POST['uf_account'])) == false)
 				continue;
 
 			echo "<tr>";
