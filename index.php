@@ -204,6 +204,8 @@ rpc_pop_lists();
 			$modes = (isset($user['user']['modes'])) ? "+" . $user['user']['modes'] : "<none>";
 			echo "<td>".$modes."</td>";
 			$oper = (isset($user['user']['operlogin'])) ? '<span class="label">'.$user['user']['operlogin']."</span> <span class=\"label operclass-label\">".$user['user']['operclass']."</span>" : "";
+			if (!strlen($oper))
+				$oper = (strpos($user['user']['modes'], "S") !== false) ? '<span class="label operclass-label">Service</span>' : "";
 			echo "<td>".$oper."</td>";
 			$secure = (isset($user['tls'])) ? "<span class=\"label secure-connection\">Secure</span>" : "<span class=\"label noaccount\">Insecure</span>";
 			echo "<td>".$secure."</td>";
