@@ -199,7 +199,7 @@ rpc_pop_lists();
 			echo "<td>".$user['name']."</td>";
 			echo "<td>".$user['id']."</td>";
 			echo "<td>".$user['hostname']." (".$user['ip'].")</td>";
-			$account = (isset($user['user']['account'])) ? '<span class="label">'.$user['user']['account'].'</span>' : '<span class="label noaccount">No account</span>';
+			$account = (isset($user['user']['account'])) ? '<span class="label">'.$user['user']['account'].'</span>' : '<span class="label noaccount">None</span>';
 			echo "<td>".$account."</td>";
 			$modes = (isset($user['user']['modes'])) ? "+" . $user['user']['modes'] : "<none>";
 			echo "<td>".$modes."</td>";
