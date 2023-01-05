@@ -29,6 +29,7 @@ git clone https://github.com/ValwareIRC/unrealircd-webpanel html
 - Move into the `html` directory and edit the configuration file
 ```
 cd html
+mv config.php.sample config.php
 nano config.php
 ```
 The file will look like this:<br>
