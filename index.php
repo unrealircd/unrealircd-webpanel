@@ -203,7 +203,7 @@ rpc_pop_lists();
 			echo "<td>".$account."</td>";
 			$modes = (isset($user['user']['modes'])) ? "+" . $user['user']['modes'] : "<none>";
 			echo "<td>".$modes."</td>";
-			$oper = (isset($user['user']['operlogin'])) ? $user['user']['operlogin']." <span class=\"label operclass-label\">".$user['user']['operclass']."</span>" : "";
+			$oper = (isset($user['user']['operlogin'])) ? '<span class="label">'.$user['user']['operlogin']."</span> <span class=\"label operclass-label\">".$user['user']['operclass']."</span>" : "";
 			echo "<td>".$oper."</td>";
 			$secure = (isset($user['tls'])) ? "<span class=\"label secure-connection\">Secure</span>" : "<span class=\"label noaccount\">Insecure</span>";
 			echo "<td>".$secure."</td>";
