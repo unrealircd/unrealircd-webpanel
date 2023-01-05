@@ -144,7 +144,7 @@ rpc_pop_lists();
 		Message::Info("Listing users which match nick: \"" . $_POST['uf_nick'] . "\"");
 
 	if (isset($_POST['uf_ip']) && strlen($_POST['uf_ip']))
-		Message::Info("Listing users which match IP: \"" . $_POST['uf_nick'] . "\"");
+		Message::Info("Listing users which match IP: \"" . $_POST['uf_ip'] . "\"");
 
 	if (isset($_POST['uf_host']) && strlen($_POST['uf_host']))
 		Message::Info("Listing users which match hostmask: \"" . $_POST['uf_host'] . "\"");
