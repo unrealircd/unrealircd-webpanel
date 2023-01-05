@@ -65,7 +65,7 @@ if (!empty($_POST)) {
 				return;
 			}
 
-			$msg_msg = ($duration == 0) ? "permanently" : "for $duration";
+			$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for $duration";
 			$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
 			if (rpc_tkl_add($user, $bantype, $duration, $reason))
 			{
@@ -137,7 +137,7 @@ rpc_pop_lists();
 			echo "<td>".$account."</td>";
 			$modes = (isset($user['user']['modes'])) ? "+" . $user['user']['modes'] : "<none>";
 			echo "<td>".$modes."</td>";
-			$oper = (isset($user['user']['operlogin'])) ? $user['user']['operlogin']." (".$user['user']['operclass'].")" : "";
+			$oper = (isset($user['user']['operlogin'])) ? $user['user']['operlogin']." <span class=\"label operclass-label\">".$user['user']['operclass']."</span>" : "";
 			echo "<td>".$oper."</td>";
 			$secure = (isset($user['tls'])) ? "<span class=\"label secure-connection\">Secure</span>" : "<span class=\"label noaccount\">Insecure</span>";
 			echo "<td>".$secure."</td>";

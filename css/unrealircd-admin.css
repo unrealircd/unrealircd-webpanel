@@ -23,21 +23,25 @@ a {
     text-decoration: none;
 }
 .secure-connection {
-    border-color: green;
-    color: green;
-    border: 3px solid green;
-    background-color: rgba(0, 255, 0, 0.267);
+    color: darkgreen;
+    border: 3px solid darkgreen;
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+.operclass-label {
+    color:brown;
+    border: 3px solid brown;
+    background-color: rgba(255, 166, 0, 0.247);
 }
 .noaccount {
-    border-color: red;
-    color: red;
-    border: 3px solid red;
-    background-color: rgba(255, 0, 0, 0.185);
+    color: darkred;
+    border: 3px solid darkred;
+    background-color: rgba(255, 78, 78, 0.295);
 }
 .label {
 
     font-family: 'Heebo', sans-serif;
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     font-weight: 500;
     letter-spacing: 0.025rem;
     font-style: normal;
@@ -47,7 +51,6 @@ a {
     -moz-border-radius: 1rem;
     padding: 0.20rem 0.50rem;
     border-style: solid;
-    border-width: 0.125rem;
     
     }
 textarea {
