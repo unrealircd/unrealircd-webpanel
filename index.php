@@ -23,16 +23,55 @@ include "Classes/class-rpc.php";
 do_log($_POST);
 
 if (!empty($_POST)) {
-	if (!($bantype = $_POST["bantype"])) {
+	if (!($bantype = $_POST['bantype'])) {
 
 	} else if (!($users = $_POST["userch"])) {
 		Message::Fail("No user was specified");
 	} else {
 		foreach ($_POST["userch"] as $user) {
 			$user = base64_decode($user);
-			$bantype = $_POST["bantype"];
-			rpc_tkl_add($user, $bantype, "2h", "You have been banned lol");
-			Message::Success($user . " has been banned");
+			$bantype = (isset($_POST['bantype'])) ? $_POST['bantype'] : NULL;
+			if (!$bantype)
+			{
+				Message::Fail("An error occured");
+				return;
+			}
+			$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
+			$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
+			$banlen_h = (isset($_POST['banlen_h'])) ? $_POST['banlen_h'] : NULL;
+
+			$duration = "";
+			if (!$banlen_d && !$banlen_h && !$banlen_w)
+				$duration .= "0";
+			
+			else
+			{
+				if ($banlen_w)
+					$duration .= $banlen_w;
+				if ($banlen_d)
+					$duration .= $banlen_d;
+				if ($banlen_h)
+					$duration .= $banlen_h;
+			}
+
+			$rpc = new RPC();
+			$rpc->set_method("user.get");
+			$rpc->set_params(["nick" => "$user"]);
+			$rpc->execute();
+			$nick = ($rpc->result) ? $rpc->fetch_assoc() : NULL;
+			if (!$nick)
+			{
+				Message::Fail("Could not find that user. Maybe they disconnected after you clicked this?");
+				return;
+			}
+
+			$msg_msg = ($duration == 0) ? "permanently" : "for $duration";
+
+			if (rpc_tkl_add($user, $bantype, $duration, "You have been banned lol"))
+			{
+				$c = $nick['result']['client'];
+				Message::Success($c['name'] . " (*@".$c['hostname'].") has been $bantype" . "'d $msg_msg");
+			}
 		}
 	}
 
@@ -40,7 +79,8 @@ if (!empty($_POST)) {
 		foreach ($_POST as $key => $value) {
 			foreach ($value as $tok) {
 				$tok = explode(",", $tok);
-				rpc_tkl_del(base64_decode($tok[0]), base64_decode($tok[1]));
+				if (rpc_tkl_del(base64_decode($tok[0]), base64_decode($tok[1])))
+					Message::Success(base64_decode($tok[1])." has been removed for ".base64_decode($tok[0]));
 			}
 		}
 
@@ -49,11 +89,12 @@ if (!empty($_POST)) {
 			foreach ($value as $tok) {
 				$tok = explode(",", $tok);
 				rpc_sf_del(base64_decode($tok[0]), base64_decode($tok[1]), base64_decode($tok[2]), base64_decode($tok[3]));
+				Message::Success(base64_decode($tok[1])." has been added for ".base64_decode($tok[0]));
 			}
 		}
 }
 
-rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
+rpc_pop_lists();
 ?>
 
 <div class="tab-content\">
@@ -295,5 +336,3 @@ rpc_pop_lists(); // populate our static lists (users, channels, tkl, spamfilter)
 	</div></div>
 	
 </body>
-
-<div class="footer"><p>Copyright 2022-2023 © <a href="https://unrealircd.org/">UnrealIRCd</a></p></div>

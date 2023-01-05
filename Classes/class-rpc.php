@@ -84,6 +84,9 @@ class RPC
 		);
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
+		if (UNREALIRCD_DEBUG)
+			do_log("SENDING JSON:", $this->content['body']);
+			
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $this->content['body']);
 
 		//for debug only!
