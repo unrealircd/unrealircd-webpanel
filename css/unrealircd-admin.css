@@ -55,7 +55,7 @@ a {
     background-color: rgba(255, 78, 78, 0.295);
 }
 .label {
-
+    white-space: nowrap;
     font-family: 'Heebo', sans-serif;
     font-size: 0.65rem;
     font-weight: 500;
