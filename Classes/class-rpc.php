@@ -86,7 +86,7 @@ class RPC
 
 		if (UNREALIRCD_DEBUG)
 			do_log("SENDING JSON:", $this->content['body']);
-			
+
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $this->content['body']);
 
 		//for debug only!
@@ -264,7 +264,7 @@ function rpc_sf_del($name, $mtype, $targets, $action) : bool
 	else
 	{
 		$r = $result['result']['tkl']; 
-		Message::Success($r['name']." [type: ".$r['match_type']."] [targets: ".$r['spamfilter_targets']. "] [action: ".$r['ban_action']."] [reason: ".$r['reason']."] [set by: ".$r['set_by']."]");
+		Message::Success("Deleted spamfilter entry: ".$r['name']." [type: ".$r['match_type']."] [targets: ".$r['spamfilter_targets']. "] [action: ".$r['ban_action']."] [reason: ".$r['reason']."] [set by: ".$r['set_by']."]");
 	}
 	return true;
 }

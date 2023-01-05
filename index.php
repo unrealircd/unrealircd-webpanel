@@ -89,7 +89,6 @@ if (!empty($_POST)) {
 			foreach ($value as $tok) {
 				$tok = explode(",", $tok);
 				rpc_sf_del(base64_decode($tok[0]), base64_decode($tok[1]), base64_decode($tok[2]), base64_decode($tok[3]));
-				Message::Success(base64_decode($tok[1])." has been added for ".base64_decode($tok[0]));
 			}
 		}
 }
