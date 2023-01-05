@@ -3,7 +3,7 @@
 <link href="css/unrealircd-admin.css" rel="stylesheet">
 <body class="body-for-sticky">
 <div id="headerContainer">
-<h2><a href="">UnrealIRCd</a> <small>Administration Panel</small></h2><br>
+<h2><a href="">UnrealIRCd<small>Administration Panel</small></a> </h2><br>
 </div>
 <script src="js/unrealircd-admin.js" defer></script>
 <div class="topnav">
@@ -118,11 +118,11 @@ rpc_pop_lists();
 	<th>UID</th>
 	<th>Host / IP</th>
 	<th>Account</th>
-	<th>Usermodes</th>
+	<th>Usermodes<a href="https://www.unrealircd.org/docs/User_modes" target="_blank">ℹ️</a></th>
 	<th>Oper</th>
 	<th>Secure</th>
 	<th>Connected to</th>
-	<th>Reputation <a href="https://www.unrealircd.org/docs/Reputation_score">ℹ️</a></th>
+	<th>Reputation <a href="https://www.unrealircd.org/docs/Reputation_score" target="_blank">ℹ️</a></th>
 	
 	<form action="" method="post">
 	<?php
@@ -133,7 +133,7 @@ rpc_pop_lists();
 			echo "<td>".$user['name']."</td>";
 			echo "<td>".$user['id']."</td>";
 			echo "<td>".$user['hostname']." (".$user['ip'].")</td>";
-			$account = (isset($user['user']['account'])) ? $user['user']['account'] : "<span class=\"label noaccount\">No account</span>";
+			$account = (isset($user['user']['account'])) ? '<span class="label">'.$user['user']['account'].'</span>' : '<span class="label noaccount">No account</span>';
 			echo "<td>".$account."</td>";
 			$modes = (isset($user['user']['modes'])) ? "+" . $user['user']['modes'] : "<none>";
 			echo "<td>".$modes."</td>";

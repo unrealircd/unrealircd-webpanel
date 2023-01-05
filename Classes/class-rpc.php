@@ -1,9 +1,9 @@
 <?php
-
 /**
  * RPC Functionality for UnrealIRCd Admin Webpanel
  * License: GPLv3 or later
- * Author: Valware
+ * Author: ValwareIRC
+ * GitHub URI: ValwareIRC/unrealircd-webpanel
  * 2023
  */
 
