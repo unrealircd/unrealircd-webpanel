@@ -70,7 +70,7 @@ if (!empty($_POST)) {
 			if (rpc_tkl_add($user, $bantype, $duration, $reason))
 			{
 				$c = $nick['result']['client'];
-				Message::Success($c['name'] . " (*@".$c['hostname'].") has been $bantype" . "'d $msg_msg");
+				Message::Success($c['name'] . " (*@".$c['hostname'].") has been $bantype" . "'d $msg_msg: $reason");
 			}
 		}
 	}
@@ -145,7 +145,7 @@ rpc_pop_lists();
 			echo "<td>".$user['user']['reputation']."</td>";
 		}
 	?></table>
-	<label for="bantype">Apply action: 
+	<label for="bantype">Apply action: </label><br>
 	<select name="bantype" id="bantype">
 			<option value=""></option>
 		<optgroup label="Bans">
@@ -154,7 +154,7 @@ rpc_pop_lists();
 		</optgroup>
 	</select>
 	<br>
-	<label for="banlen_w">Duration: </label>
+	<label for="banlen_w">Duration: </label><br>
 	<select name="banlen_w" id="banlen_w">
 			<?php
 			for ($i = 0; $i <= 56; $i++)
@@ -197,9 +197,9 @@ rpc_pop_lists();
 			}
 			?>
 	</select>
-	<br>
-	<input type="text" name="ban_reason" id="ban_reason" value="No reason"></input><br>
-	<input type="submit" value="Apply">
+	<br><label for="ban_reason">Reason:<br></label>
+	<textarea name="ban_reason" id="ban_reason">No reason</textarea><br>
+	<input class="cute_button" type="submit" value="Apply">
 	</form>
 	
 	</div></div>

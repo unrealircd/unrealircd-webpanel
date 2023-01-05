@@ -1,7 +1,7 @@
 .unrealircd_overview {
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    border-radius: 15px;
+    border-radius: 7px;
     width: 25%;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
@@ -9,16 +9,26 @@
 .users_overview {
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    border-radius: 15px;
+    border-radius: 7px;
     width: 100%;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+select {
+    border-radius: 7px;
 }
 
 a {
     color: white;
     text-decoration: none;
 }
-
+textarea {
+    height: 30px;
+    width: 400px;
+    padding: 5px 5px;
+    margin: 8px 0;
+    border-radius: 7px;
+  }
 table {
     border-collapse: collapse;
     margin: 25px 0;
@@ -239,7 +249,7 @@ body {
     appearance: none;
     background-color: #4B86EE;
     background-size: calc(100% + 20px) calc(100% + 20px);
-    border-radius: 100px;
+    border-radius: 7px;
     border-width: 0;
     box-shadow: none;
     box-sizing: border-box;
