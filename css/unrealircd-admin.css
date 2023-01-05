@@ -22,6 +22,34 @@ a {
     color: white;
     text-decoration: none;
 }
+.secure-connection {
+    border-color: green;
+    color: green;
+    border: 3px solid green;
+    background-color: rgba(0, 255, 0, 0.267);
+}
+.noaccount {
+    border-color: red;
+    color: red;
+    border: 3px solid red;
+    background-color: rgba(255, 0, 0, 0.185);
+}
+.label {
+
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.025rem;
+    font-style: normal;
+    text-transform: uppercase;
+    border-radius: 7px;
+    -webkit-border-radius: 1rem;
+    -moz-border-radius: 1rem;
+    padding: 0.20rem 0.50rem;
+    border-style: solid;
+    border-width: 0.125rem;
+    
+    }
 textarea {
     height: 30px;
     width: 400px;
