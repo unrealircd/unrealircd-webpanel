@@ -26,6 +26,12 @@ rm -rf html
 git clone https://github.com/ValwareIRC/unrealircd-webpanel html
 ```
 
+- Install the required dependencies using composer:
+```
+composer install
+```
+(If you don't have composer, then [install it](https://getcomposer.org/download/) first)
+
 - Move into the `html` directory and edit the configuration file
 ```
 cd html
