@@ -16,10 +16,13 @@
 </div> 
 <?php
 define('UPATH', dirname(__FILE__));
-include "config.php";
-include "Classes/class-log.php";
-include "Classes/class-message.php";
-include "Classes/class-rpc.php";
+require_once "config.php";
+require_once UPATH . '/vendor/autoload.php';
+require_once "connection.php";
+require_once "Classes/class-log.php";
+require_once "Classes/class-message.php";
+require_once "Classes/class-rpc.php";
+
 do_log($_POST);
 
 if (!empty($_POST)) {
@@ -172,46 +175,46 @@ rpc_pop_lists();
 
 			/* Some basic filtering for NICK */
 			if (isset($_POST['uf_nick']) && strlen($_POST['uf_nick']) && 
-			strpos(strtolower($user['name']), strtolower($_POST['uf_nick'])) !== 0 &&
-			strpos(strtolower($user['name']), strtolower($_POST['uf_nick'])) == false)
+			strpos(strtolower($user->name), strtolower($_POST['uf_nick'])) !== 0 &&
+			strpos(strtolower($user->name), strtolower($_POST['uf_nick'])) == false)
 				continue;
 
 			/* Some basic filtering for HOST */
 			if (isset($_POST['uf_host']) && strlen($_POST['uf_host']) && 
-			strpos(strtolower($user['hostname']), strtolower($_POST['uf_host'])) !== 0 &&
-			strpos(strtolower($user['hostname']), strtolower($_POST['uf_host'])) == false)
+			strpos(strtolower($user->hostname), strtolower($_POST['uf_host'])) !== 0 &&
+			strpos(strtolower($user->hostname), strtolower($_POST['uf_host'])) == false)
 				continue;
 
 			/* Some basic filtering for IP */
 			if (isset($_POST['uf_ip']) && strlen($_POST['uf_ip']) && 
-			strpos(strtolower($user['ip']), strtolower($_POST['uf_ip'])) !== 0 &&
-			strpos(strtolower($user['ip']), strtolower($_POST['uf_ip'])) == false)
+			strpos(strtolower($user->ip), strtolower($_POST['uf_ip'])) !== 0 &&
+			strpos(strtolower($user->ip), strtolower($_POST['uf_ip'])) == false)
 				continue;
 
 			/* Some basic filtering for ACCOUNT */
 			if (isset($_POST['uf_account']) && strlen($_POST['uf_account']) && 
-			strpos(strtolower($user['user']['account']), strtolower($_POST['uf_account'])) !== 0 &&
-			strpos(strtolower($user['user']['account']), strtolower($_POST['uf_account'])) == false)
+			strpos(strtolower($user->user->account), strtolower($_POST['uf_account'])) !== 0 &&
+			strpos(strtolower($user->user->account), strtolower($_POST['uf_account'])) == false)
 				continue;
 
 			echo "<tr>";
-			echo "<td><input type=\"checkbox\" value='" . base64_encode($user['id'])."' name=\"userch[]\"></td>";
-			$isBot = (strpos($user['user']['modes'], "B") !== false) ? ' <span class="label">Bot</span>' : "";
-			echo "<td>".$user['name'].$isBot.'</td>';
-			echo "<td>".$user['id']."</td>";
-			echo "<td>".$user['hostname']." (".$user['ip'].")</td>";
-			$account = (isset($user['user']['account'])) ? '<span class="label">'.$user['user']['account'].'</span>' : '<span class="label noaccount">None</span>';
+			echo "<td><input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\"></td>";
+			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="label">Bot</span>' : "";
+			echo "<td>".$user->name.$isBot.'</td>';
+			echo "<td>".$user->id."</td>";
+			echo "<td>".$user->hostname." (".$user->ip.")</td>";
+			$account = (isset($user->user->account)) ? '<span class="label">'.$user->user->account.'</span>' : '<span class="label noaccount">None</span>';
 			echo "<td>".$account."</td>";
-			$modes = (isset($user['user']['modes'])) ? "+" . $user['user']['modes'] : "<none>";
+			$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
 			echo "<td>".$modes."</td>";
-			$oper = (isset($user['user']['operlogin'])) ? '<span class="label">'.$user['user']['operlogin']."</span> <span class=\"label operclass-label\">".$user['user']['operclass']."</span>" : "";
+			$oper = (isset($user->user->operlogin)) ? '<span class="label">'.$user->user->operlogin."</span> <span class=\"label operclass-label\">".$user->user->operclass."</span>" : "";
 			if (!strlen($oper))
-				$oper = (strpos($user['user']['modes'], "S") !== false) ? '<span class="label secure-connection">Service</span>' : "";
+				$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="label secure-connection">Service</span>' : "";
 			echo "<td>".$oper."</td>";
-			$secure = (isset($user['tls'])) ? "<span class=\"label secure-connection\">Secure</span>" : "<span class=\"label noaccount\">Insecure</span>";
+			$secure = (isset($user->tls)) ? "<span class=\"label secure-connection\">Secure</span>" : "<span class=\"label noaccount\">Insecure</span>";
 			echo "<td>".$secure."</td>";
-			echo "<td>".$user['user']['servername']."</td>";
-			echo "<td>".$user['user']['reputation']."</td>";
+			echo "<td>".$user->user->servername."</td>";
+			echo "<td>".$user->user->reputation."</td>";
 		}
 	?></table>
 	<label for="bantype">Apply action: </label><br>
@@ -288,14 +291,14 @@ rpc_pop_lists();
 		foreach(RPC_List::$channel as $channel)
 		{
 			echo "<tr>";
-			echo "<td>".$channel['name']."</td>";
-			echo "<td>".$channel['creation_time']."</td>";
-			echo "<td>".$channel['num_users']."</td>";
-			$topic = (isset($channel['topic'])) ? $channel['topic'] : "";
+			echo "<td>".$channel->name."</td>";
+			echo "<td>".$channel->creation_time."</td>";
+			echo "<td>".$channel->num_users."</td>";
+			$topic = (isset($channel->topic)) ? $channel->topic : "";
 			echo "<td>".$topic."</td>";
-			$setby = (isset($channel['topic'])) ? "By ".$channel['topic_set_by'] .", at ".$channel['topic_set_at'] : "";
+			$setby = (isset($channel->topic)) ? "By ".$channel->topic_set_by .", at ".$channel->topic_set_at : "";
 			echo "<td>".$setby."</td>";
-			$modes = (isset($channel['modes'])) ? "+" . $channel['modes'] : "<none>";
+			$modes = (isset($channel->modes)) ? "+" . $channel->modes : "<none>";
 			echo "<td>".$modes."</td>";
 		}
 	?></table></div></div>
@@ -319,14 +322,14 @@ rpc_pop_lists();
 		foreach(RPC_List::$tkl as $tkl)
 		{
 			echo "<tr>";
-			echo "<td><input type=\"checkbox\" value='" . base64_encode($tkl['name']).",".base64_encode($tkl['type']) . "' name=\"tklch[]\"></td>";
-			echo "<td>".$tkl['name']."</td>";
-			echo "<td>".$tkl['type_string']."</td>";
-			echo "<td>".$tkl['set_by']."</td>";
-			echo "<td>".$tkl['set_at_string']."</td>";
-			echo "<td>".$tkl['expire_at_string']."</td>";
-			echo "<td>".$tkl['duration_string']."</td>";
-			echo "<td>".$tkl['reason']."</td>";
+			echo "<td><input type=\"checkbox\" value='" . base64_encode($tkl->name).",".base64_encode($tkl->type) . "' name=\"tklch[]\"></td>";
+			echo "<td>".$tkl->name."</td>";
+			echo "<td>".$tkl->type_string."</td>";
+			echo "<td>".$tkl->set_by."</td>";
+			echo "<td>".$tkl->set_at_string."</td>";
+			echo "<td>".$tkl->expire_at_string."</td>";
+			echo "<td>".$tkl->duration_string."</td>";
+			echo "<td>".$tkl->reason."</td>";
 		}
 	?></table><p><input class="cute_button" type="submit" value="Delete selected"></p></form></div></div>
 	
@@ -353,18 +356,19 @@ rpc_pop_lists();
 		foreach(RPC_List::$spamfilter as $sf)
 		{
 			echo "<tr>";
-			echo "<td><input type=\"checkbox\" value='" . base64_encode($sf['name']).",".base64_encode($sf['match_type']).",".base64_encode($sf['spamfilter_targets']).",".base64_encode($sf['ban_action']) . "' name=\"sf[]\"></td>";
-			echo "<td>".$sf['name']."</td>";
-			echo "<td>".$sf['type_string']."</td>";
-			echo "<td>".$sf['set_by']."</td>";
-			echo "<td>".$sf['set_at_string']."</td>";
-			echo "<td>".$sf['expire_at_string']."</td>";
-			echo "<td>".$sf['duration_string']."</td>";
-			echo "<td>".$sf['match_type']."</td>";
-			echo "<td>".$sf['ban_action']."</td>";
-			echo "<td>".$sf['ban_duration_string']."</td>";
-			for ($i = 0, $targs = ""; ($c = $sf['spamfilter_targets'][$i]); $i++)
+			echo "<td><input type=\"checkbox\" value='" . base64_encode($sf->name).",".base64_encode($sf->match_type).",".base64_encode($sf->spamfilter_targets).",".base64_encode($sf->ban_action) . "' name=\"sf[]\"></td>";
+			echo "<td>".$sf->name."</td>";
+			echo "<td>".$sf->type_string."</td>";
+			echo "<td>".$sf->set_by."</td>";
+			echo "<td>".$sf->set_at_string."</td>";
+			echo "<td>".$sf->expire_at_string."</td>";
+			echo "<td>".$sf->duration_string."</td>";
+			echo "<td>".$sf->match_type."</td>";
+			echo "<td>".$sf->ban_action."</td>";
+			echo "<td>".$sf->ban_duration_string."</td>";
+			for ($i = 0, $targs = ""; $i < strlen($sf->spamfilter_targets); $i++)
 			{
+				$c = $sf->spamfilter_targets[$i];
 				if ($c == "c")
 					$targs .= "Channel, ";
 				else if ($c == "p")
@@ -387,11 +391,10 @@ rpc_pop_lists();
 					$targs .= "MessageTag, ";
 				else if ($c == "u")
 					$targs .= "Usermask, ";
-
-				$targs = rtrim($targs,", ");
 			}
+			$targs = rtrim($targs,", ");
 			echo "<td>".$targs."</td>";
-			echo "<td>".$sf['reason']."</td>";
+			echo "<td>".$sf->reason."</td>";
 			
 		}
 	?></table><p><input class="cute_button" type="submit" value="Delete selected"></p></form></div></div>
