@@ -1,4 +1,4 @@
 config.php
-vendor/*
-log/*
+vendor/
+log/
 **~
