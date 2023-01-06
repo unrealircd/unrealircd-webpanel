@@ -57,11 +57,7 @@ if (!empty($_POST)) {
 					$duration .= $banlen_h;
 			}
 
-			$rpc = new RPC();
-			$rpc->set_method("user.get");
-			$rpc->set_params(["nick" => "$user"]);
-			$rpc->execute();
-			$nick = ($rpc->result) ? $rpc->fetch_assoc() : NULL;
+			$nick = $rpc->user()->get($user);
 			if (!$nick)
 			{
 				Message::Fail("Could not find that user. Maybe they disconnected after you clicked this?");
@@ -70,10 +66,10 @@ if (!empty($_POST)) {
 
 			$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for ".rpc_convert_duration_string($duration);
 			$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
-			if (rpc_tkl_add($user, $bantype, $duration, $reason))
+			if ($rpc->serverban()->add($user, $bantype, $duration, $reason))
 			{
-				$c = $nick['result']['client'];
-				Message::Success($c['name'] . " (*@".$c['hostname'].") has been $bantype" . "d $msg_msg: $reason");
+				$c = $nick->client;
+				Message::Success($c->name . " (*@".$c->hostname.") has been $bantype" . "d $msg_msg: $reason");
 			}
 		}
 	}
@@ -82,7 +78,9 @@ if (!empty($_POST)) {
 		foreach ($_POST as $key => $value) {
 			foreach ($value as $tok) {
 				$tok = explode(",", $tok);
-				if (rpc_tkl_del(base64_decode($tok[0]), base64_decode($tok[1])))
+				$a = base64_decode($tok[0]);
+				$b = base64_decode($tok[1]);
+				if ($rpc->serverban()->delete($a, $b))
 					Message::Success(base64_decode($tok[1])." has been removed for ".base64_decode($tok[0]));
 			}
 		}

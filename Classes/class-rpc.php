@@ -13,6 +13,8 @@ if (!defined('UPATH'))
 require UPATH . '/vendor/autoload.php';
 
 use UnrealIRCd\Connection;
+use UnrealIRCd\User;
+use UnrealIRCd\Channel;
 
 class RPC_List
 {
@@ -32,7 +34,7 @@ function rpc_pop_lists()
 	GLOBAL $rpc;
 
 	/* Get the user list */
-	$ret = $rpc->query("user.list");
+	$ret = $rpc->user()->getAll();
 	// TODO: error checking
 
 	foreach($ret->list as $r)
@@ -45,7 +47,7 @@ function rpc_pop_lists()
 	}
 
 	/* Get the channels list */
-	$ret = $rpc->query("channel.list");
+	$ret = $rpc->channel()->getAll();
 	foreach($ret->list as $r)
 	{
 		RPC_List::$channel[] = $r;
@@ -57,53 +59,20 @@ function rpc_pop_lists()
 	}
 
 	/* Get the tkl list */
-	$ret = $rpc->query("server_ban.list");
+	$ret = $rpc->serverban()->getAll();
 	foreach($ret->list as $r)
 		RPC_List::$tkl[] = $r;
 
 	/* Get the spamfilter list */
 	$ret = $rpc->query("spamfilter.list");
+	// TODO: convert to new style
 	foreach($ret->list as $r)
 		RPC_List::$spamfilter[] = $r;
 
 }
 
-
-/** RPC TKL Add */
-function rpc_tkl_add($name, $type, $expiry, $reason) : bool
-{
-	GLOBAL $rpc;
-
-	$params = ["name" => $name, "type" => $type, "reason" => $reason, "duration_string" => $expiry];
-	$result = $rpc->query("server_ban.add", $params);
-	if ($result->error)
-	{
-		$msg = "The $type could not be added: $name - ".$result->error->message . " (" . $result->error->code . ")";
-		Message::Fail($msg);
-		return false;
-	}
-	return true;
-}
-
-
-/** RPC TKL Delete */
-function rpc_tkl_del($name, $type) : bool
-{
-	GLOBAL $rpc;
-
-	$params = ["name" => $name, "type" => $type];
-	$result = $rpc->query("server_ban.del", $params);
-	if ($result->error)
-	{
-		$msg = "The $type could not be deleted: $name - ".$result->error->message . " (" . $result->error->code . ")";
-		Message::Fail($msg);
-		return false;
-	}
-	return true;
-}
-
 /** RPC Spamfilter Delete
- * 
+ * TODO: get rid of this, use unrealircd-rpc-php api when the call is there...
  */
 function rpc_sf_del($name, $mtype, $targets, $action) : bool
 {
