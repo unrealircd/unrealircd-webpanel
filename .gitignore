@@ -1,4 +1,5 @@
 config.php
-/vendor
+vendor/
+vendor/**
 /log
 **~
