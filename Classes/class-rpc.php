@@ -64,34 +64,10 @@ function rpc_pop_lists()
 		RPC_List::$tkl[] = $r;
 
 	/* Get the spamfilter list */
-	$ret = $rpc->query("spamfilter.list");
-	// TODO: convert to new style
+	$ret = $rpc->spamfilter()->getAll();
 	foreach($ret->list as $r)
 		RPC_List::$spamfilter[] = $r;
 
-}
-
-/** RPC Spamfilter Delete
- * TODO: get rid of this, use unrealircd-rpc-php api when the call is there...
- */
-function rpc_sf_del($name, $mtype, $targets, $action) : bool
-{
-	GLOBAL $rpc;
-
-	$params = ["name" => $name, "match_type" => $mtype, "spamfilter_targets" => $targets, "ban_action" => $action, "set_by" => "YoMama"];
-	$result = $rpc->query("spamfilter.del", $params);
-	if ($result->error)
-	{
-		$msg = "The spamfilter entry could not be deleted: $name - ".$result['error']['message'] . " (" . $result['error']['code'] . ")";
-		Message::Fail($msg);
-		return false;
-	}
-	else
-	{
-		$r = $result->tkl;
-		Message::Success("Deleted spamfilter entry: ".$r->name." [type: ".$r->match_type."] [targets: ".$r->spamfilter_targets. "] [action: ".$r->ban_action."] [reason: ".$r->reason."] [set by: ".$r->set_by."]");
-	}
-	return true;
 }
 
 /** Convert the duration_string */
