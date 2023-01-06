@@ -269,3 +269,16 @@ function rpc_sf_del($name, $mtype, $targets, $action) : bool
 	}
 	return true;
 }
+
+/** Convert the duration_string */
+function rpc_convert_duration_string($str)
+{
+	$tok = explode("w", $str);
+	$weeks = $tok[0];
+	$tok = explode("d", $tok[1]);
+	$days = $tok[0];
+	$tok = explode("h", $tok[1]);
+	$hours = $tok[0];
+	return "$weeks weeks, $days days and $hours hours";
+	
+}
