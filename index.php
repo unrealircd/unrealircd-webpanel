@@ -78,10 +78,12 @@ if (!empty($_POST)) {
 		foreach ($_POST as $key => $value) {
 			foreach ($value as $tok) {
 				$tok = explode(",", $tok);
-				$a = base64_decode($tok[0]);
-				$b = base64_decode($tok[1]);
-				if ($rpc->serverban()->delete($a, $b))
-					Message::Success(base64_decode($tok[1])." has been removed for ".base64_decode($tok[0]));
+				$ban = base64_decode($tok[0]);
+				$type = base64_decode($tok[1]);
+				if ($rpc->serverban()->delete($ban, $type))
+					Message::Success("$type has been removed for $ban");
+				else
+					Message::Fail("Unable to remove $type on $ban: $rpc->error");
 			}
 		}
 
@@ -89,7 +91,14 @@ if (!empty($_POST)) {
 		foreach ($_POST as $key => $value) {
 			foreach ($value as $tok) {
 				$tok = explode(",", $tok);
-				rpc_sf_del(base64_decode($tok[0]), base64_decode($tok[1]), base64_decode($tok[2]), base64_decode($tok[3]));
+				$name = base64_decode($tok[0]);
+				$match_type = base64_decode($tok[1]);
+				$spamfilter_targets = base64_decode($tok[2]);
+				$ban_action = base64_decode($tok[3]);
+				if ($rpc->spamfilter()->delete($name, $match_type, $spamfilter_targets, $ban_action))
+					Message::Success("Spamfilter on $name has been removed");
+				else
+					Message::Fail("Unable to remove spamfilter on $name: $rpc->error");
 			}
 		}
 }

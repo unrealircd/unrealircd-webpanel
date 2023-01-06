@@ -37,7 +37,7 @@ function rpc_pop_lists()
 	$ret = $rpc->user()->getAll();
 	// TODO: error checking
 
-	foreach($ret->list as $r)
+	foreach($ret as $r)
 	{
 		RPC_List::$user[] = $r;
 		if (strpos($r->user->modes,"o") !== false && strpos($r->user->modes,"S") == false)
@@ -48,7 +48,7 @@ function rpc_pop_lists()
 
 	/* Get the channels list */
 	$ret = $rpc->channel()->getAll();
-	foreach($ret->list as $r)
+	foreach($ret as $r)
 	{
 		RPC_List::$channel[] = $r;
 		if ($r->num_users > RPC_List::$channel_pop_count)
@@ -60,12 +60,12 @@ function rpc_pop_lists()
 
 	/* Get the tkl list */
 	$ret = $rpc->serverban()->getAll();
-	foreach($ret->list as $r)
+	foreach($ret as $r)
 		RPC_List::$tkl[] = $r;
 
 	/* Get the spamfilter list */
 	$ret = $rpc->spamfilter()->getAll();
-	foreach($ret->list as $r)
+	foreach($ret as $r)
 		RPC_List::$spamfilter[] = $r;
 
 }
