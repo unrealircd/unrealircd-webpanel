@@ -15,26 +15,22 @@ You may want to hide this somehow. Well, you definitely should. I don't know how
 
 Please make sure you have [correctly setup UnrealIRCd for use with JSON-RPC](https://www.unrealircd.org/docs/JSON-RPC) before you continue.
 
-- First, if you have just installed apache2 or something else, remove the `html` directory and navigate to `/var/www/`
+- Go to your webserver root, for example `/var/www/html/`, and clone
+  this repository:
 ```
-cd /var/www/
-rm -rf html
-```
-
-- Clone this repository to a new directory called `html`
-```
-git clone https://github.com/ValwareIRC/unrealircd-webpanel html
+cd /var/www/html
+git clone https://github.com/ValwareIRC/unrealircd-webpanel
 ```
 
-- Install the required dependencies using composer:
+- Go into the directory and run composer to install the dependencies
+  (If you don't have composer, then [install it](https://getcomposer.org/download/) first):
 ```
+cd unrealircd-webpanel
 composer install
 ```
-(If you don't have composer, then [install it](https://getcomposer.org/download/) first)
 
-- Move into the `html` directory and edit the configuration file
+- Edit the configuration file
 ```
-cd html
 cp config.php.sample config.php
 nano config.php
 ```
@@ -43,3 +39,5 @@ The file will look like this:<br>
 
 Edit the configuration file to match your UnrealIRCd's RPC credentials and save
 
+NOTE: You most likely want to put the webpanel behind a login, using a
+`.htaccess` file or similar.
