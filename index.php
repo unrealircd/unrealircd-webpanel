@@ -313,7 +313,81 @@ rpc_pop_lists();
 
 	<div class="tab-content\">
 	<div id="TKL" data-tab-content>
-	
+	<div class="tkl_add_boxheader">
+		Add Server Ban
+	</div>
+	<div class="tkl_add_form">
+		
+		<form action="" method="post">
+			<div class="align_label">IP / Host:</div><input class="input_text" type="text" id="tkl_add" name="tkl_add"><br>
+			<div class="align_label">Ban Type:</div><select name="bantype" id="bantype">
+				<option value=""></option>
+				<optgroup label="Bans">
+					<option value="kline">Kill Line (KLine)</option>
+					<option value="gline">Global Kill Line (GLine)</option>
+					<option value="zline">Zap Line (ZLine)</option>
+					<option value="gzline">Global Zap Line (GZLine)</option>
+					
+				</optgroup>
+				<optgroup label="Restrictions">
+					<option value="local-qline">Reserve Nick Locally(QLine)</option>
+					<option value="qline">Reserve Nick Globally (QLine)</option>
+					<option value="shun">Shun</option>
+
+				</optgroup>
+				<optgroup label="Settings">
+					<option value="except">Global Exception (ELine)</option>
+					<option value="local-exception">Local Exception (ELine)</option>
+				</optgroup>
+			</select><br>
+			<div class="align_label"><label for="banlen_w">Duration: </label></div>
+					<select name="banlen_w" id="banlen_w">
+							<?php
+							for ($i = 0; $i <= 56; $i++)
+							{
+								if (!$i)
+									echo "<option value=\"0w\"></option>";
+								else
+								{
+									$w = ($i == 1) ? "week" : "weeks";
+									echo "<option value=\"$i" . "w\">$i $w" . "</option>";
+								}
+							}
+							?>
+					</select>
+					<select name="banlen_d" id="banlen_d">
+							<?php
+							for ($i = 0; $i <= 31; $i++)
+							{
+								if (!$i)
+									echo "<option value=\"0d\"></option>";
+								else
+								{
+									$d = ($i == 1) ? "day" : "days";
+									echo "<option value=\"$i" . "d\">$i $d" . "</option>";
+								}
+							}
+							?>
+					</select>
+					<select name="banlen_h" id="banlen_h">
+							<?php
+							for ($i = 0; $i <= 24; $i++)
+							{
+								if (!$i)
+									echo "<option value=\"0d\"></option>";
+								else
+								{
+									$h = ($i == 1) ? "hour" : "hours";
+									echo "<option value=\"$i" . "h\">$i $h" . "</option>";
+								}
+							}
+							?>
+					</select>
+					<br><div class="align_label"><label for="ban_reason">Reason: </label></div>
+					<input class="input_text" type="text" id="ban_reason" name="ban_reason"><br>
+					<div class="align_right_button_tkl_add"><input class="cute_button" type="submit" id="submit" value="Submit"></div>
+		</form>
+	</div>
 	<table class='users_overview'>
 	<form action="" method="post">
 	<th><input type="checkbox" label='selectall' onClick="toggle_tkl(this)" />Select all</th>

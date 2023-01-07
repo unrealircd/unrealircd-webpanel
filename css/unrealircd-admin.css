@@ -5,7 +5,34 @@
     width: 25%;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
+.tkl_add_boxheader {
+    font-weight: bold;
+    background-color: #4B86EE;
+    width: 24%;
+    color: white;
+    margin-top: 20px;
+    border: 10px solid #4B86EE;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
 
+.align_right {
+    width: 10px;
+    text-align: right;
+}
+
+.tkl_add_form {
+    background-color: lightgray;
+    padding: 10px;
+    width: 24%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    line-height: 30px;
+}
+
+.tkl_add_form_contents {
+    margin-left: auto; 
+    margin-right: 0;
+}
 .users_overview {
     font-family: arial, sans-serif;
     border-collapse: collapse;
@@ -13,7 +40,9 @@
     width: 100%;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
-
+.input_text {
+    border-radius: 7px;
+}
 select {
     border-radius: 7px;
 }
@@ -54,6 +83,19 @@ a {
     border: 3px solid darkred;
     background-color: rgba(255, 78, 78, 0.295);
 }
+
+.align_label {
+    width: 80px;
+    display: inline-block;
+    text-align: right;
+}
+
+.align_right_button_tkl_add {
+    width: 400px;
+    display: inline-block;
+    text-align: right;
+}
+
 .label {
     white-space: nowrap;
     font-family: 'Heebo', sans-serif;
