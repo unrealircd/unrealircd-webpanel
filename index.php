@@ -26,15 +26,53 @@ require_once "Classes/class-rpc.php";
 do_log($_POST);
 
 if (!empty($_POST)) {
-	if (!($bantype = $_POST['bantype'])) {
+	if (!($bantype = $_POST['bantype']))
+	{
+	} 
+	else if (!($users = $_POST["userch"]))
+	{
+		/* check if this came from our Server Bans tab. */
+		if (!($iphost = $_POST['tkl_add']))
+			Message::Fail("No user was specified");
 
-	} else if (!($users = $_POST["userch"])) {
-		Message::Fail("No user was specified");
-	} else {
-		foreach ($_POST["userch"] as $user) {
+		else /* It did */
+		{
+			if (!strpos($iphost, "@")) // doesn't have full mask
+				$iphost = "*@" . $iphost;
+			/* duplicate code for now [= */
+			$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
+			$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
+			$banlen_h = (isset($_POST['banlen_h'])) ? $_POST['banlen_h'] : NULL;
+			$duration = "";
+			if (!$banlen_d && !$banlen_h && !$banlen_w)
+				$duration .= "0";
+			
+			else
+			{
+				if ($banlen_w)
+					$duration .= $banlen_w;
+				if ($banlen_d)
+					$duration .= $banlen_d;
+				if ($banlen_h)
+					$duration .= $banlen_h;
+			}
+			$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for ".rpc_convert_duration_string($duration);
+			$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
+			if ($rpc->serverban()->add($iphost, $bantype, $duration, $reason))
+			{
+				Message::Success("Host / IP: $iphost has been $bantype" . "d $msg_msg: $reason");
+			}
+			else
+				Message::Fail("The $bantype against \"$iphost\" could not be added.");
+		}
+	}
+	else /* It came from the Users tab */
+	{
+		foreach ($_POST["userch"] as $user)
+		{
 			$user = base64_decode($user);
 			$bantype = (isset($_POST['bantype'])) ? $_POST['bantype'] : NULL;
-			if (!$bantype)
+			if (!$bantype) /* shouldn't happen? */
 			{
 				Message::Fail("An error occured");
 				return;
