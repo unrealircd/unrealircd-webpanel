@@ -1,5 +1,8 @@
 <?php
 
+if (!defined('UPATH'))
+        die("Access denied");
+
 if (!defined('UNREALIRCD_RPC_USER') ||
         !defined('UNREALIRCD_RPC_PASSWORD') ||
         !defined('UNREALIRCD_HOST') ||
