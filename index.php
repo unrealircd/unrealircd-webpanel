@@ -37,8 +37,18 @@ if (!empty($_POST)) {
 
 		else /* It did */
 		{
-			if (!strpos($iphost, "@")) // doesn't have full mask
+			if ((
+					$bantype == "gline" ||
+					$bantype == "gzline" ||
+					$bantype == "shun" ||
+					$bantype == "eline"
+				) && strpos($iphost, "@") == false) // doesn't have full mask
 				$iphost = "*@" . $iphost;
+
+			$soft = ($_POST['soft']) ? true : false;
+
+			if ($soft)
+				$iphost = "%" . $iphost;
 			/* duplicate code for now [= */
 			$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
 			$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
@@ -63,7 +73,7 @@ if (!empty($_POST)) {
 				Message::Success("Host / IP: $iphost has been $bantype" . "d $msg_msg: $reason");
 			}
 			else
-				Message::Fail("The $bantype against \"$iphost\" could not be added.");
+				Message::Fail("The $bantype against \"$iphost\" could not be added: $rpc->error");
 		}
 	}
 	else /* It came from the Users tab */
@@ -423,6 +433,7 @@ rpc_pop_lists();
 					</select>
 					<br><div class="align_label"><label for="ban_reason">Reason: </label></div>
 					<input class="input_text" type="text" id="ban_reason" name="ban_reason"><br>
+					<input class="input_text" type="checkbox" id="soft" name="soft">Don't affect logged-in users (soft)
 					<div class="align_right_button_tkl_add"><input class="cute_button" type="submit" id="submit" value="Submit"></div>
 		</form>
 	</div>
