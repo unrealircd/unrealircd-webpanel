@@ -41,3 +41,23 @@ Edit the configuration file to match your UnrealIRCd's RPC credentials and save
 
 NOTE: You most likely want to put the webpanel behind a login, using a
 `.htaccess` file or similar.
+
+## Updating for end-users ##
+For end-users, when you want to update to the latest version:
+```bash
+git pull
+composer update
+```
+
+## Developers ##
+Developers of the webpanel will naturally use the same procedure as
+above. However, sometimes you will want to update to a newer version
+of the unrealircd-rpc-php library. You then need to run:
+```bash
+# For devs only!
+composer install
+git commit composer.lock
+```
+Commiting the composer.lock file updates the dependency for all
+other users, that way a `composer update` by end-users will update
+to exactly the version that `composer install` just installed.
