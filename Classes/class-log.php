@@ -9,6 +9,7 @@ class Log
     function __construct()
     {
 
+        /*
         if (!is_dir("log/"))
             mkdir("log/");
         $filename = "log/".date("Y-m-d")."log";
@@ -16,7 +17,7 @@ class Log
         {
             $open = fopen($filename, 'w');
             $close = fclose($open);
-        }
+        } */
     }
     function it(...$string)
     {

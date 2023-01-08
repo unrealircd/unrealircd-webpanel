@@ -347,7 +347,7 @@ rpc_pop_lists();
 			echo "<td>".$user->name.$isBot.'</td>';
 			echo "<td>".$user->id."</td>";
 			echo "<td>".$user->hostname." (".$user->ip.")</td>";
-			$account = (isset($user->user->account)) ? $user->user->account : '<span class="label noaccount">None</span>';
+			$account = (isset($user->user->account)) ? $user->user->account : '<span class="label bluelabel	">None</span>';
 			echo "<td>".$account."</td>";
 			$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
 			echo "<td>".$modes."</td>";
@@ -355,7 +355,7 @@ rpc_pop_lists();
 			if (!strlen($oper))
 				$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="label secure-connection">Service</span>' : "";
 			echo "<td>".$oper."</td>";
-			$secure = (isset($user->tls)) ? "<span class=\"label secure-connection\">Secure</span>" : "<span class=\"label noaccount\">Insecure</span>";
+			$secure = (isset($user->tls)) ? "<span class=\"label secure-connection\">Secure</span>" : "<span class=\"label redlabel\">Insecure</span>";
 			echo "<td>".$secure."</td>";
 			echo "<td>".$user->user->servername."</td>";
 			echo "<td>".$user->user->reputation."</td>";

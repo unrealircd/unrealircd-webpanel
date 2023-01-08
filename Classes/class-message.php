@@ -21,7 +21,7 @@ class Message
     static function Info($message)
     {
         ?>
-		<div class="information-bar">
+		<div class="information">
 		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
 		<?php echo $message; ?>
 	  </div> <?php

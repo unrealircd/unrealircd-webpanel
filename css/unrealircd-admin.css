@@ -78,7 +78,12 @@ a {
     border: 3px solid brown;
     background-color: rgba(255, 166, 0, 0.247);
 }
-.noaccount {
+.bluelabel {
+    color: blue;
+    border: 3px solid darkblue;
+    background-color: rgba(131, 78, 255, 0.295);
+}
+.redlabel {
     color: darkred;
     border: 3px solid darkred;
     background-color: rgba(255, 78, 78, 0.295);
@@ -439,7 +444,7 @@ body {
     width: 100%;
 }
 
-.information-bar {
+.information {
     padding: 10px;
     background-color: #245788;
     /* Red */
