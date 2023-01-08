@@ -58,7 +58,7 @@ if (!empty($_POST))
 $users = $rpc->user()->getAll();
 ?>
 
-	<div id="Users" data-tab-content>
+<div id="Users">
 	<table class='users_filter'>
 	<th class="thuf">Filter by: </th>
 	<th>
@@ -219,6 +219,7 @@ $users = $rpc->user()->getAll();
 	<input class="cute_button" type="submit" value="Apply">
 	</form>
 	
-	</div></div>
+	</div
+</div>
 
 <?php require_once 'footer.php'; ?>
