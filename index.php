@@ -351,7 +351,7 @@ rpc_pop_lists();
 			echo "<td>".$account."</td>";
 			$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
 			echo "<td>".$modes."</td>";
-			$oper = (isset($user->user->operlogin)) ? $user->user->operlogin." <span class=\"label operclass-label\">".$user->user->operclass."</span>" : "";
+			$oper = (isset($user->user->operlogin)) ? $user->user->operlogin." <span class=\"label bluelabel\">".$user->user->operclass."</span>" : "";
 			if (!strlen($oper))
 				$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="label secure-connection">Service</span>' : "";
 			echo "<td>".$oper."</td>";
