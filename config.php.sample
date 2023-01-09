@@ -12,6 +12,7 @@
 
 /**
  *  The RPC User name as defined in your unrealircd.conf
+ *  Guide / Documentation: https://www.unrealircd.org/docs/JSON-RPC
 */
 define( 'UNREALIRCD_RPC_USER', 'apiuser' );
 
@@ -31,12 +32,12 @@ define( 'UNREALIRCD_HOST', '127.0.0.1' );
 define( 'UNREALIRCD_PORT', '8000' );
 
 /** 
- * You should set this to true if your RPC server is not on our local host
+ * You should set this to true, if your RPC server is not on your local host
 */
 define( 'UNREALIRCD_SSL_VERIFY', false );
 
 /**
- * You should only need this if you're developing something.
+ * You should only need this, if you're developing something.
 */
 define( 'UNREALIRCD_DEBUG', false );
 
