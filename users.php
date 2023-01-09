@@ -45,7 +45,7 @@ if (!empty($_POST))
 
 			$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for ".rpc_convert_duration_string($duration);
 			$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
-			if ($rpc->serverban()->add($user, $bantype, $duration, $reason))
+			if ($rpc->serverban()->add($user->id, $bantype, $duration, $reason))
 				Message::Success($user->name . " (*@".$user->hostname.") has been $bantype" . "d $msg_msg: $reason");
 		}
 	}
