@@ -159,7 +159,7 @@ $users = $rpc->user()->getAll();
 				$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="label secure-connection">Service</span>' : "";
 			echo "<td>".$oper."</td>";
 			//$secure = (isset($user->tls)) ? "<span class=\"label secure-connection\">Secure</span>" : "<span class=\"label redlabel\">Insecure</span>";
-			$secure = (isset($user->tls)) ? "<span class=\"badge-pill badge-primary\">Secure</span>" : "<span class=\"badge-pill badge-danger\">Insecure</span>";
+			$secure = (isset($user->tls)) ? "<span class=\"badge-pill badge-success\">Secure</span>" : "<span class=\"badge-pill badge-danger\">Insecure</span>";
 			echo "<td>".$secure."</td>";
 			echo "<td>".$user->user->servername."</td>";
 			echo "<td>".$user->user->reputation."</td>";
