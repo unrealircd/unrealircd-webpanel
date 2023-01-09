@@ -7,6 +7,7 @@
 <h2><a href="">UnrealIRCd <small>Administration Panel</small></a></h2></div>
 <script src="js/unrealircd-admin.js" defer></script>
 <div class="topnav">
+    
 <?php
 foreach($pages as $name=>$page)
 {
@@ -17,6 +18,6 @@ foreach($pages as $name=>$page)
     }
     echo "<a ".$active."href=\"$page\">$name</a>\n";
 }
-//phpinfo();
+
 ?>
 </div>

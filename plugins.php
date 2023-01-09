@@ -1,0 +1,104 @@
+<?php
+
+require_once "config.php";
+
+require_once "common.php";
+
+require_once "Classes/class-message.php";
+
+
+/** Check for plugins and load them.
+ * 
+ * This expects your plugin folder to be located in `plugins/` and that the directory name,
+ * constructor file name and class name are identical.
+ * For example:
+ * You must have a file structure like this: plugins/myplugin/myplugin.php
+ * Which contains a class like this:
+ * ```
+ * class myplugin {
+ *      $name = "My plugin";
+ *      $author = "Joe Bloggs";
+ *      $version "1.0";
+ *      $desc = "This is my plugin and it does stuff";
+ *      
+ *      // rest of code here...
+ * }
+ * ```
+ * Your plugin class must be constructable and contain the following public variables:
+ * $name    The name or title of your plugin.
+ * $author  The name of the author
+ * $version The version of the plugin
+ * $description    A short description of the plugin
+*/
+class Plugins
+{
+    static $list = [];
+
+    static function load($modname)
+    {
+        $plugin = new Plugin($modname);
+        if ($plugin->error)
+        {
+            Message::Fail("Warning: Plugin \"$modname\" failed to load: $plugin->error");
+        }
+        else
+        {
+            self::$list[] = $plugin;
+        }
+    }
+}
+
+class Plugin
+{
+    public $name;
+    public $author;
+    public $version;
+    public $description;
+    public $handle;
+
+    public $error = NULL;
+    function __construct($handle)
+    {
+        if (!is_dir("plugins/$handle"))
+            $this->error = "Plugin directory \"plugins/$handle\" doesn't exist";
+
+        else if (!is_file("plugins/$handle/$handle.php"))
+            $this->error = "Plugin file \"plugins/$handle/$handle.php\" doesn't exist";
+
+        else
+        {
+            require_once "plugins/$handle/$handle.php";
+
+            if (!class_exists($handle))
+                $this->error = "Class \"$handle\" doesn't exist";
+
+            else
+            {
+                $plugin = new $handle();
+            
+                if (!isset($plugin->name))
+                    $this->error = "Plugin name not defined";
+                elseif (!isset($plugin->author))
+                    $this->error = "Plugin author not defined";
+                elseif (!isset($plugin->version))
+                    $this->error = "Plugin version not defined";
+                elseif (!isset($plugin->description))
+                    $this->error = "Plugin description not defined";
+                else
+                {
+                    $this->handle = $handle;
+                    $this->name = $plugin->name;
+                    $this->author = $plugin->author;
+                    $this->version = $plugin->version;
+                    $this->description = $plugin->description;
+                }
+            }
+        }
+    }
+}
+
+if (defined('PLUGINS'))
+{
+    foreach(PLUGINS as $plugin)
+        Plugins::load($plugin);
+}

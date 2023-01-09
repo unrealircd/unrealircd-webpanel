@@ -39,3 +39,17 @@ define( 'UNREALIRCD_SSL_VERIFY', false );
  * You should only need this if you're developing something.
 */
 define( 'UNREALIRCD_DEBUG', false );
+
+
+/**
+ * Your list of plugins:
+ */
+define(
+    'PLUGINS', [
+
+        /*  This is where you should type the name(s) of your plugins. 
+         *  Uncomment the following line to view the live example
+        */
+        //"example_plugin",
+    ]
+);
