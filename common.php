@@ -2,6 +2,8 @@
 define('UPATH', dirname(__FILE__));
 require_once "config.php";
 require_once "Classes/class-hook.php";
+if (!is_dir(UPATH . "/vendor"))
+	die("The vendor/ directory is missing. Most likely the admin forgot to run 'composer install'\n");
 require_once UPATH . '/vendor/autoload.php';
 require_once "connection.php";
 require_once "Classes/class-log.php";
