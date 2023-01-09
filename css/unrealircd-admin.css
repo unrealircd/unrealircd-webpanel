@@ -47,11 +47,6 @@ select {
 	border-radius: 7px;
 }
 
-a {
-	color: white;
-	text-decoration: none;
-}
-
 .thuf {
 	border-bottom-left-radius: 10px;
 }
@@ -332,9 +327,14 @@ html {
 
 
 body {
+	padding-top: 45px;
 	background-image: url("/img/linen.png");
 	display: flex;
 	flex-direction: column;
+}
+
+@media screen and (max-width: 768px) {
+    body { padding-top: 0px; }
 }
 
 /* CSS */
