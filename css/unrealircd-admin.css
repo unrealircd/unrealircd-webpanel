@@ -10,6 +10,10 @@
 	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
+.nav-item {
+	margin-left: 2px;
+	margin-right: 2px;
+}
 .navbar-nav li> {
 	border-radius: 4px;
 }
@@ -441,6 +445,7 @@ body {
 .cute_button2:focus:not(:active) {
 	box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
 }
+
 
 
 .success {

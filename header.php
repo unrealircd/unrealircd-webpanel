@@ -30,7 +30,7 @@ foreach($pages as $name=>$page)
 	if (str_ends_with($_SERVER['SCRIPT_FILENAME'], $page))
 		$class = str_replace("\"nav-item\"", "\"nav-item active\"", $class);
 	
-	echo "			<li $class><a class=\"nav-link\" href=\"$page\">$name</a></li>\n";
+	echo "			<li $class><a class=\"nav-link\" href=\"$page\">$name</a></li> \n";
 }
 ?>
 	
