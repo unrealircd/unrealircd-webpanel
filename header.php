@@ -17,10 +17,12 @@
 <link href="css/unrealircd-admin.css" rel="stylesheet">
 </head>
 <body role="document">
-<div class="container">
+<div class="container-fluid">
+	
 	<!-- Fixed navbar -->
 	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
 		<ul class="nav navbar-nav">
+			<a class="navbar-brand" href="index.php">UnrealIRCd Admin Panel</a>
 <?php
 foreach($pages as $name=>$page)
 {
@@ -30,8 +32,8 @@ foreach($pages as $name=>$page)
 	
 	echo "			<li $class><a class=\"nav-link\" href=\"$page\">$name</a></li>\n";
 }
-
 ?>
+	
 		</ul>
 	</nav><br>
 </div>
