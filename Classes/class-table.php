@@ -1,8 +1,8 @@
 <?php
 
 class Table {
-    function __construct($class, )
-    {
+	function __construct($class, )
+	{
 
-    }
+	}
 }

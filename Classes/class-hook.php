@@ -39,10 +39,10 @@ class Hook {
 	 */
 	public static function run($Hook, &$args = array())
 	{
-        if (!empty(self::$actions[$Hook]))
-            foreach (self::$actions[$Hook] as &$f)
-                $f($args);
-            
+		if (!empty(self::$actions[$Hook]))
+			foreach (self::$actions[$Hook] as &$f)
+				$f($args);
+			
 	}
 
 	/** Calls a Hook
@@ -51,7 +51,7 @@ class Hook {
 	 * @return void Does not return anything.
 	 */
 	public static function func($Hook, $function)
-    {
+	{
 		self::$actions[$Hook][] = $function;
 	}
 
@@ -62,9 +62,9 @@ class Hook {
 	 */
 
 	public static function del($Hook, $function)
-    {
+	{
 		for ($i = 0; isset(self::$actions[$Hook][$i]); $i++)
-		    if (self::$actions[$Hook][$i] == $function)
-		        array_splice(self::$actions[$Hook],$i);
+			if (self::$actions[$Hook][$i] == $function)
+				array_splice(self::$actions[$Hook],$i);
 	}
 }

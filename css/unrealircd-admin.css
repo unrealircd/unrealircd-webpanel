@@ -1,535 +1,535 @@
 .unrealircd_overview {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    border-radius: 7px;
-    width: 25%;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	border-radius: 7px;
+	width: 25%;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 .tkl_add_boxheader {
-    font-weight: bold;
-    background-color: #4B86EE;
-    width: 24%;
-    color: white;
-    margin-top: 20px;
-    border: 10px solid #4B86EE;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+	font-weight: bold;
+	background-color: #4B86EE;
+	width: 24%;
+	color: white;
+	margin-top: 20px;
+	border: 10px solid #4B86EE;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
 }
 
 .align_right {
-    width: 10px;
-    text-align: right;
+	width: 10px;
+	text-align: right;
 }
 
 .tkl_add_form {
-    background-color: lightgray;
-    padding: 10px;
-    width: 24%;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    line-height: 30px;
+	background-color: lightgray;
+	padding: 10px;
+	width: 24%;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+	line-height: 30px;
 }
 
 .tkl_add_form_contents {
-    margin-left: auto; 
-    margin-right: 0;
+	margin-left: auto; 
+	margin-right: 0;
 }
 .users_overview {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    border-radius: 7px;
-    width: 100%;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	border-radius: 7px;
+	width: 100%;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 .input_text {
-    border-radius: 7px;
+	border-radius: 7px;
 }
 select {
-    border-radius: 7px;
+	border-radius: 7px;
 }
 
 a {
-    color: white;
-    text-decoration: none;
+	color: white;
+	text-decoration: none;
 }
 
 .thuf {
-    border-bottom-left-radius: 10px;
+	border-bottom-left-radius: 10px;
 }
 
 .thuffer {
-    border-bottom-right-radius: 10px;
+	border-bottom-right-radius: 10px;
 }
 .filter-fields {
-    height: 30px;
-    width: 400px;
-    padding: 5px 5px;
-    margin: 8px 0;
-    border-radius: 7px;
+	height: 30px;
+	width: 400px;
+	padding: 5px 5px;
+	margin: 8px 0;
+	border-radius: 7px;
 }
 
 .secure-connection {
-    color: darkgreen;
-    border: 3px solid darkgreen;
-    background-color: rgba(0, 255, 0, 0.1);
+	color: darkgreen;
+	border: 3px solid darkgreen;
+	background-color: rgba(0, 255, 0, 0.1);
 }
 
 .operclass-label {
-    color:brown;
-    border: 3px solid brown;
-    background-color: rgba(255, 166, 0, 0.247);
+	color:brown;
+	border: 3px solid brown;
+	background-color: rgba(255, 166, 0, 0.247);
 }
 .bluelabel {
-    color: blue;
-    border: 3px solid darkblue;
-    background-color: rgba(131, 78, 255, 0.295);
+	color: blue;
+	border: 3px solid darkblue;
+	background-color: rgba(131, 78, 255, 0.295);
 }
 .redlabel {
-    color: darkred;
-    border: 3px solid darkred;
-    background-color: rgba(255, 78, 78, 0.295);
+	color: darkred;
+	border: 3px solid darkred;
+	background-color: rgba(255, 78, 78, 0.295);
 }
 
 .align_label {
-    width: 80px;
-    display: inline-block;
-    text-align: right;
+	width: 80px;
+	display: inline-block;
+	text-align: right;
 }
 
 .align_right_button_tkl_add {
-    width: 400px;
-    display: inline-block;
-    text-align: right;
+	width: 400px;
+	display: inline-block;
+	text-align: right;
 }
 
 .label {
-    white-space: nowrap;
-    font-family: 'Heebo', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.025rem;
-    font-style: normal;
-    text-transform: uppercase;
-    border-radius: 7px;
-    -webkit-border-radius: 1rem;
-    -moz-border-radius: 1rem;
-    padding: 0.20rem 0.50rem;
-    border-style: solid;
-    
-    }
+	white-space: nowrap;
+	font-family: 'Heebo', sans-serif;
+	font-size: 0.65rem;
+	font-weight: 500;
+	letter-spacing: 0.025rem;
+	font-style: normal;
+	text-transform: uppercase;
+	border-radius: 7px;
+	-webkit-border-radius: 1rem;
+	-moz-border-radius: 1rem;
+	padding: 0.20rem 0.50rem;
+	border-style: solid;
+	
+	}
 textarea {
-    height: 30px;
-    width: 400px;
-    padding: 5px 5px;
-    margin: 8px 0;
-    border-radius: 7px;
+	height: 30px;
+	width: 400px;
+	padding: 5px 5px;
+	margin: 8px 0;
+	border-radius: 7px;
   }
 table {
-    border-collapse: collapse;
-    margin: 25px 0;
-    font-size: 0.9em;
-    font-family: sans-serif;
-    min-width: 400px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+	border-collapse: collapse;
+	margin: 25px 0;
+	font-size: 0.9em;
+	font-family: sans-serif;
+	min-width: 400px;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
 td {
-    text-align: left;
-    padding: 8px;
+	text-align: left;
+	padding: 8px;
 }
 
 th {
-    text-align: left;
-    padding: 8px;
-    background-color: #4B86EE;
-    color: white;
+	text-align: left;
+	padding: 8px;
+	background-color: #4B86EE;
+	color: white;
 }
 
 th:first-of-type {
-    border-top-left-radius: 10px;
-    color: white;
+	border-top-left-radius: 10px;
+	color: white;
 }
 
 th:last-of-type {
-    border-top-right-radius: 10px;
-    color: white;
+	border-top-right-radius: 10px;
+	color: white;
 }
 
 tr:last-of-type td:first-of-type {
-    border-bottom-left-radius: 10px;
+	border-bottom-left-radius: 10px;
 
 }
 
 tr:last-of-type td:last-of-type {
-    border-bottom-right-radius: 10px;
+	border-bottom-right-radius: 10px;
 }
 
 tr:nth-child(even) {
-    background-color: #bec8d3;
+	background-color: #bec8d3;
 }
 
 tr:nth-child(odd) {
-    background-color: whitesmoke;
+	background-color: whitesmoke;
 }
 
 html {
-    height: 100%;
-    /* for the page to take full window height */
-    box-sizing: border-box;
+	height: 100%;
+	/* for the page to take full window height */
+	box-sizing: border-box;
 
-    /* to have the footer displayed at the bottom of the page without scrolling */
-    font-family: arial, sans-serif;
+	/* to have the footer displayed at the bottom of the page without scrolling */
+	font-family: arial, sans-serif;
 
 }
 
 *,
 *:before,
 *:after {
-    box-sizing: inherit;
-    /* enable the "border-box effect" everywhere */
+	box-sizing: inherit;
+	/* enable the "border-box effect" everywhere */
 }
 
 .body-for-sticky {
-    position: relative;
-    /* for the footer to move with the page size */
-    min-height: 100%;
-    /* for the footer to be at the bottom */
+	position: relative;
+	/* for the footer to move with the page size */
+	min-height: 100%;
+	/* for the footer to be at the bottom */
 }
 
 .footer {
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background-color: #333;
-    color: white;
-    text-align: center;
+	font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background-color: #333;
+	color: white;
+	text-align: center;
 }
 
 
 .footer a {
-    color: #4B86EE;
+	color: #4B86EE;
 }
 
 .row {
-    display: flex;
+	display: flex;
 }
 
 .column {
-    flex: 50%;
-    padding: 5px;
+	flex: 50%;
+	padding: 5px;
 }
 
 .topnav {
-    background-color: #333;
-    overflow: hidden;
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+	background-color: #333;
+	overflow: hidden;
+	font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 
 }
 
 /* Style the links inside the navigation bar */
 .topnav a {
-    float: left;
-    color: #f2f2f2;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 17px;
+	float: left;
+	color: #f2f2f2;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-size: 17px;
 }
 
 /* Change the color of links on hover */
 .topnav a:hover {
-    background-color: #ddd;
-    color: black;
+	background-color: #ddd;
+	color: black;
 }
 
 /* Add a color to the active/current link */
 .topnav a.active {
-    background-color: #4B86EE;
-    color: white;
+	background-color: #4B86EE;
+	color: white;
 }
 
 
 [data-tab-content] {
-    display: none;
+	display: none;
 }
 
 .active[data-tab-content] {
-    display: block;
+	display: block;
 }
 
 .tab.active {
-    background-color: #AAA;
+	background-color: #AAA;
 }
 
 .tab:hover {
-    background-color: #AAA;
+	background-color: #AAA;
 }
 
 #headerContainer,
 #headerTitle {
-    background-color: #4B86EE;
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    height: 62px;
-    margin-top: -10px;
-    padding: 10px 25px;
-    position: relative;
+	background-color: #4B86EE;
+	font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+	height: 62px;
+	margin-top: -10px;
+	padding: 10px 25px;
+	position: relative;
 }
 
 #headerContainer {
-    margin-left: -15px;
-    z-index: 10;
+	margin-left: -15px;
+	z-index: 10;
 
-    -webkit-box-shadow: 0 3px 3px .01px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 3px 3px .01px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 0 3px 3px .01px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 3px 3px .01px rgba(0, 0, 0, 0.2);
 }
 
 #headerContainer:before {
-    border-color: #034FD5 transparent;
-    border-style: solid;
-    border-width: 1em 0 0 1em;
-    bottom: -1em;
-    content: '';
-    display: block;
-    left: 0;
-    position: absolute;
+	border-color: #034FD5 transparent;
+	border-style: solid;
+	border-width: 1em 0 0 1em;
+	bottom: -1em;
+	content: '';
+	display: block;
+	left: 0;
+	position: absolute;
 }
 
 #headerContainer h2,
 #headerContainer h2 small {
-    color: white !important;
-    margin-bottom: 0px;
+	color: white !important;
+	margin-bottom: 0px;
 
 }
 
 #headerContainer h2 small {
-    font-weight: lighter;
+	font-weight: lighter;
 }
 
 #headerTitle {
-    background-color: white;
-    margin-right: 15px;
-    z-index: 9;
+	background-color: white;
+	margin-right: 15px;
+	z-index: 9;
 }
 
 #headerTitle h2 {
-    line-height: 1.5;
-    margin-bottom: 0px;
+	line-height: 1.5;
+	margin-bottom: 0px;
 }
 
 #headerTitle h2 i {
-    color: #f2f2f2;
-    font-size: 80px;
-    position: absolute;
-    right: 0;
-    top: -30px;
-    z-index: -1;
+	color: #f2f2f2;
+	font-size: 80px;
+	position: absolute;
+	right: 0;
+	top: -30px;
+	z-index: -1;
 }
 
 #headerTitle h2 small {
-    color: #bbb;
+	color: #bbb;
 }
 
 
 body {
-    background-image: url("/img/linen.png");
-    display: flex;
-    flex-direction: column;
+	background-image: url("/img/linen.png");
+	display: flex;
+	flex-direction: column;
 }
 
 /* CSS */
 .cute_button {
-    align-items: center;
-    appearance: none;
-    background-color: #4B86EE;
-    background-size: calc(100% + 20px) calc(100% + 20px);
-    border-radius: 7px;
-    border-width: 0;
-    box-shadow: none;
-    box-sizing: border-box;
-    color: #FFFFFF;
-    cursor: pointer;
-    display: inline-flex;
-    font-family: CircularStd, sans-serif;
-    font-size: 1rem;
-    height: auto;
-    justify-content: center;
-    line-height: 1.5;
-    padding: 6px 20px;
-    position: relative;
-    text-align: center;
-    text-decoration: none;
-    transition: background-color .2s, background-position .2s;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    vertical-align: top;
-    white-space: nowrap;
+	align-items: center;
+	appearance: none;
+	background-color: #4B86EE;
+	background-size: calc(100% + 20px) calc(100% + 20px);
+	border-radius: 7px;
+	border-width: 0;
+	box-shadow: none;
+	box-sizing: border-box;
+	color: #FFFFFF;
+	cursor: pointer;
+	display: inline-flex;
+	font-family: CircularStd, sans-serif;
+	font-size: 1rem;
+	height: auto;
+	justify-content: center;
+	line-height: 1.5;
+	padding: 6px 20px;
+	position: relative;
+	text-align: center;
+	text-decoration: none;
+	transition: background-color .2s, background-position .2s;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+	vertical-align: top;
+	white-space: nowrap;
 }
 
 .cute_button:active,
 .cute_button:focus {
-    outline: none;
+	outline: none;
 }
 
 .cute_button:hover {
-    background-position: -20px -20px;
-    background-color: #034FD5;
+	background-position: -20px -20px;
+	background-color: #034FD5;
 }
 
 .cute_button:focus:not(:active) {
-    box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
+	box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
 }
 
 .cute_button2 {
-    align-items: center;
-    appearance: none;
-    height: 27px;
-    background-color: green;
-    border-radius: 7px;
-    font-weight: bold;
-    border-width: 0;
-    box-shadow: none;
-    box-sizing: border-box;
-    color: #FFFFFF;
-    cursor: pointer;
-    display: inline-flex;
-    font-family: CircularStd, sans-serif;
-    font-size: 1rem;
-    justify-content: center;
-    line-height: 1.5;
-    position: relative;
-    text-align: center;
-    text-decoration: none;
-    transition: background-color .2s, background-position .2s;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    white-space: nowrap;
+	align-items: center;
+	appearance: none;
+	height: 27px;
+	background-color: green;
+	border-radius: 7px;
+	font-weight: bold;
+	border-width: 0;
+	box-shadow: none;
+	box-sizing: border-box;
+	color: #FFFFFF;
+	cursor: pointer;
+	display: inline-flex;
+	font-family: CircularStd, sans-serif;
+	font-size: 1rem;
+	justify-content: center;
+	line-height: 1.5;
+	position: relative;
+	text-align: center;
+	text-decoration: none;
+	transition: background-color .2s, background-position .2s;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+	white-space: nowrap;
 }
 
 .cute_button2:active,
 .cute_button2:focus {
-    outline: none;
+	outline: none;
 }
 
 .cute_button2:hover {
-    background-position: -20px -20px;
-    background-color: #353c47;
+	background-position: -20px -20px;
+	background-color: #353c47;
 }
 
 .cute_button2:focus:not(:active) {
-    box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
+	box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
 }
 
 .alert {
-    padding: 10px;
-    background-color: #b62c22;
-    /* Red */
-    color: white;
-    margin-bottom: 15px;
-    margin-top: 15px;
-    border-radius: 7px;
-    width: 100%;
+	padding: 10px;
+	background-color: #b62c22;
+	/* Red */
+	color: white;
+	margin-bottom: 15px;
+	margin-top: 15px;
+	border-radius: 7px;
+	width: 100%;
 }
 
 .success {
-    padding: 10px;
-    background-color: #208120;
-    /* Red */
-    color: white;
-    margin-bottom: 15px;
-    margin-top: 15px;
-    border-radius: 7px;
-    width: 100%;
+	padding: 10px;
+	background-color: #208120;
+	/* Red */
+	color: white;
+	margin-bottom: 15px;
+	margin-top: 15px;
+	border-radius: 7px;
+	width: 100%;
 }
 
 .information {
-    padding: 10px;
-    background-color: #245788;
-    /* Red */
-    color: white;
-    margin-bottom: 15px;
-    margin-top: 15px;
-    border-radius: 7px;
-    width: 100%;
+	padding: 10px;
+	background-color: #245788;
+	/* Red */
+	color: white;
+	margin-bottom: 15px;
+	margin-top: 15px;
+	border-radius: 7px;
+	width: 100%;
 }
 
 /* The close button */
 .closebtn {
-    margin-left: 15px;
-    color: white;
-    font-weight: bold;
-    float: right;
-    font-size: 22px;
-    line-height: 20px;
-    cursor: pointer;
-    transition: 0.3s;
+	margin-left: 15px;
+	color: white;
+	font-weight: bold;
+	float: right;
+	font-size: 22px;
+	line-height: 20px;
+	cursor: pointer;
+	transition: 0.3s;
 }
 
 
 .checkbox-dropdown {
-    width: 200px;
-    border: 1px solid #aaa;
-    padding: 10px;
-    position: relative;
-    margin: 0 auto;
-    
-    user-select: first;
+	width: 200px;
+	border: 1px solid #aaa;
+	padding: 10px;
+	position: relative;
+	margin: 0 auto;
+	
+	user-select: first;
 }
 
 /* Display CSS arrow to the right of the dropdown text */
 .checkbox-dropdown:after {
-    content:'';
-    height: 0;
-    position: absolute;
-    width: 0;
-    border: 6px solid transparent;
-    border-top-color: #000;
-    top: 50%;
-    right: 10px;
-    margin-top: -3px;
+	content:'';
+	height: 0;
+	position: absolute;
+	width: 0;
+	border: 6px solid transparent;
+	border-top-color: #000;
+	top: 50%;
+	right: 10px;
+	margin-top: -3px;
 }
 
 /* Reverse the CSS arrow when the dropdown is active */
 .checkbox-dropdown.is-active:after {
-    border-bottom-color: #000;
-    border-top-color: #fff;
-    margin-top: -9px;
+	border-bottom-color: #000;
+	border-top-color: #fff;
+	margin-top: -9px;
 }
 
 .checkbox-dropdown-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    top: 100%; /* align the dropdown right below the dropdown text */
-    border: inherit;
-    border-top: none;
-    left: -1px; /* align the dropdown to the left */
-    right: -1px; /* align the dropdown to the right */
-    opacity: 0; /* hide the dropdown */
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 100%; /* align the dropdown right below the dropdown text */
+	border: inherit;
+	border-top: none;
+	left: -1px; /* align the dropdown to the left */
+	right: -1px; /* align the dropdown to the right */
+	opacity: 0; /* hide the dropdown */
    
-    transition: opacity 0.4s ease-in-out;
-    height: 100px;
-    overflow: scroll;
-    overflow-x: hidden;
-    pointer-events: none; /* avoid mouse click events inside the dropdown */
+	transition: opacity 0.4s ease-in-out;
+	height: 100px;
+	overflow: scroll;
+	overflow-x: hidden;
+	pointer-events: none; /* avoid mouse click events inside the dropdown */
 }
 .is-active .checkbox-dropdown-list {
-    opacity: 1; /* display the dropdown */
-    pointer-events: auto; /* make sure that the user still can select checkboxes */
+	opacity: 1; /* display the dropdown */
+	pointer-events: auto; /* make sure that the user still can select checkboxes */
 }
 
 .checkbox-dropdown-list li label {
-    display: block;
-    border-bottom: 1px solid silver;
-    padding: 10px;
+	display: block;
+	border-bottom: 1px solid silver;
+	padding: 10px;
    
-    transition: all 0.2s ease-out;
+	transition: all 0.2s ease-out;
 }
 
 .checkbox-dropdown-list li label:hover {
-    background-color: #555;
-    color: white;
+	background-color: #555;
+	color: white;
 }

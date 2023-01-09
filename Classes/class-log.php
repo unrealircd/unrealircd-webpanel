@@ -1,42 +1,42 @@
 <?php
 
 if (!defined('UPATH'))
-    die("Access denied");
+	die("Access denied");
 
 
 class Log
 {
-    function __construct()
-    {
+	function __construct()
+	{
 
-        /*
-        if (!is_dir("log/"))
-            mkdir("log/");
-        $filename = "log/".date("Y-m-d")."log";
-        if (!file_exists($filename))
-        {
-            $open = fopen($filename, 'w');
-            $close = fclose($open);
-        } */
-    }
-    function it(...$string)
-    {
-        foreach($string as $str)
-        {
-            if (UNREALIRCD_DEBUG) {
-                highlight_string(var_export($str, true));
-            }
-        }
-    }
+		/*
+		if (!is_dir("log/"))
+			mkdir("log/");
+		$filename = "log/".date("Y-m-d")."log";
+		if (!file_exists($filename))
+		{
+			$open = fopen($filename, 'w');
+			$close = fclose($open);
+		} */
+	}
+	function it(...$string)
+	{
+		foreach($string as $str)
+		{
+			if (UNREALIRCD_DEBUG) {
+				highlight_string(var_export($str, true));
+			}
+		}
+	}
 }
 
 function do_log(...$strings)
 {
-    $log = new Log();
-    $log->it($strings);
+	$log = new Log();
+	$log->it($strings);
 }
 
 function get_date($year, $month, $day, $hour, $minute)
 {
-    return "$year-$month-$day" . "T$hour-$minute" . "Z";
+	return "$year-$month-$day" . "T$hour-$minute" . "Z";
 }
