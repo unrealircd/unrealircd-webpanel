@@ -36,8 +36,8 @@ if (!empty($_POST))
 					$duration .= $banlen_h;
 			}
 
-			$nick = $rpc->user()->get($user);
-			if (!$nick)
+			$user = $rpc->user()->get($user);
+			if (!user)
 			{
 				Message::Fail("Could not find that user. Maybe they disconnected after you clicked this?");
 				return;
@@ -46,10 +46,7 @@ if (!empty($_POST))
 			$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for ".rpc_convert_duration_string($duration);
 			$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
 			if ($rpc->serverban()->add($user, $bantype, $duration, $reason))
-			{
-				$c = $nick->client;
-				Message::Success($c->name . " (*@".$c->hostname.") has been $bantype" . "d $msg_msg: $reason");
-			}
+				Message::Success($user->name . " (*@".$user->hostname.") has been $bantype" . "d $msg_msg: $reason");
 		}
 	}
 }
