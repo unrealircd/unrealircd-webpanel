@@ -6,7 +6,7 @@
 ## Prerequisites ##
 - PHP 8 or later
 - A webserver
-- UnrealIRCd 6.0.5
+- UnrealIRCd 6.0.6-git recommended. Minimal functionality available with UnrealIRCd 6.0.5.
 
 ## Installation ##
 
