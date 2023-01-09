@@ -18,23 +18,22 @@
 </head>
 <body role="document">
 <div class="container">
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
-        <ul class="nav navbar-nav">
+	<!-- Fixed navbar -->
+	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
+		<ul class="nav navbar-nav">
 <?php
 foreach($pages as $name=>$page)
 {
 	$class = "class=\"nav-item\"";
 	if (str_ends_with($_SERVER['SCRIPT_FILENAME'], $page))
-	{
 		$class = str_replace("\"nav-item\"", "\"nav-item active\"", $class);
-	}
-	echo "            <li $class><a class=\"nav-link\" href=\"$page\">$name</a></li>\n";
+	
+	echo "			<li $class><a class=\"nav-link\" href=\"$page\">$name</a></li>\n";
 }
 
 ?>
-        </ul>
-    </nav>
+		</ul>
+	</nav>
 </div>
 
 <div class="container-fluid" role="main">

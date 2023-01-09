@@ -5,7 +5,23 @@
 	width: 25%;
 	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
+
+.navbar-nav li> {
+	border-radius: 4px;
+}
+.navbar-nav li>a:hover,.navbar-nav li.active {
+	color: white;
+	background-color: #4B86EE;
+	border-radius: 4px;
+}
+.navbar-nav li>a:hover,.navbar-nav li>a:focus {
+	color: white;
+	background-color: #6ca0f8;
+	border-radius: 4px;
+}
+
 .tkl_add_boxheader {
+	
 	font-weight: bold;
 	background-color: #4B86EE;
 	width: 24%;
@@ -334,7 +350,7 @@ body {
 }
 
 @media screen and (max-width: 768px) {
-    body { padding-top: 0px; }
+	body { padding-top: 0px; }
 }
 
 /* CSS */
