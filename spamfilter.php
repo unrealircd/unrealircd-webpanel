@@ -111,7 +111,7 @@ if (!empty($_POST))
 	
 }
 
-$tkl = $rpc->serverban()->getAll();
+$spamfilter = $rpc->spamfilter()->getAll();
 ?>
 <div class="tkl_add_boxheader">
 		Add Spamfilter Entry
@@ -221,7 +221,7 @@ $tkl = $rpc->serverban()->getAll();
 	<th>Reason</th>
 	
 	<?php
-		foreach(RPC_List::$spamfilter as $sf)
+		foreach($spamfilter as $sf)
 		{
 			echo "<tr>";
 			echo "<td><input type=\"checkbox\" value='" . base64_encode($sf->name).",".base64_encode($sf->match_type).",".base64_encode($sf->spamfilter_targets).",".base64_encode($sf->ban_action) . "' name=\"sf[]\"></td>";
