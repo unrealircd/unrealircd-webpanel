@@ -98,18 +98,22 @@ $users = $rpc->user()->getAll();
 		Message::Info("Listing users which match account: \"" . $_POST['uf_account'] . "\"");
 
 	?>
-	<table class='users_overview'>
-	<th><input type="checkbox" label='selectall' onClick="toggle_user(this)" />Select all</th>
-	<th>Nick</th>
-	<th>UID</th>
-	<th>Host / IP</th>
-	<th>Account</th>
-	<th>Usermodes <a href="https://www.unrealircd.org/docs/User_modes" target="_blank">ℹ️</a></th>
-	<th>Oper</th>
-	<th>Secure</th>
-	<th>Connected to</th>
-	<th>Reputation <a href="https://www.unrealircd.org/docs/Reputation_score" target="_blank">ℹ️</a></th>
+
+	<table class="table">
+	<thead>
+		<th><input type="checkbox" label='selectall' onClick="toggle_user(this)" />Select all</th>
+		<th>Nick</th>
+		<th>UID</th>
+		<th>Host / IP</th>
+		<th>Account</th>
+		<th>Usermodes <a href="https://www.unrealircd.org/docs/User_modes" target="_blank">ℹ️</a></th>
+		<th>Oper</th>
+		<th>Secure</th>
+		<th>Connected to</th>
+		<th>Reputation <a href="https://www.unrealircd.org/docs/Reputation_score" target="_blank">ℹ️</a></th>
+	</thead>
 	
+	<tbody>
 	<form action="users.php" method="post">
 	<?php
 		foreach($users as $user)
@@ -145,7 +149,8 @@ $users = $rpc->user()->getAll();
 			echo "<td>".$user->name.$isBot.'</td>';
 			echo "<td>".$user->id."</td>";
 			echo "<td>".$user->hostname." (".$user->ip.")</td>";
-			$account = (isset($user->user->account)) ? $user->user->account : '<span class="label bluelabel	">None</span>';
+			//$account = (isset($user->user->account)) ? $user->user->account : '<span class="label bluelabel	">None</span>';
+			$account = (isset($user->user->account)) ? $user->user->account : '<span class="badge-pill badge-primary">None</span>';
 			echo "<td>".$account."</td>";
 			$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
 			echo "<td>".$modes."</td>";
@@ -153,12 +158,15 @@ $users = $rpc->user()->getAll();
 			if (!strlen($oper))
 				$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="label secure-connection">Service</span>' : "";
 			echo "<td>".$oper."</td>";
-			$secure = (isset($user->tls)) ? "<span class=\"label secure-connection\">Secure</span>" : "<span class=\"label redlabel\">Insecure</span>";
+			//$secure = (isset($user->tls)) ? "<span class=\"label secure-connection\">Secure</span>" : "<span class=\"label redlabel\">Insecure</span>";
+			$secure = (isset($user->tls)) ? "<span class=\"badge-pill badge-primary\">Secure</span>" : "<span class=\"badge-pill badge-danger\">Insecure</span>";
 			echo "<td>".$secure."</td>";
 			echo "<td>".$user->user->servername."</td>";
 			echo "<td>".$user->user->reputation."</td>";
 		}
-	?></table>
+	?>
+	</tbody>
+	</table>
 	<label for="bantype">Apply action: </label><br>
 	<select name="bantype" id="bantype">
 			<option value=""></option>
