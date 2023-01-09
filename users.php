@@ -6,7 +6,7 @@ require_once "header.php";
 if (!empty($_POST))
 {
 	do_log($_POST);
-
+	$bantype = $_POST['bantype'];
 	if (isset($_POST['userch']))
 	{
 		foreach ($_POST["userch"] as $user)
@@ -62,7 +62,7 @@ $users = $rpc->user()->getAll();
 	<table class='users_filter'>
 	<th class="thuf">Filter by: </th>
 	<th>
-		<form action="" method="post">
+		<form action="users.php" method="post">
 			Nick: <input name="uf_nick" id="uf_nick" type="text">
 			<input class="cute_button2" type="submit" value="Search">
 		</form>

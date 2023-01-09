@@ -15,7 +15,10 @@
   <a data-tab-target="#News" href="#News">News</a>
 </div> 
 <?php
+require_once "misc/strings.php";
 define('UPATH', dirname(__FILE__));
+
+define('RELATIVE_PATH', get_relative_path(UPATH));
 require_once "config.php";
 require_once UPATH . '/vendor/autoload.php';
 require_once "connection.php";

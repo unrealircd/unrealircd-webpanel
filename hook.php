@@ -22,7 +22,7 @@ define('HOOKTYPE_NAVBAR', 100); /* The Hook for the navigation bar */
  * 
  * Example 3:
  * Calling the Hook using a static class method:
- * Hook::func(HOOKTYPE_NAVBAR, ['class_name', 'method']);
+ * Hook::func(HOOKTYPE_NAVBAR, 'classname::method');
  * 
  */
 class Hook {
