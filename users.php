@@ -113,7 +113,7 @@ $users = $rpc->user()->getAll();
 	<th>Connected to</th>
 	<th>Reputation <a href="https://www.unrealircd.org/docs/Reputation_score" target="_blank">ℹ️</a></th>
 	
-	<form action="" method="post">
+	<form action="users.php" method="post">
 	<?php
 		foreach($users as $user)
 		{

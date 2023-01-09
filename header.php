@@ -4,7 +4,7 @@
 <link href="css/unrealircd-admin.css" rel="stylesheet">
 <body class="body-for-sticky">
 <div id="headerContainer">
-<h2><a href="">UnrealIRCd <small>Administration Panel</small></a></h2></div>
+<h2><a href="index.php">UnrealIRCd <small>Administration Panel</small></a></h2></div>
 <script src="js/unrealircd-admin.js" defer></script>
 <div class="topnav">
     

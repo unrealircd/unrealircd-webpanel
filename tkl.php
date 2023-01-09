@@ -150,7 +150,7 @@ $tkl = $rpc->serverban()->getAll();
 		</form>
 	</div>
 	<table class='users_overview'>
-	<form action="" method="post">
+	<form action="tkl.php" method="post">
 	<th><input type="checkbox" label='selectall' onClick="toggle_tkl(this)" />Select all</th>
 	<th>Mask</th>
 	<th>Type</th>

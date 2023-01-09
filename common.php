@@ -9,7 +9,7 @@ require_once "Classes/class-log.php";
 require_once "Classes/class-message.php";
 require_once "Classes/class-rpc.php";
 
-$pages = Array("Overview"	=> "overview.php",
+$pages = Array("Overview"	=> "index.php",
                "Users"		=> "users.php",
                "Channels"	=> "channels.php",
                "Server Bans"	=> "tkl.php",
