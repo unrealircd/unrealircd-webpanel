@@ -15,14 +15,16 @@ $channels = $rpc->channel()->getAll();
 
 ?>
 
-<table class='users_overview'>
+<table class="table table-striped">
+<thead>
 	<th>Name</th>
 	<th>Created</th>
 	<th>User count</th>
 	<th>Topic</th>
 	<th>Topic Set</th>
 	<th>Modes</th>
-	
+</thead>
+<tbody>
 	<?php
 		foreach($channels as $channel)
 		{
@@ -37,4 +39,6 @@ $channels = $rpc->channel()->getAll();
 			$modes = (isset($channel->modes)) ? "+" . $channel->modes : "<none>";
 			echo "<td>".$modes."</td>";
 		}
-	?></table>
+	?>
+</tbody>
+</table>
