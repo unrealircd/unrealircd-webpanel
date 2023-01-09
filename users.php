@@ -104,7 +104,7 @@ $users = $rpc->user()->getAll();
 	<th>UID</th>
 	<th>Host / IP</th>
 	<th>Account</th>
-	<th>Usermodes<a href="https://www.unrealircd.org/docs/User_modes" target="_blank">ℹ️</a></th>
+	<th>Usermodes <a href="https://www.unrealircd.org/docs/User_modes" target="_blank">ℹ️</a></th>
 	<th>Oper</th>
 	<th>Secure</th>
 	<th>Connected to</th>
