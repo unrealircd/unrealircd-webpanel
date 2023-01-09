@@ -37,7 +37,7 @@ if (!empty($_POST))
 			}
 
 			$user = $rpc->user()->get($user);
-			if (!user)
+			if (!$user)
 			{
 				Message::Fail("Could not find that user. Maybe they disconnected after you clicked this?");
 				return;
