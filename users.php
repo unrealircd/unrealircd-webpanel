@@ -154,12 +154,14 @@ $users = $rpc->user()->getAll();
 			echo "<td>".$account."</td>";
 			$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
 			echo "<td>".$modes."</td>";
-			$oper = (isset($user->user->operlogin)) ? $user->user->operlogin." <span class=\"label bluelabel\">".$user->user->operclass."</span>" : "";
+			$oper = (isset($user->user->operlogin)) ? $user->user->operlogin." <span class=\"badge-pill badge-info\">".$user->user->operclass."</span>" : "";
 			if (!strlen($oper))
-				$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="label secure-connection">Service</span>' : "";
+				$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="badge-pill badge-info">Services Bot</span>' : "";
 			echo "<td>".$oper."</td>";
-			//$secure = (isset($user->tls)) ? "<span class=\"label secure-connection\">Secure</span>" : "<span class=\"label redlabel\">Insecure</span>";
+
 			$secure = (isset($user->tls)) ? "<span class=\"badge-pill badge-success\">Secure</span>" : "<span class=\"badge-pill badge-danger\">Insecure</span>";
+			if (strpos($user->user->modes, "S") !== false)
+				$secure = "";
 			echo "<td>".$secure."</td>";
 			echo "<td>".$user->user->servername."</td>";
 			echo "<td>".$user->user->reputation."</td>";
