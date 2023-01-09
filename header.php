@@ -33,7 +33,7 @@ foreach($pages as $name=>$page)
 
 ?>
 		</ul>
-	</nav>
+	</nav><br>
 </div>
 
 <div class="container-fluid" role="main">

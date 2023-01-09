@@ -3,50 +3,43 @@ require_once "common.php";
 
 require_once "header.php";
 
-if (!empty($_POST))
-{
+if (!empty($_POST)) {
 	do_log($_POST);
 	$bantype = $_POST['bantype'];
-	if (isset($_POST['userch']))
-	{
-		foreach ($_POST["userch"] as $user)
-		{
-			$user = base64_decode($user);
+	if (isset($_POST['userch'])) {
+		foreach ($_POST["userch"] as $user) {
+			$user = $name = base64_decode($user);
 			$bantype = (isset($_POST['bantype'])) ? $_POST['bantype'] : NULL;
-			if (!$bantype) /* shouldn't happen? */
-			{
+			if (!$bantype) /* shouldn't happen? */{
 				Message::Fail("An error occured");
-				return;
-			}
-			$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
-			$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
-			$banlen_h = (isset($_POST['banlen_h'])) ? $_POST['banlen_h'] : NULL;
+			} else {
+				$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
+				$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
+				$banlen_h = (isset($_POST['banlen_h'])) ? $_POST['banlen_h'] : NULL;
 
-			$duration = "";
-			if (!$banlen_d && !$banlen_h && !$banlen_w)
-				$duration .= "0";
-			
-			else
-			{
-				if ($banlen_w)
-					$duration .= $banlen_w;
-				if ($banlen_d)
-					$duration .= $banlen_d;
-				if ($banlen_h)
-					$duration .= $banlen_h;
+				$duration = "";
+				if (!$banlen_d && !$banlen_h && !$banlen_w)
+					$duration .= "0";
+				else {
+					if ($banlen_w)
+						$duration .= $banlen_w;
+					if ($banlen_d)
+						$duration .= $banlen_d;
+					if ($banlen_h)
+						$duration .= $banlen_h;
+				}
+				$user = $rpc->user()->get($user);
+				if (!$user) {
+					Message::Fail("Could not find that user: User not online");
+				} else {
+					$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for " . rpc_convert_duration_string($duration);
+					$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
+					if ($rpc->serverban()->add($user->id, $bantype, $duration, $reason))
+						Message::Success($user->name . " (*@" . $user->hostname . ") has been $bantype" . "d $msg_msg: $reason");
+					else
+						Message::Fail("Could not add $bantype against $name: $rpc->error");
+				}
 			}
-
-			$user = $rpc->user()->get($user);
-			if (!$user)
-			{
-				Message::Fail("Could not find that user. Maybe they disconnected after you clicked this?");
-				return;
-			}
-
-			$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for ".rpc_convert_duration_string($duration);
-			$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
-			if ($rpc->serverban()->add($user->id, $bantype, $duration, $reason))
-				Message::Success($user->name . " (*@".$user->hostname.") has been $bantype" . "d $msg_msg: $reason");
 		}
 	}
 }
@@ -145,18 +138,17 @@ $users = $rpc->user()->getAll();
 
 			echo "<tr>";
 			echo "<td><input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\"></td>";
-			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="label">Bot</span>' : "";
+			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge-pill badge-dark">Bot</span>' : "";
 			echo "<td>".$user->name.$isBot.'</td>';
 			echo "<td>".$user->id."</td>";
 			echo "<td>".$user->hostname." (".$user->ip.")</td>";
-			//$account = (isset($user->user->account)) ? $user->user->account : '<span class="label bluelabel	">None</span>';
 			$account = (isset($user->user->account)) ? $user->user->account : '<span class="badge-pill badge-primary">None</span>';
 			echo "<td>".$account."</td>";
 			$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
 			echo "<td>".$modes."</td>";
-			$oper = (isset($user->user->operlogin)) ? $user->user->operlogin." <span class=\"badge-pill badge-info\">".$user->user->operclass."</span>" : "";
+			$oper = (isset($user->user->operlogin)) ? $user->user->operlogin." <span class=\"badge-pill badge-secondary\">".$user->user->operclass."</span>" : "";
 			if (!strlen($oper))
-				$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="badge-pill badge-info">Services Bot</span>' : "";
+				$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="badge-pill badge-warning">Services Bot</span>' : "";
 			echo "<td>".$oper."</td>";
 
 			$secure = (isset($user->tls)) ? "<span class=\"badge-pill badge-success\">Secure</span>" : "<span class=\"badge-pill badge-danger\">Insecure</span>";

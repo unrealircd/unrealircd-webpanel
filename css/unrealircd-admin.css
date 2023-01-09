@@ -6,6 +6,10 @@
 	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
+.badge-pill {
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
 .navbar-nav li> {
 	border-radius: 4px;
 }
@@ -438,16 +442,6 @@ body {
 	box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
 }
 
-.alert {
-	padding: 10px;
-	background-color: #b62c22;
-	/* Red */
-	color: white;
-	margin-bottom: 15px;
-	margin-top: 15px;
-	border-radius: 7px;
-	width: 100%;
-}
 
 .success {
 	padding: 10px;
