@@ -205,7 +205,8 @@ $spamfilter = $rpc->spamfilter()->getAll();
 			<div class="align_right_button_tkl_add"><input class="cute_button" type="submit" id="submit" value="Submit"></div>
 		</form>
 	</div>
-	<table class='users_overview'>
+	<table class="table table-responsive caption-top table-striped">
+	<thead class="table-primary">
 	<form action="spamfilter.php" method="post">
 	<th><input type="checkbox" label='selectall' onClick="toggle_sf(this)" />Select all</th>
 	<th>Mask</th>
@@ -219,6 +220,7 @@ $spamfilter = $rpc->spamfilter()->getAll();
 	<th>Action Duration</th>
 	<th>Target</th>
 	<th>Reason</th>
+				</thead>
 	
 	<?php
 		foreach($spamfilter as $sf)

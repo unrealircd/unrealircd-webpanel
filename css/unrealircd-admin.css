@@ -1,3 +1,7 @@
+table {
+	font-size: 96%;
+}
+
 .unrealircd_overview {
 	font-family: arial, sans-serif;
 	border-collapse: collapse;
@@ -8,6 +12,20 @@
 
 .badge-pill {
 	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.curvy {
+	border-radius: 7px;
+}
+
+
+.form-control {
+	height: 10px;
+	margin: 5px;
+}
+
+.short-form-control {
+	width: 70%;
 }
 
 .nav-item {
@@ -67,17 +85,7 @@
 .input_text {
 	border-radius: 7px;
 }
-select {
-	border-radius: 7px;
-}
 
-.thuf {
-	border-bottom-left-radius: 10px;
-}
-
-.thuffer {
-	border-bottom-right-radius: 10px;
-}
 .filter-fields {
 	height: 30px;
 	width: 400px;
@@ -86,27 +94,6 @@ select {
 	border-radius: 7px;
 }
 
-.secure-connection {
-	color: darkgreen;
-	border: 3px solid darkgreen;
-	background-color: rgba(0, 255, 0, 0.1);
-}
-
-.operclass-label {
-	color:brown;
-	border: 3px solid brown;
-	background-color: rgba(255, 166, 0, 0.247);
-}
-.bluelabel {
-	color: blue;
-	border: 3px solid darkblue;
-	background-color: rgba(131, 78, 255, 0.295);
-}
-.redlabel {
-	color: darkred;
-	border: 3px solid darkred;
-	background-color: rgba(255, 78, 78, 0.295);
-}
 
 .align_label {
 	width: 80px;
@@ -120,21 +107,6 @@ select {
 	text-align: right;
 }
 
-.label {
-	white-space: nowrap;
-	font-family: 'Heebo', sans-serif;
-	font-size: 0.65rem;
-	font-weight: 500;
-	letter-spacing: 0.025rem;
-	font-style: normal;
-	text-transform: uppercase;
-	border-radius: 7px;
-	-webkit-border-radius: 1rem;
-	-moz-border-radius: 1rem;
-	padding: 0.20rem 0.50rem;
-	border-style: solid;
-	
-	}
 textarea {
 	height: 30px;
 	width: 400px;
@@ -142,63 +114,10 @@ textarea {
 	margin: 8px 0;
 	border-radius: 7px;
   }
-table {
-	border-collapse: collapse;
-	margin: 25px 0;
-	font-size: 0.9em;
-	font-family: sans-serif;
-	min-width: 400px;
-	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-}
 
-td {
-	text-align: left;
-	padding: 8px;
-}
 
-th {
-	text-align: left;
-	padding: 8px;
-	background-color: #4B86EE;
-	color: white;
-}
 
-th:first-of-type {
-	border-top-left-radius: 10px;
-	color: white;
-}
 
-th:last-of-type {
-	border-top-right-radius: 10px;
-	color: white;
-}
-
-tr:last-of-type td:first-of-type {
-	border-bottom-left-radius: 10px;
-
-}
-
-tr:last-of-type td:last-of-type {
-	border-bottom-right-radius: 10px;
-}
-
-tr:nth-child(even) {
-	background-color: #bec8d3;
-}
-
-tr:nth-child(odd) {
-	background-color: whitesmoke;
-}
-
-html {
-	height: 100%;
-	/* for the page to take full window height */
-	box-sizing: border-box;
-
-	/* to have the footer displayed at the bottom of the page without scrolling */
-	font-family: arial, sans-serif;
-
-}
 
 *,
 *:before,
@@ -228,15 +147,6 @@ html {
 
 .footer a {
 	color: #4B86EE;
-}
-
-.row {
-	display: flex;
-}
-
-.column {
-	flex: 50%;
-	padding: 5px;
 }
 
 .topnav {
@@ -447,28 +357,6 @@ body {
 }
 
 
-
-.success {
-	padding: 10px;
-	background-color: #208120;
-	/* Red */
-	color: white;
-	margin-bottom: 15px;
-	margin-top: 15px;
-	border-radius: 7px;
-	width: 100%;
-}
-
-.information {
-	padding: 10px;
-	background-color: #245788;
-	/* Red */
-	color: white;
-	margin-bottom: 15px;
-	margin-top: 15px;
-	border-radius: 7px;
-	width: 100%;
-}
 
 /* The close button */
 .closebtn {

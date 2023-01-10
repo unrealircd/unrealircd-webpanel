@@ -14,9 +14,9 @@ if (!empty($_POST))
 $channels = $rpc->channel()->getAll();
 
 ?>
-
-<table class="table table-striped">
-<thead>
+<h4>Channels Overview</h4>
+<table class="table table-responsive caption-top table-striped">
+	<thead class="table-primary">
 	<th>Name</th>
 	<th>Created</th>
 	<th>User count</th>

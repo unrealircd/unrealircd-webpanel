@@ -24,6 +24,7 @@
 		<ul class="nav navbar-nav">
 			<a class="navbar-brand" href="index.php">UnrealIRCd Admin Panel</a>
 <?php
+
 foreach($pages as $name=>$page)
 {
 	$class = "class=\"nav-item\"";

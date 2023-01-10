@@ -149,7 +149,8 @@ $tkl = $rpc->serverban()->getAll();
 					<div class="align_right_button_tkl_add"><input class="cute_button" type="submit" id="submit" value="Submit"></div>
 		</form>
 	</div>
-	<table class='users_overview'>
+	<table class="table table-responsive caption-top table-striped">
+	<thead class="table-primary">
 	<form action="tkl.php" method="post">
 	<th><input type="checkbox" label='selectall' onClick="toggle_tkl(this)" />Select all</th>
 	<th>Mask</th>
@@ -159,6 +160,7 @@ $tkl = $rpc->serverban()->getAll();
 	<th>Expires</th>
 	<th>Duration</th>
 	<th>Reason</th>
+	<thead
 	
 	<?php
 		foreach($tkl as $tkl)
