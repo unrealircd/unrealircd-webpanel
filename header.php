@@ -13,7 +13,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <title>UnrealIRCd Panel</title>
-<link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+<link rel="icon" type="image/x-icon" href="img/favicon.ico">
 <link href="css/unrealircd-admin.css" rel="stylesheet">
 </head>
 <body role="document">
@@ -22,7 +22,7 @@
 	<!-- Fixed navbar -->
 	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
 		<ul class="nav navbar-nav">
-			<a class="navbar-brand" href="index.php">UnrealIRCd Admin Panel</a>
+			<a class="navbar-brand" href="index.php"><img src="img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
 <?php
 
 foreach($pages as $name=>$page)
