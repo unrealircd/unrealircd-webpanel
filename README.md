@@ -1,7 +1,7 @@
 # unrealircd-webpanel
  UnrealIRCd Administration WebPanel
  
- <img src="https://i.ibb.co/7jtddG4/Screenshot-from-2022-12-31-04-53-35.png">
+ <img src="https://i.ibb.co/yP7tk6B/Screenshot-from-2023-01-10-17-54-01.png">
 
 ## Prerequisites ##
 - PHP 8 or later
