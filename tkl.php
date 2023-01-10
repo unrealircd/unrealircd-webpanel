@@ -209,7 +209,7 @@ $tkl = $rpc->serverban()->getAll();
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 		<div class="modal-header">
-			<h5 class="modal-title" id="myModalLabel">Delete</h5>
+			<h5 class="modal-title" id="myModalLabel">Confirm deletion</h5>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
 			</button>
@@ -219,7 +219,7 @@ $tkl = $rpc->serverban()->getAll();
 			This cannot be undone.			
 		</div>
 		<div class="modal-footer">
-			<button id="CloseButton" type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 			<button type="submit" action="post" class="btn btn-danger">Delete</button>
 			
 		</div>
