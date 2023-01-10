@@ -113,18 +113,29 @@ if (!empty($_POST))
 
 $spamfilter = $rpc->spamfilter()->getAll();
 ?>
-<div class="tkl_add_boxheader">
-		Add Spamfilter Entry
-	</div>
-	<div class="tkl_add_form">
+
+<h4>Spamfilter Overview</h4><br>
+<p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+			Add entry
+	</button></p>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="myModalLabel">Add new Spamfilter Entry</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
 		
 		<form action="spamfilter.php" method="post">
-			<div class="align_label">Entry: </div><input class="input_text" type="text" id="sf_add" name="sf_add"><br>
-			<div class="align_label">MatchType: </div><select name="matchtype" id="matchtype">
+			<div class="align_label curvy">Entry: </div> <input class="curvy" type="text" id="sf_add" name="sf_add"><br>
+			<div class="align_label curvy">MatchType: </div> <select name="matchtype" id="matchtype">
 				<option value="simple">Simple</option>
 				<option value="regex">Regular Expression</option>
 			</select><br>
-			<div class="align_label">Action: </div><select name="sf_bantype" id="sf_bantype">
+			<div class="align_label curvy">Action: </div> <select name="sf_bantype" id="sf_bantype">
 				<option value=""></option>
 				<optgroup label="Bans">
 					<option value="kline">Kill Line (KLine)</option>
@@ -145,18 +156,19 @@ $spamfilter = $rpc->spamfilter()->getAll();
 				</optgroup>
 			</select><br>
 			
-			<div class="align_label"><label for="banlen_w">Targets: </label></div>
-			<input type="checkbox" class="input_text" id="target_channel" name="target_channel">Channel messages<br>
-			<div class="align_label"><label></label></div><input type="checkbox" class="input_text" id="target_private" name="target_private">Private messages<br>
-			<div class="align_label"><label></label></div><input type="checkbox" class="input_text" id="target_channel_notice" name="target_channel_notice">Channel notices<br>
-			<div class="align_label"><label></label></div><input type="checkbox" class="input_text" id="target_private_notice" name="target_private_notice">Private notices<br>
-			<div class="align_label"><label></label></div><input type="checkbox" class="input_text" id="target_part" name="target_part">Part reason<br>
-			<div class="align_label"><label></label></div><input type="checkbox" class="input_text" id="target_dcc" name="target_dcc">DCC Filename<br>
-			<div class="align_label"><label></label></div><input type="checkbox" class="input_text" id="target_away" name="target_away">Away messages<br>
-			<div class="align_label"><label></label></div><input type="checkbox" class="input_text" id="target_topic" name="target_topic">Channel topic<br>
-			<div class="align_label"><label></label></div><input type="checkbox" class="input_text" id="target_messagetag" name="target_messagetag">MessageTags<br>
-			<div class="align_label"><label></label></div><input type="checkbox" class="input_text" id="target_user" name="target_user">Userhost (nick!user@host:realname)<br>
-			<div class="align_label"><label for="banlen_w">Duration: </label></div>
+			<div class="align_label curvy"><label for="banlen_w">Targets: </label></div>
+			
+			<input type="checkbox" class="curvy" id="target_channel" name="target_channel">Channel messages<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_private" name="target_private">Private messages<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_channel_notice" name="target_channel_notice">Channel notices<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_private_notice" name="target_private_notice">Private notices<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_part" name="target_part">Part reason<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_dcc" name="target_dcc">DCC Filename<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_away" name="target_away">Away messages<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_topic" name="target_topic">Channel topic<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_messagetag" name="target_messagetag">MessageTags<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_user" name="target_user">Userhost (nick!user@host:realname)<br>
+			<div class="align_label curvy"><label for="banlen_w">Duration: </label></div>
 			<select name="banlen_w" id="banlen_w">
 					<?php
 					for ($i = 0; $i <= 56; $i++)
@@ -199,15 +211,20 @@ $spamfilter = $rpc->spamfilter()->getAll();
 					}
 					?>
 			</select>
-			<br><div class="align_label"><label for="ban_reason">Reason: </label></div>
-			<input class="input_text" type="text" id="ban_reason" name="ban_reason"><br>
-			<input class="input_text" type="checkbox" id="soft" name="soft">Don't affect logged-in users (soft)
-			<div class="align_right_button_tkl_add"><input class="cute_button" type="submit" id="submit" value="Submit"></div>
-		</form>
-	</div>
+			<br><div class="align_label curvy"><label for="ban_reason">Reason: </label></div>
+			<input class="curvy" type="text" id="ban_reason" name="ban_reason"><br>
+			<input class="curvy" type="checkbox" id="soft" name="soft">Don't affect logged-in users (soft)
+				</div>
+			
+		<div class="modal-footer">
+			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="submit" action="post" class="btn btn-danger">Add Spamfilter Entry</button>
+			</form>
+		</div></div></div></div>
+
+	
 	<table class="table table-responsive caption-top table-striped">
-	<thead class="table-primary">
-	<form action="spamfilter.php" method="post">
+	<thead class="table-primary"><form action="spamfilter.php" method="post">
 	<th><input type="checkbox" label='selectall' onClick="toggle_sf(this)" />Select all</th>
 	<th>Mask</th>
 	<th>Type</th>
@@ -267,7 +284,31 @@ $spamfilter = $rpc->spamfilter()->getAll();
 			echo "<td>".$sf->reason."</td>";
 			
 		}
-	?></table><p><input class="cute_button" type="submit" value="Delete selected"></p></form></div></div>
+	?></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2">
+	Delete selected
+	</button></p>
+	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="myModalLabel">Delete</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			Are you sure you want to do this?<br>
+			This cannot be undone.			
+		</div>
+		<div class="modal-footer">
+			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="submit" action="post" class="btn btn-danger">Delete</button>
+			
+		</div>
+		</div>
+	</div>
+	</div>
+</form></div></div>
 
 
 <?php require_once 'footer.php'; ?>

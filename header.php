@@ -12,6 +12,7 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
+<script src="js/unrealircd-admin.js"></script>
 <title>UnrealIRCd Panel</title>
 <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 <link href="css/unrealircd-admin.css" rel="stylesheet">

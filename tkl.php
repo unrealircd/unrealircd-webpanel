@@ -202,6 +202,29 @@ $tkl = $rpc->serverban()->getAll();
 			echo "<td>".$tkl->duration_string."</td>";
 			echo "<td>".$tkl->reason."</td>";
 		}
-	?></table><p><input class="btn btn-danger" type="submit" value="Delete selected"></p></form></div></div>
+	?></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2">
+	Delete selected
+	</button></p>
+	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="myModalLabel">Delete</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			Are you sure you want to do this?<br>
+			This cannot be undone.			
+		</div>
+		<div class="modal-footer">
+			<button id="CloseButton" type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+			<button type="submit" action="post" class="btn btn-danger">Delete</button>
+			
+		</div>
+		</div>
+	</div>
+	</div></form></div></div>
 
 <?php require_once 'footer.php'; ?>
