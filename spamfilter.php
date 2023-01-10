@@ -8,7 +8,7 @@ if (!empty($_POST))
 
 	do_log($_POST);
 
-	if ($sf = $_POST['sf_add']) // if it was a spamfilter entry
+	if (($sf = (isset($_POST['sf_add'])) ? $_POST['sf_add'] : false)) // if it was a spamfilter entry
 	{
 		/* get targets */
 		$targets = []; // empty arrae
