@@ -19,7 +19,7 @@ Please make sure you have [correctly setup UnrealIRCd for use with JSON-RPC](htt
   this repository:
 ```
 cd /var/www/html
-git clone https://github.com/ValwareIRC/unrealircd-webpanel
+git clone https://github.com/unrealircd/unrealircd-webpanel
 ```
 
 - Go into the directory and run composer to install the dependencies
