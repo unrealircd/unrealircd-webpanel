@@ -68,7 +68,7 @@ $users = $rpc->user()->getAll();
 
 	?>
 	<table class="table table-responsive caption-top table-striped">
-	<thead class="table-light">
+	<thead>
 		<th scope="col"><h5>Filter:</h5></th>
 		<form action="" method="post">
 		<th scope="col" colspan="2">Nick <input name="uf_nick" type="text" class="form-control short-form-control">

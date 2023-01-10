@@ -6,8 +6,9 @@ require_once "header.php";
 rpc_pop_lists();
 ?>
 
-	<table class='unrealircd_overview'>
-	<th>Chat Overview</th><th></th>
+	<table class='unrealircd_overview table'>
+	<thead class="table-primary">
+	<th>Chat Overview</th><th></th></thead>
 		<tr><td><b>Users</b></td><td><?php echo count(RPC_List::$user); ?></td></tr>
 		<tr><td><b>Opers</b></td><td><?php echo RPC_List::$opercount; ?></td></tr>
 		<tr><td><b>Services</b></td><td><?php echo RPC_List::$services_count; ?></td></tr>
