@@ -28,12 +28,14 @@ if (!empty($_POST)) {
 						$duration .= $banlen_h;
 				}
 				$user = $rpc->user()->get($user);
-				if (!$user) {
+				if (!$user && $bantype !== "qline") {
 					Message::Fail("Could not find that user: User not online");
 				} else {
 					$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for " . rpc_convert_duration_string($duration);
 					$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
-					if ($rpc->serverban()->add($user->id, $bantype, $duration, $reason))
+					if ($bantype == "qline")
+						$rpc->nameban()->add($name, $reason, $duration);
+					else if ($rpc->serverban()->add($user->id, $bantype, $duration, $reason))
 						Message::Success($user->name . " (*@" . $user->hostname . ") has been $bantype" . "d $msg_msg: $reason");
 					else
 						Message::Fail("Could not add $bantype against $name: $rpc->error");
@@ -46,7 +48,7 @@ if (!empty($_POST)) {
 /* Get the user list */
 $users = $rpc->user()->getAll();
 ?>
-<h4>Users Overview</h4>
+<h4>Users Overview</h4><br>
 
 
 <div id="Users">
@@ -201,7 +203,7 @@ $users = $rpc->user()->getAll();
 	<label for="ban_reason">Reason: </label>
 	<input class="form-control short-form-control" type="text" name="ban_reason" id="ban_reason" value="No reason">
 	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-			Apply
+			Apply ban
 	</button></td></table>
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
@@ -218,7 +220,7 @@ $users = $rpc->user()->getAll();
 		</div>
 		<div class="modal-footer">
 			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-			<button type="submit" action="post" class="btn btn-danger">Ban Hammer</button>
+			<button type="submit" action="post" class="btn btn-danger">Ban</button>
 			
 		</div>
 		</div>

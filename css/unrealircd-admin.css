@@ -16,8 +16,12 @@ table {
 
 .curvy {
 	border-radius: 7px;
+	margin: 2px;
 }
 
+.alert {
+	width: 90%;
+}
 
 .form-control {
 	height: 10px;

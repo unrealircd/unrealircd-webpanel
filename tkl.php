@@ -62,7 +62,14 @@ if (!empty($_POST))
 		}
 		$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for ".rpc_convert_duration_string($duration);
 		$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
-		if ($rpc->serverban()->add($iphost, $bantype, $duration, $reason))
+		if ($bantype == "qline")
+		{
+			if ($rpc->nameban()->add($iphost, $reason, $duration))
+				Message::Success("Name Ban set against \"$iphost\": $reason");
+			else
+				Message::Fail("Name Ban could not be set against \"$iphost\": $rpc->error");
+		}
+		else if ($rpc->serverban()->add($iphost, $bantype, $duration, $reason))
 		{
 			Message::Success("Host / IP: $iphost has been $bantype" . "d $msg_msg: $reason");
 		}
@@ -73,14 +80,24 @@ if (!empty($_POST))
 
 $tkl = $rpc->serverban()->getAll();
 ?>
-<div class="tkl_add_boxheader">
-		Add Server Ban
-	</div>
-	<div class="tkl_add_form">
+<h4>Server Bans Overview</h4><br>
+<p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+			Add entry
+	</button></p></table>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="myModalLabel">Apply ban</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
 		
 		<form action="tkl.php" method="post">
-			<div class="align_label">IP / Host:</div><input class="input_text" type="text" id="tkl_add" name="tkl_add"><br>
-			<div class="align_label">Ban Type:</div><select name="bantype" id="bantype">
+			<div class="align_label">IP / Host: </div> <input class="curvy" type="text" id="tkl_add" name="tkl_add"><br>
+			<div class="align_label">Ban Type: </div> <select class="curvy" name="bantype" id="bantype">
 				<option value=""></option>
 				<optgroup label="Bans">
 					<option value="kline">Kill Line (KLine)</option>
@@ -101,7 +118,7 @@ $tkl = $rpc->serverban()->getAll();
 				</optgroup>
 			</select><br>
 			<div class="align_label"><label for="banlen_w">Duration: </label></div>
-					<select name="banlen_w" id="banlen_w">
+					<select class="curvy" name="banlen_w" id="banlen_w">
 							<?php
 							for ($i = 0; $i <= 56; $i++)
 							{
@@ -115,7 +132,7 @@ $tkl = $rpc->serverban()->getAll();
 							}
 							?>
 					</select>
-					<select name="banlen_d" id="banlen_d">
+					<select class="curvy" name="banlen_d" id="banlen_d">
 							<?php
 							for ($i = 0; $i <= 31; $i++)
 							{
@@ -129,7 +146,7 @@ $tkl = $rpc->serverban()->getAll();
 							}
 							?>
 					</select>
-					<select name="banlen_h" id="banlen_h">
+					<select class="curvy" name="banlen_h" id="banlen_h">
 							<?php
 							for ($i = 0; $i <= 24; $i++)
 							{
@@ -144,11 +161,20 @@ $tkl = $rpc->serverban()->getAll();
 							?>
 					</select>
 					<br><div class="align_label"><label for="ban_reason">Reason: </label></div>
-					<input class="input_text" type="text" id="ban_reason" name="ban_reason"><br>
-					<input class="input_text" type="checkbox" id="soft" name="soft">Don't affect logged-in users (soft)
-					<div class="align_right_button_tkl_add"><input class="cute_button" type="submit" id="submit" value="Submit"></div>
-		</form>
+					<input class="curvy input_text" type="text" id="ban_reason" name="ban_reason"><br>
+					<input class="curvy input_text" type="checkbox" id="soft" name="soft">Don't affect logged-in users (soft)
+				
+			</div>
+			
+		<div class="modal-footer">
+			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="submit" action="post" class="btn btn-danger">Add Ban</button>
+			</form>
+		</div>
+		</div>
 	</div>
+	</div>
+
 	<table class="table table-responsive caption-top table-striped">
 	<thead class="table-primary">
 	<form action="tkl.php" method="post">
@@ -160,7 +186,7 @@ $tkl = $rpc->serverban()->getAll();
 	<th>Expires</th>
 	<th>Duration</th>
 	<th>Reason</th>
-	<thead
+	</thead>
 	
 	<?php
 		foreach($tkl as $tkl)
@@ -176,6 +202,6 @@ $tkl = $rpc->serverban()->getAll();
 			echo "<td>".$tkl->duration_string."</td>";
 			echo "<td>".$tkl->reason."</td>";
 		}
-	?></table><p><input class="cute_button" type="submit" value="Delete selected"></p></form></div></div>
+	?></table><p><input class="btn btn-danger" type="submit" value="Delete selected"></p></form></div></div>
 
 <?php require_once 'footer.php'; ?>
