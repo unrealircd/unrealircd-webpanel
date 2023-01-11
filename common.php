@@ -16,7 +16,7 @@ require_once "plugins.php";
 
 $pages = Array("Overview"	=> "index.php",
 			   "Users"		=> "users/index.php",
-			   "Channels"	=> "channels.php",
+			   "Channels"	=> "channels/index.php",
 			   "Server Bans"	=> "tkl.php",
 			   "Spamfilter"	=> "spamfilter.php",
 			   "News"		=> "news.php");
