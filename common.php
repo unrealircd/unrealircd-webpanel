@@ -1,7 +1,7 @@
 <?php
 define('UPATH', dirname(__FILE__));
 require_once "config.php";
-if (!defined('BASE_DIR')) die("You need to define BASE_DIR in config.php (see config.php.sample for documentation)");
+if (!defined('BASE_URL')) die("You need to define BASE_URL in config.php (see config.php.sample for documentation)");
 require_once "Classes/class-hook.php";
 if (!is_dir(UPATH . "/vendor"))
 	die("The vendor/ directory is missing. Most likely the admin forgot to run 'composer install'\n");
