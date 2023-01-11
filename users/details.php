@@ -1,6 +1,6 @@
 <?php
-require_once "common.php";
-require_once "header.php";
+require_once "../common.php";
+require_once "../header.php";
 
 $title = "User Lookup";
 $nickname = "";
@@ -21,7 +21,7 @@ if (isset($_GET['nick']))
 <title><?php echo $title; ?></title>
 <h4><?php echo $title; ?></h4>
 <br>
-<form method="get" action="user-lookup.php">
+<form method="get" action="details.php">
 <div class="input-group short-form-control justify-content-center align-items-center">
 	<input style="margin: 0%; height: 24px;" class="left-pan form-control" id="nick" name="nick" type="text" value=<?php echo $nickname; ?>>
 	<div class="input-group-append">

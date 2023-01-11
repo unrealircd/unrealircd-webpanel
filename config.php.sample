@@ -5,10 +5,16 @@
  * 
  */
 
-
  if (!defined('UPATH'))
     die("Access denied");
 
+/**
+ * The base URL, how this panel can be accessed.
+ * This would be '/' if you installed in the web root,
+ * or something like '/webpanel/' if you go to http://x.y.z/webpanel
+ * IMPORTANT: needs a trailing slash!
+*/
+define( 'BASE_URL', '/' );
 
 /**
  *  The RPC User name as defined in your unrealircd.conf
