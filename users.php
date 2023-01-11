@@ -84,12 +84,12 @@ Click on a username to view more information.
 		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_user(this)" /></th>
 		<th scope="col">Nick</th>
 		<th scope="col">Host / IP</th>
-		<th scope="col">Account</th>
+		<th scope="col"><span data-toggle="tooltip" data-placement="bottom" title="The services account name, if the user identified to services." style="border-bottom: 1px dotted #000000">Account</span></th>
 		<th scope="col">Usermodes <a href="https://www.unrealircd.org/docs/User_modes" target="_blank">ℹ️</a></th>
 		<th scope="col">Oper</th>
-		<th scope="col">Secure</th>
+		<th scope="col"><span data-toggle="tooltip" data-placement="bottom" title="This shows [Secure] if the user is using SSL/TLS or is on localhost." style="border-bottom: 1px dotted #000000">Secure</span></th>
 		<th scope="col">Connected to</th>
-		<th scope="col">Reputation <a href="https://www.unrealircd.org/docs/Reputation_score" target="_blank">ℹ️</a></th>
+		<th scope="col"><span data-toggle="tooltip" data-placement="bottom" title="The reputation score gets higher when someone with this IP address has been connected in the past weeks. A low reputation score (like <10) is an indication of a new IP." style="border-bottom: 1px dotted #000000">Reputation</span> <a href="https://www.unrealircd.org/docs/Reputation_score" target="_blank">ℹ️</a></th>
 	</thead>
 	
 	<tbody>
