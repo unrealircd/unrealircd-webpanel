@@ -88,6 +88,8 @@ if (!empty($_POST))
 $tkl = $rpc->serverban()->getAll();
 foreach ($rpc->nameban()->getAll() as $v)
 	$tkl[] = $v;
+foreach ($rpc->exception()->getAll() as $v)
+	$tkl[] = $v;
 ?>
 <h4>Server Bans Overview</h4><br>
 <p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
