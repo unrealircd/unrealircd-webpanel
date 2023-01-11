@@ -3,9 +3,9 @@ require_once "common.php";
 require_once "header.php";
 
 $spamfilter_target_info = Array(
-	"c"=>Array("short_text" => "chanmsg", "long_text" => "Channel message"),
 	"p"=>Array("short_text" => "usermsg", "long_text" => "User message"),
 	"n"=>Array("short_text" => "usernotice", "long_text" => "User notice"),
+	"c"=>Array("short_text" => "chanmsg", "long_text" => "Channel message"),
 	"N"=>Array("short_text" => "channotice", "long_text" => "Channel notice"),
 	"P"=>Array("short_text" => "part", "long_text" => "Part message"),
 	"q"=>Array("short_text" => "quit", "long_text" => "Quit message"),
@@ -13,7 +13,7 @@ $spamfilter_target_info = Array(
 	"a"=>Array("short_text" => "away", "long_text" => "Away message"),
 	"t"=>Array("short_text" => "topic", "long_text" => "Channel topic"),
 	"T"=>Array("short_text" => "message-tag", "long_text" => "Message tag"),
-	"u"=>Array("short_text" => "usermask", "long_text" => "User mask"),
+	"u"=>Array("short_text" => "usermask", "long_text" => "User mask (nick!user@host:realname)"),
 );
 
 function spamfilter_targets_to_string($targets)
@@ -50,6 +50,29 @@ function spamfilter_targets_to_string_with_info($targets)
 	return $ret;
 }
 
+function spamfilter_target_name_to_char($name)
+{
+	GLOBAL $spamfilter_target_info;
+
+	foreach ($spamfilter_target_info as $char=>$e)
+	{
+		if ($e["short_text"] == $name)
+			return $char;
+	}
+	return false;
+}
+
+function spamfilter_targets_from_array_to_chars($ar)
+{
+	$ret = '';
+	foreach ($ar as $name)
+	{
+		$c = spamfilter_target_name_to_char($name);
+		if ($c !== false)
+			$ret .= $c;
+	}
+	return $ret;
+}
 
 if (!empty($_POST))
 {
@@ -75,45 +98,7 @@ if (!empty($_POST))
 		{
 
 			$bantype = $_POST['sf_bantype'];
-			$targ_chars = "";
-			foreach($targets as $targ)
-			{
-				switch ($targ) {
-					case "channel":
-						$targ_chars .= "c";
-						break;
-					case "private":
-						$targ_chars .= "p";
-						break;
-					case "channel-notice":
-						$targ_chars .= "N";
-						break;
-					case "private-notice":
-						$targ_chars .= "n";
-						break;
-					case "part":
-						$targ_chars .= "P";
-						break;
-					case "quit":
-						$targ_chars .= "q";
-						break;
-					case "dcc":
-						$targ_chars .= "d";
-						break;
-					case "away":
-						$targ_chars .= "a";
-						break;
-					case "topic":
-						$targ_chars .= "t";
-						break;
-					case "messagetag":
-						$targ_chars .= "T";
-						break;
-					case "user":
-						$targ_chars .= "u";
-						break;
-				}
-			}
+			$targ_chars = spamfilter_targets_from_array_to_chars($targets);
 			/* duplicate code for now [= */
 			$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
 			$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
@@ -185,18 +170,18 @@ $spamfilter = $rpc->spamfilter()->getAll();
 			<div class="align_label curvy">Entry: </div> <input class="curvy" type="text" id="sf_add" name="sf_add"><br>
 			
 			<div class="align_label curvy"><label for="banlen_w">Targets: </label></div>
-			
-			<input type="checkbox" class="curvy" id="target_channel" name="target_channel">Channel messages<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_private" name="target_private">Private messages<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_channel_notice" name="target_channel_notice">Channel notices<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_private_notice" name="target_private_notice">Private notices<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_part" name="target_part">Part reason<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_dcc" name="target_dcc">DCC Filename<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_away" name="target_away">Away messages<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_topic" name="target_topic">Channel topic<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_messagetag" name="target_messagetag">MessageTags<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_user" name="target_user">Userhost (nick!user@host:realname)<br>
-
+<?php
+			$first = true;
+			foreach ($spamfilter_target_info as $letter=>$e)
+			{
+				$shortname = $e['short_text'];
+				$longname = $e['long_text'];
+				if (!$first)
+					echo "<div class=\"align_label curvy\"><label></label></div>";
+				$first = false;
+				echo "<input type=\"checkbox\" class=\"curvy\" id=\"target_$shortname\" name=\"target_$shortname\">$longname<br>\n";
+			}
+?>
 			<div class="align_label curvy">Action: </div> <select name="sf_bantype" id="sf_bantype">
 				<option value=""></option>
 				<optgroup label="Bans">
