@@ -86,8 +86,6 @@ if (!empty($_POST))
 }
 
 $tkl = $rpc->serverban()->getAll();
-foreach ($rpc->exception()->getAll() as $v)
-	$tkl[] = $v;
 foreach ($rpc->nameban()->getAll() as $v)
 	$tkl[] = $v;
 ?>
