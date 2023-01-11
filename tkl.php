@@ -69,6 +69,13 @@ if (!empty($_POST))
 			else
 				Message::Fail("Name Ban could not be set against \"$iphost\": $rpc->error");
 		}
+		elseif ($bantype == "except")
+		{
+			if ($rpc->exception()->add($iphost, "", $duration, $reason))
+				Message::Success("Exception set for \"$iphost\": $reason");
+			else
+				Message::Fail("Exception could not be set \"$iphost\": $rpc->error");
+		}
 		else if ($rpc->serverban()->add($iphost, $bantype, $duration, $reason))
 		{
 			Message::Success("Host / IP: $iphost has been $bantype" . "d $msg_msg: $reason");
@@ -79,6 +86,10 @@ if (!empty($_POST))
 }
 
 $tkl = $rpc->serverban()->getAll();
+foreach ($rpc->exception()->getAll() as $v)
+	$tkl[] = $v;
+foreach ($rpc->nameban()->getAll() as $v)
+	$tkl[] = $v;
 ?>
 <h4>Server Bans Overview</h4><br>
 <p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">

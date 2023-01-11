@@ -50,6 +50,7 @@ $users = $rpc->user()->getAll();
 ?>
 <h4>Users Overview</h4><br>
 
+Click on a username to view more information.
 
 <div id="Users">
 	
@@ -96,6 +97,7 @@ $users = $rpc->user()->getAll();
 		foreach($users as $user)
 		{
 
+		
 			/* Some basic filtering for NICK */
 			if (isset($_POST['uf_nick']) && strlen($_POST['uf_nick']) && 
 			strpos(strtolower($user->name), strtolower($_POST['uf_nick'])) !== 0 &&
@@ -123,7 +125,7 @@ $users = $rpc->user()->getAll();
 			echo "<tr>";
 			echo "<th scope=\"row\"><input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\"></th>";
 			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge-pill badge-dark">Bot</span>' : "";
-			echo "<td>".$user->name.$isBot.'</td>';
+			echo "<td><a href=\"user-lookup.php?nick=".$user->id."\">$user->name$isBot</a></td>";
 			echo "<td>".$user->id."</td>";
 			echo "<td>".$user->hostname." (".$user->ip.")</td>";
 			$account = (isset($user->user->account)) ? $user->user->account : '<span class="badge-pill badge-primary">None</span>';
