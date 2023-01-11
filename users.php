@@ -48,7 +48,7 @@ if (!empty($_POST)) {
 /* Get the user list */
 $users = $rpc->user()->getAll();
 ?>
-<h4>Users Overview</h4><br>
+<h4>Users Overview</h4>
 
 Click on a username to view more information.
 
@@ -77,10 +77,12 @@ Click on a username to view more information.
 		<th scope="col" colspan="2">IP <input name="uf_ip" type="text" class="form-control short-form-control"></th>
 		<th scope="col" colspan="2">Account <input name="uf_account" type="text" class="form-control short-form-control"></th>
 		<th scope="col"> <input class="btn btn-primary" type="submit" value="Search"></th></form>
-	</thead><thead class="table-primary">
-		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_user(this)" />Select all</th>
+	</thead></table>
+
+	<table class="table table-responsive caption-top table-striped">
+	<thead class="table-primary">
+		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_user(this)" /></th>
 		<th scope="col">Nick</th>
-		<th scope="col">UID</th>
 		<th scope="col">Host / IP</th>
 		<th scope="col">Account</th>
 		<th scope="col">Usermodes <a href="https://www.unrealircd.org/docs/User_modes" target="_blank">ℹ️</a></th>
@@ -126,7 +128,6 @@ Click on a username to view more information.
 			echo "<th scope=\"row\"><input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\"></th>";
 			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge-pill badge-dark">Bot</span>' : "";
 			echo "<td><a href=\"user-lookup.php?nick=".$user->id."\">$user->name$isBot</a></td>";
-			echo "<td>".$user->id."</td>";
 			echo "<td>".$user->hostname." (".$user->ip.")</td>";
 			$account = (isset($user->user->account)) ? $user->user->account : '<span class="badge-pill badge-primary">None</span>';
 			echo "<td>".$account."</td>";
