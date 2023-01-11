@@ -59,11 +59,11 @@ class Plugin
 	public $error = NULL;
 	function __construct($handle)
 	{
-		if (!is_dir("plugins/$handle"))
-			$this->error = "Plugin directory \"plugins/$handle\" doesn't exist";
+		if (!is_dir(UPATH."/plugins/$handle"))
+			$this->error = "Plugin directory \"".UPATH."/plugins/$handle\" doesn't exist";
 
-		else if (!is_file("plugins/$handle/$handle.php"))
-			$this->error = "Plugin file \"plugins/$handle/$handle.php\" doesn't exist";
+		else if (!is_file(UPATH."/plugins/$handle/$handle.php"))
+			$this->error = "Plugin file \"".UPATH."/plugins/$handle/$handle.php\" doesn't exist";
 
 		else
 		{
