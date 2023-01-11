@@ -67,7 +67,7 @@ class Plugin
 
 		else
 		{
-			require_once "plugins/$handle/$handle.php";
+			require_once UPATH."/plugins/$handle/$handle.php";
 
 			if (!class_exists($handle))
 				$this->error = "Class \"$handle\" doesn't exist";
