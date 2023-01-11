@@ -227,15 +227,14 @@ $spamfilter = $rpc->spamfilter()->getAll();
 	<table class="table table-responsive caption-top table-striped">
 	<thead class="table-primary"><form action="spamfilter.php" method="post">
 	<th><input type="checkbox" label='selectall' onClick="toggle_sf(this)" /></th>
-	<th>Mask</th>
-	<th>Type</th>
-	<th>Set By</th>
-	<th>Set On</th>
 	<th>Match Type</th>
+	<th>Mask</th>
+	<th>Target</th>
 	<th>Action</th>
 	<th>Action Duration</th>
-	<th>Target</th>
 	<th>Reason</th>
+	<th>Set By</th>
+	<th>Set On</th>
 				</thead>
 	
 	<?php
@@ -243,13 +242,8 @@ $spamfilter = $rpc->spamfilter()->getAll();
 		{
 			echo "<tr>";
 			echo "<td><input type=\"checkbox\" value='" . base64_encode($sf->name).",".base64_encode($sf->match_type).",".base64_encode($sf->spamfilter_targets).",".base64_encode($sf->ban_action) . "' name=\"sf[]\"></td>";
-			echo "<td>".$sf->name."</td>";
-			echo "<td>".$sf->type_string."</td>";
-			echo "<td>".$sf->set_by."</td>";
-			echo "<td>".$sf->set_at_string."</td>";
 			echo "<td>".$sf->match_type."</td>";
-			echo "<td>".$sf->ban_action."</td>";
-			echo "<td>".$sf->ban_duration_string."</td>";
+			echo "<td>".$sf->name."</td>";
 			for ($i = 0, $targs = ""; $i < strlen($sf->spamfilter_targets); $i++)
 			{
 				$c = $sf->spamfilter_targets[$i];
@@ -278,7 +272,11 @@ $spamfilter = $rpc->spamfilter()->getAll();
 			}
 			$targs = rtrim($targs,", ");
 			echo "<td>".$targs."</td>";
+			echo "<td>".$sf->ban_action."</td>";
+			echo "<td>".$sf->ban_duration_string."</td>";
 			echo "<td>".$sf->reason."</td>";
+			echo "<td>".$sf->set_by."</td>";
+			echo "<td>".$sf->set_at_string."</td>";
 			
 		}
 	?></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2">
