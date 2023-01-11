@@ -14,7 +14,7 @@
  * or something like '/webpanel/' if you go to http://x.y.z/webpanel
  * IMPORTANT: needs a trailing slash!
 */
-define( 'BASE_URL', '/' );
+define( 'BASE_URL', '/unrealircd-webpanel/' );
 
 /**
  *  The RPC User name as defined in your unrealircd.conf
