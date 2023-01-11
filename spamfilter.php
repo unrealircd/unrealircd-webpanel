@@ -130,11 +130,25 @@ $spamfilter = $rpc->spamfilter()->getAll();
 		<div class="modal-body">
 		
 		<form action="spamfilter.php" method="post">
-			<div class="align_label curvy">Entry: </div> <input class="curvy" type="text" id="sf_add" name="sf_add"><br>
-			<div class="align_label curvy">MatchType: </div> <select name="matchtype" id="matchtype">
+			<div class="align_label curvy">Match&nbsp;type: </div> <select name="matchtype" id="matchtype">
 				<option value="simple">Simple</option>
 				<option value="regex">Regular Expression</option>
 			</select><br>
+			<div class="align_label curvy">Entry: </div> <input class="curvy" type="text" id="sf_add" name="sf_add"><br>
+			
+			<div class="align_label curvy"><label for="banlen_w">Targets: </label></div>
+			
+			<input type="checkbox" class="curvy" id="target_channel" name="target_channel">Channel messages<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_private" name="target_private">Private messages<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_channel_notice" name="target_channel_notice">Channel notices<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_private_notice" name="target_private_notice">Private notices<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_part" name="target_part">Part reason<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_dcc" name="target_dcc">DCC Filename<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_away" name="target_away">Away messages<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_topic" name="target_topic">Channel topic<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_messagetag" name="target_messagetag">MessageTags<br>
+			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_user" name="target_user">Userhost (nick!user@host:realname)<br>
+
 			<div class="align_label curvy">Action: </div> <select name="sf_bantype" id="sf_bantype">
 				<option value=""></option>
 				<optgroup label="Bans">
@@ -155,19 +169,6 @@ $spamfilter = $rpc->spamfilter()->getAll();
 					<option value="warn">Warn the user</option>
 				</optgroup>
 			</select><br>
-			
-			<div class="align_label curvy"><label for="banlen_w">Targets: </label></div>
-			
-			<input type="checkbox" class="curvy" id="target_channel" name="target_channel">Channel messages<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_private" name="target_private">Private messages<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_channel_notice" name="target_channel_notice">Channel notices<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_private_notice" name="target_private_notice">Private notices<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_part" name="target_part">Part reason<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_dcc" name="target_dcc">DCC Filename<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_away" name="target_away">Away messages<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_topic" name="target_topic">Channel topic<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_messagetag" name="target_messagetag">MessageTags<br>
-			<div class="align_label curvy"><label></label></div><input type="checkbox" class="curvy" id="target_user" name="target_user">Userhost (nick!user@host:realname)<br>
 			<div class="align_label curvy"><label for="banlen_w">Duration: </label></div>
 			<select name="banlen_w" id="banlen_w">
 					<?php
@@ -210,10 +211,10 @@ $spamfilter = $rpc->spamfilter()->getAll();
 						}
 					}
 					?>
-			</select>
+			</select><br>
+			<input class="curvy" type="checkbox" id="soft" name="soft">Don't affect logged-in users (soft)
 			<br><div class="align_label curvy"><label for="ban_reason">Reason: </label></div>
 			<input class="curvy" type="text" id="ban_reason" name="ban_reason"><br>
-			<input class="curvy" type="checkbox" id="soft" name="soft">Don't affect logged-in users (soft)
 				</div>
 			
 		<div class="modal-footer">
