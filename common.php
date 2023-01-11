@@ -22,11 +22,12 @@ function show_nick_only($str)
 	return $str;
 }
 
-$pages = Array("Overview"	=> "index.php",
-			   "Users"		=> "users/index.php",
-			   "Channels"	=> "channels/index.php",
+$pages = Array("Overview"	=> "",
+			   "Users"		=> "users",
+			   "Channels"	=> "channels",
 			   "Server Bans"	=> "server_bans.php",
 			   "Spamfilter"	=> "spamfilter.php",
+			   "Network" => "network",
 			   "News"		=> "news.php");
 
 

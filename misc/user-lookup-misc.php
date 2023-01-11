@@ -37,7 +37,7 @@ function generate_html_whois($user)
             </tr><tr>
                 <th>Connected to</th>
                 <td colspan="2"><code><?php echo $user->user->servername; ?></code></td>
-                <td></td>
+
             </tr>
             <tr>
                 <th>Logged in as</th>
@@ -65,7 +65,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Oper</th>
-                                <td colspan="2">
+                                <td>
                                     <table class="table table-responsive caption-top table-hover">
                                         <tr>
                                             <td>Oper Login</td>
@@ -85,7 +85,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Service Bot</th>
-                                <td colspan="2">
+                                <td>
                                 This user is a Services Bot.
                                 </td>
                             </tr>
@@ -96,7 +96,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Deaf</th>
-                                <td colspan="2">User is ignoring channel messages.</td>
+                                <td>User is ignoring channel messages.</td>
                             </tr>
                         <?php
                     }
@@ -105,7 +105,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Invisible</th>
-                                <td colspan="2">Not shown in /WHO searches.</td>
+                                <td>Not shown in /WHO searches.</td>
                             </tr>
                         <?php
                     }
@@ -114,7 +114,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Private channels</th>
-                                <td colspan="2">Channels hidden in /WHOIS outputs.</td>
+                                <td>Channels hidden in /WHOIS outputs.</td>
                             </tr>
                         <?php
                     }
@@ -123,7 +123,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Registered Nick</th>
-                                <td colspan="2">This user is using a registered nick.</td>
+                                <td>This user is using a registered nick.</td>
                             </tr>
                         <?php
                     }
@@ -132,7 +132,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Server Notices</th>
-                                <td colspan="2">This user is receiving server notices.</td>
+                                <td>This user is receiving server notices.</td>
                             </tr>
                         <?php
                     }
@@ -141,7 +141,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Virtual Host</th>
-                                <td colspan="2">Using a custom hostmask</td>
+                                <td>Using a custom hostmask</td>
                             </tr>
                         <?php
                     }
@@ -150,7 +150,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Wallops</th>
-                                <td colspan="2">Listening to <code>/WALLOPS</code> notices from IRC Operators.</td>
+                                <td>Listening to <code>/WALLOPS</code> notices from IRC Operators.</td>
                             </tr>
                         <?php
                     }
@@ -159,7 +159,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Hostmask</th>
-                                <td colspan="2">Using a hostmask (hiding their IP from non-IRCops).</td>
+                                <td>Using a hostmask (hiding their IP from non-IRCops).</td>
                             </tr>
                         <?php
                     }
@@ -168,7 +168,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Secure</th>
-                                <td colspan="2">
+                                <td>
                                 <table class="table table-responsive caption-top table-hover">
                                         <tr>
                                             <td>Cipher</td>
@@ -176,7 +176,7 @@ function generate_html_usersettings($user)
                                         </tr>
                                         <tr>
                                             <td>Cert Fingerprint</td>
-                                            <td><?php echo (isset($user->tls->certfp)) ? "<span class=\"badge-pill badge-info\">".$user->tls->certfp."</span>" : "<span class=\"badge-pill badge-info\">None</span>"; ?></td>
+                                            <td><?php echo (isset($user->tls->certfp)) ? "".$user->tls->certfp."" : "<span class=\"badge-pill badge-info\">None</span>"; ?></td>
                                         </tr>
                                     </table> 
                                 </td>
