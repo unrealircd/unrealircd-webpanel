@@ -28,10 +28,25 @@
 
 $active_page = false;
 /* Needs to be a separate step due to multiple matches */
-foreach($pages as $name=>$page)
-	if (str_ends_with($_SERVER['SCRIPT_FILENAME'], $page))
+foreach ($pages as $name => $page)
+{
+	$script = $_SERVER['SCRIPT_FILENAME'];
+	
+	if (str_ends_with($script, BASE_URL . "index.php") || !strlen($page))
+	{
+		$active_page = "";
+	}
+	else if (!str_ends_with($page, ".php"))
+	{
+		$script2 = rtrim($script, "/index.php");
+		if (str_ends_with($script2, $page))
+			$active_page = $page;
+	}
+	else if (str_ends_with($script, $page))
+	{
 		$active_page = $page;
-
+	}
+}
 foreach($pages as $name=>$page)
 {
 	$class = "class=\"nav-item\"";
