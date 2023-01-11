@@ -327,12 +327,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/unrealircd/unrealircd-rpc-php.git",
-                "reference": "13ae2ba6570f87dbc7e9272d65b340da4f575d52"
+                "reference": "2d5f74f2644425610ce48301309e5d727ccd7c61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/unrealircd/unrealircd-rpc-php/zipball/13ae2ba6570f87dbc7e9272d65b340da4f575d52",
-                "reference": "13ae2ba6570f87dbc7e9272d65b340da4f575d52",
+                "url": "https://api.github.com/repos/unrealircd/unrealircd-rpc-php/zipball/2d5f74f2644425610ce48301309e5d727ccd7c61",
+                "reference": "2d5f74f2644425610ce48301309e5d727ccd7c61",
                 "shasum": ""
             },
             "require": {
@@ -366,7 +366,7 @@
                 "issues": "https://github.com/unrealircd/unrealircd-rpc-php/issues",
                 "source": "https://github.com/unrealircd/unrealircd-rpc-php/tree/main"
             },
-            "time": "2023-01-09T12:17:03+00:00"
+            "time": "2023-01-10T05:14:00+00:00"
         }
     ],
     "packages-dev": [],
