@@ -226,13 +226,11 @@ $spamfilter = $rpc->spamfilter()->getAll();
 	
 	<table class="table table-responsive caption-top table-striped">
 	<thead class="table-primary"><form action="spamfilter.php" method="post">
-	<th><input type="checkbox" label='selectall' onClick="toggle_sf(this)" />Select all</th>
+	<th><input type="checkbox" label='selectall' onClick="toggle_sf(this)" /></th>
 	<th>Mask</th>
 	<th>Type</th>
 	<th>Set By</th>
 	<th>Set On</th>
-	<th>Expires</th>
-	<th>Duration</th>
 	<th>Match Type</th>
 	<th>Action</th>
 	<th>Action Duration</th>
@@ -249,8 +247,6 @@ $spamfilter = $rpc->spamfilter()->getAll();
 			echo "<td>".$sf->type_string."</td>";
 			echo "<td>".$sf->set_by."</td>";
 			echo "<td>".$sf->set_at_string."</td>";
-			echo "<td>".$sf->expire_at_string."</td>";
-			echo "<td>".$sf->duration_string."</td>";
 			echo "<td>".$sf->match_type."</td>";
 			echo "<td>".$sf->ban_action."</td>";
 			echo "<td>".$sf->ban_duration_string."</td>";
