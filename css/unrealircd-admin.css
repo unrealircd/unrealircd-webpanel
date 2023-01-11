@@ -267,7 +267,7 @@ textarea {
 
 body {
 	padding-top: 45px;
-	background-image: url("/img/linen.png");
+	background-image: url("../img/linen.png");
 	display: flex;
 	flex-direction: column;
 }
