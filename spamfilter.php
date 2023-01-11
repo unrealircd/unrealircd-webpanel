@@ -281,7 +281,7 @@ $spamfilter = $rpc->spamfilter()->getAll();
 			echo "<td>".$sf->ban_action."</td>";
 			echo "<td>".$sf->ban_duration_string."</td>";
 			echo "<td>".$sf->reason."</td>";
-			echo "<td>".$sf->set_by."</td>";
+			echo "<td>".show_nick_only($sf->set_by)."</td>";
 			echo "<td>".$sf->set_at_string."</td>";
 			
 		}

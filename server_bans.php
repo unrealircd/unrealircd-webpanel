@@ -204,7 +204,7 @@ foreach ($rpc->nameban()->getAll() as $v)
 			echo "<td><input type=\"checkbox\" value='" . base64_encode($tkl->name).",".base64_encode($tkl->type) . "' name=\"tklch[]\"></td>";
 			echo "<td>".$tkl->name."</td>";
 			echo "<td>".$tkl->type_string."</td>";
-			$set_by = ($tkl->set_by == "-config-") ? "<span class=\"badge-pill badge-secondary\">Config</span>" : $tkl->set_by;
+			$set_by = ($tkl->set_by == "-config-") ? "<span class=\"badge-pill badge-secondary\">Config</span>" : show_nick_only($tkl->set_by);
 			echo "<td>".$set_by."</td>";
 			echo "<td>".$tkl->set_at_string."</td>";
 			echo "<td>".$tkl->expire_at_string."</td>";

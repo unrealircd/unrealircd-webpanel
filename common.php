@@ -14,6 +14,14 @@ require_once "Classes/class-message.php";
 require_once "Classes/class-rpc.php";
 require_once "plugins.php";
 
+function show_nick_only($str)
+{
+	$x = strpos($str, "!");
+	if ($x !== false)
+		$str = substr($str, 0, $x);
+	return $str;
+}
+
 $pages = Array("Overview"	=> "index.php",
 			   "Users"		=> "users/index.php",
 			   "Channels"	=> "channels/index.php",
