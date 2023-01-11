@@ -15,7 +15,16 @@ if (!empty($_POST))
 				$tok = explode(",", $tok);
 				$ban = base64_decode($tok[0]);
 				$type = base64_decode($tok[1]);
-				if ($rpc->serverban()->delete($ban, $type))
+				$success = false;
+				if ($type == "except")
+					$success = $rpc->exception()->delete($ban);
+				else if ($type == "qline" || $type == "local-qline")
+					$success = $rpc->nameban()->delete($ban);
+				else
+					$success = $rpc->serverban()->delete($ban, $type);
+
+
+				if ($success)
 					Message::Success("$type has been removed for $ban");
 				else
 					Message::Fail("Unable to remove $type on $ban: $rpc->error");
