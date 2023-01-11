@@ -104,7 +104,7 @@ foreach ($rpc->nameban()->getAll() as $v)
 		</div>
 		<div class="modal-body">
 		
-		<form action="tkl.php" method="post">
+		<form  method="post">
 			<div class="align_label">IP / Host: </div> <input class="curvy" type="text" id="tkl_add" name="tkl_add"><br>
 			<div class="align_label">Ban Type: </div> <select class="curvy" name="bantype" id="bantype">
 				<option value=""></option>
@@ -186,7 +186,7 @@ foreach ($rpc->nameban()->getAll() as $v)
 
 	<table class="table table-responsive caption-top table-striped">
 	<thead class="table-primary">
-	<form action="tkl.php" method="post">
+	<form method="post">
 	<th><input type="checkbox" label='selectall' onClick="toggle_tkl(this)" />Select all</th>
 	<th>Mask</th>
 	<th>Type</th>
