@@ -1,7 +1,55 @@
 <?php
 require_once "common.php";
-
 require_once "header.php";
+
+$spamfilter_target_info = Array(
+	"c"=>Array("short_text" => "chanmsg", "long_text" => "Channel message"),
+	"p"=>Array("short_text" => "usermsg", "long_text" => "User message"),
+	"n"=>Array("short_text" => "usernotice", "long_text" => "User notice"),
+	"N"=>Array("short_text" => "channotice", "long_text" => "Channel notice"),
+	"P"=>Array("short_text" => "part", "long_text" => "Part message"),
+	"q"=>Array("short_text" => "quit", "long_text" => "Quit message"),
+	"d"=>Array("short_text" => "dcc", "long_text" => "DCC Filename"),
+	"a"=>Array("short_text" => "away", "long_text" => "Away message"),
+	"t"=>Array("short_text" => "topic", "long_text" => "Channel topic"),
+	"T"=>Array("short_text" => "message-tag", "long_text" => "Message tag"),
+	"u"=>Array("short_text" => "usermask", "long_text" => "User mask"),
+);
+
+function spamfilter_targets_to_string($targets)
+{
+	GLOBAL $spamfilter_target_info;
+
+	$ret = '';
+	for ($i = 0, $targs = ""; $i < strlen($targets); $i++)
+	{
+		$c = $targets[$i];
+		if (isset($spamfilter_target_info[$c]))
+			$ret .= $spamfilter_target_info[$c]["short_text"].", ";
+		else
+			$ret .= "??, ";
+	}
+	$ret = rtrim($ret,", ");
+	return $ret;
+}
+
+function spamfilter_targets_to_string_with_info($targets)
+{
+	GLOBAL $spamfilter_target_info;
+
+	$ret = '';
+	for ($i = 0, $targs = ""; $i < strlen($targets); $i++)
+	{
+		$c = $targets[$i];
+		if (isset($spamfilter_target_info[$c]))
+			$ret .= "<span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"".$spamfilter_target_info[$c]["long_text"]."\" style=\"border-bottom: 1px dotted #000000\">".$spamfilter_target_info[$c]["short_text"]."</span>, ";
+		else
+			$ret .= "??, ";
+	}
+	$ret = rtrim($ret,", ");
+	return $ret;
+}
+
 
 if (!empty($_POST))
 {
@@ -244,34 +292,7 @@ $spamfilter = $rpc->spamfilter()->getAll();
 			echo "<td><input type=\"checkbox\" value='" . base64_encode($sf->name).",".base64_encode($sf->match_type).",".base64_encode($sf->spamfilter_targets).",".base64_encode($sf->ban_action) . "' name=\"sf[]\"></td>";
 			echo "<td>".$sf->match_type."</td>";
 			echo "<td>".$sf->name."</td>";
-			for ($i = 0, $targs = ""; $i < strlen($sf->spamfilter_targets); $i++)
-			{
-				$c = $sf->spamfilter_targets[$i];
-				if ($c == "c")
-					$targs .= "Channel, ";
-				else if ($c == "p")
-					$targs .= "Private,";
-				else if ($c == "n")
-					$targs .= "Notice, ";
-				else if ($c == "N")
-					$targs .= "Channel notice, ";
-				else if ($c == "P")
-					$targs .= "Part message, ";
-				else if ($c == "q")
-					$targs .= "Quit message, ";
-				else if ($c == "d")
-					$targs .= "DCC filename, ";
-				else if ($c == "a")
-					$targs .= "Away message, ";
-				else if ($c == "t")
-					$targs .= "Channel topic, ";
-				else if ($c == "T")
-					$targs .= "MessageTag, ";
-				else if ($c == "u")
-					$targs .= "Usermask, ";
-			}
-			$targs = rtrim($targs,", ");
-			echo "<td>".$targs."</td>";
+			echo "<td>".spamfilter_targets_to_string_with_info($sf->spamfilter_targets)."</td>";
 			echo "<td>".$sf->ban_action."</td>";
 			echo "<td>".$sf->ban_duration_string."</td>";
 			echo "<td>".$sf->reason."</td>";
