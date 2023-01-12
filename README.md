@@ -8,6 +8,13 @@
 - A webserver
 - UnrealIRCd 6.0.6-git recommended. Minimal functionality available with UnrealIRCd 6.0.5.
 
+Note: PHP 8 may require special installation instructions.
+Here are some instructions for:
+- [Ubuntu 20/22](https://linuxhint.com/install-php-8-ubuntu-22-04/)
+- [Debian](https://www.vultr.com/docs/how-to-install-php-8-on-debian-11/)
+- [CentOS](https://www.tecmint.com/install-php-8-on-centos/)
+
+For more installation methods for PHP 8, make a websearch for how to install PHP 8 on your operating system.
 ## Installation ##
 
 Note: This instructional assumes this is going to be hosted in the webroot directory `/var/www/` (html/) directory.
