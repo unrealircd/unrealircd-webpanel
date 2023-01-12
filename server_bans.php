@@ -17,7 +17,7 @@ if (!empty($_POST))
 				$type = base64_decode($tok[1]);
 				$success = false;
 				if ($type == "except")
-					$success = $rpc->exception()->delete($ban);
+					$success = $rpc->serverbanexception()->delete($ban);
 				else if ($type == "qline" || $type == "local-qline")
 					$success = $rpc->nameban()->delete($ban);
 				else
@@ -80,7 +80,7 @@ if (!empty($_POST))
 		}
 		elseif ($bantype == "except")
 		{
-			if ($rpc->exception()->add($iphost, "", $duration, $reason))
+			if ($rpc->serverbanexception()->add($iphost, "", $duration, $reason))
 				Message::Success("Exception set for \"$iphost\": $reason");
 			else
 				Message::Fail("Exception could not be set \"$iphost\": $rpc->error");
@@ -97,7 +97,7 @@ if (!empty($_POST))
 $tkl = $rpc->serverban()->getAll();
 foreach ($rpc->nameban()->getAll() as $v)
 	$tkl[] = $v;
-foreach ($rpc->exception()->getAll() as $v)
+foreach ($rpc->serverbanexception()->getAll() as $v)
 	$tkl[] = $v;
 ?>
 <h4>Server Bans Overview</h4><br>
