@@ -68,7 +68,7 @@ Click on a username to view more information.
 		Message::Info("Listing users which match account: \"" . $_POST['uf_account'] . "\"");
 
 	?>
-	<table class="table table-responsive caption-top table-striped">
+	<table class="container-xxl table table-responsive caption-top table-striped">
 	<thead>
 		<th scope="col"><h5>Filter:</h5></th>
 		<form action="" method="post">
@@ -79,7 +79,7 @@ Click on a username to view more information.
 		<th scope="col"> <input class="btn btn-primary" type="submit" value="Search"></th></form>
 	</thead></table>
 
-	<table class="table table-responsive caption-top table-striped">
+	<table class="container-xxl table table-responsive caption-top table-striped">
 	<thead class="table-primary">
 		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_user(this)" /></th>
 		<th scope="col">Nick</th>

@@ -257,7 +257,7 @@ $spamfilter = $rpc->spamfilter()->getAll();
 		</div></div></div></div>
 
 	
-	<table class="table table-responsive caption-top table-striped">
+	<table class="container-xxl table table-responsive caption-top table-striped">
 	<thead class="table-primary"><form action="spamfilter.php" method="post">
 	<th><input type="checkbox" label='selectall' onClick="toggle_sf(this)" /></th>
 	<th>Match Type</th>
