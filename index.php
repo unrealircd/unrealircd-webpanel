@@ -58,7 +58,7 @@ rpc_pop_lists();
 		</div>
 		<div class="col-md-2">
 			<div class="card text-center">
-				<div class="card-header bg-danger text-white">
+				<div class="card-header bg-secondary text-white">
 					<div class="row">
 						<div class="col">
 							<i class="fa fa-network-wired fa-3x"></i>
