@@ -26,12 +26,11 @@
 			<a class="navbar-brand" href="index.php"><img src="<?php echo BASE_URL; ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
 <?php
 
-$active_page = false;
+$active_page = NULL;
 /* Needs to be a separate step due to multiple matches */
 foreach ($pages as $name => $page)
 {
 	$script = $_SERVER['SCRIPT_FILENAME'];
-	
 	if (str_ends_with($script, BASE_URL . "index.php") || !strlen($page))
 	{
 		$active_page = "";
@@ -45,12 +44,13 @@ foreach ($pages as $name => $page)
 	else if (str_ends_with($script, $page))
 	{
 		$active_page = $page;
-	}
+	} elseif (!$active_page)
+		$active_page = false;
 }
 foreach($pages as $name=>$page)
 {
 	$class = "class=\"nav-item\"";
-	if ($page == $active_page)
+	if (is_string($active_page) && $page == $active_page)
 		$class = str_replace("\"nav-item\"", "\"nav-item active\"", $class);
 	
 	echo "			<li $class><a class=\"nav-link\" href=\"".BASE_URL.$page."\">$name</a></li> \n";
