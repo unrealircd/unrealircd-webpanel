@@ -22,6 +22,9 @@ class RPC_List
 	static $channel = [];
 	static $tkl = [];
 	static $spamfilter = [];
+	static $server = [];
+	static $nameban = [];
+	static $exception = [];
 
 	static $opercount = 0;
 	static $services_count = 0;
@@ -67,7 +70,15 @@ function rpc_pop_lists()
 	$ret = $rpc->spamfilter()->getAll();
 	foreach($ret as $r)
 		RPC_List::$spamfilter[] = $r;
-
+	
+	foreach ($rpc->nameban()->getAll() as $r)
+		RPC_List::$nameban[] = $r;
+		
+	foreach ($rpc->serverbanexception()->getAll() as $r)
+		RPC_List::$exception[] = $r;
+	
+	foreach ($rpc->server()->getAll() as $r)
+		RPC_List::$server[] = $r;
 }
 
 /** Convert the duration_string */
