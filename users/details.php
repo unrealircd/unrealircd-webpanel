@@ -33,21 +33,34 @@ if (isset($_GET['nick']))
 <?php if (!$nick)
 	return; ?>
 <br>
-<div class="row">
-  <div class="col-sm-3">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Basic Information</h5>
-        <p class="card-text"><?php generate_html_whois($nick); ?></p>
+<div class="container-xxl">
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Basic Information</h5>
+          <p class="card-text"><?php generate_html_whois($nick); ?></p>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="col-sm-4">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">User Settings</h5>
-        <p class="card-text"><?php generate_html_usersettings($nick); ?></p>
+    <div class="col-sm-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">User Settings</h5>
+          <p class="card-text"><?php generate_html_usersettings($nick); ?></p>
+        </div>
       </div>
     </div>
+    <div class="col-sm-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Channels</h5>
+            <p class="card-text"><?php generate_html_userchannels($nick); ?></p>
+          </div>
+        </div>
+      </div>
   </div>
 </div>
+<?php 
+	require_once("../footer.php");
+

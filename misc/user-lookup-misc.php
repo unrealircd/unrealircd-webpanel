@@ -73,7 +73,7 @@ function generate_html_usersettings($user)
                                         </tr>
                                         <tr>
                                             <td>Oper Class</td>
-                                            <td><?php  echo (isset($user->user->operclass)) ? "<span class=\"badge-pill badge-info\">".$user->user->operclass."</span>" : "<span class=\"badge-pill badge-info\">None</span>"; ?></td>
+                                            <td><?php  echo (isset($user->user->operclass)) ? "<span class=\"rounded-pill badge badge-info\">".$user->user->operclass."</span>" : "<span class=\"rounded-pill badge badge-info\">None</span>"; ?></td>
                                         </tr>
                                     </table>
                                 </td>
@@ -176,7 +176,7 @@ function generate_html_usersettings($user)
                                         </tr>
                                         <tr>
                                             <td>Cert Fingerprint</td>
-                                            <td><?php echo (isset($user->tls->certfp)) ? "".$user->tls->certfp."" : "<span class=\"badge-pill badge-info\">None</span>"; ?></td>
+                                            <td><?php echo (isset($user->tls->certfp)) ? "".$user->tls->certfp."" : "<span class=\"rounded-pill badge badge-info\">None</span>"; ?></td>
                                         </tr>
                                     </table> 
                                 </td>
@@ -286,6 +286,71 @@ function generate_html_usersettings($user)
 
 
            ?>
+        </tbody>
+    </table>
+
+    <?php
+}
+
+
+function generate_html_userchannels($user)
+{
+    ?>
+
+    <table class="table table-responsive caption-top table-hover table-striped">
+        <thead class="table-info">
+            <th colspan="2">
+                Channel
+            </th>
+            <th colspan="2">
+                Status
+            </th>
+        </thead>
+        <tbody>
+            <?php
+                foreach($user->user->channels as $chan)
+                {
+                    ?>
+                    <tr>
+                        <td colspan="2"><?php echo $chan->name; ?></td>
+                        <td colspan="2">
+                            
+                            <?php
+                                for ($i = 0; isset($chan->level[$i]); $i++)
+                                {
+                                    ?><div class="text-nowrap row mb-1"><?php
+                                    if ($chan->level[$i] == "v")
+                                    {
+                                        ?><span class="rounded-pill badge badge-info" value="Voice">Voice</span><?php
+                                    }
+                                    if ($chan->level[$i] == "h")
+                                    {
+                                        ?><span class="rounded-pill badge badge-info">Half-Op</span><?php
+                                    }
+                                    if ($chan->level[$i] == "o")
+                                    {
+                                        ?><h6><span class="rounded-pill badge badge-info">Operator</span></h6><?php
+                                    }
+                                    if ($chan->level[$i] == "a")
+                                    {
+                                        ?><span class="rounded-pill badge badge-info">Admin</span><?php
+                                    }
+                                    if ($chan->level[$i] == "q")
+                                    {
+                                        ?><span class="rounded-pill badge badge-info">Owner</span><?php
+                                    }
+                                    if ($chan->level[$i] == "Y")
+                                    {
+                                        ?><span class="rounded-pill badge badge-info">OJOIN</span><?php
+                                    }
+                                  ?></div><?php
+                                }
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                }
+            ?>
         </tbody>
     </table>
 
