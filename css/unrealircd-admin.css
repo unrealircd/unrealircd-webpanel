@@ -15,10 +15,6 @@
 	margin: 2px;
 }
 
-.alert {
-	width: 90%;
-}
-
 .form-control {
 	height: 10px;
 	margin: 5px;
@@ -46,42 +42,11 @@
 	border-radius: 4px;
 }
 
-.tkl_add_boxheader {
-	
-	font-weight: bold;
-	background-color: #4B86EE;
-	width: 24%;
-	color: white;
-	margin-top: 20px;
-	border: 10px solid #4B86EE;
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
-}
-
 .align_right {
 	width: 10px;
 	text-align: right;
 }
 
-.tkl_add_form {
-	background-color: lightgray;
-	padding: 10px;
-	width: 24%;
-	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-	line-height: 30px;
-}
-
-.tkl_add_form_contents {
-	margin-left: auto; 
-	margin-right: 0;
-}
-.users_overview {
-	font-family: arial, sans-serif;
-	border-collapse: collapse;
-	border-radius: 7px;
-	width: 100%;
-	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-}
 .input_text {
 	border-radius: 7px;
 }
@@ -100,21 +65,6 @@
 	display: inline-block;
 	text-align: right;
 }
-
-.align_right_button_tkl_add {
-	width: 400px;
-	display: inline-block;
-	text-align: right;
-}
-
-textarea {
-	height: 30px;
-	width: 400px;
-	padding: 5px 5px;
-	margin: 8px 0;
-	border-radius: 7px;
-  }
-
 
 
 
@@ -135,12 +85,6 @@ footer {
 	width: 100%;
 	height: 55px;
   }
-.body-for-sticky {
-	position: relative;
-	/* for the footer to move with the page size */
-	min-height: 100%;
-	/* for the footer to be at the bottom */
-}
 
 .topnav {
 	background-color: #333;
@@ -159,134 +103,13 @@ footer {
 	font-size: 17px;
 }
 
-/* Change the color of links on hover */
-.topnav a:hover {
-	background-color: #ddd;
-	color: black;
-}
 
-/* Add a color to the active/current link */
-.topnav a.active {
-	background-color: #4B86EE;
-	color: white;
-}
-
-.tab.active {
-	background-color: #AAA;
-}
-
-.tab:hover {
-	background-color: #AAA;
-}
 
 body {
 	padding-top: 45px;
 	background-image: url("../img/linen.png");
 	display: flex;
 	flex-direction: column;
-}
-
-@media screen and (max-width: 768px) {
-	body { padding-top: 0px; }
-}
-
-/* CSS */
-.cute_button {
-	align-items: center;
-	appearance: none;
-	background-color: #4B86EE;
-	background-size: calc(100% + 20px) calc(100% + 20px);
-	border-radius: 7px;
-	border-width: 0;
-	box-shadow: none;
-	box-sizing: border-box;
-	color: #FFFFFF;
-	cursor: pointer;
-	display: inline-flex;
-	font-family: CircularStd, sans-serif;
-	font-size: 1rem;
-	height: auto;
-	justify-content: center;
-	line-height: 1.5;
-	padding: 6px 20px;
-	position: relative;
-	text-align: center;
-	text-decoration: none;
-	transition: background-color .2s, background-position .2s;
-	user-select: none;
-	-webkit-user-select: none;
-	touch-action: manipulation;
-	vertical-align: top;
-	white-space: nowrap;
-}
-
-.cute_button:active,
-.cute_button:focus {
-	outline: none;
-}
-
-.cute_button:hover {
-	background-position: -20px -20px;
-	background-color: #034FD5;
-}
-
-.cute_button:focus:not(:active) {
-	box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
-}
-
-.cute_button2 {
-	align-items: center;
-	appearance: none;
-	height: 27px;
-	background-color: green;
-	border-radius: 7px;
-	font-weight: bold;
-	border-width: 0;
-	box-shadow: none;
-	box-sizing: border-box;
-	color: #FFFFFF;
-	cursor: pointer;
-	display: inline-flex;
-	font-family: CircularStd, sans-serif;
-	font-size: 1rem;
-	justify-content: center;
-	line-height: 1.5;
-	position: relative;
-	text-align: center;
-	text-decoration: none;
-	transition: background-color .2s, background-position .2s;
-	user-select: none;
-	-webkit-user-select: none;
-	touch-action: manipulation;
-	white-space: nowrap;
-}
-
-.cute_button2:active,
-.cute_button2:focus {
-	outline: none;
-}
-
-.cute_button2:hover {
-	background-position: -20px -20px;
-	background-color: #353c47;
-}
-
-.cute_button2:focus:not(:active) {
-	box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
-}
-
-
-
-/* The close button */
-.closebtn {
-	margin-left: 15px;
-	color: white;
-	font-weight: bold;
-	float: right;
-	font-size: 22px;
-	line-height: 20px;
-	cursor: pointer;
-	transition: 0.3s;
 }
 
 
