@@ -211,13 +211,17 @@ foreach ($rpc->serverbanexception()->getAll() as $v)
 	<?php
 		foreach($tkl as $tkl)
 		{
+			$set_in_config = ((isset($tkl->set_in_config) && $tkl->set_in_config) || ($tkl->set_by == "-config-")) ? true : false;
 			echo "<tr>";
-			echo "<td><input type=\"checkbox\" value='" . base64_encode($tkl->name).",".base64_encode($tkl->type) . "' name=\"tklch[]\"></td>";
+			if ($set_in_config)
+				echo "<td></td>";
+			else
+				echo "<td><input type=\"checkbox\" value='" . base64_encode($tkl->name).",".base64_encode($tkl->type) . "' name=\"tklch[]\"></td>";
 			echo "<td>".$tkl->name."</td>";
 			echo "<td>".$tkl->type_string."</td>";
 			echo "<td>".$tkl->duration_string."</td>";
 			echo "<td>".$tkl->reason."</td>";
-			$set_by = ($tkl->set_by == "-config-") ? "<span class=\"badge-pill badge-secondary\">Config</span>" : show_nick_only($tkl->set_by);
+			$set_by = $set_in_config ? "<span class=\"badge-pill badge-secondary\">Config</span>" : show_nick_only($tkl->set_by);
 			echo "<td>".$set_by."</td>";
 			echo "<td>".$tkl->set_at_string."</td>";
 			echo "<td>".$tkl->expire_at_string."</td>";
