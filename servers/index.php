@@ -32,8 +32,11 @@ Click on a server name to view more information.
 	<thead class="table-primary">
 		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_server(this)" /></th>
 		<th scope="col">Name</th>
+		<th scope="col">Users</th>
+		<th scope="col">Version</th>
 		<th scope="col">Host / IP</th>
 		<th scope="col">Connected to</th>
+		<th scope="col">Up since</th>
 	</thead>
 	
 	<tbody>
@@ -54,8 +57,17 @@ Click on a server name to view more information.
 			echo "<tr>";
 			echo "<th scope=\"row\"><input type=\"checkbox\" value='" . base64_encode($server->id)."' name=\"serverch[]\"></th>";
 			echo "<td><a href=\"details.php?server=".$server->id."\">$server->name</a></td>";
+			echo "<td>".$server->server->num_users."</td>";
+			if (isset($server->server->features->software))
+				echo "<td>".$server->server->features->software."</td>";
+			else
+				echo "<td></td>"; /* non-unrealircd */
 			echo "<td>".$server->hostname." (".$server->ip.")</td>";
-			echo "<td>".$server->server->uplink."</td>";
+			if (isset($server->server->uplink))
+				echo "<td>".$server->server->uplink."</td>";
+			else
+				echo "<td></td>"; /* self */
+			echo "<td>".$server->server->boot_time."</td>";
 		}
 	?>
 	</tbody></table>
