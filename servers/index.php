@@ -58,15 +58,14 @@ Click on a server name to view more information.
 			echo "<th scope=\"row\"><input type=\"checkbox\" value='" . base64_encode($server->id)."' name=\"serverch[]\"></th>";
 			echo "<td><a href=\"details.php?server=".$server->id."\">$server->name</a></td>";
 			echo "<td>".$server->server->num_users."</td>";
-			if (isset($server->server->features->software))
-			{
-				$s = $server->server->features->software;
-				if ($server->server->ulined == true)
-					$s .= " <span class=\"badge-pill badge-warning\">Services</span>";
-				echo "<td>$s</td>";
-			} else {
-				echo "<td></td>";
-			}
+			$s = "";
+			if (isset($server->server->features->software)) // not (always) present on services
+				$s .= $server->server->features->software;
+
+			if ($server->server->ulined == true)
+					$s .= " <span class=\"badge rounded-pill badge-warning\">Services</span>";
+			
+			echo "<td>$s</td>";
 			echo "<td>".$server->hostname." (".$server->ip.")</td>";
 			if (isset($server->server->uplink))
 				echo "<td>".$server->server->uplink."</td>";

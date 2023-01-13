@@ -4,17 +4,21 @@ require_once "../header.php";
 
 $title = "Server Lookup";
 $servername = "";
-$nick = NULL;
+$srv = NULL;
 if (isset($_GET['server']))
 {
 	$servername = $_GET['server'];
-	$nick = $rpc->server()->get($servername);
-  echo highlight_string("<?php ".var_export($nick, true));
-	if (!$nick)
+	$srv = $rpc->server()->get($servername);
+  echo highlight_string("<?php ".var_export($srv, true));
+  $modules = $rpc->server()->module_list($servername);
+  $err = $rpc->error;
+  echo highlight_string("<?php ".var_export($modules, true). "$err");
+  
+	if (!$srv)
 	{
 		Message::Fail("Could not find server: \"$servername\"");
 	} else {
-		$servername = $nick->name;
+		$servername = $srv->name;
 		$title .= " for \"" . $servername . "\"";
 	}
 }
@@ -31,7 +35,7 @@ if (isset($_GET['server']))
 </div>
 </form>
 
-<?php if (!$nick)
+<?php if (!$srv)
 	return; ?>
 <br>
 <div class="row">
@@ -39,15 +43,15 @@ if (isset($_GET['server']))
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">Basic Information</h5>
-        <p class="card-text"><?php generate_html_whois($nick); ?></p>
+        <p class="card-text"><?php generate_html_whois($srv); ?></p>
       </div>
     </div>
   </div>
   <div class="col-sm-4">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">User Settings</h5>
-        <p class="card-text"><?php generate_html_usersettings($nick); ?></p>
+        <h5 class="card-title">Server Settings</h5>
+        <p class="card-text"><?php generate_html_usersettings($srv); ?></p>
       </div>
     </div>
   </div>
@@ -57,7 +61,7 @@ if (isset($_GET['server']))
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">User Settings</h5>
-          <p class="card-text"><?php generate_html_usersettings($nick); ?></p>
+          <p class="card-text"><?php generate_html_usersettings($srv); ?></p>
         </div>
       </div>
     </div>

@@ -221,7 +221,7 @@ foreach ($rpc->serverbanexception()->getAll() as $v)
 			echo "<td>".$tkl->type_string."</td>";
 			echo "<td>".$tkl->duration_string."</td>";
 			echo "<td>".$tkl->reason."</td>";
-			$set_by = $set_in_config ? "<span class=\"badge-pill badge-secondary\">Config</span>" : show_nick_only($tkl->set_by);
+			$set_by = $set_in_config ? "<span class=\"badge rounded-pill badge-secondary\">Config</span>" : show_nick_only($tkl->set_by);
 			echo "<td>".$set_by."</td>";
 			echo "<td>".$tkl->set_at_string."</td>";
 			echo "<td>".$tkl->expire_at_string."</td>";
