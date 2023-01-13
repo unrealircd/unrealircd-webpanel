@@ -95,7 +95,7 @@ rpc_pop_lists();
 						<div class="col">
 							<h6>Servers</h6>
 						</div>
-						<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL; ?>network">View</a></div>
+						<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL; ?>servers">View</a></div>
 					</div>
 				</div>
 			</div>
