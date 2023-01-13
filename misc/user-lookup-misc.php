@@ -299,10 +299,10 @@ function generate_html_userchannels($user)
 
     <table class="table table-responsive caption-top table-hover table-striped">
         <thead class="table-info">
-            <th colspan="2">
+            <th>
                 Channel
             </th>
-            <th colspan="2">
+            <th >
                 Status
             </th>
         </thead>
@@ -312,8 +312,8 @@ function generate_html_userchannels($user)
                 {
                     ?>
                     <tr>
-                        <td colspan="2"><?php echo $chan->name; ?></td>
-                        <td colspan="2">
+                        <td><?php echo $chan->name; ?></td>
+                        <td>
                             
                             <?php
                                 for ($i = 0; isset($chan->level[$i]); $i++)
