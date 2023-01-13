@@ -22,13 +22,15 @@ function show_nick_only($str)
 	return $str;
 }
 
-$pages = Array("Overview"	=> "",
-			   "Users"		=> "users",
-			   "Channels"	=> "channels",
-			   "Server Bans"	=> "server_bans.php",
-			   "Spamfilter"	=> "spamfilter.php",
-			   "Network" => "network",
-			   "News"		=> "news.php");
+$pages = Array(
+	"Overview"     => "",
+	"Users"        => "users",
+	"Channels"     => "channels",
+	"Servers"      => "servers",
+	"Server Bans"  => "server_bans.php",
+	"Spamfilter"   => "spamfilter.php",
+	"News"         => "news.php",
+);
 
 
 Hook::run(HOOKTYPE_NAVBAR, $pages);
