@@ -113,6 +113,22 @@ body {
 }
 
 
+.alert-short {
+	width: 40%;	
+}
+
+/* The close button */
+.closebtn {
+	color: black;
+	font-weight: bold;
+	float: right;
+	font-size: 22px;
+	line-height: 20px;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+
 .checkbox-dropdown {
 	width: 200px;
 	border: 1px solid #aaa;
