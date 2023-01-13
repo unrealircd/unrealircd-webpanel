@@ -59,9 +59,14 @@ Click on a server name to view more information.
 			echo "<td><a href=\"details.php?server=".$server->id."\">$server->name</a></td>";
 			echo "<td>".$server->server->num_users."</td>";
 			if (isset($server->server->features->software))
-				echo "<td>".$server->server->features->software."</td>";
-			else
-				echo "<td></td>"; /* non-unrealircd */
+			{
+				$s = $server->server->features->software;
+				if ($server->server->ulined == true)
+					$s .= " <span class=\"badge-pill badge-warning\">Services</span>";
+				echo "<td>$s</td>";
+			} else {
+				echo "<td></td>";
+			}
 			echo "<td>".$server->hostname." (".$server->ip.")</td>";
 			if (isset($server->server->uplink))
 				echo "<td>".$server->server->uplink."</td>";
