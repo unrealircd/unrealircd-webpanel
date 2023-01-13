@@ -2,20 +2,20 @@
 require_once "../common.php";
 require_once "../header.php";
 
-$title = "User Lookup";
-$nickname = "";
+$title = "Server Lookup";
+$servername = "";
 $nick = NULL;
-if (isset($_GET['nick']))
+if (isset($_GET['server']))
 {
-	$nickname = $_GET['nick'];
-	$nick = $rpc->server()->get($nickname);
+	$servername = $_GET['server'];
+	$nick = $rpc->server()->get($servername);
   echo highlight_string("<?php ".var_export($nick, true));
 	if (!$nick)
 	{
-		Message::Fail("Could not find user: \"$nickname\"");
+		Message::Fail("Could not find server: \"$servername\"");
 	} else {
-		$nickname = $nick->name;
-		$title .= " for \"" . $nickname . "\"";
+		$servername = $nick->name;
+		$title .= " for \"" . $servername . "\"";
 	}
 }
 ?>
@@ -24,7 +24,7 @@ if (isset($_GET['nick']))
 <br>
 <form method="get" action="details.php">
 <div class="input-group short-form-control justify-content-center align-items-center">
-	<input style="margin: 0%; height: 24px;" class="left-pan form-control" id="nick" name="nick" type="text" value=<?php echo $nickname; ?>>
+	<input style="margin: 0%; height: 24px;" class="left-pan form-control" id="nick" name="nick" type="text" value=<?php echo $servername; ?>>
 	<div class="input-group-append">
 		<br><button type="submit" class="btn btn-primary">Go</button>
 	</div>

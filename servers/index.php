@@ -53,8 +53,7 @@ Click on a server name to view more information.
 
 			echo "<tr>";
 			echo "<th scope=\"row\"><input type=\"checkbox\" value='" . base64_encode($server->id)."' name=\"serverch[]\"></th>";
-			$isBot = (strpos($server->server->modes, "B") !== false) ? ' <span class="badge-pill badge-dark">Bot</span>' : "";
-			echo "<td><a href=\"details.php?nick=".$server->id."\">$server->name$isBot</a></td>";
+			echo "<td><a href=\"details.php?server=".$server->id."\">$server->name</a></td>";
 			echo "<td>".$server->hostname." (".$server->ip.")</td>";
 			echo "<td>".$server->server->uplink."</td>";
 		}
