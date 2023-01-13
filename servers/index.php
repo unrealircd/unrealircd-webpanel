@@ -33,7 +33,6 @@ Click on a server name to view more information.
 		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_server(this)" /></th>
 		<th scope="col">Name</th>
 		<th scope="col">Host / IP</th>
-		<th scope="col"><span data-toggle="tooltip" data-placement="bottom" title="This shows [Secure] if the server is using SSL/TLS or is on localhost." style="border-bottom: 1px dotted #000000">Secure</span></th>
 		<th scope="col">Connected to</th>
 	</thead>
 	
@@ -57,10 +56,6 @@ Click on a server name to view more information.
 			$isBot = (strpos($server->server->modes, "B") !== false) ? ' <span class="badge-pill badge-dark">Bot</span>' : "";
 			echo "<td><a href=\"details.php?nick=".$server->id."\">$server->name$isBot</a></td>";
 			echo "<td>".$server->hostname." (".$server->ip.")</td>";
-			$secure = (isset($server->tls)) ? "<span class=\"badge-pill badge-success\">Secure</span>" : "<span class=\"badge-pill badge-danger\">Insecure</span>";
-			if (strpos($server->server->modes, "S") !== false)
-				$secure = "";
-			echo "<td>".$secure."</td>";
 			echo "<td>".$server->server->uplink."</td>";
 		}
 	?>
