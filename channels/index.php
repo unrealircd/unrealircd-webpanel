@@ -35,6 +35,8 @@ $channels = $rpc->channel()->getAll();
 			echo "<td>".$topic."</td>";
 			echo "<td>".$channel->creation_time."</td>";
 		}
+
+	require_once("../footer.php");
 	?>
 </tbody>
 </table>

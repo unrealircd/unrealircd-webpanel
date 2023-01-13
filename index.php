@@ -1,6 +1,5 @@
 <?php
 require_once "common.php";
-
 require_once "header.php";
 
 rpc_pop_lists();
@@ -202,3 +201,7 @@ rpc_pop_lists();
 		</div>
 	</div>
 </div>
+
+<?php
+
+require_once "footer.php";
