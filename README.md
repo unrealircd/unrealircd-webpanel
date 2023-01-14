@@ -53,7 +53,7 @@ NOTE: You most likely want to put the webpanel behind a login, using a
 For end-users, when you want to update to the latest version:
 ```bash
 git pull
-composer update
+composer install
 ```
 
 ## Developers ##
@@ -62,7 +62,7 @@ above. However, sometimes you will want to update to a newer version
 of the unrealircd-rpc-php library. You then need to run:
 ```bash
 # For devs only!
-composer install
+composer update
 git commit composer.lock
 ```
 Commiting the composer.lock file updates the dependency for all
