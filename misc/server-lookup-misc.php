@@ -50,7 +50,12 @@ function sinfo_conv_version_string($server) : string
     if (strlen($string) && strpos($string,"-"))
     {
         $tok = split($string, "-");
-        $return = "<code>" . $tok[1] . "</code> <label class=\"badge rounded-pill badge-dark\">" . $tok[2] . "</div>";
+        $tooltip = ($tok[2] == "git") ? "Installed from GitHub" : NULL;
+        if (!$tooltip)
+        {
+            $tooltip = (substr($tok[2],0,2) == "rc") ? "Release Candidate/Beta Version" : "";
+        }
+        $return = "<span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"$tooltip\"><code>" . $tok[1] . "</code> <div class=\"badge rounded-pill badge-dark\">" . $tok[2] . "</div></a>";
     }
     if ($server->server->ulined)
         $return .= "<div class=\"badge rounded-pill badge-warning\">Services</div>";
