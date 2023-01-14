@@ -1,5 +1,10 @@
-## UnrealIRCd Administration WebPanel
+ ## UnrealIRCd Administration WebPanel
  
+[![Version](https://img.shields.io/badge/UnrealIRCd-6.0.6_or_later-darkgreen.svg)]()
+[![Version](https://img.shields.io/badge/Version-Beta-blue.svg)]()
+[![Maintained](https://img.shields.io/badge/Maintained-yes-darkgreen.svg)]()
+[![Unreal](https://img.shields.io/badge/PHP-8.0_or_later-darkgreen.svg)](https://unrealircd.org)
+
  Are you tired of managing your IRC network through a command line interface? Do you wish there was a more user-friendly way to keep track of your servers, channels, and users? Look no further than the UnrealIRCd Web Panel!
 
 This web-based tool provides a comprehensive overview of your IRC network, including all channels and users, as well as detailed information about individual servers and users. With the UnrealIRCd Web Panel, you can easily add and remove server bans and spamfilter entries, rehash your entire network, and filter lists of information based on input criteria, all from the convenience of your web browser.
