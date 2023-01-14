@@ -10,7 +10,7 @@ function generate_html_whois($user)
                 <th>Nick</th>
                 <td colspan="2"><code><?php echo $user->name; ?></code></td>
             </tr><tr>
-                <th>UID</th>
+                <th>User ID (UID)</th>
                 <td colspan="2"><code><?php echo $user->id; ?></code></td>
             </tr><tr>
                 <th>Real Host</th>

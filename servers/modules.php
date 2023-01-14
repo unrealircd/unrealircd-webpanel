@@ -2,20 +2,23 @@
 require_once "../common.php";
 require_once "../header.php";
 
-$title = "Server Lookup";
+$title = "Modules";
 $servername = "";
 $srv = NULL;
 if (isset($_GET['server']))
 {
 	$servername = $_GET['server'];
 	$srv = $rpc->server()->get($servername);
-  
 	if (!$srv)
 	{
 		Message::Fail("Could not find server: \"$servername\"");
-	}
-  
-  else {
+	} else {
+
+    $modules = $rpc->server()->module_list($srv->id);
+    if (!$modules->list)
+    {
+      Message::Fail("$rpc->error");
+    }
 		$servername = $srv->name;
 		$title .= " for \"" . $servername . "\"";
 	}
@@ -24,7 +27,7 @@ if (isset($_GET['server']))
 <title><?php echo $title; ?></title>
 <h4><?php echo $title; ?></h4>
 <br>
-<form method="get" action="details.php">
+<form method="get" action="modules.php">
 <div class="input-group short-form-control justify-content-center align-items-center">
 	<input style="margin: 0%; height: 24px;" class="left-pan form-control" id="server" name="server" type="text" value=<?php echo $servername; ?>>
 	<div class="input-group-append">
@@ -36,21 +39,4 @@ if (isset($_GET['server']))
 <?php if (!$srv)
 	return; ?>
 <br>
-<div class="row">
-  <div class="col-sm-3">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Basic Information</h5>
-        <p class="card-text"><?php generate_html_serverinfo($srv); ?></p>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-4">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Server Settings</h5>
-        <p class="card-text"><?php generate_html_usersettings($srv); ?></p>
-      </div>
-    </div>
-  </div>
-</div>
+<?php generate_html_modlist($srv); ?>

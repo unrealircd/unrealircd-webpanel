@@ -9,6 +9,7 @@ require_once UPATH . '/vendor/autoload.php';
 require_once "connection.php";
 require_once "misc/strings.php";
 require_once "misc/user-lookup-misc.php";
+require_once "misc/server-lookup-misc.php";
 require_once "Classes/class-log.php";
 require_once "Classes/class-message.php";
 require_once "Classes/class-rpc.php";
