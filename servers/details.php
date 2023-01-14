@@ -66,7 +66,7 @@ if (isset($_GET['server']))
   <div class="col-sm-4">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Server Settings</h5>
+        <h5 class="card-title">Channel Modes</h5>
         <p class="card-text"><?php generate_html_servermodes($srv); ?></p>
       </div>
     </div>
