@@ -38,7 +38,7 @@ class IRCList {
         ],
         "i" => [
             "name" => "Invite Only",
-            "description" => "requires an invitation to join",
+            "description" => "Requires an invitation to join",
             "requires" => "HalfOp"
         ],
         "k" => [

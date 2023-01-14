@@ -34,7 +34,6 @@ Click on a server name to view more information.
 		<th scope="col">Name</th>
 		<th scope="col">Users</th>
 		<th scope="col">Version</th>
-		<th scope="col">Host / IP</th>
 		<th scope="col">Connected to</th>
 		<th scope="col">Up since</th>
 	</thead>
@@ -62,7 +61,6 @@ Click on a server name to view more information.
 			$s = sinfo_conv_version_string($server);
 
 			echo "<td>$s</td>";
-			echo "<td>".$server->hostname." (".$server->ip.")</td>";
 			if (isset($server->server->uplink))
 				echo "<td>".$server->server->uplink."</td>";
 			else

@@ -72,19 +72,6 @@ function generate_html_serverinfo($server)
                 <th>Info</th>
                 <td colspan="2"><code><?php echo $server->server->info; ?></code></td>
             </tr><tr>
-                <th>Host</th>
-                <td colspan="2"><code><?php echo $server->hostname; ?></code></td>
-            </tr><tr>
-                <th>IP</th>
-                <td colspan="2"><code><?php echo $server->ip." </code> ";
-                if ($cc = (isset($server->geoip->country_code)) ? strtolower($server->geoip->country_code) : "")
-                {
-                   ?>  <img src="https://flagcdn.com/48x36/<?php echo $cc; ?>.png"
-                            width="20"
-                            height="15">
-                    <?php } ?>
-                </td>
-            </tr><tr>
                 <th>Uplink</th>
                 <td colspan="2"><code><?php echo "<a href=\"".BASE_URL."servers/details.php?server=".$server->server->uplink."\">".$server->server->uplink."</a>"; ?></code></td>
             </tr><tr>
