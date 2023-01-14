@@ -20,15 +20,15 @@ Click on a server name to view more information.
 		Message::Info("Listing servers which match name: \"" . $_POST['sf_name'] . "\"");
 
 	?>
-	<table class="container-xxl table table-responsive caption-top table-striped">
+	<table class="container-xxl table table-sm table-responsive caption-top table-striped">
 	<thead>
 		<th scope="col"><h5>Filter:</h5></th>
 		<form action="" method="post">
 		<th scope="col" colspan="2">Name<input name="sf_name" type="text" class="form-control short-form-control">
-		<th scope="col"> <input class="btn btn-primary" type="submit" value="Search"></th></form>
+		<th scope="col"> <input class="btn btn-primary btn-sm" type="submit" value="Search"></th></form>
 	</thead></table>
 
-	<table class="container-xxl table table-responsive caption-top table-striped">
+	<table class="container-xxl table table-sm table-responsive caption-top table-striped">
 	<thead class="table-primary">
 		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_server(this)" /></th>
 		<th scope="col">Name</th>

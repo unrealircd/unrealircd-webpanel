@@ -195,7 +195,7 @@ foreach ($rpc->serverbanexception()->getAll() as $v)
 	</div>
 	</div>
 
-	<table class="container-xxl table table-responsive caption-top table-striped">
+	<table class="container-xxl table-sm table-responsive caption-top table-striped">
 	<thead class="table-primary">
 	<form method="post">
 	<th><input type="checkbox" label='selectall' onClick="toggle_tkl(this)" /></th>

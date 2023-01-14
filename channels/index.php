@@ -14,7 +14,7 @@ $channels = $rpc->channel()->getAll();
 
 ?>
 <h4>Channels Overview</h4><br>
-<table class="container-xxl table table-responsive caption-top table-striped">
+<table class="container-xxl table-sm table-responsive caption-top table-striped">
 	<thead class="table-primary">
 	<th>Name</th>
 	<th>Users</th>

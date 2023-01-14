@@ -79,7 +79,7 @@ Click on a username to view more information.
 		<th scope="col"> <input class="btn btn-primary" type="submit" value="Search"></th></form>
 	</thead></table>
 
-	<table class="container-xxl table table-responsive caption-top table-striped">
+	<table class="container-xxl table table-sm table-responsive caption-top table-striped">
 	<thead class="table-primary">
 		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_user(this)" /></th>
 		<th scope="col">Nick</th>
