@@ -58,13 +58,9 @@ Click on a server name to view more information.
 			echo "<th scope=\"row\"><input type=\"checkbox\" value='" . base64_encode($server->id)."' name=\"serverch[]\"></th>";
 			echo "<td><a href=\"details.php?server=".$server->id."\">$server->name</a></td>";
 			echo "<td>".$server->server->num_users."</td>";
-			$s = "";
-			if (isset($server->server->features->software)) // not (always) present on services
-				$s .= $server->server->features->software;
-
-			if ($server->server->ulined == true)
-					$s .= " <span class=\"badge rounded-pill badge-warning\">Services</span>";
 			
+			$s = sinfo_conv_version_string($server);
+
 			echo "<td>$s</td>";
 			echo "<td>".$server->hostname." (".$server->ip.")</td>";
 			if (isset($server->server->uplink))

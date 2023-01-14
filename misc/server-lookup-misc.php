@@ -46,13 +46,14 @@ function generate_html_servermodes($server)
 function sinfo_conv_version_string($server) : string
 {
     $string = (isset($server->server->features->software)) ? $server->server->features->software : "";
+    $return = "";
     if (strlen($string) && strpos($string,"-"))
     {
         $tok = split($string, "-");
-        $return = "<code>" . $tok[1] . "</code> <label class=\"badge label rounded-pill badge-dark\">" . $tok[2] . "</div>";
+        $return = "<code>" . $tok[1] . "</code> <label class=\"badge rounded-pill badge-dark\">" . $tok[2] . "</div>";
     }
     if ($server->server->ulined)
-        $return .= "<div class=\"label rounded-pill badge-warning\">Services</div>";
+        $return .= "<div class=\"badge rounded-pill badge-warning\">Services</div>";
     return $return;
 }
 
