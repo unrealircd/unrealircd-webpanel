@@ -20,6 +20,12 @@ try {
 			$api_login,
 			Array("tls_verify"=>$tls_verify)
 		);
-} catch (Exception $e) {
-		die("Unable to connect to UnreaIRCd<br>");
+}
+catch (Exception $e)
+{
+	echo "Unable to connect to UnrealIRCd: ".$e->getMessage() . "<br><br>";
+	echo "Verify your connection details in config.php (rpc user, rpc password, host) and ".
+	     "verify your UnrealIRCd configuration (listen block with listen::options::rpc and ".
+	     "an rpc-user block with the correct IP allowed and the correct username and password).";
+	throw $e;
 }
