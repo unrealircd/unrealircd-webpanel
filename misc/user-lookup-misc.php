@@ -4,7 +4,7 @@ function generate_html_whois($user)
 {
     ?>
 
-    <table class="table table-responsive caption-top table-hover">
+    <table class="table-sm table-responsive caption-top table-hover">
         <tbody>
             <tr>
                 <th>Nick</th>
@@ -54,7 +54,7 @@ function generate_html_usersettings($user)
 {
     ?>
 
-    <table class="table table-responsive caption-top table-hover">
+    <table class="table-sm table-responsive caption-top table-hover">
         <tbody>
            <?php
                 for ($i=0; ($mode = (isset($user->user->modes[$i])) ? $user->user->modes[$i] : NULL); $i++)
@@ -66,7 +66,7 @@ function generate_html_usersettings($user)
                             <tr>
                                 <th>Oper</th>
                                 <td>
-                                    <table class="table table-responsive caption-top table-hover">
+                                    <table class="table-sm table-responsive caption-top table-hover">
                                         <tr>
                                             <td>Oper Login</td>
                                             <td><code><?php echo $user->user->operlogin; ?></code></td>
@@ -169,7 +169,7 @@ function generate_html_usersettings($user)
                             <tr>
                                 <th>Secure</th>
                                 <td>
-                                <table class="table table-responsive caption-top table-hover">
+                                <table class="table-sm table-responsive caption-top table-hover">
                                         <tr>
                                             <td>Cipher</td>
                                             <td><code><?php echo $user->tls->cipher; ?></code></td>
@@ -297,7 +297,7 @@ function generate_html_userchannels($user)
 {
     ?>
 
-    <table class="table table-responsive caption-top table-hover table-striped">
+    <table class="table-sm table-responsive caption-top table-hover table-striped">
         <thead class="table-info">
             <th>
                 Channel
