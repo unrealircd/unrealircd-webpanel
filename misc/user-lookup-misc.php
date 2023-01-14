@@ -41,7 +41,7 @@ function generate_html_whois($user)
             </tr>
             <tr>
                 <th>Logged in as</th>
-                <td colspan="2"><code><?php echo (isset($user->user->account)) ? $user->user->account : ""; ?></code></td>
+                <td colspan="2"><code><?php echo (isset($user->user->account)) ? "<a href=\"".BASE_URL."users/?account=".$user->user->account."\">".$user->user->account."</a>" : ""; ?></code></td>
             </tr>
                 
 

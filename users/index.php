@@ -2,6 +2,9 @@
 require_once "../common.php";
 require_once "../header.php";
 
+if (!empty($_GET) && isset($_GET['account']) && !isset($_POST['uf_account']))
+	$_POST['uf_account'] = $_GET['account'];
+
 if (!empty($_POST)) {
 	do_log($_POST);
 	$bantype = $_POST['bantype'];
@@ -129,7 +132,7 @@ Click on a username to view more information.
 			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge rounded-pill badge-dark">Bot</span>' : "";
 			echo "<td><a href=\"details.php?nick=".$user->id."\">$user->name$isBot</a></td>";
 			echo "<td>".$user->hostname." (".$user->ip.")</td>";
-			$account = (isset($user->user->account)) ? $user->user->account : '<span class="badge rounded-pill badge-primary">None</span>';
+			$account = (isset($user->user->account)) ? "<a href=\"".BASE_URL."users/?account=".$user->user->account."\">".$user->user->account."</a>" : '<span class="badge rounded-pill badge-primary">None</span>';
 			echo "<td>".$account."</td>";
 			$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
 			echo "<td>".$modes."</td>";
