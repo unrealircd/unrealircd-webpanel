@@ -68,7 +68,7 @@ class IRCList {
         ],
         "p" => [
             "name" => "Private",
-            "description" => "Prevents the channel from showing up in /WHOIS outputs and is replaces with \"*\" in  /LIST outputs",
+            "description" => "Prevents the channel from showing up in <code>/WHOIS</code> outputs and is replaces with \"*\" in <code>/LIST</code> outputs",
             "requires" => "Operator"
         ],
         "q" => [
