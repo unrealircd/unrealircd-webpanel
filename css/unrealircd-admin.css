@@ -107,7 +107,7 @@ footer {
 
 body {
 	padding-top: 45px;
-	background-image: url("../img/linen.png");
+	background-image: url("https://www.unrealircd.org/assets/img/bg/linen.png");
 	display: flex;
 	flex-direction: column;
 }
@@ -197,10 +197,10 @@ body {
 
 .table-striped>tbody>tr:nth-child(even)>td, 
 .table-striped>tbody>tr:nth-child(even)>th {
-   background-color: #c9c9c949;
+   background-color: #a5a5a549;
  }
  .table-striped>tbody>tr:nth-child(odd)>td, 
  .table-striped>tbody>tr:nth-child(odd)>th {
-	background-color: #ffffff;
+	background-color: #ffffff00;
   }
 	
