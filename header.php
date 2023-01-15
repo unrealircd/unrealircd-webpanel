@@ -65,4 +65,3 @@ foreach($pages as $name=>$page)
 </div>
 
 <div class="container-fluid" role="main">
-<br><br><br><?php var_dump(BASE_URL . "css/unrealircd-admin.css");

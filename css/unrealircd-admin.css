@@ -201,6 +201,6 @@ body {
  }
  .table-striped>tbody>tr:nth-child(odd)>td, 
  .table-striped>tbody>tr:nth-child(odd)>th {
-	background-color: #ffffff00;
+	background-color: #ffffff;
   }
 	
