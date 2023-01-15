@@ -34,7 +34,7 @@ $active_page = NULL;
 foreach ($pages as $name => $page)
 {
 	$script = $_SERVER['SCRIPT_FILENAME'];
-	if (str_ends_with($script, BASE_URL . "index.php") || !strlen($page))
+	if ((str_ends_with($script, BASE_URL . "index.php") && BASE_URL != "/") || !strlen($page))
 	{
 		$active_page = "";
 	}
