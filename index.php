@@ -2,7 +2,7 @@
 require_once "common.php";
 require_once "header.php";
 
-rpc_pop_lists();
+$stats = $rpc->query("stats.get", []);
 ?>
 
 <h2>Network Overview</h2>
@@ -15,10 +15,12 @@ rpc_pop_lists();
 				<div class="card-header bg-success text-white">
 					<div class="row">
 						<div class="col">
-							<i class="fa fa-users fa-3x"></i>
+							<i class="fa fa-users fa-3x"></i><span class="position-absolute badge rounded-pill badge-warning">
+							<?php echo "Record: ".$stats->user->record; ?>
+						</span>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo count(RPC_List::$user); ?></h3>
+							<h3 class="display-4"><?php echo $stats->user->total - $stats->user->ulined; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -31,6 +33,8 @@ rpc_pop_lists();
 					</div>
 				</div>
 			</div>
+			
+
 		</div>
 		<div class="col-sm">
 			<div class="card text-center">
@@ -40,7 +44,7 @@ rpc_pop_lists();
 							<i class="fa fa-hashtag fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo count(RPC_List::$channel); ?></h3>
+							<h3 class="display-4"><?php echo $stats->channel->total; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -62,7 +66,7 @@ rpc_pop_lists();
 							<i class="fa fa-shield-halved fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo RPC_List::$opercount; ?></h3>
+							<h3 class="display-4"><?php echo $stats->user->oper - $stats->user->ulined; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -86,7 +90,7 @@ rpc_pop_lists();
 							<i class="fa fa-network-wired fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo count(RPC_List::$server); ?></h3>
+							<h3 class="display-4"><?php echo $stats->server->total; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -113,7 +117,7 @@ rpc_pop_lists();
 							<i class="fa fa-ban fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo count(RPC_List::$tkl); ?></h3>
+							<h3 class="display-4"><?php echo $stats->server_ban->server_ban; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -135,7 +139,7 @@ rpc_pop_lists();
 							<i class="fa fa-filter fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo count(RPC_List::$spamfilter); ?></h3>
+							<h3 class="display-4"><?php echo $stats->server_ban->spamfilter; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -157,7 +161,7 @@ rpc_pop_lists();
 							<i class="fa fa-door-open fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo count(RPC_List::$exception); ?></h3>
+							<h3 class="display-4"><?php echo $stats->server_ban->server_ban_exception; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -173,9 +177,18 @@ rpc_pop_lists();
 			</div>
 		</div>
 		<?php
-		if (RPC_List::$services_count) {
+		if ($stats->server->ulined) {
 			$bg = "bg-success";
-		} ?> 
+
+			/* honestly can't think of a case where there would actually be only one uline... but... well here we are, worrying over the small stuff =] */
+			$user_noun = ($stats->user->ulined == 1) ? "user" : "users"; // use "users" even if 0, sounds better.
+			$is_are = ($stats->user->ulined == 1) ? "is" : "are";
+			$server_noun = ($stats->server->ulined == 1) ? "server" : "servers";
+			$tooltip = "There $is_are " . $stats->user->ulined . " U-Lined $user_noun over " . $stats->server->ulined . " U-Lined $server_noun";
+		}
+		else
+			$bg = "bg-warning";
+		?> 
 		<div class="col-sm">
 			<div class="card text-center">
 				<div class="card-header <?php echo $bg; ?> text-white">
@@ -184,7 +197,7 @@ rpc_pop_lists();
 							<i class="fa fa-database fa-3x"> </i>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo RPC_List::$services_count; ?></h3>
+						<span data-toggle="tooltip" title="<?php echo $tooltip; ?>" style="border-bottom: 1px dotted #000000"><h3 class="display-4"><?php echo $stats->user->ulined; ?>/<?php echo $stats->server->ulined; ?></h3>
 						</div>
 					</div>
 				</div>
