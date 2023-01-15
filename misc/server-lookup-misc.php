@@ -47,15 +47,36 @@ function sinfo_conv_version_string($server) : string
 {
     $string = (isset($server->server->features->software)) ? $server->server->features->software : "";
     $return = "";
+    $tooltip = "";
+    $badge = "";
+    $display_string = $string;
+
     if (strlen($string) && strpos($string,"-"))
     {
         $tok = split($string, "-");
-        $tooltip = ($tok[2] == "git") ? "Installed from GitHub" : NULL;
-        if (!$tooltip)
+        if (($tok[0] == "UnrealIRCd") && isset($tok[2]))
         {
-            $tooltip = (substr($tok[2],0,2) == "rc") ? "Release Candidate/Beta Version" : "";
+            if ($tok[2] == "git")
+            {
+                if (!empty($tok[3]))
+                    $badge = "git:".$tok[3];
+                else
+                    $badge = "git";
+                $tooltip = "Installed from GitHub";
+                $display_string = $tok[0]."-".$tok[1]."-".$tok[2];
+            } else if (substr($tok[2],0,2) == "rc")
+            {
+                $tooltip = "Release Candidate/Beta Version";
+                $badge = "rc";
+            } else if (strlen($tok[2]) == 9)
+            {
+                /* Guess that this is a commit id :D */
+                $badge = "git:".$tok[2];
+                $tooltip = "Installed from GitHub";
+                $display_string = $tok[0]."-".$tok[1];
+            }
         }
-        $return = "<span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"$tooltip\"><code>" . $tok[1] . "</code> <div class=\"badge rounded-pill badge-dark\">" . $tok[2] . "</div></a>";
+        $return = "<span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"$tooltip\"><code>" . $display_string . "</code> <div class=\"badge rounded-pill badge-dark\">$badge</div></a>";
     }
     if ($server->server->ulined)
         $return .= "<div class=\"badge rounded-pill badge-warning\">Services</div>";
