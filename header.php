@@ -40,7 +40,6 @@ foreach ($pages as $name => $page)
 	}
 	else if (str_ends_with($script, BASE_URL . "index.php") && BASE_URL != "/" && !strlen($tok[0]))
 	{
-		echo "2";
 		$active_page = $tok[0];
 	}
 	else if (!str_ends_with($page, ".php"))
