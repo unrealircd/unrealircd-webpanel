@@ -25,7 +25,8 @@ Overall, the UnrealIRCd Web Panel is a must-have tool for any administrator mana
 
 Note: PHP 8 may require special installation instructions.
 Here are some instructions for:
-- [Ubuntu 20/22](https://linuxhint.com/install-php-8-ubuntu-22-04/)
+- Ubuntu 22.04: `apt-get install apache2 libapache2-mod-php`
+- [Ubuntu 20.04](https://linuxhint.com/install-php-ubuntu/)
 - [Debian](https://www.vultr.com/docs/how-to-install-php-8-on-debian-11/)
 - [CentOS](https://www.tecmint.com/install-php-8-on-centos/)
 
