@@ -35,9 +35,13 @@ foreach ($pages as $name => $page)
 {
 	$script = $_SERVER['SCRIPT_FILENAME'];
 	$tok = split($script, "/");
-	if ((str_ends_with($script, BASE_URL . "index.php") && !strlen($tok[0])) || !strlen($page))
-	{
+	if (strlen($page) == 0) {
 		$active_page = "";
+	}
+	else if (str_ends_with($script, BASE_URL . "index.php") && BASE_URL != "/" && !strlen($tok[0]))
+	{
+		echo "2";
+		$active_page = $tok[0];
 	}
 	else if (!str_ends_with($page, ".php"))
 	{
