@@ -195,38 +195,39 @@ foreach ($rpc->serverbanexception()->getAll() as $v)
 	</div>
 	</div>
 
-	<table class="container-xxl table-sm table-responsive caption-top table-striped">
+	<table class="container-xxl table table-sm table-responsive caption-top table-striped">
 	<thead class="table-primary">
 	<form method="post">
-	<th><input type="checkbox" label='selectall' onClick="toggle_tkl(this)" /></th>
-	<th>Mask</th>
-	<th>Type</th>
-	<th>Duration</th>
-	<th>Reason</th>
-	<th>Set By</th>
-	<th>Set On</th>
-	<th>Expires</th>
+	<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_tkl(this)" /></th>
+	<th scope="col">Mask</th>
+	<th scope="col">Type</th>
+	<th scope="col">Duration</th>
+	<th scope="col">Reason</th>
+	<th scope="col">Set By</th>
+	<th scope="col">Set On</th>
+	<th scope="col">Expires</th>
 	</thead>
-	
+	<tbody>
 	<?php
 		foreach($tkl as $tkl)
 		{
 			$set_in_config = ((isset($tkl->set_in_config) && $tkl->set_in_config) || ($tkl->set_by == "-config-")) ? true : false;
-			echo "<tr>";
+			echo "<tr scope='col'>";
 			if ($set_in_config)
-				echo "<td></td>";
+				echo "<td scope=\"col\"></td>";
 			else
-				echo "<td><input type=\"checkbox\" value='" . base64_encode($tkl->name).",".base64_encode($tkl->type) . "' name=\"tklch[]\"></td>";
-			echo "<td>".$tkl->name."</td>";
-			echo "<td>".$tkl->type_string."</td>";
-			echo "<td>".$tkl->duration_string."</td>";
-			echo "<td>".$tkl->reason."</td>";
+				echo "<td scope=\"col\"><input type=\"checkbox\" value='" . base64_encode($tkl->name).",".base64_encode($tkl->type) . "' name=\"tklch[]\"></td>";
+			echo "<td scope=\"col\">".$tkl->name."</td>";
+			echo "<td scope=\"col\">".$tkl->type_string."</td>";
+			echo "<td scope=\"col\">".$tkl->duration_string."</td>";
+			echo "<td scope=\"col\">".$tkl->reason."</td>";
 			$set_by = $set_in_config ? "<span class=\"badge rounded-pill badge-secondary\">Config</span>" : show_nick_only($tkl->set_by);
-			echo "<td>".$set_by."</td>";
-			echo "<td>".$tkl->set_at_string."</td>";
-			echo "<td>".$tkl->expire_at_string."</td>";
+			echo "<td scope=\"col\">".$set_by."</td>";
+			echo "<td scope=\"col\">".$tkl->set_at_string."</td>";
+			echo "<td scope=\"col\">".$tkl->expire_at_string."</td>";
+			echo "</tr>";
 		}
-	?></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2">
+	?></tbody></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2">
 	Delete selected
 	</button></p>
 	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">

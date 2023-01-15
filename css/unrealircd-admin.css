@@ -199,3 +199,8 @@ body {
 .table-striped>tbody>tr:nth-child(even)>th {
    background-color: #c9c9c949;
  }
+ .table-striped>tbody>tr:nth-child(odd)>td, 
+ .table-striped>tbody>tr:nth-child(odd)>th {
+	background-color: #ffffff;
+  }
+	

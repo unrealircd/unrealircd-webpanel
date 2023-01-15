@@ -147,6 +147,7 @@ Click on a username to view more information.
 			echo "<td>".$secure."</td>";
 			echo "<td>".$user->user->servername."</td>";
 			echo "<td>".$user->user->reputation."</td>";
+			echo "</tr>";
 		}
 	?>
 	</tbody></table>

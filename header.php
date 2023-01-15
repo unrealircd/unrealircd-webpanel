@@ -18,7 +18,7 @@
 <script src="<?php echo BASE_URL; ?>js/unrealircd-admin.js"></script>
 <title>UnrealIRCd Panel</title>
 <link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>img/favicon.ico">
-<link href="<?php echo BASE_URL; ?>css/unrealircd-admin.css" rel="stylesheet">
+<link href="<?php echo UPATH; ?>css/unrealircd-admin.css" rel="stylesheet">
 </head>
 <body role="document">
 <div class="container-fluid">
