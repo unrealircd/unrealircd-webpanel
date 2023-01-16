@@ -33,40 +33,40 @@ if (isset($_GET['chan']))
 </form>
 
 <?php if (!$channel)
-    return; ?>
+		return; ?>
 
 <br>
 <div class="container-xxl">
-  <div class="row">
-    <div class="col-sm-6">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Basic Information</h5>
-          <p class="card-text"><?php //generate_html_chaninfo($nick); ?></p>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-5">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Channel Settings</h5>
-          <p class="card-text"><?php //generate_html_chansettings($nick); ?></p>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Basic Information</h5>
+					<p class="card-text"><?php //generate_html_chaninfo($nick); ?></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-5">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Channel Settings</h5>
+					<p class="card-text"><?php //generate_html_chansettings($nick); ?></p>
+				</div>
+			</div>
+		</div>
+	</div>
 </div><br>
 <div class="container-xxl">
-  <div class="row">
-    <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Occupants</h5>
-            <p class="card-text"><?php //generate_html_channelusers($nick); ?></p>
-          </div>
-        </div>
-      </div>
-  </div>
+	<div class="row">
+		<div class="col">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Occupants</h5>
+						<p class="card-text"><?php //generate_html_channelusers($nick); ?></p>
+					</div>
+				</div>
+			</div>
+	</div>
 </div>
 <?php 
 	require_once("../footer.php");
