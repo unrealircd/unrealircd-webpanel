@@ -66,7 +66,7 @@ $stats = $rpc->query("stats.get", []);
 							<i class="fa fa-shield-halved fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo $stats->user->oper - $stats->user->ulined; ?></h3>
+							<h3 class="display-4"><?php echo $stats->user->oper; ?></h3>
 						</div>
 					</div>
 				</div>
