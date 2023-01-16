@@ -2,8 +2,14 @@
 require_once "../common.php";
 require_once "../header.php";
 
-if (!empty($_GET) && isset($_GET['account']) && !isset($_POST['uf_account']))
-	$_POST['uf_account'] = $_GET['account'];
+if (!empty($_GET))
+{
+	if (isset($_GET['account']) && !isset($_POST['uf_account']))
+		$_POST['uf_account'] = $_GET['account'];
+
+	if (isset($_GET['operonly']) && !isset($_POST['operonly']))
+		$_POST['operonly'] = $_GET['operonly'];
+}
 
 if (!empty($_POST)) {
 	do_log($_POST);
@@ -58,6 +64,7 @@ Click on a username to view more information.
 <div id="Users">
 	
 	<?php
+
 	if (isset($_POST['uf_nick']) && strlen($_POST['uf_nick']))
 		Message::Info("Listing users which match nick: \"" . $_POST['uf_nick'] . "\"");
 
@@ -70,6 +77,7 @@ Click on a username to view more information.
 	if (isset($_POST['uf_account']) && strlen($_POST['uf_account']))
 		Message::Info("Listing users which match account: \"" . $_POST['uf_account'] . "\"");
 
+
 	?>
 	<table class="container-xxl table table-responsive caption-top table-striped">
 	<thead>
@@ -79,6 +87,7 @@ Click on a username to view more information.
 		<th scope="col" colspan="2">Host <input name="uf_host" type="text" class="form-control short-form-control"></th>
 		<th scope="col" colspan="2">IP <input name="uf_ip" type="text" class="form-control short-form-control"></th>
 		<th scope="col" colspan="2">Account <input name="uf_account" type="text" class="form-control short-form-control"></th>
+		<th scope="col" colspan="2"><input <?php echo (isset($_POST['operonly'])) ? "checked" : ""; ?> name="operonly" type="checkbox" value=""> Opers Only</th>
 		<th scope="col"> <input class="btn btn-primary" type="submit" value="Search"></th></form>
 	</thead></table>
 
@@ -127,6 +136,11 @@ Click on a username to view more information.
 			strpos(strtolower($user->user->account), strtolower($_POST['uf_account'])) == false)
 				continue;
 
+			/* Some basic filtering for OPER */
+			if (isset($_POST['operonly']) &&
+			strpos($user->user->modes, "o") == false || strpos($user->user->modes,"S") !== false)
+				continue;
+
 			echo "\n<tr>";
 			echo "<th scope=\"row\"><input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\"></th>";
 			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge rounded-pill badge-dark">Bot</span>' : "";
@@ -145,7 +159,8 @@ Click on a username to view more information.
 			if (strpos($user->user->modes, "S") !== false)
 				$secure = "";
 			echo "<td>".$secure."</td>";
-			echo "<td>".$user->user->servername."</td>";
+		$serverlkup = $rpc->server()->get($user->user->servername);
+			echo "<td><a href=\"".BASE_URL."servers/details.php?server=$serverlkup->id\">".$user->user->servername."</a></td>";
 			echo "<td>".$user->user->reputation."</td>";
 			echo "</tr>";
 		}

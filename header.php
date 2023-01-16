@@ -30,7 +30,7 @@
 <?php
 
 $active_page = NULL;
-/* Needs to be a separate step due to multiple matches */
+
 foreach ($pages as $name => $page)
 {
 	$script = $_SERVER['SCRIPT_FILENAME'];

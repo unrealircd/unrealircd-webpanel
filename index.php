@@ -76,7 +76,7 @@ $stats = $rpc->query("stats.get", []);
 							<h6>Opers</h6>
 						</div>
 						<!-- TODO: Filter opers in user list and make this do that -->
-						<div class="col"><a class="btn btn-secondary disabled" href="#">View</a></div>
+						<div class="col"><a class="btn btn-primary" href="<?php echo BASE_URL."users/?operonly"; ?>">View</a></div>
 					</div>
 				</div>
 			</div>

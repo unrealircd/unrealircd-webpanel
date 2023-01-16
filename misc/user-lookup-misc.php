@@ -2,6 +2,7 @@
 
 function generate_html_whois($user)
 {
+    global $rpc;
     ?>
 
     <table class="table-sm table-responsive caption-top table-hover">
@@ -36,7 +37,9 @@ function generate_html_whois($user)
                 <td colspan="2"><code><?php echo (isset($user->user->vhost)) ? $user->user->vhost : ""; ?></code></td>
             </tr><tr>
                 <th>Connected to</th>
-                <td colspan="2"><code><?php echo $user->user->servername; ?></code></td>
+                <?php $serverlkup = $rpc->server()->get($user->user->servername); ?>
+			   
+                <td colspan="2"><a href="<?php echo BASE_URL."servers/details.php?server=$serverlkup->id"; ?>"><code><?php echo $user->user->servername; ?></code></td>
 
             </tr>
             <tr>
