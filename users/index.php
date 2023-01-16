@@ -159,8 +159,7 @@ Click on a username to view more information.
 			if (strpos($user->user->modes, "S") !== false)
 				$secure = "";
 			echo "<td>".$secure."</td>";
-		$serverlkup = $rpc->server()->get($user->user->servername);
-			echo "<td><a href=\"".BASE_URL."servers/details.php?server=$serverlkup->id\">".$user->user->servername."</a></td>";
+			echo "<td><a href=\"".BASE_URL."servers/details.php?server=".substr($user->id, 0, 3)."\">".$user->user->servername."</a></td>";
 			echo "<td>".$user->user->reputation."</td>";
 			echo "</tr>";
 		}
