@@ -138,7 +138,7 @@ Click on a username to view more information.
 
 			/* Some basic filtering for OPER */
 			if (isset($_POST['operonly']) &&
-			strpos($user->user->modes, "o") == false || strpos($user->user->modes,"S") !== false)
+			(strpos($user->user->modes, "o") == false || strpos($user->user->modes,"S") !== false))
 				continue;
 
 			echo "\n<tr>";
