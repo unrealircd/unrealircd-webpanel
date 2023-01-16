@@ -9,42 +9,42 @@ function generate_html_whois($user)
         <tbody>
             <tr>
                 <th>Nick</th>
-                <td colspan="2"><code><?php echo $user->name; ?></code></td>
+                <td colspan="2"><code><?php echo htmlspecialchars($user->name); ?></code></td>
             </tr><tr>
                 <th>User ID (UID)</th>
-                <td colspan="2"><code><?php echo $user->id; ?></code></td>
+                <td colspan="2"><code><?php echo htmlspecialchars($user->id); ?></code></td>
             </tr><tr>
                 <th>Real Host</th>
-                <td colspan="2"><code><?php echo $user->hostname; ?></code></td>
+                <td colspan="2"><code><?php echo htmlspecialchars($user->hostname); ?></code></td>
             </tr><tr>
                 <th>IP</th>
-                <td colspan="2"><code><?php echo $user->ip." </code> ";
+                <td colspan="2"><code><?php echo htmlspecialchars($user->ip)." </code> ";
                 if ($cc = (isset($user->geoip->country_code)) ? strtolower($user->geoip->country_code) : "")
                 {
-                   ?>  <img src="https://flagcdn.com/48x36/<?php echo $cc; ?>.png"
+                   ?>  <img src="https://flagcdn.com/48x36/<?php echo htmlspecialchars($cc); ?>.png"
                             width="20"
                             height="15">
                     <?php } ?>
                 </td>
             </tr><tr>
                 <th>Ident</th>
-                <td colspan="2"><code><?php echo $user->user->username; ?></code></td>
+                <td colspan="2"><code><?php echo htmlspecialchars($user->user->username); ?></code></td>
             </tr><tr>
                 <th>GECOS / Real Name</th>
-                <td colspan="2"><code><?php echo $user->user->realname; ?></code></td>
+                <td colspan="2"><code><?php echo htmlspecialchars($user->user->realname); ?></code></td>
             </tr><tr>
                 <th>Virtual Host</th>
-                <td colspan="2"><code><?php echo (isset($user->user->vhost)) ? $user->user->vhost : ""; ?></code></td>
+                <td colspan="2"><code><?php echo (isset($user->user->vhost)) ? htmlspecialchars($user->user->vhost) : ""; ?></code></td>
             </tr><tr>
                 <th>Connected to</th>
                 <?php $serverlkup = $rpc->server()->get($user->user->servername); ?>
 			   
-                <td colspan="2"><a href="<?php echo BASE_URL."servers/details.php?server=$serverlkup->id"; ?>"><code><?php echo $user->user->servername; ?></code></td>
+                <td colspan="2"><a href="<?php echo BASE_URL."servers/details.php?server=$serverlkup->id"; ?>"><code><?php echo htmlspecialchars($user->user->servername); ?></code></td>
 
             </tr>
             <tr>
                 <th>Logged in as</th>
-                <td colspan="2"><code><?php echo (isset($user->user->account)) ? "<a href=\"".BASE_URL."users/?account=".$user->user->account."\">".$user->user->account."</a>" : ""; ?></code></td>
+                <td colspan="2"><code><?php echo (isset($user->user->account)) ? "<a href=\"".BASE_URL."users/?account=".htmlspecialchars($user->user->account)."\">".htmlspecialchars($user->user->account)."</a>" : ""; ?></code></td>
             </tr>
                 
 
@@ -72,11 +72,11 @@ function generate_html_usersettings($user)
                                     <table class="table-sm table-responsive caption-top table-hover">
                                         <tr>
                                             <td>Oper Login</td>
-                                            <td><code><?php echo $user->user->operlogin; ?></code></td>
+                                            <td><code><?php echo htmlspecialchars($user->user->operlogin); ?></code></td>
                                         </tr>
                                         <tr>
                                             <td>Oper Class</td>
-                                            <td><?php  echo (isset($user->user->operclass)) ? "<span class=\"rounded-pill badge badge-info\">".$user->user->operclass."</span>" : "<span class=\"rounded-pill badge badge-info\">None</span>"; ?></td>
+                                            <td><?php echo (isset($user->user->operclass)) ? "<span class=\"rounded-pill badge badge-info\">".htmlspecialchars($user->user->operclass)."</span>" : "<span class=\"rounded-pill badge badge-info\">None</span>"; ?></td>
                                         </tr>
                                     </table>
                                 </td>
@@ -175,11 +175,11 @@ function generate_html_usersettings($user)
                                 <table class="table-sm table-responsive caption-top table-hover">
                                         <tr>
                                             <td>Cipher</td>
-                                            <td><code><?php echo $user->tls->cipher; ?></code></td>
+                                            <td><code><?php echo htmlspecialchars($user->tls->cipher); ?></code></td>
                                         </tr>
                                         <tr>
                                             <td>Cert Fingerprint</td>
-                                            <td><?php echo (isset($user->tls->certfp)) ? "<code>".$user->tls->certfp."</code>" : "<span class=\"rounded-pill badge badge-info\">None</span>"; ?></td>
+                                            <td><?php echo (isset($user->tls->certfp)) ? "<code>".htmlspecialchars($user->tls->certfp)."</code>" : "<span class=\"rounded-pill badge badge-info\">None</span>"; ?></td>
                                         </tr>
                                     </table> 
                                 </td>
