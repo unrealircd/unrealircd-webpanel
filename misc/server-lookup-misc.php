@@ -75,6 +75,8 @@ function sinfo_conv_version_string($server) : string
                 $tooltip = "Installed from GitHub";
                 $display_string = $tok[0]."-".$tok[1];
             }
+            $tooltip = htmlspecialchars($tooltip);
+            $display_string = htmlspecialchars($display_string);
         }
         $return = "<span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"$tooltip\"><code>" . $display_string . "</code> <div class=\"badge rounded-pill badge-dark\">$badge</div></a>";
     }
@@ -91,20 +93,20 @@ function generate_html_serverinfo($server)
         <tbody>
             <tr>
                 <th>Name</th>
-                <td colspan="2"><code><?php echo $server->name; ?></code></td>
+                <td colspan="2"><code><?php echo htmlspecialchars($server->name); ?></code></td>
             </tr><tr>
                 <th>Server ID (SID)</th>
-                <td colspan="2"><code><?php echo $server->id; ?></code></td>
+                <td colspan="2"><code><?php echo htmlspecialchars($server->id); ?></code></td>
             </tr><tr>
                 <th>Info</th>
-                <td colspan="2"><code><?php echo $server->server->info; ?></code></td>
+                <td colspan="2"><code><?php echo htmlspecialchars($server->server->info); ?></code></td>
             </tr><tr>
                 <th>Uplink</th>
                 <?php $serverlkup = (isset($server->server->uplink)) ? $rpc->server()->get($server->server->uplink) : "<span class=\"badge rounded-pill badge-info\">None</span>"; ?>
-                <td colspan="2"><code><?php echo "<a href=\"".BASE_URL."servers/details.php?server=".$serverlkup->id."\">".$server->server->uplink."</a>"; ?></code></td>
+                <td colspan="2"><code><?php echo "<a href=\"".BASE_URL."servers/details.php?server=".htmlspecialchars($serverlkup->id)."\">".htmlspecialchars($server->server->uplink)."</a>"; ?></code></td>
             </tr><tr>
                 <th>User count</th>
-                <td colspan="2"><code><?php echo $server->server->num_users; ?></code></td>
+                <td colspan="2"><code><?php echo htmlspecialchars($server->server->num_users); ?></code></td>
             </tr><tr>
                 <th>Version</th>
                 <td colspan="2"><?php echo sinfo_conv_version_string($server); ?></td>
@@ -136,16 +138,16 @@ function generate_html_modlist($srv)
         <?php
         foreach ($modules->list as $module) {
             echo "<tr>\n";
-            echo "<td><code>$module->name</code></td>";
+            echo "<td><code>".htmlspecialchars($module->name)."</code></td>";
             $desc = $module->description;
             $short_desc = substr($desc, 0, 70); // truncate to 80 chars
             if (strlen($desc) > strlen($short_desc))
                 $short_desc .= "...";
-            echo "<td><span href='#' data-toggle='tooltip' title=\"$desc\">$short_desc</span></td>";
+            echo "<td><span href='#' data-toggle='tooltip' title=\"".htmlspecialchars($desc)."\">".htmlspecialchars($short_desc)."</span></td>";
             $source = (!$module->third_party) ? "<div class=\"badge rounded-pill badge-success\">Official</div>" : "<div class=\"badge rounded-pill badge-info\">Third-Party</div>";
-            echo "<td>$source</td>";
-            echo "<td>$module->author</td>";
-            echo "<td>$module->version</td>";
+            echo "<td>".htmlspecialchars($source)."</td>";
+            echo "<td>".htmlspecialchars($module->author)."</td>";
+            echo "<td>".htmlspecialchars($module->version)."</td>";
         }
     }
         ?>

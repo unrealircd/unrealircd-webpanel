@@ -27,11 +27,11 @@ $channels = $rpc->channel()->getAll();
 		foreach($channels as $channel)
 		{
 			echo "<tr>";
-			echo "<td>".$channel->name."</td>";
+			echo "<td>".htmlspecialchars($channel->name)."</td>";
 			echo "<td>".$channel->num_users."</td>";
 			$modes = (isset($channel->modes)) ? "+" . $channel->modes : "<none>";
-			echo "<td>".$modes."</td>";
-			$topic = (isset($channel->topic)) ? $channel->topic : "";
+			echo "<td>".htmlspecialchars($modes)."</td>";
+			$topic = (isset($channel->topic)) ? htmlspecialchars($channel->topic) : "";
 			echo "<td>".$topic."</td>";
 			echo "<td>".$channel->creation_time."</td>";
 			echo "</tr>";
