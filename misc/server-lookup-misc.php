@@ -85,6 +85,7 @@ function sinfo_conv_version_string($server) : string
 
 function generate_html_serverinfo($server)
 {
+    global $rpc;
     ?>
     <table class="table-sm table-responsive caption-top table-hover">
         <tbody>
@@ -99,7 +100,8 @@ function generate_html_serverinfo($server)
                 <td colspan="2"><code><?php echo $server->server->info; ?></code></td>
             </tr><tr>
                 <th>Uplink</th>
-                <td colspan="2"><code><?php echo "<a href=\"".BASE_URL."servers/details.php?server=".$server->server->uplink."\">".$server->server->uplink."</a>"; ?></code></td>
+                <?php $serverlkup = $rpc->server()->get($server->server->uplink); ?>
+                <td colspan="2"><code><?php echo "<a href=\"".BASE_URL."servers/details.php?server=".$serverlkup->id."\">".$server->server->uplink."</a>"; ?></code></td>
             </tr><tr>
                 <th>User count</th>
                 <td colspan="2"><code><?php echo $server->server->num_users; ?></code></td>
