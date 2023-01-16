@@ -57,9 +57,6 @@ composer install
 cp config.php.sample config.php
 nano config.php
 ```
-The file will look like this:<br>
-<img src="https://i.ibb.co/zZ7LsXD/Screenshot-from-2023-01-04-17-03-20.png">
-
 Edit the configuration file to match your UnrealIRCd's RPC credentials and save
 
 NOTE: You most likely want to put the webpanel behind a login, using a
