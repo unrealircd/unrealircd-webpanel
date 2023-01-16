@@ -179,7 +179,7 @@ function generate_html_usersettings($user)
                                         </tr>
                                         <tr>
                                             <td>Cert Fingerprint</td>
-                                            <td><?php echo (isset($user->tls->certfp)) ? "".$user->tls->certfp."" : "<span class=\"rounded-pill badge badge-info\">None</span>"; ?></td>
+                                            <td><?php echo (isset($user->tls->certfp)) ? "<code>".$user->tls->certfp."</code>" : "<span class=\"rounded-pill badge badge-info\">None</span>"; ?></td>
                                         </tr>
                                     </table> 
                                 </td>
