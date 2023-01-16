@@ -107,7 +107,7 @@ footer {
 
 body {
 	padding-top: 45px;
-	background-image: url("https://www.unrealircd.org/assets/img/bg/linen.png");
+	background-image: url("../img/background.jpg");
 	display: flex;
 	flex-direction: column;
 }
