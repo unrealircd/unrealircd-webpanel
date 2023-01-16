@@ -43,46 +43,43 @@ $servers = $rpc->server()->getAll();
 <?php
 	if (isset($_POST['rehash']))
 	{
+	if (!empty($rehash_success)) {
+		do_log($rehash_success);
+		$servlist_bullet = "<ol>";
+
+		foreach ($rehash_success as $serv) {
+			$servlist_bullet .= "<li>$serv</li>";
+		}
+		$servlist_bullet .= "</ol>";
+		$servlist_err_bullet = "";
+		foreach ($rehash_errors as $serv => $err) {
+			$servlist_err_bullet .= "<h6>$serv</h6><ol>";
+			foreach ($err as $er)
+				$servlist_err_bullet .= "<li>$er</li>";
+			echo "</ol>";
+		}
+		$servlist_warn_bullet = ""; foreach ($rehash_warnings as $server => $warning) {
+			$servlist_warn_bullet .= "<h6>$serv</h6><ol>";
+			foreach ($warning as $w)
+				$servlist_warn_bullet .= "<li>$w</li>";
+			$servlist_warn_bullet .= "</ol>";
+		}
 		if (!empty($rehash_success))
-			do_log($rehash_success);
-			$servlist_bullet = "<ol>";
-			
-			foreach($rehash_success as $serv)
-			{
-				$servlist_bullet .= "<li>$serv</li>";
-			}
-			$servlist_bullet .= "</ol>";
-			$servlist_err_bullet = "";
-			foreach($rehash_errors as $serv => $err)
-			{
-				$servlist_err_bullet .= "<h6>$serv</h6><ol>";
-				foreach($err as $er)
-					$servlist_err_bullet .= "<li>$er</li>";
-				echo "</ol>";
-			}
-			$servlist_warn_bullet = "";
-			foreach($rehash_warnings as $server => $warning)
-			{
-				$servlist_warn_bullet .= "<h6>$serv</h6><ol>";
-				foreach($warning as $w)
-					$servlist_warn_bullet .= "<li>$w</li>";
-				$servlist_warn_bullet .= "</ol>";
-			}
-			if (!empty($rehash_success))
-				Message::Success(
-					"The following server(s) were successfully rehashed:",
-					$servlist_bullet
-				);
-			if (!empty($rehash_warnings))
-				Message::Info(
-					"The following warning(s) were encountered:",
-					$servlist_warn_bullet
-				);
-			if (!empty($rehash_errors))
-				Message::Fail(
-					"The following error(s) were encountered and the server(s) failed to rehash:",
-					$servlist_err_bullet
-				);
+			Message::Success(
+				"The following server(s) were successfully rehashed:",
+				$servlist_bullet
+			);
+		if (!empty($rehash_warnings))
+			Message::Warning(
+				"The following warning(s) were encountered:",
+				$servlist_warn_bullet
+			);
+		if (!empty($rehash_errors))
+			Message::Fail(
+				"The following error(s) were encountered and the server(s) failed to rehash:",
+				$servlist_err_bullet
+			);
+		}
 	}
 	if (isset($_POST['sf_name']) && strlen($_POST['sf_name']))
 		Message::Info("Listing servers which match name: \"" . $_POST['sf_name'] . "\"");
@@ -100,7 +97,27 @@ Click on a server name to view more information.
 		<th scope="col" colspan="2">Name<input name="sf_name" type="text" class="form-control short-form-control">
 		<th scope="col"> <input class="btn btn-primary btn-sm" type="submit" value="Search"></th></form>
 	</thead></table>
-	<form action="index.php" method="post"><button type="submit" class="btn btn-info" name="rehash">Rehash Selected</div><br>
+	<form action="index.php" method="post"><div class="btn btn-sm btn-warning" data-toggle="modal" data-target="#rehash_modal">Rehash Selected</div><br><br>
+
+		<div class="modal fade" id="rehash_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="myModalLabel">Rehash Selected Servers</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					Are you sure you want to rehash the selected servers?	
+				</div>
+				<div class="modal-footer">
+						<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						<button type="submit" class="btn btn-primary" name="rehash">Rehash Selected</button>
+				</div>
+				</div>
+			</div>
+		</div>
 	<table class="container-xxl table table-sm table-responsive caption-top table-striped">
 	<thead class="table-primary">
 		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_server(this)" /></th>
