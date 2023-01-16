@@ -6,7 +6,9 @@ $rehash_errors = [];
 $rehash_warnings = [];
 $rehash_success = [];
 
-if (!empty($_POST) && do_log($_POST))
+if (!empty($_POST))
+{
+	do_log($_POST);
 	if (isset($_POST['rehash']))
 		foreach ($_POST['serverch'] as $servID)
 			if ($response = $rpc->server()->rehash($servID)) 
@@ -32,7 +34,7 @@ if (!empty($_POST) && do_log($_POST))
 					}
 				}		 
 			}
-
+}
 
 /* Get the server list */
 $servers = $rpc->server()->getAll();
