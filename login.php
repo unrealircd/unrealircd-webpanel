@@ -70,3 +70,4 @@ if (!empty($_POST))
     </div>
   </div>
 </form>
+<?php require_once "footer.php";
