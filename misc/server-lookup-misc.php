@@ -145,7 +145,7 @@ function generate_html_modlist($srv)
                 $short_desc .= "...";
             echo "<td><span href='#' data-toggle='tooltip' title=\"".htmlspecialchars($desc)."\">".htmlspecialchars($short_desc)."</span></td>";
             $source = (!$module->third_party) ? "<div class=\"badge rounded-pill badge-success\">Official</div>" : "<div class=\"badge rounded-pill badge-info\">Third-Party</div>";
-            echo "<td>".htmlspecialchars($source)."</td>";
+            echo "<td>$source</td>";
             echo "<td>".htmlspecialchars($module->author)."</td>";
             echo "<td>".htmlspecialchars($module->version)."</td>";
         }
