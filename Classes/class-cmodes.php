@@ -124,7 +124,7 @@ class IRCList {
         "I" => [
             "name" => "Invitation",
             "description" => "Marks an inviation to a channel.",
-            "requires" => "HalOp"
+            "requires" => "HalfOp"
         ],
         "K" => [
             "name" => "No Knock",
