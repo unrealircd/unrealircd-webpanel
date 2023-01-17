@@ -37,7 +37,6 @@ if (isset($_POST))
     }
 }
 
-var_dump(unreal_get_current_user());
 
 $conn = sqlnew();
 $count = $conn->query("SELECT count(*) FROM ".SQL_PREFIX."users")->fetchColumn();
