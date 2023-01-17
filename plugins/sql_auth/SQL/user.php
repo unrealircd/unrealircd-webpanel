@@ -1,0 +1,28 @@
+<?php
+
+class SQLA_User
+{
+    public $id = NULL;
+    public $username = NULL;
+    public $passhash = NULL;
+    public $first_name = NULL;
+    public $last_name = NULL;
+
+    function __construct(string $name)
+    {
+        $conn = sqlnew();
+        $prep = $conn->prepare("SELECT * FROM " . SQL_PREFIX . "users WHERE LOWER(user_name) = :name LIMIT 1");
+        $prep->execute(["name" => strtolower($name)]);
+        $data = $prep->fetchAll();
+        if ($data = $data[0])
+        {
+            $this->id = $data['user_id'];
+            $this->username = $data['user_name'];
+            $this->passhash = $data['user_pass'];
+            $this->first_name = $data['first_name'] ?? NULL;
+            $this->last_name = $data['last_name'] ?? NULL;
+        }
+        
+    }
+
+}

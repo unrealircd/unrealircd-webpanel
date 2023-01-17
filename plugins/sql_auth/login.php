@@ -1,5 +1,7 @@
 
-<?php  include "../../common.php";
+<?php
+require_once "../../common.php";
+require_once "SQL/user.php";
 
 $logout = false;
 if (!empty($_GET['logout']))
@@ -15,13 +17,28 @@ if (!empty($_POST))
 {
   if ($_POST['username'] && $_POST['password'])
   {
-    session_start([
-      'cookie_lifetime' => 86400,
-    ]);
-    $_SESSION['id'] = $_POST['username'];
-    /* insert magic hacks here */
-    header('Location: ' . BASE_URL);
-  } else
+      session_start([
+        'cookie_lifetime' => 86400,
+      ]);
+      $user = new SQLA_User($_POST['username']);
+      
+      /* not being too informative with the login error in case of attackers */
+      if (!$user->id)
+      {
+          $failmsg = "Incorrect username";
+      }
+      else if (password_verify($_POST['password'], $user->passhash))
+      {
+        $_SESSION['id'] = $user->id;
+        header('Location: ' . BASE_URL);
+      }
+      else
+      {
+          $failmsg = "Incorrect pass";
+      }
+
+  }
+  else
     $failmsg = "Couldn't log you in: Missing credentials";
 }
 
