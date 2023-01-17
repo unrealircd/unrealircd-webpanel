@@ -12,6 +12,7 @@ class sql_auth
 
 	function __construct()
 	{
+		self::create_tables();
 		Hook::func(HOOKTYPE_NAVBAR, 'sql_auth::add_navbar');
 		Hook::func(HOOKTYPE_PRE_HEADER, 'sql_auth::session_start');
 
@@ -57,6 +58,29 @@ class sql_auth
 		{
 			header("Location: ".BASE_URL."plugins/sql_auth/login.php");
 		}
+	}
+
+	public static function create_tables()
+	{
+		$conn = sqlnew();
+		$conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "users (
+			user_id int AUTO_INCREMENT NOT NULL,
+			user_name VARCHAR(255) NOT NULL,
+			user_pass VARCHAR(255) NOT NULL,
+			
+			user_fname VARCHAR(255),
+			user_lname VARCHAR(255),
+			user_bio VARCHAR(255),
+			created VARCHAR(255),
+			PRIMARY KEY (user_id)
+		)");
+		$conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "user_meta (
+			meta_id int AUTO_INCREMENT NOT NULL,
+			user_id int NOT NULL,
+			meta_key VARCHAR(255) NOT NULL,
+			meta_value VARCHAR(255),
+			PRIMARY KEY (meta_id)
+		)");
 	}
 
 }
