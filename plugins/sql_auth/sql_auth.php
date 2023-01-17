@@ -31,7 +31,7 @@ class sql_auth
 			$link = "error.php?errno=1";
 		}
 		$label = ($notifs) ? "<span class=\"position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger\">$notifs</span>" : "";
-		$pages["SQL Auth$label"] = "plugins/sql_auth/$link";
+		$pages["Panel Access$label"] = "plugins/sql_auth/$link";
 		if ($_SESSION['id'])
 		{
 			$pages["Logout"] = "plugins/sql_auth/login.php?logout=true";
