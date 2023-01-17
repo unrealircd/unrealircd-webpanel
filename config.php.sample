@@ -49,6 +49,38 @@ define( 'UNREALIRCD_DEBUG', false );
 
 
 /**
+ * If you wish to use the default SQL user authentication system,
+ * you'll need to specify your SQL information below.
+ */
+
+ /**
+  * SQL IP address or hostname
+  */
+define('SQL_IP', "127.0.0.1");
+
+/**
+ * SQL Dabase name
+ */
+define('SQL_DATABASE', "unrealircd");
+/**
+ * SQL Username
+ */
+define('SQL_USERNAME', "unrealircd");
+
+/**
+ * SQL Password
+ */
+define('SQL_PASSWORD', "replace_this_with_your_sql_password");
+
+/**
+ * SQL Table prefix
+ * You should only need to change this if you have already have one
+ * or more instances of webpanel on the same database
+ */
+define('SQL_PREFIX', "unreal_");
+
+
+/**
  * Your list of plugins:
  */
 define(
