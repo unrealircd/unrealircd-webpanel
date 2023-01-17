@@ -1,3 +1,4 @@
+<?php $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 <!DOCTYPE html>
 <head>
  <!-- Latest compiled and minified CSS -->

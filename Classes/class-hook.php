@@ -1,6 +1,7 @@
 <?php
 
 define('HOOKTYPE_NAVBAR', 100); /* The Hook for the navigation bar */
+define('HOOKTYPE_PRE_HEADER', 101); /* The hook for pre-header */
 
 /** 
  *  Class for "Hook"

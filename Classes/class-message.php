@@ -5,7 +5,7 @@ class Message
 	static function Fail(...$message)
 	{
 		?>
-		<div class="alert alert-short alert-danger fade show" role="alert">
+		<div class="alert alert-danger fade show" role="alert">
 		<span class="closebtn text-right" onclick="this.parentElement.style.display='none';">&times;</span>
 		<?php
 			for ($i = 0; isset($message[$i]); $i++)
@@ -20,7 +20,7 @@ class Message
 	static function Success(...$message)
 	{
 		?>
-		<div class="alert alert-short alert-success fade show" role="alert">
+		<div class="alert alert-success fade show" role="alert">
 		<span class="closebtn text-right" onclick="this.parentElement.style.display='none';">&times;</span>
 		<?php
 			for ($i = 0; isset($message[$i]); $i++)
@@ -35,7 +35,7 @@ class Message
 	static function Info(...$message)
 	{
 		?>
-		<div class="alert alert-short alert-info fade show" role="alert">
+		<div class="alert alert-info fade show" role="alert">
 		<span class="closebtn text-right" onclick="this.parentElement.style.display='none';">&times;</span>
 		<?php
 			for ($i = 0; isset($message[$i]); $i++)

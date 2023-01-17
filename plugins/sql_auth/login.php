@@ -1,10 +1,24 @@
 
-<?php  include "common.php";
+<?php  include "../../common.php";
 
+$logout = false;
+if (!empty($_GET['logout']))
+{
+  if (!isset($_SESSION['id']))
+    $failmsg = "Nothing to logout from";
+  else {
+    session_destroy();
+    $logout = true;
+  }
+}
 if (!empty($_POST))
 {
   if ($_POST['username'] && $_POST['password'])
   {
+    session_start([
+      'cookie_lifetime' => 86400,
+    ]);
+    $_SESSION['id'] = $_POST['username'];
     /* insert magic hacks here */
     header('Location: ' . BASE_URL);
   } else
@@ -33,7 +47,7 @@ if (!empty($_POST))
 <link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>img/favicon.ico">
 <link href="<?php echo BASE_URL; ?>css/unrealircd-admin.css" rel="stylesheet">
 </head><div class="text-center">
-<a href="<?php echo BASE_URL; ?>login.php"><button type="button" style="margin:0; top:50%; position: absolute;" class="btn  btn-primary" data-bs-toggle="modal" data-bs-target="#loginModaltitle">
+<a href="<?php echo BASE_URL; ?>plugins/sql_auth/login.php"><button type="button" style="margin:0; top:50%; position: absolute;" class="btn  btn-primary" data-bs-toggle="modal" data-bs-target="#loginModaltitle">
   Login to continue
 </button></a>
 </div>
@@ -53,7 +67,11 @@ if (!empty($_POST))
         </div>
         <div class="modal-body">
             <div class="form-group">
-              <?php if (isset($failmsg)) Message::Fail($failmsg); ?>
+              <?php 
+                if (isset($failmsg)) Message::Fail($failmsg);
+                if ($logout)
+                  Message::Success("You have been logged out");
+              ?>
               <label for="username">Username / Nick:</label>
               <input style="width:90%;" type="text" class="form-control" name="username" id="username" >
             </div>
@@ -63,11 +81,11 @@ if (!empty($_POST))
             </div>
         </div>
         <div class="modal-footer">
-          <a class="btn btn-secondary" href="/">Cancel</a>
+          <a class="btn btn-secondary" href="#">Cancel</a>
           <button type="submit" class="btn btn-primary">Log-In</button>
         </div>
       </div>
     </div>
   </div>
 </form>
-<?php require_once "footer.php";
+<?php require_once "../../footer.php";
