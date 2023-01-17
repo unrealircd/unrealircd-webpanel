@@ -3,6 +3,7 @@ $conn = NULL;
 
 require_once "../../common.php";
 require_once "../../header.php";
+require_once "SQL/user.php";
 do_log($_POST);
 
 if (isset($_POST))
@@ -36,7 +37,7 @@ if (isset($_POST))
     }
 }
 
-
+var_dump(unreal_get_current_user());
 
 $conn = sqlnew();
 $count = $conn->query("SELECT count(*) FROM ".SQL_PREFIX."users")->fetchColumn();

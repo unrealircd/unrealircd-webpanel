@@ -1,6 +1,8 @@
 <?php
 
 require_once "SQL/sql.php";
+require_once "SQL/user.php";
+
 class sql_auth
 {
 	public $name = "SQLAuth";
@@ -12,6 +14,16 @@ class sql_auth
 	{
 		Hook::func(HOOKTYPE_NAVBAR, 'sql_auth::add_navbar');
 		Hook::func(HOOKTYPE_PRE_HEADER, 'sql_auth::session_start');
+
+		if (defined('SQL_DEFAULT_USER')) // we've got a default account
+		{
+			$lkup = new SQLA_User(SQL_DEFAULT_USER['username']);
+
+			if (!$lkup->id) // doesn't exist, add it with full privileges
+			{
+				create_new_user(["user_name" => SQL_DEFAULT_USER['username'], "user_pass" => SQL_DEFAULT_USER['password']]);
+			}
+		}
 	}
 
 	public static function add_navbar(&$pages)
