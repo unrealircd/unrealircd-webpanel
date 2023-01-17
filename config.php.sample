@@ -80,6 +80,16 @@ define('SQL_PASSWORD', "replace_this_with_your_sql_password");
 define('SQL_PREFIX', "unreal_");
 
 
+/** 
+ * The default user for the plugin "SQL_Auth". As soon as you load
+ * the plugin, the user defined below will be created. It suggested
+ * that you remove it after you've logged in successfully.
+ */
+define('SQL_DEFAULT_USER', [
+    "username" => "default",
+    "password" => "testing"
+]);
+
 /**
  * Your list of plugins:
  */
