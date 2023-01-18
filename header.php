@@ -27,7 +27,7 @@
 	<!-- Fixed navbar -->
 	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
 		<ul class="nav navbar-nav">
-			<a class="navbar-brand" href="<?php echo BASE_URL; ?>/index.php"><img src="<?php echo BASE_URL; ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
+			<a class="navbar-brand" href="<?php echo BASE_URL; ?>"><img src="<?php echo BASE_URL; ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
 <?php
 
 $active_page = NULL;
