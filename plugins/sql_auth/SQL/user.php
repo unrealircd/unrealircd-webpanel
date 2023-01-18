@@ -4,7 +4,7 @@ class SQLA_User
 {
     public $id = NULL;
     public $username = NULL;
-    protected $passhash = NULL;
+    private $passhash = NULL;
     public $first_name = NULL;
     public $last_name = NULL;
     public $user_meta = [];
@@ -68,6 +68,21 @@ class SQLA_User_Meta
     }
 }
 
+/**
+ * Array of user
+ * 
+ * Required:
+ * user_name
+ * user_pass
+ * 
+ * Optional:
+ * user_fname
+ * user_lname
+ * 
+ * @param array $user
+ * @throws Exception
+ * @return bool
+ */
 function create_new_user(array $user) : bool
 {
     if (!isset($user['user_name']) || !isset($user['user_pass']))

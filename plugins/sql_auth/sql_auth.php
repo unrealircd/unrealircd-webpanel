@@ -30,22 +30,9 @@ class sql_auth
 	public static function add_navbar(&$pages)
 	{
 		session_start();
-		$query = "SELECT * FROM INFORMATION_SCHEMA.TABLES
-		WHERE TABLE_TYPE = 'BASE TABLE'
-		AND TABLE_NAME = '".SQL_PREFIX."users'";
-
-		$conn = sqlnew();
-		$result = $conn->query($query);
-		$notifs = 0;
-		$link = "";
-		if (!$result || !$result->fetchColumn())
-		{
-			++$notifs;
-			$link = "error.php?errno=1";
-		}
-		$label = ($notifs) ? "<span class=\"position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger\">$notifs</span>" : "";
-		$pages["Panel Access$label"] = "plugins/sql_auth/$link";
-		if ($_SESSION['id'])
+		
+		$pages["Panel Access"] = "plugins/sql_auth/";
+		if (isset($_SESSION['id']))
 		{
 			$pages["Logout"] = "plugins/sql_auth/login.php?logout=true";
 		}
@@ -53,7 +40,6 @@ class sql_auth
 
 	public static function session_start($n)
 	{
-		session_start();
 		if (!isset($_SESSION['id']))
 		{
 			header("Location: ".BASE_URL."plugins/sql_auth/login.php");

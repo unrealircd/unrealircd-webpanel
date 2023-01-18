@@ -17,9 +17,7 @@ if (!empty($_POST))
 {
   if ($_POST['username'] && $_POST['password'])
   {
-      session_start([
-        'cookie_lifetime' => 86400,
-      ]);
+      
       $user = new SQLA_User($_POST['username']);
       
       /* not being too informative with the login error in case of attackers */
