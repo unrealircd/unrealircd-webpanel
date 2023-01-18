@@ -7,7 +7,9 @@ class SQLA_User
     private $passhash = NULL;
     public $first_name = NULL;
     public $last_name = NULL;
+    public $created = NULL;
     public $user_meta = [];
+    public $bio = NULL;
 
     /**
      * Find a user in the database by name or ID
@@ -38,6 +40,8 @@ class SQLA_User
             $this->passhash = $data['user_pass'];
             $this->first_name = $data['user_fname'] ?? NULL;
             $this->last_name = $data['user_lname'] ?? NULL;
+            $this->created = $data['created'];
+            $this->bio = $data['user_bio'];
             $this->user_meta = (new SQLA_User_Meta($this->id))->list;
         }
     }
@@ -92,10 +96,11 @@ function create_new_user(array $user) : bool
     $password = password_hash($user['user_pass'], PASSWORD_ARGON2ID);
     $first_name = (isset($user['fname'])) ? $user['fname'] : NULL;
     $last_name = (isset($user['lname'])) ? $user['lname'] : NULL;
+    
 
     $conn = sqlnew();
-    $prep = $conn->prepare("INSERT INTO " . SQL_PREFIX . "users (user_name, user_pass, user_fname, user_lname) VALUES (:name, :pass, :fname, :lname)");
-    $prep->execute(["name" => $username, "pass" => $password, "fname" => $first_name, "lname" => $last_name]);
+    $prep = $conn->prepare("INSERT INTO " . SQL_PREFIX . "users (user_name, user_pass, user_fname, user_lname, created) VALUES (:name, :pass, :fname, :lname, :created)");
+    $prep->execute(["name" => $username, "pass" => $password, "fname" => $first_name, "lname" => $last_name, "created" => date("Y-m-d H:i:s")]);
     
     return true;
 }
