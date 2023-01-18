@@ -8,30 +8,60 @@ require_once "SQL/user.php";
 do_log($_POST);
 
 
-$conn = sqlnew();
-$result = $conn->query("SELECT user_id FROM " . SQL_PREFIX . "users");
 
-if (!$result) // impossible
-{
-    die("Something went wrong.");
-}
 
-$userlist = [];
-while($row =  $result->fetch())
-{
-    $userlist[] = new SQLA_User(NULL, $row['user_id']);
-}
 ?>
 <h4>Panel Access Overview</h4>
 <?php
     if (isset($_POST))
     {
+		// TODO:  Validation and stuff
         $p = $_POST;
+		if (isset($p['delete_user']))
+		{
+			$info = [];
+			foreach ($p['userch'] as $id)
+			{
+				$user = new SQLA_User(NULL, $id);
+				$deleted = delete_user($id, $info);
+				$msg = ($deleted = 1) ? "Message::Success" : "Message::Fail";
+			}
+			$msg($info);
+			unset($info);
+		}
+
         if (isset($p['do_add_user']))
         {
-
-        }        
+			$user = [];
+			$user['user_name'] = $p['user_add'];
+			$user['user_pass'] = $p['password'];
+			$user['fname'] = $p['add_first_name'];
+			$user['lname'] = $p['add_last_name'];
+			$user['user_bio'] = $p['user_bio'];
+			create_new_user($user);
+			if (($usr_obj = new SQLA_User($p['user_name'])) && !$usr_obj->id)
+			{
+				Message::Success("Successfully created user \"" . $user['user_name'] . "\"");
+			}
+			else
+			{
+				Message::Fail("Failed to create user \"" . $user['user_name'] . "\"");
+			}
+		}
     }
+	$conn = sqlnew();
+	$result = $conn->query("SELECT user_id FROM " . SQL_PREFIX . "users");
+	$userlist = [];
+	while($row =  $result->fetch())
+	{
+		$userlist[] = new SQLA_User(NULL, $row['user_id']);
+	}
+
+	if (!$result) // impossible
+	{
+		die("Something went wrong.");
+	}
+
 ?>
 Click on a username to view more information.
 <br><br>
@@ -131,4 +161,4 @@ Click on a username to view more information.
 	</div>
 	</div></form></div></div>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once '../../footer.php'; ?>

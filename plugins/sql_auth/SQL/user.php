@@ -33,7 +33,7 @@ class SQLA_User
         $data = NULL;
         if ($prep)
             $data = $prep->fetchAll();
-        if ($data = $data[0])
+        if (isset($data[0]) && $data = $data[0])
         {
             $this->id = $data['user_id'];
             $this->username = $data['user_name'];
@@ -96,11 +96,12 @@ function create_new_user(array $user) : bool
     $password = password_hash($user['user_pass'], PASSWORD_ARGON2ID);
     $first_name = (isset($user['fname'])) ? $user['fname'] : NULL;
     $last_name = (isset($user['lname'])) ? $user['lname'] : NULL;
+    $user_bio = (isset($user['user_bio'])) ? $user['user_bio'] : NULL;
     
 
     $conn = sqlnew();
-    $prep = $conn->prepare("INSERT INTO " . SQL_PREFIX . "users (user_name, user_pass, user_fname, user_lname, created) VALUES (:name, :pass, :fname, :lname, :created)");
-    $prep->execute(["name" => $username, "pass" => $password, "fname" => $first_name, "lname" => $last_name, "created" => date("Y-m-d H:i:s")]);
+    $prep = $conn->prepare("INSERT INTO " . SQL_PREFIX . "users (user_name, user_pass, user_fname, user_lname, user_bio, created) VALUES (:name, :pass, :fname, :lname, :user_bio, :created)");
+    $prep->execute(["name" => $username, "pass" => $password, "fname" => $first_name, "lname" => $last_name, "user_bio" => $user_bio, "created" => date("Y-m-d H:i:s")]);
     
     return true;
 }
@@ -132,3 +133,35 @@ function current_user_can() : bool
     return false;
 }
 
+/**
+ * Delete a user and related meta
+ * @param int $id The ID of the user in the SQL database.
+ * @param array $info Optional: This will fill with a response.
+ * @return int
+ * 
+ * Return values:
+ *  1   The user was successfully deleted.
+ *  0   The user was not found
+ *  -1  The admin does not have permission to delete users [TODO]
+ */
+function delete_user(int $id, &$info = []) : int
+{
+    $user = new SQLA_User(NULL, $id);
+    if (!$user->id) {
+        $info[] = "Could not find user";
+        var_dump("return 1");
+        return 0;
+    }
+    $query = "DELETE FROM " . SQL_PREFIX . "users WHERE user_id = :id";
+    $conn = sqlnew();
+    $stmt = $conn->prepare($query);
+    $stmt->execute(["id" => $user->id]);
+    $deleted = $stmt->rowCount();
+    if ($user->id)
+    {
+        $info[] = "Successfully deleted user \"$user->username\"";
+        return 1;
+    }
+    $info[] = "Unknown error";
+    return 0;
+}
