@@ -4,6 +4,9 @@ class Message
 {
 	static function Fail(...$message)
 	{
+		// cater for arrays
+		if (is_array($message[0]) && !isset($message[1]))
+			$message = $message[0];
 		?>
 		<div class="alert alert-danger fade show" role="alert">
 		<span class="closebtn text-right" onclick="this.parentElement.style.display='none';">&times;</span>
@@ -19,6 +22,9 @@ class Message
 	}
 	static function Success(...$message)
 	{
+		// cater for arrays
+		if (is_array($message[0]) && !isset($message[1]))
+			$message = $message[0];
 		?>
 		<div class="alert alert-success fade show" role="alert">
 		<span class="closebtn text-right" onclick="this.parentElement.style.display='none';">&times;</span>
@@ -34,6 +40,9 @@ class Message
 	}
 	static function Info(...$message)
 	{
+		// cater for arrays
+		if (is_array($message[0]) && !isset($message[1]))
+			$message = $message[0];
 		?>
 		<div class="alert alert-info fade show" role="alert">
 		<span class="closebtn text-right" onclick="this.parentElement.style.display='none';">&times;</span>
