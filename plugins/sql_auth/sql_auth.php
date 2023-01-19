@@ -15,6 +15,7 @@ class sql_auth
 		self::create_tables();
 		Hook::func(HOOKTYPE_NAVBAR, 'sql_auth::add_navbar');
 		Hook::func(HOOKTYPE_PRE_HEADER, 'sql_auth::session_start');
+		Hook::func(HOOKTYPE_OVERVIEW_CARD, 'sql_auth::add_overview_card');
 
 		if (defined('SQL_DEFAULT_USER')) // we've got a default account
 		{
@@ -67,6 +68,41 @@ class sql_auth
 			meta_value VARCHAR(255),
 			PRIMARY KEY (meta_id)
 		)");
+	}
+
+	public static function add_overview_card(&$stats)
+	{
+		$num_of_panel_admins = sqlnew()->query("SELECT COUNT(*) FROM " . SQL_PREFIX . "users")->fetchColumn();
+		?>
+
+		<div class="container mt-5">
+
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="card text-center">
+						<div class="card-header bg-success text-white">
+							<div class="row">
+								<div class="col">
+									<i class="fa fa-lock-open fa-3x"></i>
+								</div>
+								<div class="col">
+									<h3 class="display-4"><?php echo $num_of_panel_admins; ?></h3>
+								</div>
+							</div>
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="col">
+									<h6>Panel Users</h6>
+								</div>
+								<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL; ?>plugins/sql_auth/">View</a></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>		
+		<?php
 	}
 
 }
