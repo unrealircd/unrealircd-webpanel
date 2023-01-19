@@ -3,7 +3,6 @@ require_once "common.php";
 require_once "header.php";
 
 $stats = $rpc->query("stats.get", []);
-var_dump($stats);
 ?>
 
 <h2>Network Overview</h2>
