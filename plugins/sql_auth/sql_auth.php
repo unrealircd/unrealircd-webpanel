@@ -45,6 +45,15 @@ class sql_auth
 		{
 			header("Location: ".BASE_URL."plugins/sql_auth/login.php");
 		}
+		else
+		{
+			$user = new SQLA_User(NULL, $_SESSION['id']);
+			if (!$user->id)
+			{
+				session_destroy();
+				header("Location: ".BASE_URL."plugins/sql_auth/login.php");
+			}
+		}
 	}
 
 	public static function create_tables()
