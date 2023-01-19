@@ -77,6 +77,9 @@ Click on a username to view more information.
 	if (isset($_POST['uf_account']) && strlen($_POST['uf_account']))
 		Message::Info("Listing users which match account: \"" . $_POST['uf_account'] . "\"");
 
+	if (isset($_POST['uf_server']) && strlen($_POST['uf_server']))
+		Message::Info("Listing users connected to servers matching: \"" . $_POST['uf_server'] . "\"");
+
 
 	?>
 	<table class="container-xxl table table-responsive caption-top table-striped">
@@ -87,6 +90,7 @@ Click on a username to view more information.
 		<th scope="col" colspan="2">Host <input name="uf_host" type="text" class="form-control short-form-control"></th>
 		<th scope="col" colspan="2">IP <input name="uf_ip" type="text" class="form-control short-form-control"></th>
 		<th scope="col" colspan="2">Account <input name="uf_account" type="text" class="form-control short-form-control"></th>
+		<th scope="col" colspan="2">Server <input name="uf_server" type="text" class="form-control short-form-control"></th>
 		<th scope="col" colspan="2"><input <?php echo (isset($_POST['operonly'])) ? "checked" : ""; ?> name="operonly" type="checkbox" value=""> Opers Only</th>
 		<th scope="col"> <input class="btn btn-primary" type="submit" value="Search"></th></form>
 	</thead></table>
@@ -134,6 +138,12 @@ Click on a username to view more information.
 			if (isset($_POST['uf_account']) && strlen($_POST['uf_account']) && 
 			strpos(strtolower($user->user->account), strtolower($_POST['uf_account'])) !== 0 &&
 			strpos(strtolower($user->user->account), strtolower($_POST['uf_account'])) == false)
+				continue;
+
+			/* Some basic filtering for ACCOUNT */
+			if (isset($_POST['uf_server']) && strlen($_POST['uf_server']) && 
+			strpos(strtolower($user->user->servername), strtolower($_POST['uf_server'])) !== 0 &&
+			strpos(strtolower($user->user->servername), strtolower($_POST['uf_server'])) == false)
 				continue;
 
 			/* Some basic filtering for OPER */
