@@ -3,11 +3,24 @@ require_once "common.php";
 require_once "header.php";
 
 $stats = $rpc->query("stats.get", []);
+var_dump($stats);
 ?>
 
 <h2>Network Overview</h2>
 
-<?php Hook::run(HOOKTYPE_PRE_OVERVIEW_CARD, $stats); ?>
+<?php
+$array_of_stats = (array)$stats;
+
+/* What if someone wants to add their own stats... */
+Hook::run(HOOKTYPE_PRE_OVERVIEW_CARD, $array_of_stats);
+
+/* This makes sure that a plugin which called the parameter
+ * by reference can add/update the stats for display here.
+*/
+$stats = (object) $array_of_stats;
+
+
+?>
 
 <div class="container mt-5">
 
