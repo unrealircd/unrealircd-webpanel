@@ -47,11 +47,11 @@ class sql_auth
 		}
 		else
 		{
-			$user = new SQLA_User(NULL, $_SESSION['id']);
-			if (!$user->id)
+			if (!unreal_get_current_user()->id) // user no longer exists
 			{
 				session_destroy();
 				header("Location: ".BASE_URL."plugins/sql_auth/login.php");
+				die();
 			}
 		}
 	}

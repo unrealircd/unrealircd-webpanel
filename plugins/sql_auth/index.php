@@ -23,7 +23,14 @@ do_log($_POST);
 			foreach ($p['userch'] as $id)
 			{
 				$user = new SQLA_User(NULL, $id);
+				$us = unreal_get_current_user();
 				$deleted = delete_user($id, $info);
+				if ($us->id == $user->id) // if it's the current user
+				{
+					session_destroy();
+					header("Location: " . BASE_URL . "plugins/sql_auth/login.php");
+					die();
+				}
 				$msg = ($deleted = 1) ? "Message::Success" : "Message::Fail";
 			}
 			$msg($info);
