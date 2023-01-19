@@ -47,9 +47,23 @@ define( 'UNREALIRCD_SSL_VERIFY', false );
 */
 define( 'UNREALIRCD_DEBUG', false );
 
+/**
+ * Your list of plugins:
+ */
+define(
+    'PLUGINS', [
+
+        /*  This is where you should type the name(s) of your plugins. 
+         *  Uncomment the following line to view the live example
+        */
+        //"example_plugin", /* An example plugin */
+        //"sql_auth", /* Provides a login page which uses SQL */
+    ]
+);
+
 
 /**
- * If you wish to use the default SQL user authentication system,
+ * If you wish to use the SQL user authentication system "sql_auth",
  * you'll need to specify your SQL information below.
  */
 
@@ -89,16 +103,3 @@ define('SQL_DEFAULT_USER', [
     "username" => "default",
     "password" => "testing"
 ]);
-
-/**
- * Your list of plugins:
- */
-define(
-    'PLUGINS', [
-
-        /*  This is where you should type the name(s) of your plugins. 
-         *  Uncomment the following line to view the live example
-        */
-        //"example_plugin",
-    ]
-);
