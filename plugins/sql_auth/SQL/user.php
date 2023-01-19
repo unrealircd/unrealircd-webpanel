@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * SQLA_User
+ * This is the User class for the SQL_Auth plugin
+ */
 class SQLA_User
 {
     public $id = NULL;
@@ -54,6 +58,12 @@ class SQLA_User
     }
 }
 
+
+/**
+ * This class looks up and returns any user meta.
+ * This is used by SQLA_User, so you won't need to 
+ * call it separately from SQLA_User.
+ */
 class SQLA_User_Meta
 {
     public $list = [];
