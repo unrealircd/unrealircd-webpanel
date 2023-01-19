@@ -7,6 +7,8 @@ $stats = $rpc->query("stats.get", []);
 
 <h2>Network Overview</h2>
 
+<?php Hook::run(HOOKTYPE_PRE_OVERVIEW_CARD, $stats);
+
 <div class="container mt-5">
 
 	<div class="row">
@@ -20,7 +22,7 @@ $stats = $rpc->query("stats.get", []);
 						</span>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo $stats->user->total - $stats->user->ulined; ?></h3>
+							<h3 class="display-4"><?php echo $stats->user->total; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -75,7 +77,6 @@ $stats = $rpc->query("stats.get", []);
 						<div class="col">
 							<h6>Opers</h6>
 						</div>
-						<!-- TODO: Filter opers in user list and make this do that -->
 						<div class="col"><a class="btn btn-primary" href="<?php echo BASE_URL."users/?operonly"; ?>">View</a></div>
 					</div>
 				</div>
@@ -216,5 +217,7 @@ $stats = $rpc->query("stats.get", []);
 </div>
 
 <?php
+
+Hook::run(HOOKTYPE_OVERVIEW_CARD, $stats);
 
 require_once "footer.php";

@@ -1,7 +1,66 @@
 <?php
 
-define('HOOKTYPE_NAVBAR', 100); /* The Hook for the navigation bar */
-define('HOOKTYPE_PRE_HEADER', 101); /* The hook for pre-header */
+/* Hook Definitions
+ * 
+ * Hooks let you do things in your plugin, like add nav items for your
+ * own pages, add extra cards to the overview and more (to come)
+ */
+/** HOOKTYPE_NAVBAR
+ * 
+ * @param array $pages
+ * Receives an array of pages. For example:
+ * $pages = ["Overview" => ""];
+ * 
+ * So when you call this hook, you must refer to the
+ * parameter by reference. For example:
+ * Hook::func(HOOKTYPE_NAVBAR, 'add_navbar_item');
+ * 
+ * function add_navbar_item(&$pages) // remember the & to use by reference
+ * { insert_hacks_here(); }
+ */
+define('HOOKTYPE_NAVBAR', 100); 
+
+/** HOOKTYPE_PRE_HEADER
+ * 
+ * This doesn't receive anything, however you must still specify an
+ * parameter for your hook function, because it's referring to memory. Sorry =]
+ * 
+ * Currently this is only used by the "sql_auth" plugin by Valware in order to
+ * redirect users immediately to the login page.
+ * 
+ * Putting HTML in this hook is not a good idea.
+ */
+define('HOOKTYPE_PRE_HEADER', 101);
+
+/** HOOKTYPE_PRE_OVERVIEW_CARD
+ * 
+ * @param object $stats
+ * 
+ * This is called before the initial cards have loaded in the overview.
+ * This lets you add your own HTML or whatever you like on the overview,
+ * new cards, whatever.
+ * 
+ * The parameter is an object containing stats used in the overview.
+ * See "index.php" to see how it's used.
+ * 
+ */
+
+define('HOOKTYPE_PRE_OVERVIEW_CARD', 102);
+/** HOOKTYPE_OVERVIEW_CARD
+ * 
+ * @param object $stats
+ * 
+ * This is called after the initial cards have loaded in the overview.
+ * This lets you add your own HTML or whatever you like on the overview,
+ * new cards, whatever.
+ * 
+ * The parameter is an object containing stats used in the overview.
+ * See "index.php" to see how it's used.
+ * 
+ */
+
+ 
+define('HOOKTYPE_OVERVIEW_CARD', 102);
 
 /** 
  *  Class for "Hook"
