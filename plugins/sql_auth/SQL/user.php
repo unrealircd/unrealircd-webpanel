@@ -20,7 +20,7 @@ class SQLA_User
      * @param string $name
      * @param mixed $id
      */
-    function __construct(string $name = NULL, $id = NULL)
+    function __construct(string $name = NULL, int $id = NULL)
     {
         $conn = sqlnew();
 
@@ -50,11 +50,70 @@ class SQLA_User
         }
     }
 
-    function password_verify(string $input)
+    /**
+     * Verify a user's password
+     * @param string $input
+     * @return bool
+     */
+    function password_verify(string $input) : bool
     {
         if (password_verify($input, $this->passhash))
             return true;
         return false;
+    }
+
+    /**
+     * Add user meta data
+     * @param string $key
+     * @param string $value
+     * @return bool
+     */
+    function add_meta(string $key, string $value)
+    {
+        if (!$key || !$value)
+            return false;
+
+        $meta = [
+            "id" => $this->id,
+            "key" => $key,
+            "value" => $value
+        ];
+        
+        $conn = sqlnew();
+        $query = "INSERT INTO " . SQL_PREFIX . "user_meta (user_id, meta_key, meta_value) VALUES (:id, :key, :value)";
+        $stmt = $conn->prepare($query);
+        $stmt->execute($meta);
+        if ($stmt->rowCount())
+            return true;
+        return false;
+
+    }
+
+    /**
+     * Delete user meta data
+     * @param string $key
+     * @param string $value
+     * @return bool
+     */
+    function delete_meta(string $key, string $value)
+    {
+        if (!$key || !$value)
+            return false;
+
+        $meta = [
+            "id" => $this->id,
+            "key" => $key,
+            "value" => $value
+        ];
+        
+        $conn = sqlnew();
+        $query = "INSERT INTO " . SQL_PREFIX . "user_meta (user_id, meta_key, meta_value) VALUES (:id, :key, :value)";
+        $stmt = $conn->prepare($query);
+        $stmt->execute($meta);
+        if ($stmt->rowCount())
+            return true;
+        return false;
+
     }
 }
 
@@ -175,3 +234,4 @@ function delete_user(int $id, &$info = []) : int
     $info[] = "Unknown error";
     return 0;
 }
+
