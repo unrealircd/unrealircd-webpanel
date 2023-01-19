@@ -125,7 +125,6 @@ if (!empty($rehash_success)) {
 	</div>
 </div>
 <br>
-<div class="row">
 	<div class="col-sm-3">
 		<div class="card">
 			<div class="card-body">

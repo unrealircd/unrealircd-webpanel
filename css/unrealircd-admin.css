@@ -203,3 +203,40 @@ body {
 	background-color: #ffffff;
   }
 	
+  /* Small screens (max-width: 576px) */
+@media (max-width: 576px) {
+   /* Change the font size for all headings */
+   h1, h2, h3, h4, h5, h6 {
+    font-size: 18px;
+  }
+
+  /* Hide the sidebar */
+  .sidebar {
+    display: none;
+  }
+
+  /* Make the main content take up the full width of the screen */
+  .main-content {
+    width: 100%;
+  }
+}
+
+/* Medium screens (min-width: 577px) and (max-width: 768px) */
+@media (min-width: 577px) and (max-width: 768px) {
+  /* Change the font size for all headings */
+  
+}
+
+/* Large screens (min-width: 769px) */
+@media (min-width: 769px) {
+  /* CSS rules for large screens go here */
+}
+/* Portrait screens (max-width: 576px) */
+@media (max-width: 576px) and (max-height: 812px) {
+  /* CSS rules for portrait screens go here */
+}
+
+/* Landscape screens (min-width: 577px) and (max-height: 812px) */
+@media (min-width: 577px) and (max-height: 812px) {
+  /* CSS rules for landscape screens go here */
+}

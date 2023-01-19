@@ -2,6 +2,8 @@
 
 require_once "SQL/sql.php";
 require_once "SQL/user.php";
+require_once "SQL/settings.php";
+new AuthSettings();
 
 class sql_auth
 {
@@ -31,7 +33,11 @@ class sql_auth
 	public static function add_navbar(&$pages)
 	{
 		session_start();
-		
+		if (!unreal_get_current_user()->id)
+		{
+			$pages = NULL;
+			return;
+		}
 		$pages["Panel Access"] = "plugins/sql_auth/";
 		if (isset($_SESSION['id']))
 		{
@@ -41,9 +47,14 @@ class sql_auth
 
 	public static function session_start($n)
 	{
+		
 		if (!isset($_SESSION['id']))
 		{
-			header("Location: ".BASE_URL."plugins/sql_auth/login.php");
+			$tok = split($_SERVER['SCRIPT_FILENAME'], "/");
+			if ($check = security_check() && $tok[count($tok) - 1] !== "error.php") {
+				header("Location: " . BASE_URL . "plugins/sql_auth/error.php");
+				die();
+			}
 		}
 		else
 		{
@@ -56,6 +67,10 @@ class sql_auth
 		}
 	}
 
+	/**
+	 * Create the tables we'll be using in the SQLdb
+	 * @return void
+	 */
 	public static function create_tables()
 	{
 		$conn = sqlnew();
@@ -77,9 +92,20 @@ class sql_auth
 			meta_value VARCHAR(255),
 			PRIMARY KEY (meta_id)
 		)");
+		$conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "auth_settings (
+			id int AUTO_INCREMENT NOT NULL,
+			setting_key VARCHAR(255) NOT NULL,
+			setting_value VARCHAR(255),
+			PRIMARY KEY (id)
+		)");
 	}
 
-	public static function add_overview_card(&$stats)
+	/**
+	 * Summary of add_overview_card
+	 * @param mixed $stats
+	 * @return void
+	 */
+	public static function add_overview_card(object &$stats) : void
 	{
 		$num_of_panel_admins = sqlnew()->query("SELECT COUNT(*) FROM " . SQL_PREFIX . "users")->fetchColumn();
 		?>
@@ -115,3 +141,63 @@ class sql_auth
 	}
 
 }
+
+
+function security_check()
+{
+	$ip = $_SERVER['REMOTE_ADDR'];
+	if (dnsbl_check($ip))
+		return true;
+
+	else if (fail2ban_check($ip))
+	{
+
+	}
+}
+
+function dnsbl_check($ip)
+{
+	$dnsbl_lookup = DNSBL;
+
+	// clear variable just in case
+	$listed = NULL;
+
+	// if the IP was not given because you're an idiot, stop processing
+	if (!$ip) { return; }
+	
+	// get the first two segments of the IPv4	
+	$because = split($ip, ".");   // why you
+	$you = $because[1]; 		  // gotta play
+	$want = $because[2];		 // that song
+	$to = $you.".".$want.".";	// so loud?
+	
+	// exempt local connections because sometimes they get a false positive
+	if ($to == "192.168." || $to == "127.0.") { return NULL; }
+	
+	// you spin my IP right round, right round, to check the records baby, right round-round-round
+	$reverse_ip = glue(array_reverse(split($ip, ".")), ".");
+	
+	// checkem
+	foreach ($dnsbl_lookup as $host) {
+		
+		//if it was listed
+		if (checkdnsrr($reverse_ip . "." . $host . ".", "A")) {
+			
+			//take note
+			$listed = $host;
+		}
+	}
+
+	// if it was safe, return NOTHING
+	if (!$listed) {
+		return NULL;
+	}
+	
+	// else, you guessed it, return where it was listed
+	else {
+		return $listed;
+	}
+}
+
+function fail2ban_check($ip)
+{}

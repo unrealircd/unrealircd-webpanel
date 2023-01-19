@@ -1,6 +1,14 @@
 <?php $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 <!DOCTYPE html>
 <head>
+<div class="media">
+<div class="media-body">
+
+		<!-- This will make it so that it "works" on mobile device. Not sure it's a good idea yet though
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="HandheldFriendly" content="true">
+-->
+
  <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
@@ -25,7 +33,7 @@
 <div class="container-fluid">
 	
 	<!-- Fixed navbar -->
-	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
+	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top z-index padding-top">
 		<ul class="nav navbar-nav">
 			<a class="navbar-brand" href="<?php echo BASE_URL; ?>"><img src="<?php echo BASE_URL; ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
 <?php

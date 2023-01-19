@@ -18,6 +18,8 @@ if (!empty($_POST))
   if ($_POST['username'] && $_POST['password'])
   {
       
+      /* securitah */
+      security_check();
       $user = new SQLA_User($_POST['username']);
       
       /* not being too informative with the login error in case of attackers */

@@ -103,3 +103,13 @@ define('SQL_DEFAULT_USER', [
     "username" => "default",
     "password" => "testing"
 ]);
+
+/**
+ * Also part of the SQL_Auth plugin. This protects your login page.
+ * This is a list of DNS Blacklists that get checked for non-logged-in
+ * users.
+*/
+define('DNSBL', [
+    "dnsbl.dronebl.org",
+	"rbl.efnetrbl.org"
+]);

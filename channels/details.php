@@ -24,10 +24,12 @@ if (isset($_GET['chan']))
 <br>
 
 <form method="get" action="details.php">
-<div class="input-group short-form-control justify-content-center align-items-center">
-	<input style="margin: 0%; height: 24px;" class="left-pan form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
-	<div class="input-group-append">
-		<br><button type="submit" class="btn btn-primary">Go</button>
+<div class="container">
+	<div class="input-group short-form-control">
+		<input style="margin: 0%; height: 24px;" class="form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
+		<div class="input-group-append">
+			<br><button type="submit" class="btn btn-primary">Go</button>
+		</div>
 	</div>
 </div>
 </form>
@@ -36,7 +38,7 @@ if (isset($_GET['chan']))
 		return; ?>
 
 <br>
-<div class="container-xxl">
+<div class="container">
 	<div class="row">
 		<div class="col-sm-6">
 			<div class="card">
@@ -56,9 +58,9 @@ if (isset($_GET['chan']))
 		</div>
 	</div>
 </div><br>
-<div class="container-xxl">
+<div class="container">
 	<div class="row">
-		<div class="col">
+		<div class="col-sm-6">
 				<div class="card">
 					<div class="card-body">
 						<h5 class="card-title">Occupants</h5>
@@ -69,5 +71,5 @@ if (isset($_GET['chan']))
 	</div>
 </div>
 <?php 
-	require_once("../footer.php");
+require_once("../footer.php");
 
