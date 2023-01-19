@@ -34,7 +34,6 @@ For more installation methods for PHP 8, make a websearch for how to install PHP
 ## Installation ##
 
 Note: This instructional assumes this is going to be hosted in the webroot directory `/var/www/` (html/) directory.
-You may want to hide this somehow. Well, you definitely should. I don't know how to do that though. Sorry.
 
 Please make sure you have [correctly setup UnrealIRCd for use with JSON-RPC](https://www.unrealircd.org/docs/JSON-RPC) before you continue.
 
@@ -68,6 +67,30 @@ For end-users, when you want to update to the latest version:
 git pull
 composer install
 ```
+
+## Authentication
+There will be at least two methods of authentication. Currently in
+development:
+
+- SQL (available but still in development!)
+- Local File DB (not public yet)
+
+### SQL Authentication (Work In Progress)
+<img width="130" height="100" src="https://cdn.shopify.com/s/files/1/1140/2002/products/UV-10073Cautionuseatyourownrisk-01_1024x1024.png?v=1588174823">
+In order to use the SQL Authentication plugin you must first make
+sure you have an SQL database which UnrealIRCd Admin Panel can
+access.
+
+Make sure you've put your SQL details in `config.php` and that you
+have `"sql_auth",` in the plugins section of the config.
+
+You can create the first user by following the example in `config.php`. 
+After you've logged in, you will have two new tabs: `Panel Access` and `Logout`. 
+You will be able to add and delete users from the `Panel Access` tab.
+
+### Local File DB
+<img width="27" height="27" src="https://media2.giphy.com/media/3o7TKtnuHOHHUjR38Y/giphy.gif?cid=6c09b95281771195a917f87730a56bcdcfa5b6f418dcaf5e&rid=giphy.gif&ct=s"> This might take a while. Please wait a few days.
+
 
 ## Developers ##
 Developers of the webpanel will naturally use the same procedure as
