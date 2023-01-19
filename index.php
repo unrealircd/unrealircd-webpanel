@@ -7,7 +7,7 @@ $stats = $rpc->query("stats.get", []);
 
 <h2>Network Overview</h2>
 
-<?php Hook::run(HOOKTYPE_PRE_OVERVIEW_CARD, $stats);
+<?php Hook::run(HOOKTYPE_PRE_OVERVIEW_CARD, $stats); ?>
 
 <div class="container mt-5">
 
