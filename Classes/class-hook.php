@@ -59,8 +59,8 @@ define('HOOKTYPE_PRE_OVERVIEW_CARD', 102);
  * 
  */
 
- 
-define('HOOKTYPE_OVERVIEW_CARD', 102);
+
+define('HOOKTYPE_OVERVIEW_CARD', 103);
 
 /** 
  *  Class for "Hook"
