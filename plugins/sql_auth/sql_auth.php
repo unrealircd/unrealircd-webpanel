@@ -32,7 +32,6 @@ class sql_auth
 
 	public static function add_navbar(&$pages)
 	{
-		session_start();
 		if (!unreal_get_current_user()->id)
 		{
 			$pages = NULL;
@@ -47,14 +46,17 @@ class sql_auth
 
 	public static function session_start($n)
 	{
-		
-		if (!isset($_SESSION['id']))
+		do_log($_SESSION);
+		if (!isset($_SESSION['id']) || empty($_SESSION))
 		{
 			$tok = split($_SERVER['SCRIPT_FILENAME'], "/");
 			if ($check = security_check() && $tok[count($tok) - 1] !== "error.php") {
 				header("Location: " . BASE_URL . "plugins/sql_auth/error.php");
 				die();
 			}
+			session_destroy();
+			header("Location: ".BASE_URL."plugins/sql_auth/login.php");
+			die();
 		}
 		else
 		{
@@ -64,6 +66,7 @@ class sql_auth
 				header("Location: ".BASE_URL."plugins/sql_auth/login.php");
 				die();
 			}
+			session_start();
 		}
 	}
 
