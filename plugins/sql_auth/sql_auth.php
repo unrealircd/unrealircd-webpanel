@@ -3,7 +3,6 @@
 require_once "SQL/sql.php";
 require_once "SQL/user.php";
 require_once "SQL/settings.php";
-new AuthSettings();
 
 class sql_auth
 {
@@ -101,6 +100,7 @@ class sql_auth
 			setting_value VARCHAR(255),
 			PRIMARY KEY (id)
 		)");
+		new AuthSettings();
 	}
 
 	/**
