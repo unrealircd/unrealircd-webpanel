@@ -7,39 +7,39 @@ $logout = false;
 if (!empty($_GET['logout']))
 {
   if (!isset($_SESSION['id']))
-    $failmsg = "Nothing to logout from";
+	$failmsg = "Nothing to logout from";
   else {
-    session_destroy();
-    $logout = true;
+	session_destroy();
+	$logout = true;
   }
 }
 if (!empty($_POST))
 {
   if ($_POST['username'] && $_POST['password'])
   {
-      
-      /* securitah */
-      security_check();
-      $user = new SQLA_User($_POST['username']);
-      
-      /* not being too informative with the login error in case of attackers */
-      if (!$user->id)
-      {
-          $failmsg = "Incorrect login";
-      }
-      else if ($user->password_verify($_POST['password']))
-      {
-          $_SESSION['id'] = $user->id;
-          header('Location: ' . BASE_URL);
-      }
-      else
-      {
-          $failmsg = "Incorrect login";
-      }
+	  
+	  /* securitah */
+	  security_check();
+	  $user = new SQLA_User($_POST['username']);
+	  
+	  /* not being too informative with the login error in case of attackers */
+	  if (!$user->id)
+	  {
+		  $failmsg = "Incorrect login";
+	  }
+	  else if ($user->password_verify($_POST['password']))
+	  {
+		  $_SESSION['id'] = $user->id;
+		  header('Location: ' . BASE_URL);
+	  }
+	  else
+	  {
+		  $failmsg = "Incorrect login";
+	  }
 
   }
   else
-    $failmsg = "Couldn't log you in: Missing credentials";
+	$failmsg = "Couldn't log you in: Missing credentials";
 }
 
 ?><!DOCTYPE html>
@@ -69,40 +69,40 @@ if (!empty($_POST))
 </button></a>
 </div>
 <script>
-    $(document).ready(function(){
-        $("#loginModal").modal('show');
-    });
+	$(document).ready(function(){
+		$("#loginModal").modal('show');
+	});
 </script>
 <body role="document">
 <div class="container-fluid">
 <form method="post" action="login.php">
   <div class="modal" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loginModal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header" style="margin: 0 auto;">
-          <h3 class="modal-title" id="loginModaltitle"><img src="<?php echo BASE_URL; ?>img/favicon.ico">  Log in to use Admin Panel</h3>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-              <?php 
-                if (isset($failmsg)) Message::Fail($failmsg);
-                if ($logout)
-                  Message::Success("You have been logged out");
-              ?>
-              <label for="username">Username / Nick:</label>
-              <input style="width:90%;" type="text" class="form-control" name="username" id="username" >
-            </div>
-            <div class="form-group">
-              <label for="password">Password:</label>
-              <input style="width:90%;" type="password" class="form-control" name="password" id="password">
-            </div>
-        </div>
-        <div class="modal-footer">
-          <a class="btn btn-secondary" href="#">Cancel</a>
-          <button type="submit" class="btn btn-primary">Log-In</button>
-        </div>
-      </div>
-    </div>
+	<div class="modal-dialog modal-dialog-centered">
+	  <div class="modal-content">
+		<div class="modal-header" style="margin: 0 auto;">
+		  <h3 class="modal-title" id="loginModaltitle"><img src="<?php echo BASE_URL; ?>img/favicon.ico">  Log in to use Admin Panel</h3>
+		</div>
+		<div class="modal-body">
+			<div class="form-group">
+			  <?php 
+				if (isset($failmsg)) Message::Fail($failmsg);
+				if ($logout)
+				  Message::Success("You have been logged out");
+			  ?>
+			  <label for="username">Username / Nick:</label>
+			  <input style="width:90%;" type="text" class="form-control" name="username" id="username" >
+			</div>
+			<div class="form-group">
+			  <label for="password">Password:</label>
+			  <input style="width:90%;" type="password" class="form-control" name="password" id="password">
+			</div>
+		</div>
+		<div class="modal-footer">
+		  <a class="btn btn-secondary" href="#">Cancel</a>
+		  <button type="submit" class="btn btn-primary">Log-In</button>
+		</div>
+	  </div>
+	</div>
   </div>
 </form>
 <?php require_once "../../footer.php";
