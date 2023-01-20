@@ -69,6 +69,11 @@ define(
 
  /**
   * SQL IP address or hostname
+  * You may specify a unix domain socket directory address
+  * E.g:
+  *     define('SQL_IP', "/path/to/unix/domain/socket");
+  *
+  * Path to unix socket MUST start with a slash "/"
   */
 define('SQL_IP', "127.0.0.1");
 

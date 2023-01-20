@@ -8,7 +8,11 @@ function sqlnew()
 	$db = SQL_DATABASE;
 	$charset = 'utf8mb4';
 
-	$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+	if ($host[0] == "/")
+		$host_type = "unix_socket";
+	else
+		$host_type = "host";
+	$dsn = "mysql:$host_type=$host;dbname=$db;charset=$charset";
 	$options = [
 		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
