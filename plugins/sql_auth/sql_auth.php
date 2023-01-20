@@ -65,6 +65,8 @@ class sql_auth
 				header("Location: ".BASE_URL."plugins/sql_auth/login.php");
 				die();
 			}
+			// you'll be automatically logged out after one hour of inactivity
+			session_set_cookie_params(3600);
 			session_start();
 		}
 	}
