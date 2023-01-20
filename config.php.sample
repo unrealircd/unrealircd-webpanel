@@ -6,7 +6,7 @@
  */
 
  if (!defined('UPATH'))
-    die("Access denied");
+	die("Access denied");
 
 /**
  * The base URL, how this panel can be accessed.
@@ -51,14 +51,14 @@ define( 'UNREALIRCD_DEBUG', false );
  * Your list of plugins:
  */
 define(
-    'PLUGINS', [
+	'PLUGINS', [
 
-        /*  This is where you should type the name(s) of your plugins. 
-         *  Uncomment the following line to view the live example
-        */
-        //"example_plugin", /* An example plugin */
-        //"sql_auth", /* Provides a login page which uses SQL */
-    ]
+		/*  This is where you should type the name(s) of your plugins. 
+		 *  Uncomment the following line to view the live example
+		*/
+		//"example_plugin", /* An example plugin */
+		//"sql_auth", /* Provides a login page which uses SQL */
+	]
 );
 
 
@@ -100,8 +100,8 @@ define('SQL_PREFIX', "unreal_");
  * that you remove it after you've logged in successfully.
  */
 define('SQL_DEFAULT_USER', [
-    "username" => "default",
-    "password" => "testing"
+	"username" => "default",
+	"password" => "testing"
 ]);
 
 /**
@@ -110,6 +110,6 @@ define('SQL_DEFAULT_USER', [
  * users.
 */
 define('DNSBL', [
-    "dnsbl.dronebl.org",
+	"dnsbl.dronebl.org",
 	"rbl.efnetrbl.org"
 ]);
