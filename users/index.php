@@ -9,18 +9,29 @@ if (!empty($_GET))
 
 	if (isset($_GET['operonly']) && !isset($_POST['operonly']))
 		$_POST['operonly'] = $_GET['operonly'];
+
+	if (isset($_GET['servicesonly']) && !isset($_POST['servicesonly']))
+		$_POST['servicesonly'] = $_GET['servicesonly'];
 }
 
-if (!empty($_POST)) {
+if (!empty($_POST))
+{
 	do_log($_POST);
 	$bantype = $_POST['bantype'];
+
 	if (isset($_POST['userch'])) {
-		foreach ($_POST["userch"] as $user) {
+		foreach ($_POST["userch"] as $user)
+		{
 			$user = $name = base64_decode($user);
 			$bantype = (isset($_POST['bantype'])) ? $_POST['bantype'] : NULL;
-			if (!$bantype) /* shouldn't happen? */{
+
+			if (!$bantype) /* shouldn't happen? */
+			{
 				Message::Fail("An error occured");
-			} else {
+			}
+			
+			else
+			{
 				$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
 				$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
 				$banlen_h = (isset($_POST['banlen_h'])) ? $_POST['banlen_h'] : NULL;
@@ -37,15 +48,22 @@ if (!empty($_POST)) {
 						$duration .= $banlen_h;
 				}
 				$user = $rpc->user()->get($user);
+
 				if (!$user && $bantype !== "qline") {
 					Message::Fail("Could not find that user: User not online");
-				} else {
+				}
+				
+				else
+				{
 					$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for " . rpc_convert_duration_string($duration);
 					$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
+
 					if ($bantype == "qline")
 						$rpc->nameban()->add($name, $reason, $duration);
+
 					else if ($rpc->serverban()->add($user->id, $bantype, $duration, $reason))
 						Message::Success($user->name . " (*@" . $user->hostname . ") has been $bantype" . "d $msg_msg: $reason");
+
 					else
 						Message::Fail("Could not add $bantype against $name: $rpc->error");
 				}
@@ -84,15 +102,22 @@ Click on a username to view more information.
 	?>
 	<table class="container-xxl table table-responsive caption-top table-striped">
 	<thead>
-		<th scope="col"><h5>Filter:</h5></th>
 		<form action="" method="post">
-		<th scope="col" colspan="2">Nick <input name="uf_nick" type="text" class="form-control short-form-control">
-		<th scope="col" colspan="2">Host <input name="uf_host" type="text" class="form-control short-form-control"></th>
-		<th scope="col" colspan="2">IP <input name="uf_ip" type="text" class="form-control short-form-control"></th>
-		<th scope="col" colspan="2">Account <input name="uf_account" type="text" class="form-control short-form-control"></th>
-		<th scope="col" colspan="2">Server <input name="uf_server" type="text" class="form-control short-form-control"></th>
-		<th scope="col" colspan="2"><input <?php echo (isset($_POST['operonly'])) ? "checked" : ""; ?> name="operonly" type="checkbox" value=""> Opers Only</th>
-		<th scope="col"> <input class="btn btn-primary" type="submit" value="Search"></th></form>
+			<tr>	
+				<th scope="col"><h5>Filter:</h5></th>
+				<th scope="col" colspan="2"><input <?php echo (isset($_POST['operonly'])) ? "checked" : ""; ?> name="operonly" type="checkbox" value=""> Opers Only</th>
+				<th scope="col" colspan="2"><input <?php echo (isset($_POST['servicesonly'])) ? "checked" : ""; ?> name="servicesonly" type="checkbox" value=""> Services Only</th>
+			</tr>
+			<tr>			
+				<th scope="col" colspan="2">Nick <input name="uf_nick" type="text" class="form-control short-form-control">
+				<th scope="col" colspan="2">Host <input name="uf_host" type="text" class="form-control short-form-control"></th>
+				<th scope="col" colspan="2">IP <input name="uf_ip" type="text" class="form-control short-form-control"></th>
+				<th scope="col" colspan="2">Account <input name="uf_account" type="text" class="form-control short-form-control"></th>
+				<th scope="col" colspan="2">Server <input name="uf_server" type="text" class="form-control short-form-control"></th>
+				
+				<th scope="col"> <input class="btn btn-primary" type="submit" value="Search"></th>
+			</tr>
+		</form>
 	</thead></table>
 
 	<table class="container-xxl table table-sm table-responsive caption-top table-striped">
@@ -151,12 +176,17 @@ Click on a username to view more information.
 			(strpos($user->user->modes, "o") == false || strpos($user->user->modes,"S") !== false))
 				continue;
 
+			/* Some basic filtering for SERVICES */
+			if (isset($_POST['servicesonly']) &&
+			(strpos($user->user->modes,"S") == false))
+				continue;
+
 			echo "\n<tr>";
 			echo "<th scope=\"row\"><input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\"></th>";
 			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge rounded-pill badge-dark">Bot</span>' : "";
 			echo "<td><a href=\"details.php?nick=".$user->id."\">$user->name$isBot</a></td>";
-			echo "<td>".$user->hostname." (".$user->ip.")</td>";
-			$account = (isset($user->user->account)) ? "<a href=\"".BASE_URL."users/?account=".$user->user->account."\">".$user->user->account."</a>" : '<span class="badge rounded-pill badge-primary">None</span>';
+			echo "<td>".htmlspecialchars($user->hostname)." (".htmlspecialchars($user->ip).")</td>";
+			$account = (isset($user->user->account)) ? "<a href=\"".BASE_URL."users/?account=".$user->user->account."\">".htmlspecialchars($user->user->account)."</a>" : '<span class="badge rounded-pill badge-primary">None</span>';
 			echo "<td>".$account."</td>";
 			$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
 			echo "<td>".$modes."</td>";
@@ -165,7 +195,7 @@ Click on a username to view more information.
 				$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="badge rounded-pill badge-warning">Services Bot</span>' : "";
 			echo "<td>".$oper."</td>";
 
-			$secure = (isset($user->tls)) ? "<span class=\"badge rounded-pill badge-success\">Secure</span>" : "<span class=\"badge rounded-pill badge-danger\">Insecure</span>";
+			$secure = (isset($user->tls) || $user->hostname !== "localhost") ? "<span class=\"badge rounded-pill badge-success\">Secure</span>" : "<span class=\"badge rounded-pill badge-danger\">Insecure</span>";
 			if (strpos($user->user->modes, "S") !== false)
 				$secure = "";
 			echo "<td>".$secure."</td>";

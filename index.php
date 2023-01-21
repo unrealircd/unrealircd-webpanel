@@ -219,7 +219,7 @@ $stats = (object) $array_of_stats;
 						<div class="col">
 							<h6>Services Online</h6>
 						</div>
-						<div class="col"> <a class="btn btn-secondary disabled" href="#">View</a></div>
+						<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL."users/?servicesonly"; ?>">View</a></div>
 					</div>
 				</div>
 				
