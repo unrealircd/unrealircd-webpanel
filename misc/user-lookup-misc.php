@@ -18,13 +18,15 @@ function generate_html_whois($user)
                 <td colspan="2"><code><?php echo htmlspecialchars($user->hostname); ?></code></td>
             </tr><tr>
                 <th>IP</th>
-                <td colspan="2"><code><?php echo htmlspecialchars($user->ip)." </code> ";
+                <td colspan="2"><code><?php echo htmlspecialchars($user->ip); ?></code>
+                <?php
                 if ($cc = (isset($user->geoip->country_code)) ? strtolower($user->geoip->country_code) : "")
                 {
                    ?>  <img src="https://flagcdn.com/48x36/<?php echo htmlspecialchars($cc); ?>.png"
                             width="20"
                             height="15">
                     <?php } ?>
+                    <a href="<?php echo htmlspecialchars(BASE_URL."ip-whois.php?ip=$user->ip"); ?>"><button class="btn-sm btn-primary">WHOIS IP</button></a>
                 </td>
             </tr><tr>
                 <th>Ident</th>
