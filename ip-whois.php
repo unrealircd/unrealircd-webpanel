@@ -71,7 +71,7 @@ else
 if ($ip)
 {
     ?>
-    <div class="container-xxl">
+    <div class="container-xxl mt-3">
         <div class="row">
             <div class="col-sm-3">
                 <?php generate_ip_whois_table($ip_info); ?>
