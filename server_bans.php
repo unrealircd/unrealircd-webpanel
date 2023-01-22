@@ -8,7 +8,7 @@ if (!empty($_POST))
 
 	do_log($_POST);
 
-	if (!empty($_POST['tklch'])) // User has asked to delete these tkls
+	if (isset($_POST['tklch']) && !empty($_POST['tklch'])) // User has asked to delete these tkls
 	{
 		foreach ($_POST as $key => $value) {
 			foreach ($value as $tok) {
@@ -31,66 +31,65 @@ if (!empty($_POST))
 			}
 		}
 	}
-	else if (!($iphost = $_POST['tkl_add']))
-			Message::Fail("No user was specified");
-	else if (!($bantype = (isset($_POST['bantype'])) ? $_POST['bantype'] : false))
+	elseif (isset($_POST['tkl_add']) && !empty($_POST['tkl_add']))
 	{
-		Message::Fail("Unable to add Server Ban: No ban type selected");
+		if (!($iphost = $_POST['tkl_add']))
+			Message::Fail("No mask was specified");
+		else if (!($bantype = (isset($_POST['bantype'])) ? $_POST['bantype'] : false))
+		{
+			Message::Fail("Unable to add Server Ban: No ban type selected");
+		} else /* It did */{
+
+			if (
+				(
+					$bantype == "gline" ||
+					$bantype == "gzline" ||
+					$bantype == "shun" ||
+					$bantype == "eline"
+				) && strpos($iphost, "@") == false
+			) // doesn't have full mask
+				$iphost = "*@" . $iphost;
+
+			$soft = ($_POST['soft']) ? true : false;
+
+			if ($soft)
+				$iphost = "%" . $iphost;
+			/* duplicate code for now [= */
+			$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
+			$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
+			$banlen_h = (isset($_POST['banlen_h'])) ? $_POST['banlen_h'] : NULL;
+			$duration = "";
+			if (!$banlen_d && !$banlen_h && !$banlen_w)
+				$duration .= "0";
+			else {
+				if ($banlen_w)
+					$duration .= $banlen_w;
+				if ($banlen_d)
+					$duration .= $banlen_d;
+				if ($banlen_h)
+					$duration .= $banlen_h;
+			}
+			$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for " . rpc_convert_duration_string($duration);
+			$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
+			if ($bantype == "qline") {
+				if ($rpc->nameban()->add($iphost, $reason, $duration))
+					Message::Success("Name Ban set against \"$iphost\": $reason");
+				else
+					Message::Fail("Name Ban could not be set against \"$iphost\": $rpc->error");
+			} elseif ($bantype == "except") {
+				if ($rpc->serverbanexception()->add($iphost, "", $duration, $reason))
+					Message::Success("Exception set for \"$iphost\": $reason");
+				else
+					Message::Fail("Exception could not be set \"$iphost\": $rpc->error");
+			} else if ($rpc->serverban()->add($iphost, $bantype, $duration, $reason)) {
+				Message::Success("Host / IP: $iphost has been $bantype" . "d $msg_msg: $reason");
+			} else
+				Message::Fail("The $bantype against \"$iphost\" could not be added: $rpc->error");
+		}
 	}
-	else /* It did */
+	elseif (isset($_POST['search_types']) && !empty($_POST['search_types']))
 	{
 		
-		if ((
-				$bantype == "gline" ||
-				$bantype == "gzline" ||
-				$bantype == "shun" ||
-				$bantype == "eline"
-			) && strpos($iphost, "@") == false) // doesn't have full mask
-			$iphost = "*@" . $iphost;
-
-		$soft = ($_POST['soft']) ? true : false;
-
-		if ($soft)
-			$iphost = "%" . $iphost;
-		/* duplicate code for now [= */
-		$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
-		$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
-		$banlen_h = (isset($_POST['banlen_h'])) ? $_POST['banlen_h'] : NULL;
-		$duration = "";
-		if (!$banlen_d && !$banlen_h && !$banlen_w)
-			$duration .= "0";
-		
-		else
-		{
-			if ($banlen_w)
-				$duration .= $banlen_w;
-			if ($banlen_d)
-				$duration .= $banlen_d;
-			if ($banlen_h)
-				$duration .= $banlen_h;
-		}
-		$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for ".rpc_convert_duration_string($duration);
-		$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
-		if ($bantype == "qline")
-		{
-			if ($rpc->nameban()->add($iphost, $reason, $duration))
-				Message::Success("Name Ban set against \"$iphost\": $reason");
-			else
-				Message::Fail("Name Ban could not be set against \"$iphost\": $rpc->error");
-		}
-		elseif ($bantype == "except")
-		{
-			if ($rpc->serverbanexception()->add($iphost, "", $duration, $reason))
-				Message::Success("Exception set for \"$iphost\": $reason");
-			else
-				Message::Fail("Exception could not be set \"$iphost\": $rpc->error");
-		}
-		else if ($rpc->serverban()->add($iphost, $bantype, $duration, $reason))
-		{
-			Message::Success("Host / IP: $iphost has been $bantype" . "d $msg_msg: $reason");
-		}
-		else
-			Message::Fail("The $bantype against \"$iphost\" could not be added: $rpc->error");
 	}
 }
 
