@@ -80,7 +80,7 @@ function sinfo_conv_version_string($server) : string
         }
         $return = "<span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"$tooltip\"><code>" . $display_string . "</code> <div class=\"badge rounded-pill badge-dark\">$badge</div></a>";
     }
-    if ($server->server->ulined)
+    if (isset($server->server->ulined) && $server->server->ulined)
         $return .= "<div class=\"badge rounded-pill badge-warning\">Services</div>";
     return $return;
 }
