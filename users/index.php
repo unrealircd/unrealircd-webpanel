@@ -17,13 +17,12 @@ if (!empty($_GET))
 if (!empty($_POST))
 {
 	do_log($_POST);
-	$bantype = $_POST['bantype'];
+	$bantype = (isset($_POST['bantype'])) ? $_POST['bantype'] : NULL;
 
 	if (isset($_POST['userch'])) {
 		foreach ($_POST["userch"] as $user)
 		{
 			$user = $name = base64_decode($user);
-			$bantype = (isset($_POST['bantype'])) ? $_POST['bantype'] : NULL;
 
 			if (!$bantype) /* shouldn't happen? */
 			{

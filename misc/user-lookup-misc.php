@@ -74,7 +74,10 @@ function generate_html_usersettings($user)
                                     <table class="table-sm table-responsive caption-top table-hover">
                                         <tr>
                                             <td>Oper Login</td>
-                                            <td><code><?php echo htmlspecialchars($user->user->operlogin); ?></code></td>
+                                            <td><code><?php
+                                            $operlogin = (isset($user->user->operlogin)) ? $user->user->operlogin : "";
+                                             echo htmlspecialchars($operlogin); 
+                                             ?></code></td>
                                         </tr>
                                         <tr>
                                             <td>Oper Class</td>
@@ -177,7 +180,10 @@ function generate_html_usersettings($user)
                                 <table class="table-sm table-responsive caption-top table-hover">
                                         <tr>
                                             <td>Cipher</td>
-                                            <td><code><?php echo htmlspecialchars($user->tls->cipher); ?></code></td>
+                                            <td><code><?php
+                                                $cipher = (isset($user->tls->cipher)) ? $user->tls->cipher : "";
+                                                echo htmlspecialchars($cipher);
+                                            ?></code></td>
                                         </tr>
                                         <tr>
                                             <td>Cert Fingerprint</td>
