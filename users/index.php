@@ -185,7 +185,7 @@ Click on a username to view more information.
 			echo "<th scope=\"row\"><input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\"></th>";
 			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge rounded-pill badge-dark">Bot</span>' : "";
 			echo "<td><a href=\"details.php?nick=".$user->id."\">$user->name$isBot</a></td>";
-			echo "<td>".htmlspecialchars($user->hostname)." (".htmlspecialchars($user->ip).")</td>";
+			echo "<td>".htmlspecialchars($user->hostname)." (".htmlspecialchars($user->ip ?? "None").")</td>";
 			$account = (isset($user->user->account)) ? "<a href=\"".BASE_URL."users/?account=".$user->user->account."\">".htmlspecialchars($user->user->account)."</a>" : '<span class="badge rounded-pill badge-primary">None</span>';
 			echo "<td>".$account."</td>";
 			$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
