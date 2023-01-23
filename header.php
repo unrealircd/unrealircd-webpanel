@@ -4,10 +4,9 @@
 <div class="media">
 <div class="media-body">
 
-		<!-- This will make it so that it "works" on mobile device. Not sure it's a good idea yet though
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="HandheldFriendly" content="true">
--->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="HandheldFriendly" content="true">
+
 
  <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
@@ -34,8 +33,12 @@
 	
 	<!-- Fixed navbar -->
 	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top z-index padding-top">
-		<ul class="nav navbar-nav">
-			<a class="navbar-brand" href="<?php echo BASE_URL; ?>"><img src="<?php echo BASE_URL; ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="collapsibleNavbar">
+			<ul class="navbar-nav mr-auto">
+				<a class="navbar-brand" href="<?php echo BASE_URL; ?>"><img src="<?php echo BASE_URL; ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
 <?php
 
 $active_page = NULL;
@@ -44,7 +47,9 @@ foreach ($pages as $name => $page)
 {
 	$script = $_SERVER['SCRIPT_FILENAME'];
 	$tok = split($script, "/");
-	if (strlen($page) == 0) {
+	if (is_array($page))
+		continue;
+	if (is_string($page) && strlen($page) == 0) {
 		$active_page = "";
 	}
 	else if (str_ends_with($script, BASE_URL . "index.php") && BASE_URL != "/" && !strlen($tok[0]))
@@ -69,11 +74,38 @@ foreach($pages as $name=>$page)
 	if (is_string($active_page) && $page == $active_page)
 		$class = str_replace("\"nav-item\"", "\"nav-item active\"", $class);
 	
-	echo "			<li $class><a class=\"nav-link\" href=\"".BASE_URL.$page."\">$name</a></li> \n";
+	if (is_string($page))
+		echo "<li $class><a class=\"nav-link\" href=\"".BASE_URL.$page."\">$name</a></li>\n";
+
+	elseif (is_array($page))
+	{
+		foreach ($page as $k => $v)
+		{
+			$first_page = $v;
+			break;
+		}
+		?>
+		<li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <?php echo $name; ?>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+			<?php foreach($page as $k => $p)
+			{
+				?>
+					<a class="dropdown-item" href="<?php echo BASE_URL.$p;?>"><?php echo $k; ?></a>
+				<?php
+			} ?>
+        </div>
+      </li>
+	  <?php
+		
+	}
+
 }
 ?>
 	
-		</ul>
+		</ul></div>
 	</nav><br>
 </div>
 

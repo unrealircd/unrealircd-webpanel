@@ -80,34 +80,49 @@ class SQLA_User
         ];
         
         $conn = sqlnew();
-        $query = "INSERT INTO " . SQL_PREFIX . "user_meta (user_id, meta_key, meta_value) VALUES (:id, :key, :value)";
-        $stmt = $conn->prepare($query);
-        $stmt->execute($meta);
-        if ($stmt->rowCount())
-            return true;
-        return false;
 
+        /* check if it exists first, update it if it does */
+        $query = "SELECT * FROM " . SQL_PREFIX . "user_meta WHERE user_id = :id AND meta_key = :key";
+        $stmt = $conn->prepare($query);
+        $stmt->execute(["id" => $this->id, "key" => $key]);
+        if ($stmt->rowCount()) // it exists, update instead of insert
+        {
+            $query = "UPDATE " . SQL_PREFIX . "user_meta SET meta_value = :value WHERE user_id = :id AND meta_key = :key";
+            $stmt = $conn->prepare($query);
+            $stmt->execute($meta);
+            if ($stmt->rowCount())
+                return true;
+            return false;
+        }
+
+        else
+        {
+            $query = "INSERT INTO " . SQL_PREFIX . "user_meta (user_id, meta_key, meta_value) VALUES (:id, :key, :value)";
+            $stmt = $conn->prepare($query);
+            $stmt->execute($meta);
+            if ($stmt->rowCount())
+                return true;
+            return false;
+        }
     }
 
     /**
-     * Delete user meta data
+     * Delete user meta data by key
      * @param string $key
-     * @param string $value
      * @return bool
      */
-    function delete_meta(string $key, string $value)
+    function delete_meta(string $key)
     {
-        if (!$key || !$value)
+        if (!$key )
             return false;
 
         $meta = [
             "id" => $this->id,
             "key" => $key,
-            "value" => $value
         ];
         
         $conn = sqlnew();
-        $query = "INSERT INTO " . SQL_PREFIX . "user_meta (user_id, meta_key, meta_value) VALUES (:id, :key, :value)";
+        $query = "DELETE FROM " . SQL_PREFIX . "user_meta WHERE user_id = :id AND  meta_key = :key";
         $stmt = $conn->prepare($query);
         $stmt->execute($meta);
         if ($stmt->rowCount())

@@ -20,11 +20,10 @@ $stats = (object) $array_of_stats;
 
 
 ?>
+<div class="container">
 
-<div class="container mt-5">
-
-	<div class="row">
-		<div class="col-sm">
+	<div class="row mt-3" style="margin-left:0px;">
+		<div class="col-sm mb-3">
 			<div class="card text-center">
 				<div class="card-header bg-success text-white">
 					<div class="row">
@@ -50,7 +49,7 @@ $stats = (object) $array_of_stats;
 			
 
 		</div>
-		<div class="col-sm">
+		<div class="col-sm mb-3">
 			<div class="card text-center">
 				<div class="card-header bg-primary text-white">
 					<div class="row">
@@ -72,7 +71,7 @@ $stats = (object) $array_of_stats;
 				</div>
 			</div>
 		</div>
-		<div class="col-sm">
+		<div class="col-sm mb-3">
 			<div class="card text-center">
 				<div class="card-header bg-warning">
 					<div class="row">
@@ -95,7 +94,7 @@ $stats = (object) $array_of_stats;
 			</div>
 		</div>
 
-		<div class="col-sm">
+		<div class="col-sm mb-3">
 			<div class="card text-center">
 				<div class="card-header bg-secondary text-white">
 					<div class="row">
@@ -122,7 +121,7 @@ $stats = (object) $array_of_stats;
 <div class="container mt-3">
 
 	<div class="row">
-		<div class="col-sm">
+		<div class="col-sm mb-3">
 			<div class="card text-center">
 				<div class="card-header bg-danger text-white">
 					<div class="row">
@@ -144,7 +143,7 @@ $stats = (object) $array_of_stats;
 				</div>
 			</div>
 		</div>
-		<div class="col-sm">
+		<div class="col-sm mb-3">
 			<div class="card text-center">
 				<div class="card-header bg-secondary text-white">
 					<div class="row">
@@ -166,7 +165,7 @@ $stats = (object) $array_of_stats;
 				</div>
 			</div>
 		</div>
-		<div class="col-sm">
+		<div class="col-sm mb-3">
 			<div class="card text-center">
 				<div class="card-header bg-primary text-white">
 					<div class="row">
@@ -202,7 +201,7 @@ $stats = (object) $array_of_stats;
 		else
 			$bg = "bg-warning";
 		?> 
-		<div class="col-sm">
+		<div class="col-sm mb-3">
 			<div class="card text-center">
 				<div class="card-header <?php echo $bg; ?> text-white">
 					<div class="row">

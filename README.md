@@ -15,8 +15,11 @@ Additionally, the UnrealIRCd Web Panel is a great tool for keeping track of your
 
 Overall, the UnrealIRCd Web Panel is a must-have tool for any administrator managing an IRC network. Its user-friendly interface and powerful management capabilities make it easy to keep track of your network and ensure that everything is running smoothly. So why not give it a try and see how it can improve your IRC network management experience?
 
-## Example Overview
+## Example Overview from Desktop
  <img src="https://i.ibb.co/7SdFZnk/Screenshot-from-2023-01-14-07-26-21.png">
+
+## Example Overview from Mobile
+<img src="https://i.ibb.co/KGLdB43/Screenshot-20230123-233804-Chrome.jpg">
 
 ## Prerequisites ##
 - PHP 8 or later

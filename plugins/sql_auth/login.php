@@ -16,26 +16,27 @@ if (!empty($_GET['logout']))
 if (!empty($_POST))
 {
   if ($_POST['username'] && $_POST['password'])
-  {
-	  
-	  /* securitah */
-	  security_check();
-	  $user = new SQLA_User($_POST['username']);
-	  
-	  /* not being too informative with the login error in case of attackers */
-	  if (!$user->id)
-	  {
-		  $failmsg = "Incorrect login";
-	  }
-	  else if ($user->password_verify($_POST['password']))
-	  {
-		  $_SESSION['id'] = $user->id;
-		  header('Location: ' . BASE_URL);
-	  }
-	  else
-	  {
-		  $failmsg = "Incorrect login";
-	  }
+{
+	
+	/* securitah */
+	security_check();
+	$user = new SQLA_User($_POST['username']);
+	
+	/* not being too informative with the login error in case of attackers */
+	if (!$user->id)
+	{
+		$failmsg = "Incorrect login";
+	}
+	else if ($user->password_verify($_POST['password']))
+	{
+		$_SESSION['id'] = $user->id;
+		header('Location: ' . BASE_URL);
+		$user->add_meta("last_login", date("Y-m-d m:i:s"));
+	}
+	else
+	{
+		$failmsg = "Incorrect login";
+	}
 
   }
   else

@@ -17,6 +17,7 @@ class sql_auth
 		Hook::func(HOOKTYPE_NAVBAR, 'sql_auth::add_navbar');
 		Hook::func(HOOKTYPE_PRE_HEADER, 'sql_auth::session_start');
 		Hook::func(HOOKTYPE_OVERVIEW_CARD, 'sql_auth::add_overview_card');
+		Hook::func(HOOKTYPE_FOOTER, 'sql_auth::add_footer_info');
 
 		if (defined('SQL_DEFAULT_USER')) // we've got a default account
 		{
@@ -40,6 +41,16 @@ class sql_auth
 		if (isset($_SESSION['id']))
 		{
 			$pages["Logout"] = "plugins/sql_auth/login.php?logout=true";
+		}
+	}
+
+	public static function add_footer_info($empty)
+	{
+		if (!($user = unreal_get_current_user()))
+			return;
+
+		else {
+			echo "<code>Admin Panel v" . WEBPANEL_VERSION . "</code>";
 		}
 	}
 
@@ -100,6 +111,12 @@ class sql_auth
 			id int AUTO_INCREMENT NOT NULL,
 			setting_key VARCHAR(255) NOT NULL,
 			setting_value VARCHAR(255),
+			PRIMARY KEY (id)
+		)");
+		$conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "fail2ban (
+			id int AUTO_INCREMENT NOT NULL,
+			ip VARCHAR(255) NOT NULL,
+			count VARCHAR(255),
 			PRIMARY KEY (id)
 		)");
 		new AuthSettings();
@@ -205,4 +222,6 @@ function dnsbl_check($ip)
 }
 
 function fail2ban_check($ip)
-{}
+{
+
+}

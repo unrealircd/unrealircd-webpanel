@@ -1,10 +1,10 @@
 <?php
 
 /* Hook Definitions
- * 
- * Hooks let you do things in your plugin, like add nav items for your
- * own pages, add extra cards to the overview and more (to come)
- */
+* 
+* Hooks let you do things in your plugin, like add nav items for your
+* own pages, add extra cards to the overview and more (to come)
+*/
 /** HOOKTYPE_NAVBAR
  * 
  * @param array $pages
@@ -44,8 +44,8 @@ define('HOOKTYPE_PRE_HEADER', 101);
  * See "index.php" to see how it's used.
  * 
  */
-
 define('HOOKTYPE_PRE_OVERVIEW_CARD', 102);
+
 /** HOOKTYPE_OVERVIEW_CARD
  * 
  * @param object $stats
@@ -57,11 +57,45 @@ define('HOOKTYPE_PRE_OVERVIEW_CARD', 102);
  * The parameter is an object containing stats used in the overview.
  * See "index.php" to see how it's used.
  * 
- */
-
-
+*/
 define('HOOKTYPE_OVERVIEW_CARD', 103);
 
+/** HOOKTYPE_NOTIFICATION
+ * 
+ * @param array $notification
+ * The array should contain:
+ *
+ * "name" - The name of the recipient
+ * "message" - The notification message
+ *
+ * This does not do anything special by itself. It simply allows plugins
+ * to be able to use it with regards to notification sending.
+ * This is not run at any place, but should be run from your plugin.
+ *
+ * This hook is simple in design and only contains two elements in attempt
+ * to make it work cross-plugin. That is, if you have implemented your own
+ * notificiation system, you will be able to do whatever you like such as
+ * display a navbar list of notifications or send important emails by running
+ * this hook.
+ * 
+*/
+define('HOOKTYPE_NOTIFICATION', 104);
+
+
+/** HOOKTYPE_PRE_FOOTER
+ * $param array $empty - Doesn't do anything
+ * 
+ * This runs inside the footer body before anything else.
+ */
+define('HOOKTYPE_PRE_FOOTER', 105);
+
+/** HOOKTYPE_FOOTER
+ * $param array $empty - Doesn't do anything
+ * 
+ * This runs inside the footer body after everything else.
+ */
+define('HOOKTYPE_FOOTER', 106);
+ 
 /** 
  *  Class for "Hook"
  * This is the main function which gets called whenever you want to use a Hook.

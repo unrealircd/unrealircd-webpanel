@@ -1,7 +1,7 @@
 <?php
-require_once "common.php";
+require_once "../common.php";
 
-require_once "header.php";
+require_once "../header.php";
 
 if (!empty($_POST))
 {
@@ -94,12 +94,11 @@ if (!empty($_POST))
 }
 
 $tkl = $rpc->serverban()->getAll();
-foreach ($rpc->nameban()->getAll() as $v)
-	$tkl[] = $v;
 foreach ($rpc->serverbanexception()->getAll() as $v)
 	$tkl[] = $v;
 ?>
-<h4>Server Bans Overview</h4><br>
+<h4>Server Bans Overview</h4>
+Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>
 <p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
 			Add entry
 	</button></p></table>

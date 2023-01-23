@@ -6,6 +6,7 @@ require_once "Classes/class-hook.php";
 if (!is_dir(UPATH . "/vendor"))
 	die("The vendor/ directory is missing. Most likely the admin forgot to run 'composer install'\n");
 require_once UPATH . '/vendor/autoload.php';
+require_once "cfg/defines.php";
 require_once "connection.php";
 require_once "misc/strings.php";
 require_once "misc/user-lookup-misc.php";
@@ -16,20 +17,16 @@ require_once "Classes/class-message.php";
 require_once "Classes/class-rpc.php";
 require_once "plugins.php";
 
-function show_nick_only($str)
-{
-	$x = strpos($str, "!");
-	if ($x !== false)
-		$str = substr($str, 0, $x);
-	return $str;
-}
-
 $pages = Array(
 	"Overview"     => "",
 	"Users"        => "users",
 	"Channels"     => "channels",
 	"Servers"      => "servers",
-	"Server Bans"  => "server_bans.php",
+	"Server Bans"  => [
+		"Server Bans" => "server-bans",
+		"Name Bans" => "server-bans/name-bans.php",
+		"Ban Exceptions" => "server-bans/ban-exceptions.php"
+	],
 	"Spamfilter"   => "spamfilter.php",
 	"News"         => "news.php",
 );
