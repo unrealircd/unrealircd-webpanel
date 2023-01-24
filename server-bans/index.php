@@ -94,8 +94,6 @@ if (!empty($_POST))
 }
 
 $tkl = $rpc->serverban()->getAll();
-foreach ($rpc->serverbanexception()->getAll() as $v)
-	$tkl[] = $v;
 ?>
 <h4>Server Bans Overview</h4>
 Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>

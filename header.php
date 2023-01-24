@@ -32,13 +32,13 @@
 <div class="container-fluid">
 	
 	<!-- Fixed navbar -->
-	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top z-index padding-top">
+	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top z-index padding-top"><a class="navbar-brand" href="<?php echo BASE_URL; ?>"><img src="<?php echo BASE_URL; ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
 			<ul class="navbar-nav mr-auto">
-				<a class="navbar-brand" href="<?php echo BASE_URL; ?>"><img src="<?php echo BASE_URL; ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
+				
 <?php
 
 $active_page = NULL;
