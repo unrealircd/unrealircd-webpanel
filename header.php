@@ -105,7 +105,7 @@ foreach($pages as $name=>$page)
 }
 ?>
 	
-		</ul></div>
+		</ul>
 	</nav><br>
 </div>
 

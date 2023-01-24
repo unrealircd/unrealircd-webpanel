@@ -10,15 +10,14 @@ $ban_exceptions = $rpc->serverbanexception()->getAll();
 <h4>Ban Exceptions Overview</h4>
 Here is where you can make an exception to bans, that is, to make it so that the target mask is exempt from the ban types you specify.<br>
 <br>
-
 <p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
 			Add entry
 	</button></p></table>
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 		<div class="modal-content">
 		<div class="modal-header">
-			<h5 class="modal-title" id="myModalLabel">Add new Name Ban</h5>
+			<h5 class="modal-title" id="myModalLabel">Add new Ban Exception</h5>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
 			</button>
@@ -26,8 +25,25 @@ Here is where you can make an exception to bans, that is, to make it so that the
 		<div class="modal-body">
 		
 		<form  method="post">
-			<div class="align_label">Nick / Channel</div> <input class="curvy" type="text" id="tkl_add" name="tkl_add"><br>
-			
+			<div class="align_label">IP / Mask</div> <input class="curvy" type="text" id="tkl_add" name="tkl_add"><br>
+			<div class="align_label">Exception Type: </div> <select multiple name="bantype" id="bantype" data-live-search="true">
+				<option value=""></option>
+				
+					<option value="k">Kill Line (KLine)</option>
+					<option value="G">Global Kill Line (GLine)</option>
+					<option value="z">Zap Line (ZLine)</option>
+					<option value="Z">Global Zap Line (GZLine)</option>
+					<option value="Q">Reserve Nick Globally (QLine)</option>
+					<option value="s">Shun</option>
+					<option value="F">Spamfilter</option>
+					<option value="b">Blacklist</option>
+					<option value="c">Connect Flood</option>
+					<option value="d">Handshake Flood</option>
+					<option value="m">Max Per IP</option>
+					<option value="r">Anti-Random</option>
+					<option value="8">Anti-Mixed-UTF8</option>
+					<option value="v">Versions</option>
+			</select><br>
 			<div class="align_label"><label for="banlen_w">Duration: </label></div>
 					<select class="curvy" name="banlen_w" id="banlen_w">
 							<?php

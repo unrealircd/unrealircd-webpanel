@@ -22,7 +22,7 @@ $stats = (object) $array_of_stats;
 ?>
 <div class="container">
 
-	<div class="row mt-3" style="margin-left:0px;">
+	<div class="row mt-3">
 		<div class="col-sm mb-3">
 			<div class="card text-center">
 				<div class="card-header bg-success text-white">
@@ -138,7 +138,7 @@ $stats = (object) $array_of_stats;
 						<div class="col">
 							<h6>Server Bans</h6>
 						</div>
-						<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL; ?>server_bans.php">View</a></div>
+						<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL; ?>server-bans">View</a></div>
 					</div>
 				</div>
 			</div>
@@ -183,7 +183,7 @@ $stats = (object) $array_of_stats;
 						<div class="col">
 							<h6>Server Ban Exceptions</h6>
 						</div>
-						<div class="col"> <a class="btn btn-secondary disabled" href="#">View</a></div>
+						<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL; ?>server-bans/ban-exceptions.php">View</a></div>
 					</div>
 				</div>
 			</div>
