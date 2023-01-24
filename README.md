@@ -19,7 +19,10 @@ Overall, the UnrealIRCd Web Panel is a must-have tool for any administrator mana
  <img src="https://i.ibb.co/7SdFZnk/Screenshot-from-2023-01-14-07-26-21.png">
 
 ## Example Overview from Mobile
-<img src="https://i.ibb.co/KGLdB43/Screenshot-20230123-233804-Chrome.jpg">
+<div class="row">
+<img src="https://i.ibb.co/KGLdB43/Screenshot-20230123-233804-Chrome.jpg" height="30%" width="30%">
+<img src="https://i.ibb.co/tB980kd/Screenshot-20230124-000204-Chrome.jpg" height="30%" width="30%">
+</div>
 
 ## Prerequisites ##
 - PHP 8 or later
