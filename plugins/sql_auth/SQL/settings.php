@@ -1,5 +1,6 @@
 <?php
 
+
 class AuthSettings {
 
     public $list = [];

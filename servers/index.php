@@ -35,9 +35,14 @@ if (!empty($_POST))
 				}		 
 			}
 }
-
+$checkforupdates = (isset($_POST['checkforupdates'])) ? true : false;
 /* Get the server list */
 $servers = $rpc->server()->getAll();
+$latest = 0;
+if ($checkforupdates)
+{
+	$latest = get_unreal_latest_version();
+}
 ?>
 <h4>Servers Overview</h4>
 <?php
@@ -97,24 +102,26 @@ Click on a server name to view more information.
 		<th scope="col" colspan="2">Name<input name="sf_name" type="text" class="form-control short-form-control">
 		<th scope="col"> <input class="btn btn-primary btn-sm" type="submit" value="Search"></th></form>
 	</thead></table>
-	<form action="index.php" method="post"><div class="btn btn-sm btn-warning" data-toggle="modal" data-target="#rehash_modal">Rehash Selected</div><br><br>
+	<form action="index.php" method="post">
+		<div class="btn btn-sm btn-warning" data-toggle="modal" data-target="#rehash_modal"><i class="fa-solid fa-arrows-rotate"></i> Rehash Selected</div>
+		<button name="checkforupdates" type="submit" class="btn btn-sm btn-info"><i class="fa-solid fa-cloud-arrow-down"></i> Check for upgrades</div><br>
 
 		<div class="modal fade" id="rehash_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="myModalLabel">Rehash Selected Servers</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					Are you sure you want to rehash the selected servers?	
-				</div>
-				<div class="modal-footer">
-						<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-						<button type="submit" class="btn btn-primary" name="rehash">Rehash Selected</button>
-				</div>
+					<div class="modal-header">
+						<h5 class="modal-title" id="myModalLabel">Rehash Selected Servers</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						Are you sure you want to rehash the selected servers?	
+					</div>
+					<div class="modal-footer">
+							<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+							<button type="submit" class="btn btn-primary" name="rehash">Rehash Selected</button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -141,14 +148,25 @@ Click on a server name to view more information.
 			strpos(strtolower($server->name), strtolower($_POST['sf_name'])) == false)
 				continue;
 
+			$update = "";
+			if ($checkforupdates && $latest)
+			{
+				
+				$tok = split($server->server->features->software, "-");
+				if (!strcasecmp($tok[0],"unrealircd"))
+				{
+					if ($latest > $tok[1])
+						$update = " <i class=\"fa-solid fa-cloud-arrow-down\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Upgrade available!\"></i>";
+				}
+			}
 
 			echo "<tr>";
 			echo "<th scope=\"row\"><input type=\"checkbox\" value='$server->id' name=\"serverch[]\"></th>";
-			echo "<td><a href=\"details.php?server=".$server->id."\">$server->name</a></td>";
+			echo "<td><a href=\"details.php?server=".$server->id."\">$server->name</a> $update</td>";
 			echo "<td>".$server->server->num_users."</td>";
 			
 			$s = sinfo_conv_version_string($server);
-
+			
 			echo "<td>$s</td>";
 			if (isset($server->server->uplink))
 				echo "<td>".$server->server->uplink."</td>";

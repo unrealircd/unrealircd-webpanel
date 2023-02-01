@@ -195,4 +195,4 @@ You can also forbid the use of channel names. This is useful in such cases where
 	</div>
 	</div></form></div></div>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once '../footer.php'; ?>

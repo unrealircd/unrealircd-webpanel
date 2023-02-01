@@ -1,9 +1,12 @@
-<footer class="text-center bg-dark text-white fixed-bottom" style="background-color: #f1f1f1;">
+<footer class="text-center bg-dark text-white fixed-bottom"  style="background-color: #f1f1f1;">
   <!-- Grid container -->
   <div class="container">
     <!-- Section: Social media -->
+    
+    <?php $arr = []; Hook::run(HOOKTYPE_PRE_FOOTER, $arr); ?>
+
     <section class="mt-1">
-    © 1999-<?php echo date('Y'); ?> UnrealIRCd 
+    © 1999-<?php echo date('Y'); ?> UnrealIRCd
 
       <!-- Twitter -->
       <a
@@ -28,9 +31,11 @@
         data-mdb-ripple-color="dark"
         ><img  class="btn btn-link btn-floating btn-xs text-white" src="<?php echo BASE_URL; ?>img/favicon.ico" width="25" height="25"></i
       ></a>
-      
+    
+    <?php $arr = []; Hook::run(HOOKTYPE_FOOTER, $arr); ?>
     </section>
     
+
 </footer>
 </body>
 </html>

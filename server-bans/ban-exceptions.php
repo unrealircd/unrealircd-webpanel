@@ -157,4 +157,4 @@ Here is where you can make an exception to bans, that is, to make it so that the
 	</div>
 	</div></form></div></div>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once '../footer.php'; ?>

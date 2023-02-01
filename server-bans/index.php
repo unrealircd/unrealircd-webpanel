@@ -248,4 +248,4 @@ Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>
 	</div>
 	</div></form></div></div>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once '../footer.php'; ?>

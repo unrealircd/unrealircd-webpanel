@@ -156,3 +156,28 @@ function generate_html_modlist($srv)
 
     <?php
 }
+
+
+function get_unreal_latest_version()
+{
+    $url = "https://www.unrealircd.org/downloads/list.json";
+    $contents = file_get_contents($url);
+    if (!$contents)
+    {
+        Message::Fail("Could not get latest version of UnrealIRCd. Please check again later.");
+        return NULL;
+    }
+    $arr = json_decode($contents, true);
+    $biggest = 0;
+    foreach($arr as $key => $value)
+    {
+        if ($key > $biggest)
+            $biggest = $key;
+    }
+    if (!$biggest)
+    {
+        Message::Fail("Could not get latest version of UnrealIRCd. Please check again later.");
+        return NULL;
+    }
+    return $arr[$biggest]['Stable']['version'];
+}
