@@ -65,8 +65,8 @@ nano config.php
 ```
 Edit the configuration file to match your UnrealIRCd's RPC credentials and save
 
-NOTE: You most likely want to put the webpanel behind a login, using a
-`.htaccess` file or similar.
+IMPORTANT: You will want to put the webpanel behind a login, using a
+`.htaccess` file or similar. Don't open it up to the world!
 
 ## Updating for end-users ##
 For end-users, when you want to update to the latest version:
@@ -76,8 +76,9 @@ composer install
 ```
 
 ## Authentication
-There will be at least two methods of authentication. Currently in
-development:
+Right now, by default everyone being able to access the URL can use the
+webpanel. In future versions this will no longer be the case.
+There are currently two authentication methods under development:
 
 - SQL (available but still in development!)
 - Local File DB (not public yet)
