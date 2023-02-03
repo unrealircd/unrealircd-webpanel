@@ -45,9 +45,9 @@ if (isset($_GET['chan']))
 <br>
 <div class="row">
 	<div class="col-sm-3">
-		<div class="btn btn-sm btn-info" data-toggle="modal" data-target="#bans_modal">Bans</div>
+		<div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#bans_modal">Bans</div>
 		<div class="btn btn-sm btn-info" data-toggle="modal" data-target="#invites_modal">Invites</div>
-		<div class="btn btn-sm btn-info" data-toggle="modal" data-target="#excepts_modal">Exceptions</div>
+		<div class="btn btn-sm btn-warning" data-toggle="modal" data-target="#excepts_modal">Exceptions</div>
 	</div>
 </div>
 <br>
