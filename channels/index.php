@@ -27,7 +27,7 @@ $channels = $rpc->channel()->getAll();
 		foreach($channels as $channel)
 		{
 			echo "<tr>";
-			echo "<td>".htmlspecialchars($channel->name)."</td>";
+			echo "<td><a href=\"details.php?chan=".urlencode(htmlspecialchars($channel->name))."\">".htmlspecialchars($channel->name)."</a></td>";
 			echo "<td>".$channel->num_users."</td>";
 			$modes = (isset($channel->modes)) ? "+" . $channel->modes : "<none>";
 			echo "<td>".htmlspecialchars($modes)."</td>";
