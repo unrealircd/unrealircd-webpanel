@@ -17,6 +17,7 @@ Overall, the UnrealIRCd Web Panel is a must-have tool for any administrator mana
 
 ## Example Overview from Desktop
  <img src="https://i.ibb.co/7SdFZnk/Screenshot-from-2023-01-14-07-26-21.png">
+ <img src="https://i.ibb.co/6vQ6wg7/spamfilter.png">
 
 ## Example Overview from Mobile
 <div class="row">
