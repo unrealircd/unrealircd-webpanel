@@ -32,7 +32,8 @@ class sql_auth
 
 	public static function add_navbar(&$pages)
 	{
-		if (!unreal_get_current_user()->id)
+		$user = unreal_get_current_user();
+		if (!$user)
 		{
 			$pages = NULL;
 			return;
@@ -56,6 +57,11 @@ class sql_auth
 
 	public static function session_start($n)
 	{
+		if (!isset($_SESSION))
+		{
+			session_set_cookie_params(3600);
+			session_start();
+		}
 		do_log($_SESSION);
 		if (!isset($_SESSION['id']) || empty($_SESSION))
 		{
@@ -77,8 +83,6 @@ class sql_auth
 				die();
 			}
 			// you'll be automatically logged out after one hour of inactivity
-			session_set_cookie_params(3600);
-			session_start();
 		}
 	}
 

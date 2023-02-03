@@ -232,7 +232,11 @@ function create_new_user(array $user) : bool
  */
 function unreal_get_current_user() : SQLA_User|bool
 {
-	session_start();
+	if (!isset($_SESSION))
+	{
+		session_set_cookie_params(3600);
+		session_start();
+	}
 	if (isset($_SESSION['id']))
 	{
 		$user = new SQLA_User(NULL, $_SESSION['id']);
