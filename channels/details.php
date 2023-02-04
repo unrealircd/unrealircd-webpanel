@@ -59,7 +59,7 @@ if (isset($_POST))
 	<div class="input-group short-form-control">
 		<input  class="short-form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
 		<div class="input-group-append">
-			<br><button type="submit" class="btn btn-primary">Go</button>
+			<button type="submit" class="btn btn-primary">Go</button>
 		</div>
 	</div>
 </div>
@@ -72,8 +72,9 @@ if (isset($_POST))
 <h3>
 	Topic:<br></h3><h4>
 	<form method="post" action="details.php?chan=<?php echo urlencode($channelObj->name); ?>">
+	<div class="input-group short-form-control">
 	<input maxlength="360" type="text" class="short-form-control" name="set_topic" value="<?php echo (isset($channelObj->topic)) ? htmlspecialchars($channelObj->topic) : ""; ?>">
-	<button type="submit" name="update_topic" value="true" class="btn btn-info">Update</button>
+	<div class="input-group-append"><button type="submit" name="update_topic" value="true" class="btn btn-info">Update Topic</button></div></div>
 	</form>
 </h4>
 <?php 
@@ -161,7 +162,7 @@ if ($topicset)
 
 		<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
 		<div class="card-body">
-			Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+			<?php generate_chan_occupants_table($channelObj); ?>
 		</div>
 		</div>
 	</div>
