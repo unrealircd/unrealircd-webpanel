@@ -48,15 +48,12 @@ if (isset($_POST))
 			}
 		}
 	}
-	if ($topicset)
-		Message::Success("The topic for $channelObj->name has been updated to be: \"$channelObj->topic\"");
 }
 
 ?>
 <title><?php echo $title; ?></title>
 <h4><?php echo $title; ?></h4>
 <br>
-
 <form method="get" action="details.php">
 <div class="container-xxl">
 	<div class="input-group short-form-control">
@@ -79,6 +76,10 @@ if (isset($_POST))
 	<button type="submit" name="update_topic" value="true" class="btn btn-info">Update</button>
 	</form>
 </h4>
+<?php 
+if ($topicset)
+	Message::Success("The topic for $channelObj->name has been updated to be: \"".htmlspecialchars($channelObj->topic)."\"");
+?>
 <br>
 <div class="row">
 	<div class="col-sm-3">
