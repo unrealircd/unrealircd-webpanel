@@ -7,6 +7,7 @@ $title = "Channel Lookup";
 $channel = "";
 $channame = "";
 $nick = NULL;
+$channelObj = NULL;
 do_log($_GET);
 do_log($_POST);
 if (isset($_GET['chan']))
@@ -23,6 +24,34 @@ if (isset($_GET['chan']))
 		do_log($channelObj);
 	}
 }
+$topicset = false;
+if (isset($_POST))
+{
+	if (isset($_POST['update_topic']) && isset($_POST['set_topic']))
+	{
+		if (isset($channelObj))
+		{
+			if (isset($channelObj->topic)) // if the set topic is different
+			{
+				if (strcmp($channelObj->topic,$_POST['set_topic']))
+				{
+					$user = (function_exists('unreal_get_current_user') && $u = unreal_get_current_user()) ? $u->username : NULL;
+					$topicset = $rpc->channel()->set_topic($channelObj->name, $_POST['set_topic'], $user);
+					$channelObj->topic = $_POST['set_topic'];
+				}
+			}
+			else
+			{
+				$user = (function_exists('unreal_get_current_user') && $u = unreal_get_current_user()) ? $u->username : NULL;
+				$topicset = $rpc->channel()->set_topic($channelObj->name, $_POST['set_topic'], $user);
+				$channelObj->topic = $_POST['set_topic'];
+			}
+		}
+	}
+	if ($topicset)
+		Message::Success("The topic for $channelObj->name has been updated to be: \"$channelObj->topic\"");
+}
+
 ?>
 <title><?php echo $title; ?></title>
 <h4><?php echo $title; ?></h4>
@@ -31,7 +60,7 @@ if (isset($_GET['chan']))
 <form method="get" action="details.php">
 <div class="container-xxl">
 	<div class="input-group short-form-control">
-		<input style="margin: 0%; height: 24px;" class="form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
+		<input  class="short-form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
 		<div class="input-group-append">
 			<br><button type="submit" class="btn btn-primary">Go</button>
 		</div>
@@ -42,6 +71,14 @@ if (isset($_GET['chan']))
 <?php if (!$channelObj)
 		return; ?>
 
+<br>
+<h3>
+	Topic:<br></h3><h4>
+	<form method="post" action="details.php?chan=<?php echo urlencode($channelObj->name); ?>">
+	<input maxlength="360" type="text" class="short-form-control" name="set_topic" value="<?php echo (isset($channelObj->topic)) ? htmlspecialchars($channelObj->topic) : ""; ?>">
+	<button type="submit" name="update_topic" value="true" class="btn btn-info">Update</button>
+	</form>
+</h4>
 <br>
 <div class="row">
 	<div class="col-sm-3">
@@ -107,13 +144,16 @@ if (isset($_GET['chan']))
 		</div>
 	</div>
 </div>
+
+
+
 <div class="container-xxl">
 	<div class="accordion" id="accordionExample">
 	<div class="card">
 		<div class="card-header" id="headingOne">
 		<h2 class="mb-0">
 			<button class="btn" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-			Collapsible Group Item #1
+			Channel Occupants
 			</button>
 		</h2>
 		</div>
