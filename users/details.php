@@ -22,12 +22,12 @@ if (isset($_GET['nick']))
 <h4><?php echo $title; ?></h4>
 <br>
 <form method="get" action="details.php">
-<div class="input-group short-form-control justify-content-center align-items-center">
-	<input style="margin: 0%; height: 24px;" class="left-pan form-control" id="nick" name="nick" type="text" value=<?php echo $nickname; ?>>
-	<div class="input-group-append">
-		<br><button type="submit" class="btn btn-primary">Go</button>
-	</div>
-</div>
+  <div class="input-group short-form-control">
+    <input class="short-form-control" id="nick" name="nick" type="text" value=<?php echo $nickname; ?>>
+    <div class="input-group-append">
+      <br><button type="submit" class="btn btn-primary">Go</button>
+    </div>
+  </div>
 </form>
 
 <?php if (!$nick)

@@ -99,7 +99,7 @@ Click on a server name to view more information.
 	<thead>
 		<th scope="col"><h5>Filter:</h5></th>
 		<form action="" method="post">
-		<th scope="col" colspan="2">Name<input name="sf_name" type="text" class="form-control short-form-control">
+		<th scope="col" colspan="2">Name: <input name="sf_name" type="text" class="short-form-control">
 		<th scope="col"> <input class="btn btn-primary btn-sm" type="submit" value="Search"></th></form>
 	</thead></table>
 	<form action="index.php" method="post">

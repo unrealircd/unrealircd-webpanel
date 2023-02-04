@@ -108,11 +108,11 @@ Click on a username to view more information.
 				<th scope="col" colspan="2"><input <?php echo (isset($_POST['servicesonly'])) ? "checked" : ""; ?> name="servicesonly" type="checkbox" value=""> Services Only</th>
 			</tr>
 			<tr>			
-				<th scope="col" colspan="2">Nick <input name="uf_nick" type="text" class="form-control short-form-control">
-				<th scope="col" colspan="2">Host <input name="uf_host" type="text" class="form-control short-form-control"></th>
-				<th scope="col" colspan="2">IP <input name="uf_ip" type="text" class="form-control short-form-control"></th>
-				<th scope="col" colspan="2">Account <input name="uf_account" type="text" class="form-control short-form-control"></th>
-				<th scope="col" colspan="2">Server <input name="uf_server" type="text" class="form-control short-form-control"></th>
+				<th scope="col" colspan="2">Nick: <input name="uf_nick" type="text" class="short-form-control">
+				<th scope="col" colspan="2">Host: <input name="uf_host" type="text" class="short-form-control"></th>
+				<th scope="col" colspan="2">IP: <input name="uf_ip" type="text" class="short-form-control"></th>
+				<th scope="col" colspan="2">Account: <input name="uf_account" type="text" class="short-form-control"></th>
+				<th scope="col" colspan="2">Server: <input name="uf_server" type="text" class="short-form-control"></th>
 				
 				<th scope="col"> <input class="btn btn-primary" type="submit" value="Search"></th>
 			</tr>
@@ -261,7 +261,7 @@ Click on a username to view more information.
 	</select><br></td><tr><td colspan="3">
 	
 	<label for="ban_reason">Reason: </label>
-	<input class="form-control short-form-control" type="text" name="ban_reason" id="ban_reason" value="No reason">
+	<input class="short-form-control" type="text" name="ban_reason" id="ban_reason" value="No reason">
 	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
 			Apply ban
 	</button></td></table>
