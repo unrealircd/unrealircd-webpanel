@@ -35,4 +35,9 @@ function toggle_sf(source) {
     }
 }
 
-
+function toggle_checkbox(source) {
+    checkboxes = document.getElementsByName("checkboxes[]");
+    for (var i = 0, n = checkboxes.length; i < n; i++) {
+        checkboxes[i].checked = source.checked;
+    }
+}
