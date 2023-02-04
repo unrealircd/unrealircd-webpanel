@@ -2,7 +2,61 @@
 require_once "../common.php";
 
 require_once "../header.php";
+if (!empty($_POST))
+{
 
+	do_log($_POST);
+
+	if (isset($_POST['tklch']) && !empty($_POST['tklch'])) // User has asked to delete these tkls
+	{
+		foreach ($_POST['tklch'] as $key => $value)
+		{
+			$tok = split($value, ",");
+			$iphost = base64_decode($tok[0]);
+			$success = false;
+			$success = $rpc->serverbanexception()->delete($iphost);
+
+
+			if ($success)
+				Message::Success("Ban Exception has been removed for $iphost");
+			else
+				Message::Fail("Unable to remove Ban Exception on $iphost: $rpc->error");
+		}
+	}
+	elseif (isset($_POST['tkl_add']) && !empty($_POST['tkl_add']))
+	{
+		if (!($iphost = $_POST['tkl_add']))
+			Message::Fail("No mask was specified");
+		
+		/* duplicate code for now [= */
+		$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
+		$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
+		$banlen_h = (isset($_POST['banlen_h'])) ? $_POST['banlen_h'] : NULL;
+		$duration = "";
+		if (!$banlen_d && !$banlen_h && !$banlen_w)
+			$duration .= "0";
+		else {
+			if ($banlen_w)
+				$duration .= $banlen_w;
+			if ($banlen_d)
+				$duration .= $banlen_d;
+			if ($banlen_h)
+				$duration .= $banlen_h;
+		}
+		$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for " . rpc_convert_duration_string($duration);
+		$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
+	
+		if ($rpc->serverbanexception()->add($iphost, $reason, $duration))
+			Message::Success("Ban Exception set against \"$iphost\": $reason");
+		else
+			Message::Fail("Ban Exception could not be set against \"$iphost\": $rpc->error");
+		
+	}
+	elseif (isset($_POST['search_types']) && !empty($_POST['search_types']))
+	{
+		
+	}
+}
 
 $ban_exceptions = $rpc->serverbanexception()->getAll();
 
