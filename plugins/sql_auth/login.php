@@ -4,6 +4,8 @@ require_once "../../common.php";
 require_once "SQL/user.php";
 
 $logout = false;
+$redirect = (isset($_GET['redirect'])) ? $_GET['redirect'] : BASE_URL;
+
 if (!empty($_GET['logout']))
 {
 	if (!isset($_SESSION['id']))
@@ -29,8 +31,10 @@ if (!empty($_POST))
 		}
 		else if ($user->password_verify($_POST['password']))
 		{
+			var_dump($_GET);
+
 			$_SESSION['id'] = $user->id;
-			header('Location: ' . BASE_URL);
+			header('Location: ' . $redirect);
 			$user->add_meta("last_login", date("Y-m-d m:i:s"));
 		}
 		else
@@ -76,7 +80,7 @@ if (!empty($_POST))
 </script>
 <body role="document">
 <div class="container-fluid">
-<form method="post" action="login.php">
+<form method="post" action="login.php?redirect=<?php echo $redirect; ?>">
 	<div class="modal" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loginModal" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
