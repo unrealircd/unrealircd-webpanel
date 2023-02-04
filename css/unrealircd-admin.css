@@ -244,3 +244,8 @@ body {
 .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl {
 	width: inherit;
 }
+
+.card-header .badge {
+	top:-10px;
+	left:20px;
+}
