@@ -240,3 +240,7 @@ body {
 @media (min-width: 577px) and (max-height: 812px) {
   /* CSS rules for landscape screens go here */
 }
+
+.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl {
+	width: inherit;
+}
