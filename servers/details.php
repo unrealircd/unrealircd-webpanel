@@ -227,3 +227,5 @@ if (!empty($rehash_success)) {
 		</div>
 	</div>
 </div>
+
+<?php require_once UPATH.'/footer.php'; ?>
