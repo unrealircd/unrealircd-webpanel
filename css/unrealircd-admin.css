@@ -244,3 +244,7 @@ body {
 .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl {
 	width: inherit;
 }
+
+.card-header i.fa {
+	line-height: 74px;
+}
