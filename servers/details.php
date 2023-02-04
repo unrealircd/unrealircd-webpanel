@@ -57,8 +57,8 @@ if (isset($_GET['server']))
 	{
 		Message::Fail("Could not find server: \"$servername\"");
 	}
-	
 	else {
+		do_log($srv);
 		$servername = $srv->name;
 		$title .= " for \"" . $servername . "\"";
 	}
@@ -105,8 +105,8 @@ if (!empty($rehash_success)) {
 <h4><?php echo $title; ?></h4>
 <br>
 <form method="get" action="details.php">
-<div class="input-group short-form-control justify-content-center align-items-center">
-	<input style="margin: 0%; height: 24px;" class="left-pan form-control" id="server" name="server" type="text" value=<?php echo $servername; ?>>
+<div class="input-group short-form-control">
+	<input class="short-form-control" id="server" name="server" type="text" value=<?php echo $servername; ?>>
 	<div class="input-group-append">
 		<br><button type="submit" class="btn btn-primary">Go</button>
 	</div>
