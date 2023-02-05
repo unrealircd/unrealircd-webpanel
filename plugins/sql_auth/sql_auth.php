@@ -44,7 +44,7 @@ class sql_auth
 		$pages["Panel Access"] = "plugins/sql_auth/";
 		if (isset($_SESSION['id']))
 		{
-			$pages["Logout"] = "plugins/sql_auth/login.php?logout=true";
+			$pages["Logout"] = "login/?logout=true";
 		}
 	}
 
@@ -76,7 +76,7 @@ class sql_auth
 				header("Location: " . BASE_URL . "plugins/sql_auth/error.php");
 				die();
 			}
-			header("Location: ".BASE_URL."plugins/sql_auth/login.php?redirect=".urlencode($current_url));
+			header("Location: ".BASE_URL."login/?redirect=".urlencode($current_url));
 			die();
 		}
 		else
@@ -84,7 +84,7 @@ class sql_auth
 			if (!unreal_get_current_user()->id) // user no longer exists
 			{
 				session_destroy();
-				header("Location: ".BASE_URL."plugins/sql_auth/login.php");
+				header("Location: ".BASE_URL."login");
 				die();
 			}
 			// you'll be automatically logged out after one hour of inactivity
