@@ -44,7 +44,7 @@ if (isset($_POST))
 		if ($rpc->server()->disconnect($_POST['disconnect'], $_POST['reason']))
 			Message::Success("Server \"".$_POST['disconnect']."\" has been successfully disconnected from the network.");
 		else
-			Message::Fail($rpc->error);
+			Message::Fail((isset($rpc->error)) ? $rpc->error : "No error");
 	}
 	
 }

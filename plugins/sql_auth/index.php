@@ -4,7 +4,6 @@ $conn = NULL;
 require_once "../../common.php";
 require_once "../../header.php";
 require_once "SQL/sql.php";
-require_once "SQL/user.php";
 do_log($_POST);
 
 
@@ -17,12 +16,12 @@ do_log($_POST);
 	{
 		// TODO:  Validation and stuff
 		$p = $_POST;
-		if (isset($p['delete_user']) && current_user_can(SQLPERM_MANAGE_USERS))
+		if (isset($p['delete_user']) && current_user_can(PERMISSION_MANAGE_USERS))
 		{
 			$info = [];
 			foreach ($p['userch'] as $id)
 			{
-				$user = new SQLA_User(NULL, $id);
+				$user = new PanelUser(NULL, $id);
 				$us = unreal_get_current_user();
 				$deleted = delete_user($id, $info);
 				if ($us->id == $user->id) // if it's the current user
@@ -37,7 +36,7 @@ do_log($_POST);
 			unset($info);
 		}
 
-		if (isset($p['do_add_user']) && current_user_can(SQLPERM_MANAGE_USERS))
+		if (isset($p['do_add_user']) && current_user_can(PERMISSION_MANAGE_USERS))
 		{
 			$user = [];
 			$user['user_name'] = $p['user_add'];
@@ -46,7 +45,7 @@ do_log($_POST);
 			$user['lname'] = $p['add_last_name'];
 			$user['user_bio'] = $p['user_bio'];
 			create_new_user($user);
-			if (($usr_obj = new SQLA_User($p['user_name'])) && !$usr_obj->id)
+			if (($usr_obj = new PanelUser($p['user_name'])) && !$usr_obj->id)
 			{
 				Message::Success("Successfully created user \"" . $user['user_name'] . "\"");
 			}
@@ -61,7 +60,7 @@ do_log($_POST);
 	$userlist = [];
 	while($row =  $result->fetch())
 	{
-		$userlist[] = new SQLA_User(NULL, $row['user_id']);
+		$userlist[] = new PanelUser(NULL, $row['user_id']);
 	}
 
 	if (!$result) // impossible
@@ -74,7 +73,7 @@ Click on a username to view more information.
 <br><br>
 <div id="Users">
 	<div class="row">
-		<?php if (current_user_can(SQLPERM_MANAGE_USERS)) { ?>
+		<?php if (current_user_can(PERMISSION_MANAGE_USERS)) { ?>
 		<div class="col-sm-3">
 			<form method="post">
 			<div class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal">Add New User</div>

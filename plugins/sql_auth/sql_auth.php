@@ -1,7 +1,6 @@
 <?php
 
 require_once "SQL/sql.php";
-require_once "SQL/user.php";
 require_once "SQL/settings.php";
 
 class sql_auth
@@ -18,10 +17,14 @@ class sql_auth
 		Hook::func(HOOKTYPE_PRE_HEADER, 'sql_auth::session_start');
 		Hook::func(HOOKTYPE_OVERVIEW_CARD, 'sql_auth::add_overview_card');
 		Hook::func(HOOKTYPE_FOOTER, 'sql_auth::add_footer_info');
+		Hook::func(HOOKTYPE_USER_LOOKUP, 'sql_auth::get_user');
+		Hook::func(HOOKTYPE_USERMETA_ADD, 'sql_auth::add_usermeta');
+		Hook::func(HOOKTYPE_USERMETA_DEL, 'sql_auth::del_usermeta');
+		Hook::func(HOOKTYPE_USERMETA_GET, 'sql_auth::get_usermeta');
 
 		if (defined('SQL_DEFAULT_USER')) // we've got a default account
 		{
-			$lkup = new SQLA_User(SQL_DEFAULT_USER['username']);
+			$lkup = new PanelUser(SQL_DEFAULT_USER['username']);
 
 			if (!$lkup->id) // doesn't exist, add it with full privileges
 			{
@@ -168,6 +171,95 @@ class sql_auth
 		<?php
 	}
 
+	/* We convert $u with a full user as an object ;D*/
+	public static function get_user(&$u)
+	{
+		$id = $u['id'];
+		$name = $u['name'];
+		$conn = sqlnew();
+
+		if ($id)
+		{
+			$prep = $conn->prepare("SELECT * FROM " . SQL_PREFIX . "users WHERE user_id = :id LIMIT 1");
+			$prep->execute(["id" => strtolower($id)]);
+		}
+		elseif ($name)
+		{
+			$prep = $conn->prepare("SELECT * FROM " . SQL_PREFIX . "users WHERE LOWER(user_name) = :name LIMIT 1");
+			$prep->execute(["name" => strtolower($name)]);
+		}
+		$data = NULL;
+		$obj = (object) [];
+		if ($prep)
+			$data = $prep->fetchAll();
+		if (isset($data[0]) && $data = $data[0])
+		{
+			$obj->id = $data['user_id'];
+			$obj->username = $data['user_name'];
+			$obj->passhash = $data['user_pass'];
+			$obj->first_name = $data['user_fname'] ?? NULL;
+			$obj->last_name = $data['user_lname'] ?? NULL;
+			$obj->created = $data['created'];
+			$obj->bio = $data['user_bio'];
+			$obj->user_meta = (new PanelUser_Meta($obj->id))->list;
+		}
+		$u['object'] = $obj;
+	}
+
+	public static function get_usermeta(&$u)
+	{
+		//do_log($u);
+		$list = &$u['meta'];
+		$id = $u['id'];
+		$conn = sqlnew();
+		if (isset($id))
+		{
+			$prep = $conn->prepare("SELECT * FROM " . SQL_PREFIX . "user_meta WHERE user_id = :id");
+			$prep->execute(["id" => $id]);
+		}
+		foreach ($prep->fetchAll() as $row)
+		{
+			$list[$row['meta_key']] = $row['meta_value'];
+		}
+	}
+
+	public static function add_usermeta(&$meta)
+	{
+		$conn = sqlnew();
+		/* check if it exists first, update it if it does */
+		$query = "SELECT * FROM " . SQL_PREFIX . "user_meta WHERE user_id = :id AND meta_key = :key";
+		$stmt = $conn->prepare($query);
+		$stmt->execute(["id" => $meta['id'], "key" => $meta['key']]);
+		if ($stmt->rowCount()) // it exists, update instead of insert
+		{
+			$query = "UPDATE " . SQL_PREFIX . "user_meta SET meta_value = :value WHERE user_id = :id AND meta_key = :key";
+			$stmt = $conn->prepare($query);
+			$stmt->execute($meta);
+			if ($stmt->rowCount())
+				return true;
+			return false;
+		}
+
+		else
+		{
+			$query = "INSERT INTO " . SQL_PREFIX . "user_meta (user_id, meta_key, meta_value) VALUES (:id, :key, :value)";
+			$stmt = $conn->prepare($query);
+			$stmt->execute($meta);
+			if ($stmt->rowCount())
+				return true;
+			return false;
+		}
+	}
+	public static function del_usermeta(&$u)
+	{
+		$conn = sqlnew();
+		$query = "DELETE FROM " . SQL_PREFIX . "user_meta WHERE user_id = :id AND meta_key = :key";
+		$stmt = $conn->prepare($query);
+		$stmt->execute($u['meta']);
+		if ($stmt->rowCount())
+			return true;
+		return false;
+	}
 }
 
 

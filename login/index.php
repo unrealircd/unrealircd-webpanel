@@ -1,6 +1,6 @@
 
 <?php
-require_once "../../common.php";
+require_once "../common.php";
 
 $logout = false;
 $redirect = (isset($_GET['redirect'])) ? $_GET['redirect'] : BASE_URL;
@@ -77,7 +77,7 @@ if (!empty($_POST))
 </script>
 <body role="document">
 <div class="container-fluid">
-<form method="post" action="login.php?redirect=<?php echo $redirect; ?>">
+<form method="post" action="index.php?redirect=<?php echo $redirect; ?>">
 	<div class="modal" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loginModal" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
@@ -116,4 +116,4 @@ if (!empty($_POST))
 	</div>
 	</div>
 </form>
-<?php require_once "../../footer.php";
+<?php require_once "../footer.php";

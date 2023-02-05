@@ -83,19 +83,38 @@ define('HOOKTYPE_NOTIFICATION', 104);
 
 
 /** HOOKTYPE_PRE_FOOTER
- * $param array $empty - Doesn't do anything
+ * @param array $empty - Doesn't do anything
  * 
  * This runs inside the footer body before anything else.
  */
 define('HOOKTYPE_PRE_FOOTER', 105);
 
 /** HOOKTYPE_FOOTER
- * $param array $empty - Doesn't do anything
+ * @param array $empty - Doesn't do anything
  * 
  * This runs inside the footer body after everything else.
  */
 define('HOOKTYPE_FOOTER', 106);
- 
+
+/** HOOKTYPE_USER_LOOKUP
+ * @param array $user [name, id]
+ */
+define('HOOKTYPE_USER_LOOKUP', 107);
+
+/** HOOKTYPE_USERMETA_ADD
+ * @param array $meta [[id, key, value], (object)PanelUser]
+ */
+define('HOOKTYPE_USERMETA_ADD', 108);
+
+/** HOOKTYPE_USERMETA_ADD
+ * @param array $meta [id, key, value]
+ */
+define('HOOKTYPE_USERMETA_DEL', 109);
+
+/** HOOKTYPE_USERMETA_ADD
+ * @param array $meta [id, key, value]
+ */
+define('HOOKTYPE_USERMETA_GET', 110);
 /** 
  *  Class for "Hook"
  * This is the main function which gets called whenever you want to use a Hook.
@@ -154,7 +173,6 @@ class Hook {
 	 * @param string $function The name of the function that we are removing.
 	 * @return void Does not reuturn anything.
 	 */
-
 	public static function del($Hook, $function)
 	{
 		for ($i = 0; isset(self::$actions[$Hook][$i]); $i++)

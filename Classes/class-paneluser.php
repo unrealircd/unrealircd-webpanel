@@ -1,23 +1,23 @@
 <?php
 
-define('SQLPERM_MANAGE_USERS', 'manage_users'); /** Relating to Panel Access: Can add, delete and edit users. Big boss. */
-define('SQLPERM_BAN_USERS', 'ban_users'); /** Relating to Users tab: Can ban users connected to IRC */
-define('SQLPERM_EDIT_USER', 'edit_user'); /** Change properties of a user, i.e. vhost, modes and more */
-define('SQLPERM_EDIT_CHANNEL', 'edit_channel'); /** Change properties of a channel, i.e. topic, modes and more */
-define('SQLPERM_EDIT_CHANNEL_USER', 'edit_channel_user'); /** Change properties of a user on a channel i.e give/remove voice or ops and more */
-define('SQLPERM_SERVER_BAN_ADD', 'tkl_add'); /** Can add manual bans, including G-Lines, Z-Lines and more */
-define('SQLPERM_SERVER_BAN_DEL', 'tkl_del'); /** Can remove set bans, including G-Lines, Z-Lines and more */
-define('SQLPERM_NAME_BAN_ADD', 'nb_add'); /** Can add Name Bans (Q-Lines) */
-define('SQLPERM_NAME_BAN_DEL', 'nb_del'); /** Can delete Name Bans (Q-Lines) */
-define('SQLPERM_BAN_EXCEPTION_ADD', 'be_add'); /** Can add ban exceptions (E-Lines) */
-define('SQLPERM_BAN_EXCEPTION_DEL', 'be_del'); /** Can delete ban exceptions (E-Lines) */
-define('SQLPERM_SPAMFILTER_ADD', 'sf_add'); /** Can add spamfilter entries */
-define('SQLPERM_SPAMFILTER_DEL', 'sf_del'); /** Can delete spamfilter entries */
+define('PERMISSION_MANAGE_USERS', 'manage_users'); /** Relating to Panel Access: Can add, delete and edit users. Big boss. */
+define('PERMISSION_BAN_USERS', 'ban_users'); /** Relating to Users tab: Can ban users connected to IRC */
+define('PERMISSION_EDIT_USER', 'edit_user'); /** Change properties of a user, i.e. vhost, modes and more */
+define('PERMISSION_EDIT_CHANNEL', 'edit_channel'); /** Change properties of a channel, i.e. topic, modes and more */
+define('PERMISSION_EDIT_CHANNEL_USER', 'edit_channel_user'); /** Change properties of a user on a channel i.e give/remove voice or ops and more */
+define('PERMISSION_SERVER_BAN_ADD', 'tkl_add'); /** Can add manual bans, including G-Lines, Z-Lines and more */
+define('PERMISSION_SERVER_BAN_DEL', 'tkl_del'); /** Can remove set bans, including G-Lines, Z-Lines and more */
+define('PERMISSION_NAME_BAN_ADD', 'nb_add'); /** Can add Name Bans (Q-Lines) */
+define('PERMISSION_NAME_BAN_DEL', 'nb_del'); /** Can delete Name Bans (Q-Lines) */
+define('PERMISSION_BAN_EXCEPTION_ADD', 'be_add'); /** Can add ban exceptions (E-Lines) */
+define('PERMISSION_BAN_EXCEPTION_DEL', 'be_del'); /** Can delete ban exceptions (E-Lines) */
+define('PERMISSION_SPAMFILTER_ADD', 'sf_add'); /** Can add spamfilter entries */
+define('PERMISSION_SPAMFILTER_DEL', 'sf_del'); /** Can delete spamfilter entries */
 /**
- * SQLA_User
+ * PanelUser
  * This is the User class for the SQL_Auth plugin
  */
-class SQLA_User
+class PanelUser
 {
 	public $id = NULL;
 	public $username = NULL;
@@ -35,32 +35,13 @@ class SQLA_User
 	 */
 	function __construct(string $name = NULL, int $id = NULL)
 	{
-		$conn = sqlnew();
+		$user["name"] = $name;
+		$user["id"] = $id;
+		$user["object"] = NULL;
 
-		if ($id)
-		{
-			$prep = $conn->prepare("SELECT * FROM " . SQL_PREFIX . "users WHERE user_id = :id LIMIT 1");
-			$prep->execute(["id" => strtolower($id)]);
-		}
-		elseif ($name)
-		{
-			$prep = $conn->prepare("SELECT * FROM " . SQL_PREFIX . "users WHERE LOWER(user_name) = :name LIMIT 1");
-			$prep->execute(["name" => strtolower($name)]);
-		}
-		$data = NULL;
-		if ($prep)
-			$data = $prep->fetchAll();
-		if (isset($data[0]) && $data = $data[0])
-		{
-			$this->id = $data['user_id'];
-			$this->username = $data['user_name'];
-			$this->passhash = $data['user_pass'];
-			$this->first_name = $data['user_fname'] ?? NULL;
-			$this->last_name = $data['user_lname'] ?? NULL;
-			$this->created = $data['created'];
-			$this->bio = $data['user_bio'];
-			$this->user_meta = (new SQLA_User_Meta($this->id))->list;
-		}
+		Hook::run(HOOKTYPE_USER_LOOKUP, $user);
+		foreach ($user['object'] as $key => $value)
+			$this->$key = $value;
 	}
 
 	/**
@@ -79,10 +60,10 @@ class SQLA_User
 	 * Add user meta data
 	 * @param string $key
 	 * @param string $value
-	 * @return bool
 	 */
 	function add_meta(string $key, string $value)
 	{
+		
 		if (!$key || !$value)
 			return false;
 
@@ -91,38 +72,16 @@ class SQLA_User
 			"key" => $key,
 			"value" => $value
 		];
+
+		$array['meta'] = $meta;
+		$array['user'] = $this;
+		Hook::run(HOOKTYPE_USERMETA_ADD, $array);
 		
-		$conn = sqlnew();
-
-		/* check if it exists first, update it if it does */
-		$query = "SELECT * FROM " . SQL_PREFIX . "user_meta WHERE user_id = :id AND meta_key = :key";
-		$stmt = $conn->prepare($query);
-		$stmt->execute(["id" => $this->id, "key" => $key]);
-		if ($stmt->rowCount()) // it exists, update instead of insert
-		{
-			$query = "UPDATE " . SQL_PREFIX . "user_meta SET meta_value = :value WHERE user_id = :id AND meta_key = :key";
-			$stmt = $conn->prepare($query);
-			$stmt->execute($meta);
-			if ($stmt->rowCount())
-				return true;
-			return false;
-		}
-
-		else
-		{
-			$query = "INSERT INTO " . SQL_PREFIX . "user_meta (user_id, meta_key, meta_value) VALUES (:id, :key, :value)";
-			$stmt = $conn->prepare($query);
-			$stmt->execute($meta);
-			if ($stmt->rowCount())
-				return true;
-			return false;
-		}
 	}
 
 	/**
 	 * Delete user meta data by key
 	 * @param string $key
-	 * @return bool
 	 */
 	function delete_meta(string $key)
 	{
@@ -133,14 +92,7 @@ class SQLA_User
 			"id" => $this->id,
 			"key" => $key,
 		];
-		
-		$conn = sqlnew();
-		$query = "DELETE FROM " . SQL_PREFIX . "user_meta WHERE user_id = :id AND meta_key = :key";
-		$stmt = $conn->prepare($query);
-		$stmt->execute($meta);
-		if ($stmt->rowCount())
-			return true;
-		return false;
+		Hook::run(HOOKTYPE_USERMETA_DEL, $meta);
 
 	}
 
@@ -171,24 +123,21 @@ class SQLA_User
 
 /**
  * This class looks up and returns any user meta.
- * This is used by SQLA_User, so you won't need to 
- * call it separately from SQLA_User.
+ * This is used by PanelUser, so you won't need to 
+ * call it separately from PanelUser.
  */
-class SQLA_User_Meta
+class PanelUser_Meta
 {
 	public $list = [];
 	function __construct($id)
 	{
-		$conn = sqlnew();
-		if ($id)
-		{
-			$prep = $conn->prepare("SELECT * FROM " . SQL_PREFIX . "user_meta WHERE user_id = :id");
-			$prep->execute(["id" => $id]);
-		}
-		foreach ($prep->fetchAll() as $row)
-		{
-			$this->list[$row['meta_key']] = $row['meta_value'];
-		}
+		$array = [];
+		$arr["id"] = $id;
+		$arr['meta'] = &$array;
+		Hook::run(HOOKTYPE_USERMETA_GET, $arr);
+		do_log($array);
+		$this->list = $arr['meta'];
+		
 	}
 }
 
@@ -228,9 +177,9 @@ function create_new_user(array $user) : bool
 
 /**
  * Gets the user object for the current session
- * @return SQLA_User|bool
+ * @return PanelUser|bool
  */
-function unreal_get_current_user() : SQLA_User|bool
+function unreal_get_current_user() : PanelUser|bool
 {
 	if (!isset($_SESSION))
 	{
@@ -239,7 +188,7 @@ function unreal_get_current_user() : SQLA_User|bool
 	}
 	if (isset($_SESSION['id']))
 	{
-		$user = new SQLA_User(NULL, $_SESSION['id']);
+		$user = new PanelUser(NULL, $_SESSION['id']);
 		if ($user->id)
 			return $user;
 	}
@@ -254,9 +203,10 @@ function unreal_get_current_user() : SQLA_User|bool
 function current_user_can($permission) : bool
 {
 	$user = unreal_get_current_user();
+	do_log($user);
 	if (!$user)
 		return false;
-
+	do_log($user);
 	if (isset($user->user_meta['permissions']))
 	{
 		$perms = unserialize($user->user_meta['permissions']);
@@ -281,7 +231,7 @@ function current_user_can($permission) : bool
  */
 function delete_user(int $id, &$info = []) : int
 {
-	$user = new SQLA_User(NULL, $id);
+	$user = new PanelUser(NULL, $id);
 	if (!$user->id) {
 		$info[] = "Could not find user";
 		return 0;
