@@ -1,7 +1,7 @@
 <?php
 require_once "../common.php";
-
 require_once "../header.php";
+require_once "../misc/ban-exceptions-misc.php";
 if (!empty($_POST))
 {
 
@@ -27,7 +27,13 @@ if (!empty($_POST))
 	{
 		if (!($iphost = $_POST['tkl_add']))
 			Message::Fail("No mask was specified");
-		
+
+		$bantypes = isset($_POST['bantype']) ? $_POST['bantype'] : "";
+		$bantypes_dup = "";
+		if (!empty($bantypes))
+			foreach ($bantypes as $bt)
+				$bantypes_dup .= $bt;
+		$bantypes = $bantypes_dup;
 		/* duplicate code for now [= */
 		$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
 		$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
@@ -45,8 +51,10 @@ if (!empty($_POST))
 		}
 		$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for " . rpc_convert_duration_string($duration);
 		$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
-	
-		if ($rpc->serverbanexception()->add($iphost, $reason, $duration))
+
+		if (isset($_POST['soft']))
+			$iphost = "%$iphost";
+		if ($rpc->serverbanexception()->add($iphost, $bantypes, $reason, (($user = unreal_get_current_user())) ? $user->username : NULL, $duration))
 			Message::Success("Ban Exception set against \"$iphost\": $reason");
 		else
 			Message::Fail("Ban Exception could not be set against \"$iphost\": $rpc->error");
@@ -68,7 +76,7 @@ Here is where you can make an exception to bans, that is, to make it so that the
 			Add entry
 	</button></p></table>
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 		<div class="modal-header">
 			<h5 class="modal-title" id="myModalLabel">Add new Ban Exception</h5>
@@ -80,7 +88,7 @@ Here is where you can make an exception to bans, that is, to make it so that the
 		
 		<form  method="post">
 			<div class="align_label">IP / Mask</div> <input class="curvy" type="text" id="tkl_add" name="tkl_add"><br>
-			<div class="align_label">Exception Type: </div> <select multiple name="bantype" id="bantype" data-live-search="true">
+			<div class="align_label">Exception Type: </div> <select multiple name="bantype[]" id="bantype" data-live-search="true">
 				<option value=""></option>
 				
 					<option value="k">Kill Line (KLine)</option>
@@ -142,14 +150,13 @@ Here is where you can make an exception to bans, that is, to make it so that the
 							?>
 					</select>
 					<br><div class="align_label"><label for="ban_reason">Reason: </label></div>
-					<input class="curvy input_text" type="text" id="ban_reason" name="ban_reason"><br>
-					<input class="curvy input_text" type="checkbox" id="soft" name="soft">Don't affect logged-in users (soft)
+					<input class="curvy input_text" type="text" id="ban_reason" name="ban_reason">
 				
 			</div>
 			
 		<div class="modal-footer">
 			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-			<button type="submit" action="post" class="btn btn-danger">Add Ban</button>
+			<button type="submit" action="post" class="btn btn-danger">Add Ban Exception</button>
 			</form>
 		</div>
 		</div>
@@ -162,6 +169,8 @@ Here is where you can make an exception to bans, that is, to make it so that the
 	<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_tkl(this)" /></th>
 	<th scope="col">Mask</th>
 	<th scope="col">Duration</th>
+	<th scope="col">Type</th>
+	<th scope="col">Exception Types</th>
 	<th scope="col">Reason</th>
 	<th scope="col">Set By</th>
 	<th scope="col">Set On</th>
@@ -179,6 +188,8 @@ Here is where you can make an exception to bans, that is, to make it so that the
 				echo "<td scope=\"col\"><input type=\"checkbox\" value='" . base64_encode($ban_exceptions->name).",".base64_encode($ban_exceptions->type) . "' name=\"tklch[]\"></td>";
 			echo "<td scope=\"col\">".$ban_exceptions->name."</td>";
 			echo "<td scope=\"col\">".$ban_exceptions->duration_string."</td>";
+			echo "<td scope=\"col\"><span class=\"badge badge-pill badge-primary\">".$ban_exceptions->type."</span></td>";
+			echo "<td scope=\"col\">".convert_exceptiontypes_to_badges($ban_exceptions->exception_types)."</td>";
 			echo "<td scope=\"col\">".$ban_exceptions->reason."</td>";
 			$set_by = $set_in_config ? "<span class=\"badge rounded-pill badge-secondary\">Config</span>" : show_nick_only($ban_exceptions->set_by);
 			echo "<td scope=\"col\">".$set_by."</td>";

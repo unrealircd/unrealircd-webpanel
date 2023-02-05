@@ -27,6 +27,7 @@ class PanelUser
 	public $created = NULL;
 	public $user_meta = [];
 	public $bio = NULL;
+	public $email = NULL;
 
 	/**
 	 * Find a user in the database by name or ID
