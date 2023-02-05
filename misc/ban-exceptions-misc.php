@@ -4,7 +4,6 @@
 function convert_exceptiontypes_to_badges($types)
 {
     $badges = "";
-    var_dump($types);
     for ($i = 0; $i <= strlen($types) - 1; $i++)
     {
         if ($types[$i] == "k")
