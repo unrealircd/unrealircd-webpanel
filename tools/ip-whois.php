@@ -1,7 +1,7 @@
 <?php
 
-require_once "common.php";
-require_once "header.php";
+require_once "../common.php";
+require_once "../header.php";
 
 $ip_info = [];
 $ip = NULL;
@@ -33,9 +33,8 @@ else
         if (!strlen($line) && $start)
             $i++;
 
-        if (!ctype_alnum($line[0])) // we don't care about your opinion we just want the info
+        if (($line && !ctype_alnum($line[0])) || !$line) // we don't care about your opinion we just want the info
             continue;
-
         $start = true;
         $tok = split($line);
         foreach ($tok as &$t)
@@ -106,4 +105,4 @@ if ($ip)
 	</div>
 </div>
 
-<?php require_once("footer.php");
+<?php require_once("../footer.php");
