@@ -1,18 +1,30 @@
 <?php
-
-define('PERMISSION_MANAGE_USERS', 'manage_users'); /** Relating to Panel Access: Can add, delete and edit users. Big boss. */
-define('PERMISSION_BAN_USERS', 'ban_users'); /** Relating to Users tab: Can ban users connected to IRC */
-define('PERMISSION_EDIT_USER', 'edit_user'); /** Change properties of a user, i.e. vhost, modes and more */
-define('PERMISSION_EDIT_CHANNEL', 'edit_channel'); /** Change properties of a channel, i.e. topic, modes and more */
-define('PERMISSION_EDIT_CHANNEL_USER', 'edit_channel_user'); /** Change properties of a user on a channel i.e give/remove voice or ops and more */
-define('PERMISSION_SERVER_BAN_ADD', 'tkl_add'); /** Can add manual bans, including G-Lines, Z-Lines and more */
-define('PERMISSION_SERVER_BAN_DEL', 'tkl_del'); /** Can remove set bans, including G-Lines, Z-Lines and more */
-define('PERMISSION_NAME_BAN_ADD', 'nb_add'); /** Can add Name Bans (Q-Lines) */
-define('PERMISSION_NAME_BAN_DEL', 'nb_del'); /** Can delete Name Bans (Q-Lines) */
-define('PERMISSION_BAN_EXCEPTION_ADD', 'be_add'); /** Can add ban exceptions (E-Lines) */
-define('PERMISSION_BAN_EXCEPTION_DEL', 'be_del'); /** Can delete ban exceptions (E-Lines) */
-define('PERMISSION_SPAMFILTER_ADD', 'sf_add'); /** Can add spamfilter entries */
-define('PERMISSION_SPAMFILTER_DEL', 'sf_del'); /** Can delete spamfilter entries */
+/** Relating to Panel Access: Can add, delete and edit users. Big boss. */
+define('PERMISSION_MANAGE_USERS', 'manage_users'); 
+/** Relating to Users tab: Can ban users connected to IRC */
+define('PERMISSION_BAN_USERS', 'ban_users');
+/** Change properties of a user, i.e. vhost, modes and more */
+define('PERMISSION_EDIT_USER', 'edit_user');
+/** Change properties of a channel, i.e. topic, modes and more */
+define('PERMISSION_EDIT_CHANNEL', 'edit_channel'); 
+/** Change properties of a user on a channel i.e give/remove voice or ops and more */
+define('PERMISSION_EDIT_CHANNEL_USER', 'edit_channel_user'); 
+/** Can add manual bans, including G-Lines, Z-Lines and more */
+define('PERMISSION_SERVER_BAN_ADD', 'tkl_add'); 
+/** Can remove set bans, including G-Lines, Z-Lines and more */
+define('PERMISSION_SERVER_BAN_DEL', 'tkl_del');
+/** Can add Name Bans (Q-Lines) */
+define('PERMISSION_NAME_BAN_ADD', 'nb_add');
+/** Can delete Name Bans (Q-Lines) */
+define('PERMISSION_NAME_BAN_DEL', 'nb_del'); 
+/** Can add ban exceptions (E-Lines) */
+define('PERMISSION_BAN_EXCEPTION_ADD', 'be_add'); 
+/** Can delete ban exceptions (E-Lines) */
+define('PERMISSION_BAN_EXCEPTION_DEL', 'be_del'); 
+/** Can add spamfilter entries */
+define('PERMISSION_SPAMFILTER_ADD', 'sf_add'); 
+/** Can delete spamfilter entries */
+define('PERMISSION_SPAMFILTER_DEL', 'sf_del'); 
 /**
  * PanelUser
  * This is the User class for the SQL_Auth plugin
