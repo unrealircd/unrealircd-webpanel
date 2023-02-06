@@ -65,20 +65,17 @@ if (!empty($_POST))
 <title>UnrealIRCd Panel</title>
 <link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>img/favicon.ico">
 <link href="<?php echo BASE_URL; ?>css/unrealircd-admin.css" rel="stylesheet">
-</head><div class="text-center">
-<a href="<?php echo BASE_URL; ?>login"><button type="button" style="margin:0; top:50%; position: absolute;" class="btn	btn-primary" data-bs-toggle="modal" data-bs-target="#loginModaltitle">
-	Login to continue
-</button></a>
-</div>
+</head>
 <script>
 	$(document).ready(function(){
-		$("#loginModal").modal('show');
+		$("#loginModal").modal({backdrop: 'static', keyboard: false}, 'show');
 	});
+
 </script>
 <body role="document">
 <div class="container-fluid">
 <form method="post" action="index.php?redirect=<?php echo $redirect; ?>">
-	<div class="modal" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loginModal" aria-hidden="true">
+	<div class="modal" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loginModal" aria-hidden="false"></a>
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 		<div class="modal-header" style="margin: 0 auto;">
