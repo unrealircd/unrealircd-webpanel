@@ -115,6 +115,15 @@ define('HOOKTYPE_USERMETA_DEL', 109);
  * @param array $meta [id, key, value]
  */
 define('HOOKTYPE_USERMETA_GET', 110);
+
+/** HOOKTYPE_USER_CREATE
+ * @param array $userinfo []
+ */
+define('HOOKTYPE_USER_CREATE', 111);
+
+define('HOOKTYPE_GET_USER_LIST', 112);
+
+define('HOOKTYPE_USER_DELETE', 113);
 /** 
  *  Class for "Hook"
  * This is the main function which gets called whenever you want to use a Hook.

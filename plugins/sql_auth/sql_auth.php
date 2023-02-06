@@ -13,7 +13,6 @@ class sql_auth
 	function __construct()
 	{
 		self::create_tables();
-		Hook::func(HOOKTYPE_NAVBAR, 'sql_auth::add_navbar');
 		Hook::func(HOOKTYPE_PRE_HEADER, 'sql_auth::session_start');
 		Hook::func(HOOKTYPE_OVERVIEW_CARD, 'sql_auth::add_overview_card');
 		Hook::func(HOOKTYPE_FOOTER, 'sql_auth::add_footer_info');
@@ -21,6 +20,9 @@ class sql_auth
 		Hook::func(HOOKTYPE_USERMETA_ADD, 'sql_auth::add_usermeta');
 		Hook::func(HOOKTYPE_USERMETA_DEL, 'sql_auth::del_usermeta');
 		Hook::func(HOOKTYPE_USERMETA_GET, 'sql_auth::get_usermeta');
+		Hook::func(HOOKTYPE_USER_CREATE, 'sql_auth::user_create');
+		Hook::func(HOOKTYPE_GET_USER_LIST, 'sql_auth::get_user_list');
+		Hook::func(HOOKTYPE_USER_DELETE, 'sql_auth::user_delete');
 
 		if (defined('SQL_DEFAULT_USER')) // we've got a default account
 		{
@@ -28,25 +30,15 @@ class sql_auth
 
 			if (!$lkup->id) // doesn't exist, add it with full privileges
 			{
-				create_new_user(["user_name" => SQL_DEFAULT_USER['username'], "user_pass" => SQL_DEFAULT_USER['password']]);
+				$user = [];
+				$user['user_name'] = SQL_DEFAULT_USER['username'];
+				$user['user_pass'] = SQL_DEFAULT_USER['password'];
+				$user['err'] = "";
+				create_new_user($user);
 			}
 		}
 	}
 
-	public static function add_navbar(&$pages)
-	{
-		$user = unreal_get_current_user();
-		if (!$user)
-		{
-			$pages = NULL;
-			return;
-		}
-		$pages["Panel Access"] = "plugins/sql_auth/";
-		if (isset($_SESSION['id']))
-		{
-			$pages["Logout"] = "login/?logout=true";
-		}
-	}
 
 	public static function add_footer_info($empty)
 	{
@@ -260,6 +252,56 @@ class sql_auth
 		if ($stmt->rowCount())
 			return true;
 		return false;
+	}
+	public static function user_create(&$u)
+	{
+		$username = $u['user_name'];
+		$first_name = $u['fname'];
+		$last_name = $u['lname'];
+		$password = $u['user_pass'];
+		$user_bio = $u['user_bio'];
+		$conn = sqlnew();
+		$prep = $conn->prepare("INSERT INTO " . SQL_PREFIX . "users (user_name, user_pass, user_fname, user_lname, user_bio, created) VALUES (:name, :pass, :fname, :lname, :user_bio, :created)");
+		$prep->execute(["name" => $username, "pass" => $password, "fname" => $first_name, "lname" => $last_name, "user_bio" => $user_bio, "created" => date("Y-m-d H:i:s")]);
+		if ($prep->rowCount())
+			$u['success'] = true;
+		else
+			$u['errmsg'][] = "Could not add user";
+	}
+
+	public static function get_user_list(&$list)
+	{
+		$conn = sqlnew();
+		$result = $conn->query("SELECT user_id FROM " . SQL_PREFIX . "users");
+		if (!$result) // impossible
+		{
+			die("Something went wrong.");
+		}
+		$userlist = [];
+		while($row =  $result->fetch())
+		{
+			$userlist[] = new PanelUser(NULL, $row['user_id']);
+		}
+		if (!empty($userlist))
+			$list = $userlist;
+		
+	}
+	public static function user_delete(&$u)
+	{
+		$user = $u['user'];
+		$query = "DELETE FROM " . SQL_PREFIX . "users WHERE user_id = :id";
+		$conn = sqlnew();
+		$stmt = $conn->prepare($query);
+		$stmt->execute(["id" => $user->id]);
+		$deleted = $stmt->rowCount();
+		if ($deleted)
+		{
+			$u['info'][] = "Successfully deleted user \"$user->username\"";
+			$u['boolint'] =  1;
+		} else {
+			$u['info'][] = "Unknown error";
+			$u['boolint'] = 0;
+		}
 	}
 }
 

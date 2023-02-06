@@ -157,21 +157,29 @@ class PanelUser_Meta
  * @throws Exception
  * @return bool
  */
-function create_new_user(array $user) : bool
+function create_new_user(array &$user) : bool
 {
 	if (!isset($user['user_name']) || !isset($user['user_pass']))
 		throw new Exception("Attempted to add user without specifying user_name or user_pass");
 
-	$username = $user['user_name'];
-	$password = password_hash($user['user_pass'], PASSWORD_ARGON2ID);
-	$first_name = (isset($user['fname'])) ? $user['fname'] : NULL;
-	$last_name = (isset($user['lname'])) ? $user['lname'] : NULL;
-	$user_bio = (isset($user['user_bio'])) ? $user['user_bio'] : NULL;
-	
+	$user['user_name'] = htmlspecialchars($user['user_name']);
+	$user['user_pass'] = password_hash($user['user_pass'], PASSWORD_ARGON2ID);
+	$user['fname'] = (isset($user['fname'])) ? htmlspecialchars($user['fname']) : NULL;
+	$last['lname'] = (isset($user['lname'])) ? htmlspecialchars($user['lname']) : NULL;
+	$user['user_bio'] = (isset($user['user_bio'])) ? htmlspecialchars($user['user_bio']) : NULL;
 
-	$conn = sqlnew();
-	$prep = $conn->prepare("INSERT INTO " . SQL_PREFIX . "users (user_name, user_pass, user_fname, user_lname, user_bio, created) VALUES (:name, :pass, :fname, :lname, :user_bio, :created)");
-	$prep->execute(["name" => $username, "pass" => $password, "fname" => $first_name, "lname" => $last_name, "user_bio" => $user_bio, "created" => date("Y-m-d H:i:s")]);
+	if (($u = new PanelUser($user['user_name']))->id)
+	{
+		$user['err'] = "User already exists";
+		return false;
+	}
+	// internal use
+	$user['success'] = false;
+	$user['errmsg'] = [];
+	
+	Hook::run(HOOKTYPE_USER_CREATE, $user);
+	if (!$user['success'])
+		return false;
 	
 	return true;
 }
@@ -237,17 +245,8 @@ function delete_user(int $id, &$info = []) : int
 		$info[] = "Could not find user";
 		return 0;
 	}
-	$query = "DELETE FROM " . SQL_PREFIX . "users WHERE user_id = :id";
-	$conn = sqlnew();
-	$stmt = $conn->prepare($query);
-	$stmt->execute(["id" => $user->id]);
-	$deleted = $stmt->rowCount();
-	if ($user->id)
-	{
-		$info[] = "Successfully deleted user \"$user->username\"";
-		return 1;
-	}
-	$info[] = "Unknown error";
-	return 0;
+	$arr = ["user" => $user, "info" => &$info, "boolint" => 0];
+	Hook::run(HOOKTYPE_USER_DELETE, $arr);
+	return $arr["boolint"];
 }
 

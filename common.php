@@ -29,9 +29,15 @@ $pages = Array(
 		"Ban Exceptions" => "server-bans/ban-exceptions.php"
 	],
 	"Spamfilter"   => "spamfilter.php",
+
+	"Settings" => "settings",
+	
 	"News"         => "news.php",
 );
-
+if (unreal_get_current_user())
+{
+	$pages["Logout"] = "login/?logout=true";
+}
 
 Hook::run(HOOKTYPE_NAVBAR, $pages);
 
