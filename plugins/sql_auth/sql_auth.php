@@ -14,7 +14,6 @@ class sql_auth
 	{
 		self::create_tables();
 		Hook::func(HOOKTYPE_PRE_HEADER, 'sql_auth::session_start');
-		Hook::func(HOOKTYPE_OVERVIEW_CARD, 'sql_auth::add_overview_card');
 		Hook::func(HOOKTYPE_FOOTER, 'sql_auth::add_footer_info');
 		Hook::func(HOOKTYPE_USER_LOOKUP, 'sql_auth::get_user');
 		Hook::func(HOOKTYPE_USERMETA_ADD, 'sql_auth::add_usermeta');
@@ -121,46 +120,6 @@ class sql_auth
 			PRIMARY KEY (id)
 		)");
 		new AuthSettings();
-	}
-
-	/**
-	 * Summary of add_overview_card
-	 * @param mixed $stats
-	 * @return void
-	 */
-	public static function add_overview_card(object &$stats) : void
-	{
-		$num_of_panel_admins = sqlnew()->query("SELECT COUNT(*) FROM " . SQL_PREFIX . "users")->fetchColumn();
-		?>
-
-		<div class="container mt-5">
-
-			<div class="row">
-				<div class="col-sm-3">
-					<div class="card text-center">
-						<div class="card-header bg-success text-white">
-							<div class="row">
-								<div class="col">
-									<i class="fa fa-lock-open fa-3x"></i>
-								</div>
-								<div class="col">
-									<h3 class="display-4"><?php echo $num_of_panel_admins; ?></h3>
-								</div>
-							</div>
-						</div>
-						<div class="card-body">
-							<div class="row">
-								<div class="col">
-									<h6>Panel Users</h6>
-								</div>
-								<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL; ?>plugins/sql_auth/">View</a></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>		
-		<?php
 	}
 
 	/* We convert $u with a full user as an object ;D*/
