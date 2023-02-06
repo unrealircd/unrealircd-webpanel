@@ -29,7 +29,9 @@ $pages = Array(
 		"Ban Exceptions" => "server-bans/ban-exceptions.php"
 	],
 	"Spamfilter"   => "spamfilter.php",
-
+	"Tools" => [
+		"IP WHOIS" => "tools/ip-whois.php",
+	],
 	"Settings" => "settings",
 	
 	"News"         => "news.php",

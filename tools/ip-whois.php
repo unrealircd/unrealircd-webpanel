@@ -57,8 +57,8 @@ else
 
 <br>
 <form method="get" action="ip-whois.php">
-<div class="input-group short-form-control justify-content-center align-items-center">
-	<input style="margin: 0%; height: 24px;" class="left-pan form-control" id="ip" name="ip" type="text" value=<?php echo $ip; ?>>
+<div class="input-group">
+	<input class="short-form-control" id="ip" name="ip" type="text" value=<?php echo $ip; ?>>
 	<div class="input-group-append">
 		<br><button type="submit" class="btn btn-primary">Go</button>
 	</div>
