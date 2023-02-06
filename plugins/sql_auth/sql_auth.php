@@ -225,6 +225,7 @@ class sql_auth
 
 	public static function add_usermeta(&$meta)
 	{
+		$meta = $meta['meta'];
 		$conn = sqlnew();
 		/* check if it exists first, update it if it does */
 		$query = "SELECT * FROM " . SQL_PREFIX . "user_meta WHERE user_id = :id AND meta_key = :key";

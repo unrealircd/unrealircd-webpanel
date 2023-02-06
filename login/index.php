@@ -66,7 +66,7 @@ if (!empty($_POST))
 <link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>img/favicon.ico">
 <link href="<?php echo BASE_URL; ?>css/unrealircd-admin.css" rel="stylesheet">
 </head><div class="text-center">
-<a href="<?php echo BASE_URL; ?>plugins/sql_auth/login.php"><button type="button" style="margin:0; top:50%; position: absolute;" class="btn	btn-primary" data-bs-toggle="modal" data-bs-target="#loginModaltitle">
+<a href="<?php echo BASE_URL; ?>login"><button type="button" style="margin:0; top:50%; position: absolute;" class="btn	btn-primary" data-bs-toggle="modal" data-bs-target="#loginModaltitle">
 	Login to continue
 </button></a>
 </div>
