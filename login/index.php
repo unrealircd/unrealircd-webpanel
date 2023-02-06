@@ -75,7 +75,7 @@ if (!empty($_POST))
 <body role="document">
 <div class="container-fluid">
 <form method="post" action="index.php?redirect=<?php echo $redirect; ?>">
-	<div class="modal" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loginModal" aria-hidden="false"></a>
+	<div class="modal" id="loginModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="loginModal" aria-hidden="false"></a>
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 		<div class="modal-header" style="margin: 0 auto;">
