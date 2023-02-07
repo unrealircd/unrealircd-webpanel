@@ -83,7 +83,8 @@ if ($ip)
     
     <?php
 }
-
+if (!isset($whois))
+    return;
 ?>
 
 <div class="modal fade" id="ip_whois_raw" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
