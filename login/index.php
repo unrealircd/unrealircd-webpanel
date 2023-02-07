@@ -24,18 +24,21 @@ if (!empty($_POST))
 		$user = new PanelUser($_POST['username']);
 		
 		/* not being too informative with the login error in case of attackers */
-		if (!$user->id)
-		{
-			$failmsg = "Incorrect login";
-		}
-		else if ($user->password_verify($_POST['password']))
+		if (isset($user->id) && $user->password_verify($_POST['password']))
 		{
 			$_SESSION['id'] = $user->id;
 			header('Location: ' . $redirect);
 			$user->add_meta("last_login", date("Y-m-d m:i:s"));
+			Hook::run(HOOKTYPE_USER_LOGIN, $user);
+			die();
 		}
 		else
 		{
+			$fail = [
+				"login" => htmlspecialchars($_POST['username']),
+				"IP" => $_SERVER['REMOTE_ADDR']
+			];
+			Hook::run(HOOKTYPE_USER_LOGIN_FAIL, $fail);
 			$failmsg = "Incorrect login";
 		}
 

@@ -124,6 +124,10 @@ define('HOOKTYPE_USER_CREATE', 111);
 define('HOOKTYPE_GET_USER_LIST', 112);
 
 define('HOOKTYPE_USER_DELETE', 113);
+
+define('HOOKTYPE_USER_LOGIN', 114);
+
+define('HOOKTYPE_USER_LOGIN_FAIL', 115);
 /** 
  *  Class for "Hook"
  * This is the main function which gets called whenever you want to use a Hook.
