@@ -127,7 +127,7 @@ define('EMAIL_SETTINGS', [
     "host" => 'smtp.host.example.com',
     "port" => 587,
     "encryption" => 'tls', /* Use 'tls' for STARTTLS or 'ssl' for TLS/SSL
-    "username" => "v.a.pond@outlook.com", /* The email to login with and send emails from */
+    "username" => "youremail@example.com", /* The email to login with and send emails from */
     "password" => "supersecretpassword", /* The password for the above email */
     "from_name" => "UnrealIRCd Admin Panel",
 
