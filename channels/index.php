@@ -24,6 +24,9 @@ $channels = $rpc->channel()->getAll();
 </thead>
 <tbody>
 	<?php
+		$columns = array_column($channels, 'num_users');
+		array_multisort($columns, SORT_DESC, $channels);
+
 		foreach($channels as $channel)
 		{
 			echo "<tr>";
