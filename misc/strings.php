@@ -70,7 +70,6 @@ function how_long_ago($timestamp)
 {
 	$now = time();
 	$diff = $now - strtotime($timestamp);
-
 	$units = array(
 		31536000 => 'year',
 		2592000 => 'month',

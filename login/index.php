@@ -28,7 +28,7 @@ if (!empty($_POST))
 		{
 			$_SESSION['id'] = $user->id;
 			header('Location: ' . $redirect);
-			$user->add_meta("last_login", date("Y-m-d m:i:s"));
+			$user->add_meta("last_login", date("Y-m-d H:i:s"));
 			Hook::run(HOOKTYPE_USER_LOGIN, $user);
 			die();
 		}

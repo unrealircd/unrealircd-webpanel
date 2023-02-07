@@ -146,11 +146,14 @@ Click on a username to view more information.
 			echo "<td scope=\"col\">".$user->bio."</td>";
 			$last = (isset($user->user_meta['last_login'])) ? "<code>".$user->user_meta['last_login'] . "</code> <span class=\"badge rounded-pill badge-dark\">".how_long_ago($user->user_meta['last_login'])."</span>" : "none";
 			echo "<td scope=\"col\">$last</td>";
-			echo "</tr>";
+			echo "</tr>\n";
 		}
-	?></tbody></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2">
+	?></tbody></table>
+	<?php if (current_user_can(PERMISSION_MANAGE_USERS)) { ?>
+		<p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2">
 	Delete selected
 	</button></p>
+	<?php } ?>
 	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
