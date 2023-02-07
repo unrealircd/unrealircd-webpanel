@@ -9,6 +9,7 @@ class php_mailer
 	public $author = "Valware";
 	public $version = "1.0";
 	public $description = "Send mail using PHPMailer()";
+	public $email = "v.a.pond@outlook.com";
 
 	function __construct()
 	{
@@ -41,9 +42,8 @@ class php_mailer
 			$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
 			$mail->send();
-			echo 'Message has been sent';
 		} catch (Exception $e) {
-			echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+			die("Could not send mail:". $e);
 		}
 	}
 

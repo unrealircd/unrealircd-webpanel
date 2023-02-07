@@ -9,6 +9,7 @@ class sql_auth
 	public $author = "Valware";
 	public $version = "1.0";
 	public $description = "Provides a User Auth and Management Panel with an SQL backend";
+	public $email = "v.a.pond@outlook.com";
 
 	function __construct()
 	{

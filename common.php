@@ -32,7 +32,10 @@ $pages = Array(
 	"Tools" => [
 		"IP WHOIS" => "tools/ip-whois.php",
 	],
-	"Settings" => "settings",
+	"Settings" => [
+		"Panel Users" => "settings",
+		"Plugins" => "settings/plugins.php",
+	],
 	
 	"News"         => "news.php",
 );

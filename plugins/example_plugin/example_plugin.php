@@ -6,6 +6,7 @@ class example_plugin
 	public $author = "Valware";
 	public $version = "1.0";
 	public $description = "An example plugin to show how to make stuff";
+	public $email = "v.a.pond@outlook.com";
 
 	function __construct()
 	{
