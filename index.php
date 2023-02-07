@@ -226,7 +226,39 @@ $stats = (object) $array_of_stats;
 		</div>
 	</div>
 </div>
+<?php
+$userlist = [];
+Hook::run(HOOKTYPE_GET_USER_LIST, $userlist);
+$num_of_panel_admins = count($userlist);
+?>
 
+<div class="container mt-5">
+
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="card text-center">
+						<div class="card-header bg-success text-white">
+							<div class="row">
+								<div class="col">
+									<i class="fa fa-lock-open fa-3x"></i>
+								</div>
+								<div class="col">
+									<h3 class="display-4"><?php echo $num_of_panel_admins; ?></h3>
+								</div>
+							</div>
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="col">
+									<h6>Panel Users</h6>
+								</div>
+								<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL; ?>settings">View</a></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
 <?php
 
 Hook::run(HOOKTYPE_OVERVIEW_CARD, $stats);

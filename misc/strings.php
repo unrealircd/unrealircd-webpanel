@@ -64,3 +64,25 @@ function show_nick_only($str)
 		$str = substr($str, 0, $x);
 	return $str;
 }
+
+
+function how_long_ago($timestamp)
+{
+	$now = time();
+	$diff = $now - strtotime($timestamp);
+	$units = array(
+		31536000 => 'year',
+		2592000 => 'month',
+		604800 => 'week',
+		86400 => 'day',
+		3600 => 'hour',
+		60 => 'minute',
+		1 => 'second'
+	);
+
+	foreach ($units as $unit => $text) {
+		if ($diff < $unit) continue;
+		$numberOfUnits = floor($diff / $unit);
+		return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'').' ago';
+	}
+}

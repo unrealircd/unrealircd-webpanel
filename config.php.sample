@@ -58,6 +58,7 @@ define(
 		*/
 		//"example_plugin", /* An example plugin */
 		//"sql_auth", /* Provides a login page which uses SQL */
+		//"php_mailer", /* Provides ability to send emails on behalf of the admin panel */
 	]
 );
 
@@ -117,4 +118,17 @@ define('SQL_DEFAULT_USER', [
 define('DNSBL', [
 	"dnsbl.dronebl.org",
 	"rbl.efnetrbl.org"
+]);
+
+/** Your email settings
+ * Requires plugin "php_mailer"
+*/
+define('EMAIL_SETTINGS', [
+    "host" => 'smtp.host.example.com',
+    "port" => 587,
+    "encryption" => 'tls', /* Use 'tls' for STARTTLS or 'ssl' for TLS/SSL
+    "username" => "youremail@example.com", /* The email to login with and send emails from */
+    "password" => "supersecretpassword", /* The password for the above email */
+    "from_name" => "UnrealIRCd Admin Panel",
+
 ]);

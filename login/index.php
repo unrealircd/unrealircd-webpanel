@@ -1,16 +1,17 @@
 
 <?php
-require_once "../../common.php";
-require_once "SQL/user.php";
+require_once "../common.php";
 
 $logout = false;
+$redirect = (isset($_GET['redirect'])) ? $_GET['redirect'] : BASE_URL;
+
 if (!empty($_GET['logout']))
 {
 	if (!isset($_SESSION['id']))
-	$failmsg = "Nothing to logout from";
+		$failmsg = "Nothing to logout from";
 	else {
-	session_destroy();
-	$logout = true;
+		session_destroy();
+		$logout = true;
 	}
 }
 if (!empty($_POST))
@@ -20,21 +21,24 @@ if (!empty($_POST))
 		
 		/* securitah */
 		security_check();
-		$user = new SQLA_User($_POST['username']);
+		$user = new PanelUser($_POST['username']);
 		
 		/* not being too informative with the login error in case of attackers */
-		if (!$user->id)
-		{
-			$failmsg = "Incorrect login";
-		}
-		else if ($user->password_verify($_POST['password']))
+		if (isset($user->id) && $user->password_verify($_POST['password']))
 		{
 			$_SESSION['id'] = $user->id;
-			header('Location: ' . BASE_URL);
-			$user->add_meta("last_login", date("Y-m-d m:i:s"));
+			header('Location: ' . $redirect);
+			$user->add_meta("last_login", date("Y-m-d H:i:s"));
+			Hook::run(HOOKTYPE_USER_LOGIN, $user);
+			die();
 		}
 		else
 		{
+			$fail = [
+				"login" => htmlspecialchars($_POST['username']),
+				"IP" => $_SERVER['REMOTE_ADDR']
+			];
+			Hook::run(HOOKTYPE_USER_LOGIN_FAIL, $fail);
 			$failmsg = "Incorrect login";
 		}
 
@@ -64,20 +68,17 @@ if (!empty($_POST))
 <title>UnrealIRCd Panel</title>
 <link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>img/favicon.ico">
 <link href="<?php echo BASE_URL; ?>css/unrealircd-admin.css" rel="stylesheet">
-</head><div class="text-center">
-<a href="<?php echo BASE_URL; ?>plugins/sql_auth/login.php"><button type="button" style="margin:0; top:50%; position: absolute;" class="btn	btn-primary" data-bs-toggle="modal" data-bs-target="#loginModaltitle">
-	Login to continue
-</button></a>
-</div>
+</head>
 <script>
 	$(document).ready(function(){
-		$("#loginModal").modal('show');
+		$("#loginModal").modal({backdrop: 'static', keyboard: false}, 'show');
 	});
+
 </script>
 <body role="document">
 <div class="container-fluid">
-<form method="post" action="login.php">
-	<div class="modal" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loginModal" aria-hidden="true">
+<form method="post" action="index.php?redirect=<?php echo $redirect; ?>">
+	<div class="modal" id="loginModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="loginModal" aria-hidden="false"></a>
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 		<div class="modal-header" style="margin: 0 auto;">
@@ -90,12 +91,21 @@ if (!empty($_POST))
 				if ($logout)
 					Message::Success("You have been logged out");
 				?>
-				<label for="username">Username / Nick:</label>
-				<input style="width:90%;" type="text" class="form-control" name="username" id="username" >
+				<br>
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
+					</div><input type="text" class="form-control" name="username" id="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+				</div>
+				
 			</div>
 			<div class="form-group">
-				<label for="password">Password:</label>
-				<input style="width:90%;" type="password" class="form-control" name="password" id="password">
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
+					</div><input type="password" class="form-control" name="password" id="password" placeholder="Password">
+				</div>
+
 			</div>
 		</div>
 		<div class="modal-footer">
@@ -106,4 +116,4 @@ if (!empty($_POST))
 	</div>
 	</div>
 </form>
-<?php require_once "../../footer.php";
+<?php require_once "../footer.php";

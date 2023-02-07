@@ -26,9 +26,9 @@ Overall, the UnrealIRCd Web Panel is a must-have tool for any administrator mana
 </div>
 
 ## Prerequisites ##
+- UnrealIRCd 6.0.6 or later
+- A webserver (e.g. apache or nginx)
 - PHP 8 or later
-- A webserver
-- UnrealIRCd 6.0.6-git recommended. Minimal functionality available with UnrealIRCd 6.0.5.
 
 Note: PHP 8 may require special installation instructions.
 Here are some instructions for:

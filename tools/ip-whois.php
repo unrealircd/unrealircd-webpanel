@@ -1,7 +1,7 @@
 <?php
 
-require_once "common.php";
-require_once "header.php";
+require_once "../common.php";
+require_once "../header.php";
 
 $ip_info = [];
 $ip = NULL;
@@ -33,9 +33,8 @@ else
         if (!strlen($line) && $start)
             $i++;
 
-        if (!ctype_alnum($line[0])) // we don't care about your opinion we just want the info
+        if (($line && !ctype_alnum($line[0])) || !$line) // we don't care about your opinion we just want the info
             continue;
-
         $start = true;
         $tok = split($line);
         foreach ($tok as &$t)
@@ -58,8 +57,8 @@ else
 
 <br>
 <form method="get" action="ip-whois.php">
-<div class="input-group short-form-control justify-content-center align-items-center">
-	<input style="margin: 0%; height: 24px;" class="left-pan form-control" id="ip" name="ip" type="text" value=<?php echo $ip; ?>>
+<div class="input-group">
+	<input class="short-form-control" id="ip" name="ip" type="text" value=<?php echo $ip; ?>>
 	<div class="input-group-append">
 		<br><button type="submit" class="btn btn-primary">Go</button>
 	</div>
@@ -97,7 +96,7 @@ if ($ip)
 			</button>
 		</div>
 		<div class="modal-body">
-            <code><?php echo str_replace("\n", "<br>",$whois); ?></code>
+            <code><?php echo str_replace("\n", "<br>",htmlspecialchars($whois)); ?></code>
 		</div>
 		<div class="modal-footer">
             <button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -106,4 +105,4 @@ if ($ip)
 	</div>
 </div>
 
-<?php require_once("footer.php");
+<?php require_once("../footer.php");

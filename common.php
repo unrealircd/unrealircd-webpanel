@@ -15,6 +15,7 @@ require_once UPATH . "/misc/ip-whois-misc.php";
 require_once UPATH . "/Classes/class-log.php";
 require_once UPATH . "/Classes/class-message.php";
 require_once UPATH . "/Classes/class-rpc.php";
+require_once UPATH . "/Classes/class-paneluser.php";
 require_once UPATH . "/plugins.php";
 
 $pages = Array(
@@ -28,9 +29,20 @@ $pages = Array(
 		"Ban Exceptions" => "server-bans/ban-exceptions.php"
 	],
 	"Spamfilter"   => "spamfilter.php",
+	"Tools" => [
+		"IP WHOIS" => "tools/ip-whois.php",
+	],
+	"Settings" => [
+		"Panel Users" => "settings",
+		"Plugins" => "settings/plugins.php",
+	],
+	
 	"News"         => "news.php",
 );
-
+if (unreal_get_current_user())
+{
+	$pages["Logout"] = "login/?logout=true";
+}
 
 Hook::run(HOOKTYPE_NAVBAR, $pages);
 

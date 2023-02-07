@@ -26,7 +26,7 @@ function generate_html_whois($user)
                             width="20"
                             height="15">
                     <?php } ?>
-                    <a href="<?php echo htmlspecialchars(BASE_URL."ip-whois.php?ip=$user->ip"); ?>"><button class="btn-sm btn-primary">WHOIS IP</button></a>
+                    <a href="<?php echo htmlspecialchars(BASE_URL."tools/ip-whois.php?ip=$user->ip"); ?>"><button class="btn-sm btn-primary">WHOIS IP</button></a>
                 </td>
             </tr><tr>
                 <th>Ident</th>

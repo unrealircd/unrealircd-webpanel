@@ -55,6 +55,7 @@ class Plugin
 	public $version;
 	public $description;
 	public $handle;
+	public $email;
 
 	public $error = NULL;
 	function __construct($handle)
@@ -84,6 +85,8 @@ class Plugin
 					$this->error = "Plugin version not defined";
 				elseif (!isset($plugin->description))
 					$this->error = "Plugin description not defined";
+				elseif (!isset($plugin->email))
+					$this->error = "Plugin email not defined";
 				else
 				{
 					$this->handle = $handle;
@@ -91,6 +94,7 @@ class Plugin
 					$this->author = $plugin->author;
 					$this->version = $plugin->version;
 					$this->description = $plugin->description;
+					$this->email = $plugin->email;
 				}
 			}
 		}

@@ -60,6 +60,13 @@ if (!empty($_POST))
 					if ($bantype == "qline")
 						$rpc->nameban()->add($name, $reason, $duration);
 
+					else if ($bantype == "kill")
+					{
+						if ($rpc->user()->kill($user->id, $reason))
+							Message::Success($user->name . "(*@" . $user->hostname . ") has been killed: $reason");
+						else
+							Message::Fail("Could not kill $user->name: $rpc->error");
+					}
 					else if ($rpc->serverban()->add($user->id, $bantype, $duration, $reason))
 						Message::Success($user->name . " (*@" . $user->hostname . ") has been $bantype" . "d $msg_msg: $reason");
 
@@ -108,11 +115,11 @@ Click on a username to view more information.
 				<th scope="col" colspan="2"><input <?php echo (isset($_POST['servicesonly'])) ? "checked" : ""; ?> name="servicesonly" type="checkbox" value=""> Services Only</th>
 			</tr>
 			<tr>			
-				<th scope="col" colspan="2">Nick <input name="uf_nick" type="text" class="form-control short-form-control">
-				<th scope="col" colspan="2">Host <input name="uf_host" type="text" class="form-control short-form-control"></th>
-				<th scope="col" colspan="2">IP <input name="uf_ip" type="text" class="form-control short-form-control"></th>
-				<th scope="col" colspan="2">Account <input name="uf_account" type="text" class="form-control short-form-control"></th>
-				<th scope="col" colspan="2">Server <input name="uf_server" type="text" class="form-control short-form-control"></th>
+				<th scope="col" colspan="2">Nick: <input name="uf_nick" type="text" class="short-form-control">
+				<th scope="col" colspan="2">Host: <input name="uf_host" type="text" class="short-form-control"></th>
+				<th scope="col" colspan="2">IP: <input name="uf_ip" type="text" class="short-form-control"></th>
+				<th scope="col" colspan="2">Account: <input name="uf_account" type="text" class="short-form-control"></th>
+				<th scope="col" colspan="2">Server: <input name="uf_server" type="text" class="short-form-control"></th>
 				
 				<th scope="col"> <input class="btn btn-primary" type="submit" value="Search"></th>
 			</tr>
@@ -160,11 +167,10 @@ Click on a username to view more information.
 
 			/* Some basic filtering for ACCOUNT */
 			if (isset($_POST['uf_account']) && strlen($_POST['uf_account']) && 
-			strpos(strtolower($user->user->account), strtolower($_POST['uf_account'])) !== 0 &&
-			strpos(strtolower($user->user->account), strtolower($_POST['uf_account'])) == false)
+			strtolower($user->user->account) !== strtolower($_POST['uf_account']))
 				continue;
 
-			/* Some basic filtering for ACCOUNT */
+			/* Some basic filtering for SERVER */
 			if (isset($_POST['uf_server']) && strlen($_POST['uf_server']) && 
 			strpos(strtolower($user->user->servername), strtolower($_POST['uf_server'])) !== 0 &&
 			strpos(strtolower($user->user->servername), strtolower($_POST['uf_server'])) == false)
@@ -213,6 +219,7 @@ Click on a username to view more information.
 		<optgroup label="Bans">
 			<option value="gline">GLine</option>
 			<option value="gzline">GZLine</option>
+			<option value="kill">Kill</option>
 		</optgroup>
 	</select></td><td colspan="2">
 	<label for="banlen_w">Duration: </label>
@@ -258,12 +265,14 @@ Click on a username to view more information.
 			}
 			
 			?>
-	</select><br></td><tr><td colspan="3">
+	</select>
+	
+	<br></td><tr><td colspan="3">
 	
 	<label for="ban_reason">Reason: </label>
-	<input class="form-control short-form-control" type="text" name="ban_reason" id="ban_reason" value="No reason">
+	<input class="form-control" type="text" name="ban_reason" id="ban_reason" value="No reason">
 	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-			Apply ban
+			Apply
 	</button></td></table>
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
@@ -280,7 +289,7 @@ Click on a username to view more information.
 		</div>
 		<div class="modal-footer">
 			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-			<button type="submit" action="post" class="btn btn-danger">Ban</button>
+			<button type="submit" action="post" class="btn btn-danger">Apply</button>
 			
 		</div>
 		</div>

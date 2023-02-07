@@ -120,7 +120,7 @@ if (!empty($_POST))
 				$reason = isset($_POST['ban_reason']) ? $_POST['ban_reason'] : "No reason";
 				$soft = (isset($_POST['soft'])) ? true : false;
 				if ($soft)
-					$targ_chars = "%" . $targ_chars;
+					$bantype = "soft-$bantype";
 				if ($rpc->spamfilter()->add($sf, $match_type, $targ_chars, $bantype, $duration, $reason))
 					Message::Success("Added spamfilter entry \"$sf\" [match type: $match_type] [targets: $targ_chars] [reason: $reason]");
 				else
@@ -278,7 +278,7 @@ $spamfilter = $rpc->spamfilter()->getAll();
 			echo "<td>".$sf->match_type."</td>";
 			echo "<td>".$sf->name."</td>";
 			echo "<td>".spamfilter_targets_to_string_with_info($sf->spamfilter_targets)."</td>";
-			echo "<td>".$sf->ban_action."</td>";
+			echo "<td><span class=\"badge rounded-pill badge-info\">".$sf->ban_action."</span></td>";
 			echo "<td>".$sf->ban_duration_string."</td>";
 			echo "<td>".$sf->reason."</td>";
 			echo "<td>".show_nick_only($sf->set_by)."</td>";

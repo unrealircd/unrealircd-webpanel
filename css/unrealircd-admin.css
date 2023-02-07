@@ -15,32 +15,10 @@
 	margin: 2px;
 }
 
-.form-control {
-	height: 10px;
-	margin: 5px;
-}
-  
 .short-form-control {
 	width: 70%;
 }
 
-.nav-item {
-	margin-left: 2px;
-	margin-right: 2px;
-}
-.navbar-nav li> {
-	border-radius: 4px;
-}
-.navbar-nav li>a:hover,.navbar-nav li.active {
-	color: white;
-	background-color: #4B86EE;
-	border-radius: 4px;
-}
-.navbar-nav li>a:hover,.navbar-nav li>a:focus {
-	color: white;
-	background-color: #6ca0f8;
-	border-radius: 4px;
-}
 
 .align_right {
 	width: 10px;
@@ -66,15 +44,6 @@
 	text-align: right;
 }
 
-
-
-
-*,
-*:before,
-*:after {
-	box-sizing: inherit;
-	/* enable the "border-box effect" everywhere */
-}
 body {
     padding-bottom: 120px;
 }
@@ -248,4 +217,5 @@ body {
 .card-header .badge {
 	top:-10px;
 	left:20px;
+	line-height: 74px;
 }

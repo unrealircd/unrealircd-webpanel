@@ -122,16 +122,6 @@ Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>
 					<option value="gzline">Global Zap Line (GZLine)</option>
 					
 				</optgroup>
-				<optgroup label="Restrictions">
-					<option value="local-qline">Reserve Nick Locally(QLine)</option>
-					<option value="qline">Reserve Nick Globally (QLine)</option>
-					<option value="shun">Shun</option>
-
-				</optgroup>
-				<optgroup label="Settings">
-					<option value="except">Global Exception (ELine)</option>
-					<option value="local-exception">Local Exception (ELine)</option>
-				</optgroup>
 			</select><br>
 			<div class="align_label"><label for="banlen_w">Duration: </label></div>
 					<select class="curvy" name="banlen_w" id="banlen_w">
