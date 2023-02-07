@@ -218,3 +218,7 @@ body {
 	top:-10px;
 	left:20px;
 }
+
+.card-header i.fa {
+	line-height: 74px;
+}
