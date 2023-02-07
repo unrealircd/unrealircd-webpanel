@@ -18,6 +18,9 @@ Hook::run(HOOKTYPE_PRE_OVERVIEW_CARD, $array_of_stats);
 */
 $stats = (object) $array_of_stats;
 
+$userlist = [];
+Hook::run(HOOKTYPE_GET_USER_LIST, $userlist);
+$num_of_panel_admins = count($userlist);
 
 ?>
 <div class="container">
@@ -226,13 +229,7 @@ $stats = (object) $array_of_stats;
 		</div>
 	</div>
 </div>
-<?php
-$userlist = [];
-Hook::run(HOOKTYPE_GET_USER_LIST, $userlist);
-$num_of_panel_admins = count($userlist);
-?>
-
-<div class="container mt-5">
+<div class="container mt-3">
 
 			<div class="row">
 				<div class="col-sm-3">
