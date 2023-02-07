@@ -28,16 +28,16 @@
       <a
         href="https://unrealircd.org"
         role="button"
-        data-mdb-ripple-color="dark"
-        ><img  class="btn btn-link btn-floating btn-xs text-white" src="<?php echo BASE_URL; ?>img/favicon.ico" width="25" height="25"></i
-      ></a>
+        data-mdb-ripple-color="dark">
+        <img  class="btn btn-link btn-floating btn-xs text-white" src="<?php echo BASE_URL; ?>img/favicon.ico" width="25" height="25"></a>
     
     <?php $arr = []; Hook::run(HOOKTYPE_FOOTER, $arr); ?>
     </section>
     
 
+</div>
+</div>
+
 </footer>
 </body>
 </html>
-</div>
-</div>

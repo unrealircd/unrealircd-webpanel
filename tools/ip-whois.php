@@ -96,7 +96,7 @@ if ($ip)
 			</button>
 		</div>
 		<div class="modal-body">
-            <code><?php echo str_replace("\n", "<br>",$whois); ?></code>
+            <code><?php echo str_replace("\n", "<br>",htmlspecialchars($whois)); ?></code>
 		</div>
 		<div class="modal-footer">
             <button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

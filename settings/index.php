@@ -139,12 +139,13 @@ Click on a username to view more information.
 		{
 			
 			echo "<td scope=\"col\"><input type=\"checkbox\" value='" .$user->id . "' name=\"userch[]\"></td>";
-			echo "<td scope=\"col\">".$user->username."</td>";
+			echo "<td scope=\"col\"><a href=\"".BASE_URL."settings/user-edit.php?id=$user->id\">$user->username</a></td>";
 			echo "<td scope=\"col\">".$user->first_name."</td>";
 			echo "<td scope=\"col\">".$user->last_name."</td>";
-			echo "<td scope=\"col\">".$user->created."</td>";
+			echo "<td scope=\"col\"><code>".$user->created."</code></td>";
 			echo "<td scope=\"col\">".$user->bio."</td>";
-			echo "<td scope=\"col\">".$user->user_meta['last_login']."</td>";
+			$last = (isset($user->user_meta['last_login'])) ? "<code>".$user->user_meta['last_login'] . "</code> <span class=\"badge rounded-pill badge-dark\">".how_long_ago($user->user_meta['last_login'])."</span>" : "none";
+			echo "<td scope=\"col\">$last</td>";
 			echo "</tr>";
 		}
 	?></tbody></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2">
