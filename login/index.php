@@ -49,6 +49,8 @@ if (!empty($_POST))
 
 ?><!DOCTYPE html>
 <head>
+<link href="<?php echo BASE_URL; ?>css/unrealircd-admin.css" rel="stylesheet">
+<script src="<?php echo BASE_URL; ?>js/unrealircd-admin.js"></script>
  <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
@@ -64,56 +66,32 @@ if (!empty($_POST))
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 
-<script src="<?php echo BASE_URL; ?>js/unrealircd-admin.js"></script>
-<title>UnrealIRCd Panel</title>
 <link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>img/favicon.ico">
-<link href="<?php echo BASE_URL; ?>css/unrealircd-admin.css" rel="stylesheet">
+<title>UnrealIRCd Panel</title>
 </head>
-<script>
-	$(document).ready(function(){
-		$("#loginModal").modal({backdrop: 'static', keyboard: false}, 'show');
-	});
-
-</script>
-<body role="document">
-<div class="container-fluid">
+<div class="container">
 <form method="post" action="index.php?redirect=<?php echo $redirect; ?>">
-	<div class="modal" id="loginModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="loginModal" aria-hidden="false"></a>
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content">
-		<div class="modal-header" style="margin: 0 auto;">
-			<h3 class="modal-title" id="loginModaltitle"><img src="<?php echo BASE_URL; ?>img/favicon.ico">	Log in to use Admin Panel</h3>
+	<h3><img src="<?php echo BASE_URL; ?>img/favicon.ico">	Log in to use Admin Panel</h3>
+	
+		<?php 
+		if (isset($failmsg)) Message::Fail($failmsg);
+		if ($logout)
+			Message::Success("You have been logged out");
+		?>
+		<div class="input-group">
+		<div class="input-group mb-3">
+			<div class="input-group-prepend">
+				<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
+			</div><input type="text" class="form-control" name="username" id="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
 		</div>
-		<div class="modal-body">
-			<div class="form-group">
-				<?php 
-				if (isset($failmsg)) Message::Fail($failmsg);
-				if ($logout)
-					Message::Success("You have been logged out");
-				?>
-				<br>
-				<div class="input-group mb-3">
-					<div class="input-group-prepend">
-						<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-					</div><input type="text" class="form-control" name="username" id="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-				</div>
-				
-			</div>
-			<div class="form-group">
-				<div class="input-group mb-3">
-					<div class="input-group-prepend">
-						<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
-					</div><input type="password" class="form-control" name="password" id="password" placeholder="Password">
-				</div>
+		<div class="input-group mb-3">
+			<div class="input-group-prepend">
+				<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
+			</div><input type="password" class="form-control" name="password" id="password" placeholder="Password">
+		</div>
 
-			</div>
-		</div>
-		<div class="modal-footer">
-			<a class="btn btn-secondary" href="#">Cancel</a>
-			<button type="submit" class="btn btn-primary">Log-In</button>
-		</div>
-		</div>
 	</div>
-	</div>
+	<button type="submit" class="btn btn-primary btn-block">Log-In</button>
 </form>
+</div>
 <?php require_once "../footer.php";

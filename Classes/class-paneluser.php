@@ -224,17 +224,24 @@ function unreal_get_current_user() : PanelUser|bool
 function current_user_can($permission) : bool
 {
 	$user = unreal_get_current_user();
-	do_log($user);
+	return user_can($user, $permission);
+}
+
+/**
+ * Checks if a user can do something
+ * @param string $permission
+ * @return bool
+ */
+function user_can(PanelUser $user, $permission) : bool
+{
 	if (!$user)
 		return false;
-	do_log($user);
+
 	if (isset($user->user_meta['permissions']))
 	{
 		$perms = unserialize($user->user_meta['permissions']);
 		if (in_array($permission, $perms))
-		{
 			return true;
-		}
 	}
 	return false;
 }
@@ -262,3 +269,48 @@ function delete_user(int $id, &$info = []) : int
 	return $arr["boolint"];
 }
 
+function get_panel_user_permission_list()
+{
+	$list = [
+		"Can add/delete/edit Admin Panel users" => PERMISSION_MANAGE_USERS,
+		"Can ban/kill IRC users" => PERMISSION_BAN_USERS,
+		"Can hange properties of a user, i.e. vhost, modes and more" => PERMISSION_EDIT_USER,
+		"Can change properties of a channel, i.e. topic, modes and more" => PERMISSION_EDIT_CHANNEL,
+		"Change properties of a user on a channel i.e give/remove voice or ops and more" => PERMISSION_EDIT_CHANNEL_USER,
+		"Can add manual bans, including G-Lines, Z-Lines and more" => PERMISSION_SERVER_BAN_ADD,
+		"Can remove set bans, including G-Lines, Z-Lines and more" => PERMISSION_SERVER_BAN_DEL,
+		"Can forbid usernames and channels" => PERMISSION_NAME_BAN_ADD,
+		"Can unforbid usernames and channels" => PERMISSION_NAME_BAN_DEL,
+		"Can add server ban exceptions" => PERMISSION_BAN_EXCEPTION_ADD,
+		"Can remove server ban exceptions" => PERMISSION_BAN_EXCEPTION_DEL,
+		"Can add Spamfilter entries" => PERMISSION_SPAMFILTER_ADD,
+		"Can remove Spamfilter entries" => PERMISSION_SPAMFILTER_DEL
+	];
+	Hook::run(HOOKTYPE_USER_PERMISSION_LIST, $list); // so plugin writers can add their own permissions
+	return $list;
+}
+
+function generate_panel_user_permission_table($user)
+{
+	
+	$list = get_panel_user_permission_list();
+	foreach($list as $desc => $slug)
+	{
+		$attributes = "";
+		$attributes .= (current_user_can(PERMISSION_MANAGE_USERS)) ? "" : "disabled ";
+		?>
+		<div class="input-group">
+			<div class="input-group-prepend">
+				<div class="input-group-text">
+					<input <?php
+						$attributes .= (user_can($user, $slug)) ? "checked" : "";
+						echo $attributes;
+					?> name="permissions[]" value="<?php echo $slug; ?>" type="checkbox">
+				</div>
+			</div>
+			<input type="text" readonly  class="form-control" value="<?php echo "$desc ($slug)"; ?>">
+		</div>
+
+		<?php
+	}
+}
