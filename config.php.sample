@@ -35,7 +35,7 @@ define( 'UNREALIRCD_HOST', '127.0.0.1' );
 /**
  * The port of your RPC server as defined in your unrealircd.conf
 */
-define( 'UNREALIRCD_PORT', '8080' );
+define( 'UNREALIRCD_PORT', '8600' );
 
 /** 
  * You should set this to true, if your RPC server is not on your local host
