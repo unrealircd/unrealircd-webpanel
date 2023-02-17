@@ -69,29 +69,38 @@ if (!empty($_POST))
 <link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>img/favicon.ico">
 <title>UnrealIRCd Panel</title>
 </head>
-<div class="container">
-<form method="post" action="index.php?redirect=<?php echo $redirect; ?>">
-	<h3><img src="<?php echo BASE_URL; ?>img/favicon.ico">	Log in to use Admin Panel</h3>
-	
-		<?php 
-		if (isset($failmsg)) Message::Fail($failmsg);
-		if ($logout)
-			Message::Success("You have been logged out");
-		?>
-		<div class="input-group">
-		<div class="input-group mb-3">
-			<div class="input-group-prepend">
-				<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-			</div><input type="text" class="form-control" name="username" id="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-		</div>
-		<div class="input-group mb-3">
-			<div class="input-group-prepend">
-				<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
-			</div><input type="password" class="form-control" name="password" id="password" placeholder="Password">
-		</div>
+<section class="vh-100">
+  <div class="container py-5 h-10">
+	<div class="row d-flex justify-content-center align-items-center h-100">
+	  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+		<div class="card shadow-2-strong" style="border-radius: 1rem;">
+		  <div class="card-body p-5 text-center">
+			<form method="post" action="index.php?redirect=<?php echo $redirect; ?>">
+				<h3><img src="<?php echo BASE_URL; ?>img/favicon.ico">	Log in to use Admin Panel</h3>
+				
+					<?php 
+					if (isset($failmsg)) Message::Fail($failmsg);
+					if ($logout)
+						Message::Success("You have been logged out");
+					?>
+					<div class="input-group">
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
+						</div><input type="text" class="form-control" name="username" id="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
+						</div><input type="password" class="form-control" name="password" id="password" placeholder="Password">
+					</div>
 
+				</div>
+				<button type="submit" class="btn btn-primary btn-block">Log-In</button>
+			</form>
+			</div>
+		</div>
 	</div>
-	<button type="submit" class="btn btn-primary btn-block">Log-In</button>
-</form>
 </div>
+</div></section>
 <?php require_once "../footer.php";
