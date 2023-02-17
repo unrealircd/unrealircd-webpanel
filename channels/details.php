@@ -25,22 +25,17 @@ if (isset($_GET['chan']))
 	}
 }
 $topicset = false;
+$del_ex = false;
+$del_inv = false;
+$del_ban = false;
+$checkboxes = [];
 if (isset($_POST))
 {
 	if (isset($_POST['update_topic']) && isset($_POST['set_topic']))
 	{
 		if (isset($channelObj))
 		{
-			if (isset($channelObj->topic)) // if the set topic is different
-			{
-				if (strcmp($channelObj->topic,$_POST['set_topic']))
-				{
-					$user = (function_exists('unreal_get_current_user') && $u = unreal_get_current_user()) ? $u->username : NULL;
-					$topicset = $rpc->channel()->set_topic($channelObj->name, $_POST['set_topic'], $user);
-					$channelObj->topic = $_POST['set_topic'];
-				}
-			}
-			else
+			if (!isset($channelObj->topic) || strcmp($channelObj->topic,$_POST['set_topic'])) // if the set topic is different
 			{
 				$user = (function_exists('unreal_get_current_user') && $u = unreal_get_current_user()) ? $u->username : NULL;
 				$topicset = $rpc->channel()->set_topic($channelObj->name, $_POST['set_topic'], $user);
@@ -48,6 +43,29 @@ if (isset($_POST))
 			}
 		}
 	}
+	$checkboxes = (isset($_POST['ban_checkboxes'])) ? $_POST['ban_checkboxes'] : [];
+	if (isset($_POST['delete_sel_ex']))
+	{
+		foreach($_POST['ce_checkboxes'] as $c)
+			$checkboxes[] = $c;
+		$del_ex = true;
+		chlkup_autoload_modal("excepts_modal");
+	}
+	else if (isset($_POST['delete_sel_inv']))
+	{
+		foreach($_POST['ci_checkboxes'] as $c)
+			$checkboxes[] = $c;
+		$del_inv = true;
+		chlkup_autoload_modal("invites_modal");
+	}
+	else if (isset($_POST['delete_sel_ban']))
+	{
+		foreach($_POST['cb_checkboxes'] as $c)
+			$checkboxes[] = $c;
+		$del_ban = true;
+		chlkup_autoload_modal("bans_modal");
+	}
+
 }
 
 ?>
@@ -56,8 +74,8 @@ if (isset($_POST))
 <br>
 <form method="get" action="details.php">
 <div class="container-xxl">
-	<div class="input-group short-form-control">
-		<input  class="short-form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
+	<div class="input-group">
+		<input  class="form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
 		<div class="input-group-append">
 			<button type="submit" class="btn btn-primary">Go</button>
 		</div>
@@ -70,13 +88,12 @@ if (isset($_POST))
 
 <br>
 <h3>
-	Topic:<br></h3><h4>
+	Topic:<br></h3>
 	<form method="post" action="details.php?chan=<?php echo urlencode($channelObj->name); ?>">
-	<div class="input-group short-form-control">
-	<input maxlength="360" type="text" class="short-form-control" name="set_topic" value="<?php echo (isset($channelObj->topic)) ? htmlspecialchars($channelObj->topic) : ""; ?>">
+	<div class="input-group">
+	<input maxlength="360" type="text" class="input-group form-control" name="set_topic" value="<?php echo (isset($channelObj->topic)) ? htmlspecialchars($channelObj->topic) : ""; ?>">
 	<div class="input-group-append"><button type="submit" name="update_topic" value="true" class="btn btn-info">Update Topic</button></div></div>
 	</form>
-</h4>
 <?php 
 if ($topicset)
 	Message::Success("The topic for $channelObj->name has been updated to be: \"".htmlspecialchars($channelObj->topic)."\"");
@@ -102,6 +119,7 @@ if ($topicset)
 			</button>
 		</div>
 		<div class="modal-body">
+			<?php if ($del_ban) do_delete_chanban($channelObj, $checkboxes); ?>
 			<form method="post">
 			<?php generate_chanbans_table($channelObj); ?>		
 			</form>
@@ -120,6 +138,7 @@ if ($topicset)
 			</button>
 		</div>
 		<div class="modal-body">
+			<?php if ($del_inv) do_delete_invite($channelObj, $checkboxes); ?>
 			<form method="post">
 			<?php generate_chaninvites_table($channelObj); ?>		
 			</form>
@@ -139,6 +158,7 @@ if ($topicset)
 			</button>
 		</div>
 		<div class="modal-body">
+			<?php if ($del_ex) do_delete_chanex($channelObj, $checkboxes); ?>
 			<form method="post">
 			<?php generate_chanexcepts_table($channelObj); ?>		
 			</form>
