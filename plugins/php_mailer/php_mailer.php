@@ -59,6 +59,18 @@ class php_mailer
 			"New login to Unreal Admin Panel",
 			"There was a new login to the admin panel.<br>User: \"$user->username\"<br>IP: \"".$_SERVER['REMOTE_ADDR']."\""
 		);
+
+		if ($user->email)
+			self::send_mail(
+				["email" => $user->email, "name" => $user->first_name . " " . $user->last_name],
+				"New login to your account",
+				"Dear $user->first_name, <br><br>".
+				"There was a new login to account: \"$user->username\"<br><br>".
+				"Details:<br>".
+				"IP: ".$_SERVER['REMOTE_ADDR']." (".$_SERVER['HTTP_CF_IPCOUNTRY'].")<br>".
+				"User Agent: ".$_SERVER['HTTP_USER_AGENT']."<br><br>".
+				"If this was not you, please contact your Panel Administrator."
+			);
 	}
 	public static function user_login_fail_notif($fail)
 	{
@@ -67,5 +79,17 @@ class php_mailer
 			"Failed login attempt - Unreal Admin Panel",
 			"There was a failed login attempt to the admin panel.<br>User: \"".$fail['login']."\"<br>IP: \"".$fail['IP']."\""
 		);
+		$user = new PanelUser($fail['login']);
+		if ($user->email)
+			self::send_mail(
+				["email" => $user->email, "name" => $user->first_name . " " . $user->last_name],
+				"Failed login attempt to your account",
+				"Dear $user->first_name, <br><br>".
+				"There was failed login attempt to your account: \"$user->username\"<br><br>".
+				"Details:<br>".
+				"IP: ".$_SERVER['REMOTE_ADDR']." (".$_SERVER['HTTP_CF_IPCOUNTRY'].")<br>".
+				"User Agent: ".$_SERVER['HTTP_USER_AGENT']."<br><br>".
+				"If this was not you, please contact your Panel Administrator."
+			);
 	}
 }
