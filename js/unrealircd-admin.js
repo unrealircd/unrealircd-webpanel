@@ -35,6 +35,27 @@ function toggle_sf(source) {
     }
 }
 
+function toggle_chanbans(source) {
+    checkboxes = document.getElementsByName("cb_checkboxes[]");
+    for (var i = 0, n = checkboxes.length; i < n; i++) { 
+        checkboxes[i].checked = source.checked;
+    }
+}
+
+function toggle_chanexs(source) {
+    checkboxes = document.getElementsByName("ce_checkboxes[]");
+    for (var i = 0, n = checkboxes.length; i < n; i++) { 
+        checkboxes[i].checked = source.checked;
+    }
+}
+
+function toggle_chaninvs(source) {
+    checkboxes = document.getElementsByName("ci_checkboxes[]");
+    for (var i = 0, n = checkboxes.length; i < n; i++) { 
+        checkboxes[i].checked = source.checked;
+    }
+}
+
 function toggle_checkbox(source) {
     checkboxes = document.getElementsByName("checkboxes[]");
     for (var i = 0, n = checkboxes.length; i < n; i++) {

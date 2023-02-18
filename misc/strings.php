@@ -86,3 +86,17 @@ function how_long_ago($timestamp)
 		return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'').' ago';
 	}
 }
+
+function time_of_day()
+{
+	$timeofday = "day"; // in case something went wrong? lol
+	$hour = date("H");
+	if ($hour >= 18 || $hour < 4)
+		$timeofday = "evening";
+	else if ($hour >= 4 && $hour < 12)
+		$timeofday = "morning";
+	else if ($hour >= 12 && $hour < 18)
+		$timeofday = "afternoon";
+
+	return $timeofday;
+}
