@@ -94,13 +94,30 @@ class sql_auth
 			user_id int AUTO_INCREMENT NOT NULL,
 			user_name VARCHAR(255) NOT NULL,
 			user_pass VARCHAR(255) NOT NULL,
-			
+			user_email VARCHAR(255),
 			user_fname VARCHAR(255),
 			user_lname VARCHAR(255),
 			user_bio VARCHAR(255),
 			created VARCHAR(255),
 			PRIMARY KEY (user_id)
 		)");
+
+		/**
+		 * Patch for beta users
+		 * This adds the email column to existing tables without it
+		*/
+		$columns = $conn->query("SHOW COLUMNS FROM " . SQL_PREFIX . "users");
+		$column_names = array();
+		$c = $columns->fetchAll();
+		foreach($c as $column) {
+			$column_names[] = $column['Field'];
+		}
+		$column_exists = in_array("user_email", $column_names);
+		if (!$column_exists) {
+			$conn->query("ALTER TABLE " . SQL_PREFIX . "users ADD COLUMN user_email varchar(255)");
+		}
+
+
 		$conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "user_meta (
 			meta_id int AUTO_INCREMENT NOT NULL,
 			user_id int NOT NULL,
@@ -153,6 +170,7 @@ class sql_auth
 			$obj->last_name = $data['user_lname'] ?? NULL;
 			$obj->created = $data['created'];
 			$obj->bio = $data['user_bio'];
+			$obj->email = $data['user_email'];
 			$obj->user_meta = (new PanelUser_Meta($obj->id))->list;
 		}
 		$u['object'] = $obj;
@@ -220,9 +238,10 @@ class sql_auth
 		$last_name = $u['lname'];
 		$password = $u['user_pass'];
 		$user_bio = $u['user_bio'];
+		$user_email = $u['user_email'];
 		$conn = sqlnew();
-		$prep = $conn->prepare("INSERT INTO " . SQL_PREFIX . "users (user_name, user_pass, user_fname, user_lname, user_bio, created) VALUES (:name, :pass, :fname, :lname, :user_bio, :created)");
-		$prep->execute(["name" => $username, "pass" => $password, "fname" => $first_name, "lname" => $last_name, "user_bio" => $user_bio, "created" => date("Y-m-d H:i:s")]);
+		$prep = $conn->prepare("INSERT INTO " . SQL_PREFIX . "users (user_name, user_pass, user_fname, user_lname, user_bio, user_email, created) VALUES (:name, :pass, :fname, :lname, :user_bio, :user_email, :created)");
+		$prep->execute(["name" => $username, "pass" => $password, "fname" => $first_name, "lname" => $last_name, "user_bio" => $user_bio, "user_email" => $user_email, "created" => date("Y-m-d H:i:s")]);
 		if ($prep->rowCount())
 			$u['success'] = true;
 		else

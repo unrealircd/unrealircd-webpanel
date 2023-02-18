@@ -43,6 +43,7 @@ if (isset($_POST))
 		$user['user_pass'] = $p['password'];
 		$user['fname'] = $p['add_first_name'];
 		$user['lname'] = $p['add_last_name'];
+		$user['user_email'] = $p['user_email'];
 		$user['user_bio'] = $p['user_bio'];
 		$user['err'] = "";
 		if (!create_new_user($user))
@@ -98,9 +99,14 @@ Click on a username to view more information.
 					<input style="width: 170%;" name="password" id="password" class="form-control curvy" type="password"></label>
 			</div>
 			<div class="input-group mb-3">
+				<label for="user_email" id="user_add">Email
+					<input style="width: 170%;" name="user_email" id="user_email" class="form-control curvy" type="text"></label>
+			</div>
+			<div class="input-group mb-3">
 				<label for="add_first_name" id="user_add">First Name
 					<input style="width: 170%;" name="add_first_name" id="add_first_name" class="form-control curvy" type="text"></label>
-			</div><div class="input-group mb-3">
+			</div>
+			<div class="input-group mb-3">
 				<label for="password" id="user_add">Last Name
 					<input style="width: 170%;" name="add_last_name" id="add_last_name" class="form-control curvy" type="text"></label>
 			</div>
@@ -128,6 +134,7 @@ Click on a username to view more information.
 	<th scope="col">Username</th>
 	<th scope="col">First Name</th>
 	<th scope="col">Last Name</th>
+	<th scope="col">Email</th>
 	<th scope="col">Created</th>
 	<th scope="col">Bio</th>
 	<th scope="col">Last login</th>
@@ -142,6 +149,7 @@ Click on a username to view more information.
 			echo "<td scope=\"col\"><a href=\"".BASE_URL."settings/user-edit.php?id=$user->id\">$user->username</a></td>";
 			echo "<td scope=\"col\">".$user->first_name."</td>";
 			echo "<td scope=\"col\">".$user->last_name."</td>";
+			echo "<td scope=\"col\"><a href=\"mailto:$user->email\">$user->email</a></td>";
 			echo "<td scope=\"col\"><code>".$user->created."</code></td>";
 			echo "<td scope=\"col\">".$user->bio."</td>";
 			$last = (isset($user->user_meta['last_login'])) ? "<code>".$user->user_meta['last_login'] . "</code> <span class=\"badge rounded-pill badge-dark\">".how_long_ago($user->user_meta['last_login'])."</span>" : "none";

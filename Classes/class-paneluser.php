@@ -179,6 +179,7 @@ function create_new_user(array &$user) : bool
 	$user['fname'] = (isset($user['fname'])) ? htmlspecialchars($user['fname']) : NULL;
 	$last['lname'] = (isset($user['lname'])) ? htmlspecialchars($user['lname']) : NULL;
 	$user['user_bio'] = (isset($user['user_bio'])) ? htmlspecialchars($user['user_bio']) : NULL;
+	$user['email'] = (isset($user['user_email'])) ? htmlspecialchars($user['user_email']) : NULL;
 
 	if (($u = new PanelUser($user['user_name']))->id)
 	{
