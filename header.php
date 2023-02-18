@@ -104,9 +104,28 @@ foreach($pages as $name=>$page)
 	}
 
 }
+$ToD = time_of_day();
+$user = unreal_get_current_user();
+if ($user)
+{
+	$name = $user->first_name ?? $user->username; // address them by first name, else username
+}
 ?>
 	
 		</ul>
+		
+		
+		<?php if ($user) { ?>
+			<div class="nav-item form-inline my-2 my-lg-0 mr-sm-2">
+				<div class="collapse navbar-collapse" id="collapsibleNavbar">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item dropdown">
+							<h6 style="color:white;">Good <?php echo "$ToD, $name!"; ?></h6>
+						</li>
+					</ul>
+				</div>
+			</div>
+		<?php } ?>
 	</nav><br>
 </div>
 
