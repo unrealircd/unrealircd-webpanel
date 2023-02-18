@@ -108,7 +108,7 @@ $ToD = time_of_day();
 $user = unreal_get_current_user();
 if ($user)
 {
-	$name = $user->first_name ?? $user->username; // address them by first name, else username
+	$name = (strlen($user->first_name)) ? $user->first_name : $user->username; // address them by first name, else username
 }
 ?>
 	
