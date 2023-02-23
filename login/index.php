@@ -10,6 +10,7 @@ if (!empty($_GET['logout']))
 	if (!isset($_SESSION['id']))
 		$failmsg = "Nothing to logout from";
 	else {
+		$_SESSION = NULL;
 		session_destroy();
 		$logout = true;
 	}

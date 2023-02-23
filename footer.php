@@ -6,7 +6,7 @@
 		<?php $arr = []; Hook::run(HOOKTYPE_PRE_FOOTER, $arr); ?>
 
 		<section class="mt-1">
-		© 1999-<?php echo date('Y'); ?> UnrealIRCd
+		<a href="https://unrealircd.org/" class="btn btn-default" style="color:white">© 1999-<?php echo date('Y'); ?> UnrealIRCd</a>
 
 			<!-- Twitter -->
 			<a
@@ -29,7 +29,7 @@
 				href="https://unrealircd.org"
 				role="button"
 				data-mdb-ripple-color="dark">
-				<img	class="btn btn-link btn-floating btn-xs text-white" src="<?php echo BASE_URL; ?>img/favicon.ico" width="25" height="25"></a>
+				<img class="btn btn-link btn-floating btn-xs text-white" src="<?php echo BASE_URL; ?>img/favicon.ico" width="25" height="25"></a>
 		
 		
 		<?php

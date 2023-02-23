@@ -42,7 +42,7 @@ class sql_auth
 
 	public static function add_footer_info($empty)
 	{
-		if (!($user = unreal_get_current_user()))
+		if (!($user = unreal_get_current_user())->id)
 			return;
 
 		else {
