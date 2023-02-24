@@ -26,14 +26,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 
 <script src="<?php echo BASE_URL; ?>js/unrealircd-admin.js"></script>
-<title>UnrealIRCd Panel</title>
+<title><?php echo _("title"); ?></title>
 <link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>img/favicon.ico">
 </head>
 <body role="document">
 <div class="container-fluid">
 	
 	<!-- Fixed navbar -->
-	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top z-index padding-top"><a class="navbar-brand" href="<?php echo BASE_URL; ?>"><img src="<?php echo BASE_URL; ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
+	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top z-index padding-top"><a class="navbar-brand" href="<?php echo BASE_URL; ?>"><img src="<?php echo BASE_URL; ?>img/favicon.ico" height="25" width="25"> <?php echo _("title-navbar"); ?></a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
 			<span class="navbar-toggler-icon"></span>
 		</button>
