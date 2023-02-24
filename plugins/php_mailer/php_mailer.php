@@ -57,7 +57,8 @@ class php_mailer
 		self::send_mail(
 			["email" => EMAIL_SETTINGS['username'], "name" => EMAIL_SETTINGS['from_name']],
 			"New login to Unreal Admin Panel",
-			"There was a new login to the admin panel.<br>User: \"$user->username\"<br>IP: \"".$_SERVER['REMOTE_ADDR']."\""
+			"There was a new login to the admin panel.<br>User: \"$user->username\"<br>IP: \"".$_SERVER['REMOTE_ADDR']."\" (".$_SERVER['HTTP_CF_IPCOUNTRY'].")<br>".
+			"User Agent: ".$_SERVER['HTTP_USER_AGENT']
 		);
 
 		if ($user->email)
