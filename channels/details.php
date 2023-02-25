@@ -29,6 +29,8 @@ $del_ex = false;
 $del_inv = false;
 $del_ban = false;
 $checkboxes = [];
+
+$chanban_errors = [];
 if (isset($_POST))
 {
 	if (isset($_POST['update_topic']) && isset($_POST['set_topic']))
@@ -65,9 +67,62 @@ if (isset($_POST))
 		$del_ban = true;
 		chlkup_autoload_modal("bans_modal");
 	}
+	if (isset($_POST['add_chban']))
+	{
+		$mode = $_POST['add_chban'];
+		$nick = (strlen($_POST['ban_nick'])) ? $_POST['ban_nick'] : false;
+		$action_string = (strlen($_POST['bantype_sel_action'])) ? $_POST['bantype_sel_action'] : false;
+		$action = "";
+		$type_string = (strlen($_POST['bantype_sel_type'])) ? $_POST['bantype_sel_type'] : false;
+		$type = "";
+		$expiry = (strlen($_POST['bantype_sel_ex'])) ? $_POST['bantype_sel_ex'] : false;
+		$time = "";
+		
+		if (!$nick)
+			$chanban_errors[] = "You did not specify a nick/mask";
+
+		if ($action_string)
+		{
+			if (strstr($action_string,"Quiet"))
+				$action = "~quiet:";
+			elseif (strstr($action_string,"Nick-change"))
+				$action = "~nickchange:";
+			elseif (strstr($action_string,"Join"))
+				$action = "~join:";
+		}
+		if ($type_string)
+		{
+			if (strstr($type_string,"Account"))
+				$type = "~account:";
+			elseif (strstr($type_string,"Channel"))
+				$type = "~channel:";
+			elseif (strstr($type_string,"Country"))
+				$type = "~country:";
+			elseif (strstr($type_string,"OperClass"))
+				$type = "~operclass:";
+			elseif (strstr($type_string,"GECOS"))
+				$type = "~realname:";
+			elseif (strstr($type_string,"Security"))
+				$type = "~security-group:";
+			elseif (strstr($type_string,"Certificate"))
+				$type = "~certfp:";
+		}
+		if ($expiry)
+		{
+			$future = strtotime($expiry);
+			$now = strtotime(date("Y-m-d h:i:s"));
+			$ts = ($future - $now) / 60;
+			$time = "~time:$ts:";
+			if ($ts > 9999 || $ts < 1)
+				$chanban_errors[] = "Cannot set expiry more than ".(9999 / 60)." hours (".(9999 / 1440)." days) in the future, or in the past";
+		}
+		if (empty($chanban_errors))
+			$rpc->channel()->set_mode($channel, "$mode", "$time$action$type$nick");
+	}
 
 }
 
+var_dump($chanban_errors);
 ?>
 <title><?php echo $title; ?></title>
 <h4><?php echo $title; ?></h4>
@@ -101,9 +156,14 @@ if ($topicset)
 <br>
 <div class="row">
 	<div class="col-sm-3">
-		<div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#bans_modal">Bans</div>
-		<div class="btn btn-sm btn-info" data-toggle="modal" data-target="#invites_modal">Invites</div>
-		<div class="btn btn-sm btn-warning" data-toggle="modal" data-target="#excepts_modal">Exceptions</div>
+		<button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Bans</button>
+		<div class="dropdown-menu">
+			<a class="dropdown-item" data-toggle="modal" data-target="#add_ban_modal">Add New</a>
+			<a class="dropdown-item" data-toggle="modal" data-target="#bans_modal">List</a>
+		</div>
+
+		<div class="btn btn-info dropdown-toggle" data-toggle="modal" data-target="#invites_modal">Invites</div>
+		<div class="btn btn-warning dropdown-toggle" data-toggle="modal" data-target="#excepts_modal">Exceptions</div>
 	</div>
 </div>
 <br>
@@ -161,6 +221,96 @@ if ($topicset)
 			<?php if ($del_ex) do_delete_chanex($channelObj, $checkboxes); ?>
 			<form method="post">
 			<?php generate_chanexcepts_table($channelObj); ?>		
+			</form>
+		</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Modal for Add Ban -->
+<div class="modal fade" id="add_ban_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="myModalLabel">Add New Channel Ban</h5>
+			<div type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</div>
+		</div>
+		<div class="modal-body">
+			<form method="post">
+			<div class="input-group mb-3">
+				<label for="ban_nick">Mask
+					<a href="https://www.unrealircd.org/docs/Extended_bans" target="__blank"><i class="fa fa-info-circle" aria-hidden="true"
+					title="The mask or other value. For example if you are matching a country in 'Ban Type' then you would put the country code as this value. Click to view more information on Extended Bans"
+					></i></a>
+					<input style="width: 170%;" name="ban_nick" id="ban_nick" class="form-control curvy" type="text"
+							placeholder="nick!user@host or something else"
+					></label>
+					
+			</div>
+			<div class="input-group mb-3">
+				<label for="bantype_action">Ban Action
+					<select class="form-control" name="bantype_sel_action" id="bantype_sel">
+						<option></option>
+						<option>Quiet (Mute)</option>
+						<option>Nick-change</option>
+						<option>Join</option>
+					</select>
+				</label>
+			</div>
+			<div class="input-group mb-3">
+				<label for="bantype_sel_type">Ban Type
+					<select class="form-control" name="bantype_sel_type" id="bantype_sel_type">
+						<option></option>
+						<option>Match Account</option>
+						<option>Match Channel</option>
+						<option>Match Country</option>
+						<option>Match OperClass</option>
+						<option>Match RealName / GECOS</option>
+						<option>Match Security Group</option>
+						<option>Match Certificate Fingerprint</option>
+					</select>
+				</label>
+			</div>
+			<div class="input-group mb-3">
+			<label for="bantype_sel_ex">Expiry Date-Time <br><small>Leave blank to mean "Permanent"</small>
+					<input type="datetime-local" name="bantype_sel_ex" id="bantype_sel_ex" class="form-control">
+				</label>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<input type="hidden" id="server" name="add_chban" value="b"></input>
+			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="submit" action="post" class="btn btn-danger">Add Channel Ban</button>
+			</form>
+		</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Modal for Add Manual Ban -->
+<div class="modal fade" id="add_manual_ban_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="myModalLabel">Add New Channel Ban</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<form method="post">
+			<div class="input-group mb-3">
+				<label for="name_add"  name="user_add" id="user_add">Username
+					<input style="width: 170%;" name="user_add" id="user_add" class="form-control curvy" type="text"></label>
+			</div>
+			<div class="input-group mb-3">
+				<label for="password" id="user_add">Password
+					<input style="width: 170%;" name="password" id="password" class="form-control curvy" type="password"></label>
+			</div>
 			</form>
 		</div>
 		</div>
