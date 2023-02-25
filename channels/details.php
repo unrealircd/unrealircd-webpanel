@@ -118,11 +118,14 @@ if (isset($_POST))
 		}
 		if (empty($chanban_errors))
 			$rpc->channel()->set_mode($channel, "$mode", "$time$action$type$nick");
+
+		else
+			foreach($chanban_errors as $err)
+				Message::Fail($err);
 	}
 
 }
 
-var_dump($chanban_errors);
 ?>
 <title><?php echo $title; ?></title>
 <h4><?php echo $title; ?></h4>
