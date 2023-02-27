@@ -154,6 +154,9 @@ function generate_chan_occupants_table($channel)
 	<?php
 }
 
+/**
+ * 	Force loading of a particular modal by name
+ */
 function chlkup_autoload_modal($name)
 {
 	?>

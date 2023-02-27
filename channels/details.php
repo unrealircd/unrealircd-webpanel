@@ -76,7 +76,7 @@ if (isset($_POST))
 			$mode = (isset($_POST['add_chinv'])) ? $_POST['add_chinv'] : $_POST['add_chex'];
 		
 		$nick = (strlen($_POST['ban_nick'])) ? $_POST['ban_nick'] : false;
-		$action_string = (strlen($_POST['bantype_sel_action'])) ? $_POST['bantype_sel_action'] : false;
+		$action_string = (isset($_POST['bantype_sel_action']) && strlen($_POST['bantype_sel_action'])) ? $_POST['bantype_sel_action'] : false;
 		$action = "";
 		$type_string = (strlen($_POST['bantype_sel_type'])) ? $_POST['bantype_sel_type'] : false;
 		$type = "";
@@ -140,6 +140,21 @@ if (isset($_POST))
 <h4><?php echo $title; ?></h4>
 <br>
 
+
+<div class="container-xl">
+<form method="get" action="details.php">
+	<div class="input-group">
+		<input  class="form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
+		<div class="input-group-append">
+			<button type="submit" class="btn btn-primary">Go</button>
+		</div>
+	</div>
+</div>
+</form>
+<?php if (!$channelObj)
+		return; ?>
+
+
 <!-- Modal for Channel Bans -->
 <div class="modal fade" id="bans_modal" name="bans_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -160,7 +175,7 @@ if (isset($_POST))
 	</div>
 </div>
 <!-- Modal for Channel Invited -->
-<div class="modal fade" id="#invites_modal" name="#invites_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="invites_modal" name="#invites_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 		<div class="modal-content">
 		<div class="modal-header">
@@ -366,19 +381,6 @@ if (isset($_POST))
 		</div>
 	</div>
 </div>
-<div class="container-xl">
-<form method="get" action="details.php">
-	<div class="input-group">
-		<input  class="form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
-		<div class="input-group-append">
-			<button type="submit" class="btn btn-primary">Go</button>
-		</div>
-	</div>
-</div>
-</form>
-
-<?php if (!$channelObj)
-		return; ?>
 
 <br>
 <h3>
