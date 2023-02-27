@@ -112,12 +112,14 @@ if (isset($_POST))
 			$future = strtotime($expiry);
 			$now = strtotime(date("Y-m-d h:i:s"));
 			$ts = ($future - $now) / 60;
+			$ts = (int)$ts;
 			$time = "~time:$ts:";
 			if ($ts > 9999 || $ts < 1)
 				$chanban_errors[] = "Cannot set expiry more than ".(9999 / 60)." hours (".(9999 / 1440)." days) in the future, or in the past";
 		}
 		if (empty($chanban_errors))
-			$rpc->channel()->set_mode($channel, "$mode", "$time$action$type$nick");
+			if ($rpc->channel()->set_mode($channel, "$mode", "$time$action$type$nick"))
+				Message::Success("The mode was set successfully: $mode $time$action$type$nick");
 
 		else
 			foreach($chanban_errors as $err)
