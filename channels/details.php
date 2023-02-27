@@ -67,9 +67,14 @@ if (isset($_POST))
 		$del_ban = true;
 		chlkup_autoload_modal("bans_modal");
 	}
-	if (isset($_POST['add_chban']))
+	if (isset($_POST['add_chban']) || isset($_POST['add_chinv']) || isset($_POST['add_chex']))
 	{
-		$mode = $_POST['add_chban'];
+
+		if (isset($_POST['add_chban']))
+			$mode = $_POST['add_chban'];
+		else
+			$mode = (isset($_POST['add_chinv'])) ? $_POST['add_chinv'] : $_POST['add_chex'];
+		
 		$nick = (strlen($_POST['ban_nick'])) ? $_POST['ban_nick'] : false;
 		$action_string = (strlen($_POST['bantype_sel_action'])) ? $_POST['bantype_sel_action'] : false;
 		$action = "";
@@ -125,6 +130,8 @@ if (isset($_POST))
 			foreach($chanban_errors as $err)
 				Message::Fail($err);
 	}
+	/* and finally re-grab the channel because updates lol */
+	$channelObj = $rpc->channel()->get($channel);
 
 }
 
@@ -132,49 +139,9 @@ if (isset($_POST))
 <title><?php echo $title; ?></title>
 <h4><?php echo $title; ?></h4>
 <br>
-<form method="get" action="details.php">
-<div class="container-xxl">
-	<div class="input-group">
-		<input  class="form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
-		<div class="input-group-append">
-			<button type="submit" class="btn btn-primary">Go</button>
-		</div>
-	</div>
-</div>
-</form>
-
-<?php if (!$channelObj)
-		return; ?>
-
-<br>
-<h3>
-	Topic:<br></h3>
-	<form method="post" action="details.php?chan=<?php echo urlencode($channelObj->name); ?>">
-	<div class="input-group">
-	<input maxlength="360" type="text" class="input-group form-control" name="set_topic" value="<?php echo (isset($channelObj->topic)) ? htmlspecialchars($channelObj->topic) : ""; ?>">
-	<div class="input-group-append"><button type="submit" name="update_topic" value="true" class="btn btn-info">Update Topic</button></div></div>
-	</form>
-<?php 
-if ($topicset)
-	Message::Success("The topic for $channelObj->name has been updated to be: \"".htmlspecialchars($channelObj->topic)."\"");
-?>
-<br>
-<div class="row">
-	<div class="col-sm-3">
-		<button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Bans</button>
-		<div class="dropdown-menu">
-			<a class="dropdown-item" data-toggle="modal" data-target="#add_ban_modal">Add New</a>
-			<a class="dropdown-item" data-toggle="modal" data-target="#bans_modal">List</a>
-		</div>
-
-		<div class="btn btn-info dropdown-toggle" data-toggle="modal" data-target="#invites_modal">Invites</div>
-		<div class="btn btn-warning dropdown-toggle" data-toggle="modal" data-target="#excepts_modal">Exceptions</div>
-	</div>
-</div>
-<br>
 
 <!-- Modal for Channel Bans -->
-<div class="modal fade" id="bans_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="bans_modal" name="bans_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 		<div class="modal-content">
 		<div class="modal-header">
@@ -193,7 +160,7 @@ if ($topicset)
 	</div>
 </div>
 <!-- Modal for Channel Invited -->
-<div class="modal fade" id="invites_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="#invites_modal" name="#invites_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 		<div class="modal-content">
 		<div class="modal-header">
@@ -234,7 +201,7 @@ if ($topicset)
 
 
 <!-- Modal for Add Ban -->
-<div class="modal fade" id="add_ban_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="ban" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 		<div class="modal-content">
 		<div class="modal-header">
@@ -296,32 +263,160 @@ if ($topicset)
 </div>
 
 
-<!-- Modal for Add Manual Ban -->
-<div class="modal fade" id="add_manual_ban_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+<!-- Modal for Add Invite -->
+<div class="modal fade" id="invite" tabindex="-1" role="dialog" aria-labelledby="add_invite_modal" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 		<div class="modal-content">
 		<div class="modal-header">
-			<h5 class="modal-title" id="myModalLabel">Add New Channel Ban</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<h5 class="modal-title" id="add_invite_modal">Add New Channel Invite</h5>
+			<div type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
-			</button>
+		</div>
 		</div>
 		<div class="modal-body">
 			<form method="post">
 			<div class="input-group mb-3">
-				<label for="name_add"  name="user_add" id="user_add">Username
-					<input style="width: 170%;" name="user_add" id="user_add" class="form-control curvy" type="text"></label>
+				<label for="ban_nick">Mask
+					<a href="https://www.unrealircd.org/docs/Extended_bans" target="__blank"><i class="fa fa-info-circle" aria-hidden="true"
+					title="The mask or other value. For example if you are matching a country in 'Invite Type' then you would put the country code as this value. Click to view more information on Extended Bans"
+					></i></a>
+					<input style="width: 170%;" name="ban_nick" id="ban_nick" class="form-control curvy" type="text"
+							placeholder="nick!user@host or something else"
+					></label>
+					
 			</div>
 			<div class="input-group mb-3">
-				<label for="password" id="user_add">Password
-					<input style="width: 170%;" name="password" id="password" class="form-control curvy" type="password"></label>
+				<label for="bantype_sel_type">Invite Type
+					<select class="form-control" name="bantype_sel_type" id="bantype_sel_type">
+						<option></option>
+						<option>Match Account</option>
+						<option>Match Channel</option>
+						<option>Match Country</option>
+						<option>Match OperClass</option>
+						<option>Match RealName / GECOS</option>
+						<option>Match Security Group</option>
+						<option>Match Certificate Fingerprint</option>
+					</select>
+				</label>
 			</div>
+			<div class="input-group mb-3">
+			<label for="bantype_sel_ex">Expiry Date-Time <br><small>Leave blank to mean "Permanent"</small>
+					<input type="datetime-local" name="bantype_sel_ex" id="bantype_sel_ex" class="form-control">
+				</label>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<input type="hidden" name="add_chinv" value="e"></input>
+			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="submit" action="post" class="btn btn-danger">Add Channel Ban</button>
 			</form>
 		</div>
 		</div>
 	</div>
 </div>
 
+<!-- Modal for Add Ban Exceptions -->
+<div class="modal fade" id="except" tabindex="-1" role="dialog" aria-labelledby="add_except_modal" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="add_except_modal">Add New Channel Ban Exception</h5>
+			<div type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</div>
+		</div>
+		<div class="modal-body">
+			<form method="post">
+			<div class="input-group mb-3">
+				<label for="ban_nick">Mask
+					<a href="https://www.unrealircd.org/docs/Extended_bans" target="__blank"><i class="fa fa-info-circle" aria-hidden="true"
+					title="The mask or other value. For example if you are matching a country in 'Ban Type' then you would put the country code as this value. Click to view more information on Extended Bans"
+					></i></a>
+					<input style="width: 170%;" name="ban_nick" id="ban_nick" class="form-control curvy" type="text"
+							placeholder="nick!user@host or something else"
+					></label>
+					
+			</div>
+			<div class="input-group mb-3">
+				<label for="bantype_sel_type">Ban Type
+					<select class="form-control" name="bantype_sel_type" id="bantype_sel_type">
+						<option></option>
+						<option>Match Account</option>
+						<option>Match Channel</option>
+						<option>Match Country</option>
+						<option>Match OperClass</option>
+						<option>Match RealName / GECOS</option>
+						<option>Match Security Group</option>
+						<option>Match Certificate Fingerprint</option>
+					</select>
+				</label>
+			</div>
+			<div class="input-group mb-3">
+			<label for="bantype_sel_ex">Expiry Date-Time <br><small>Leave blank to mean "Permanent"</small>
+					<input type="datetime-local" name="bantype_sel_ex" id="bantype_sel_ex" class="form-control">
+				</label>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<input type="hidden" id="server" name="add_chex" value="e"></input>
+			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="submit" action="post" class="btn btn-danger">Add Exception</button>
+			</form>
+		</div>
+		</div>
+	</div>
+</div>
+<div class="container-xl">
+<form method="get" action="details.php">
+	<div class="input-group">
+		<input  class="form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
+		<div class="input-group-append">
+			<button type="submit" class="btn btn-primary">Go</button>
+		</div>
+	</div>
+</div>
+</form>
+
+<?php if (!$channelObj)
+		return; ?>
+
+<br>
+<h3>
+	Topic:<br></h3>
+	<form method="post" action="details.php?chan=<?php echo urlencode($channelObj->name); ?>">
+	<div class="input-group">
+	<input maxlength="360" type="text" class="input-group form-control" name="set_topic" value="<?php echo (isset($channelObj->topic)) ? htmlspecialchars($channelObj->topic) : ""; ?>">
+	<div class="input-group-append"><button type="submit" name="update_topic" value="true" class="btn btn-info">Update Topic</button></div></div>
+	</form>
+<?php 
+if ($topicset)
+	Message::Success("The topic for $channelObj->name has been updated to be: \"".htmlspecialchars($channelObj->topic)."\"");
+?>
+<br>
+<div class="row" style="margin-left: 0px">
+	<div class="p-1">
+		<button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Bans</button>
+		<div class="dropdown-menu">
+			<div class="dropdown-item" data-toggle="modal" data-target="#ban">Add New</div>
+			<div class="dropdown-item" data-toggle="modal" data-target="#bans_modal">List</div>
+		</div>
+	</div>
+	<div class="p-1">
+		<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Invites</button>
+		<div class="dropdown-menu">
+			<div class="dropdown-item" data-toggle="modal" data-target="#invite">Add New</div>
+			<div class="dropdown-item" data-toggle="modal" data-target="#invites_modal">List</div>
+		</div>
+	</div>
+	<div class="p-1">	
+	<button class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Excepts</button>
+		<div class="dropdown-menu">
+			<div class="dropdown-item" data-toggle="modal" data-target="#except">Add New</div>
+			<div class="dropdown-item" data-toggle="modal" data-target="#excepts_modal">List</div>
+		</div>
+	</div>
+</div>
+<br>
 
 
 <div class="container-xxl">
@@ -371,6 +466,7 @@ if ($topicset)
 		</div>
 	</div>
 </div>
+
 <?php 
 require_once("../footer.php");
 
