@@ -39,7 +39,7 @@
 		?>
 		
 </div>
-</div>
+</div><!-- Second div is because there is a container div in the header-->
 
 </footer>
 </body>
