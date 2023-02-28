@@ -321,9 +321,9 @@ if (isset($_POST))
 			</div>
 		</div>
 		<div class="modal-footer">
-			<input type="hidden" name="add_chinv" value="e"></input>
+			<input type="hidden" name="add_chinv" value="I"></input>
 			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-			<button type="submit" action="post" class="btn btn-danger">Add Channel Ban</button>
+			<button type="submit" action="post" class="btn btn-danger">Add Invite</button>
 			</form>
 		</div>
 		</div>
