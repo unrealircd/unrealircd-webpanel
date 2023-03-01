@@ -277,7 +277,7 @@ function get_panel_user_permission_list()
 		"Can ban/kill IRC users" => PERMISSION_BAN_USERS,
 		"Can change properties of a user, i.e. vhost, modes and more" => PERMISSION_EDIT_USER,
 		"Can change properties of a channel, i.e. topic, modes and more" => PERMISSION_EDIT_CHANNEL,
-		"Change properties of a user on a channel i.e give/remove voice or ops and more" => PERMISSION_EDIT_CHANNEL_USER,
+		"Can change properties of a user on a channel i.e give/remove voice or ops and more" => PERMISSION_EDIT_CHANNEL_USER,
 		"Can add manual bans, including G-Lines, Z-Lines and more" => PERMISSION_SERVER_BAN_ADD,
 		"Can remove set bans, including G-Lines, Z-Lines and more" => PERMISSION_SERVER_BAN_DEL,
 		"Can forbid usernames and channels" => PERMISSION_NAME_BAN_ADD,
