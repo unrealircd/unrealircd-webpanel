@@ -18,7 +18,7 @@ $spamfilter_target_info = Array(
 
 function spamfilter_targets_to_string($targets)
 {
-	GLOBAL $spamfilter_target_info;
+	global $spamfilter_target_info;
 
 	$ret = '';
 	for ($i = 0, $targs = ""; $i < strlen($targets); $i++)
@@ -35,7 +35,7 @@ function spamfilter_targets_to_string($targets)
 
 function spamfilter_targets_to_string_with_info($targets)
 {
-	GLOBAL $spamfilter_target_info;
+	global $spamfilter_target_info;
 
 	$ret = '';
 	for ($i = 0, $targs = ""; $i < strlen($targets); $i++)
@@ -52,7 +52,7 @@ function spamfilter_targets_to_string_with_info($targets)
 
 function spamfilter_target_name_to_char($name)
 {
-	GLOBAL $spamfilter_target_info;
+	global $spamfilter_target_info;
 
 	foreach ($spamfilter_target_info as $char=>$e)
 	{
@@ -81,57 +81,66 @@ if (!empty($_POST))
 
 	if (($sf = (isset($_POST['sf_add'])) ? $_POST['sf_add'] : false)) // if it was a spamfilter entry
 	{
-		/* get targets */
-		$targets = []; // empty arrae
-		foreach($_POST as $key => $value)
-		{
-			if (substr($key, 0, 7) == "target_")
-				$targets[] = str_replace(["target_", "_"], ["", "-"], $key);
-		}
-		if (empty($targets))
-			Message::Fail("No target was specified");
-
-		if (!isset($_POST['sf_bantype']))
-			Message::Fail("No action was chosen");
-
+		if (!current_user_can(PERMISSION_SPAMFILTER_ADD))
+			Message::Fail("Could not add Spamfilter entry: Permission denied");
 		else
 		{
-
-			$bantype = $_POST['sf_bantype'];
-			$targ_chars = spamfilter_targets_from_array_to_chars($targets);
-			/* duplicate code for now [= */
-			$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
-			$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
-			$banlen_h = (isset($_POST['banlen_h'])) ? $_POST['banlen_h'] : NULL;
-			$duration = "";
-			if (!$banlen_d && !$banlen_h && !$banlen_w)
-				$duration .= "0";
 			
+			/* get targets */
+			$targets = []; // empty arrae
+			foreach($_POST as $key => $value)
+			{
+				if (substr($key, 0, 7) == "target_")
+					$targets[] = str_replace(["target_", "_"], ["", "-"], $key);
+			}
+			if (empty($targets))
+				Message::Fail("No target was specified");
+
+			if (!isset($_POST['sf_bantype']))
+				Message::Fail("No action was chosen");
+
 			else
 			{
-				if ($banlen_w)
-					$duration .= $banlen_w;
-				if ($banlen_d)
-					$duration .= $banlen_d;
-				if ($banlen_h)
-					$duration .= $banlen_h;
-			}
-			$match_type = $_POST['matchtype']; // should default to 'simple'
-				$reason = isset($_POST['ban_reason']) ? $_POST['ban_reason'] : "No reason";
-				$soft = (isset($_POST['soft'])) ? true : false;
-				if ($soft)
-					$bantype = "soft-$bantype";
-				if ($rpc->spamfilter()->add($sf, $match_type, $targ_chars, $bantype, $duration, $reason))
-					Message::Success("Added spamfilter entry \"$sf\" [match type: $match_type] [targets: $targ_chars] [reason: $reason]");
+
+				$bantype = $_POST['sf_bantype'];
+				$targ_chars = spamfilter_targets_from_array_to_chars($targets);
+				/* duplicate code for now [= */
+				$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
+				$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
+				$banlen_h = (isset($_POST['banlen_h'])) ? $_POST['banlen_h'] : NULL;
+				$duration = "";
+				if (!$banlen_d && !$banlen_h && !$banlen_w)
+					$duration .= "0";
+				
 				else
-					Message::Fail("Could not add spamfilter entry \"$sf\" [match type: $match_type] [targets: $targ_chars] [reason: $reason]: $rpc->error");
+				{
+					if ($banlen_w)
+						$duration .= $banlen_w;
+					if ($banlen_d)
+						$duration .= $banlen_d;
+					if ($banlen_h)
+						$duration .= $banlen_h;
+				}
+				$match_type = $_POST['matchtype']; // should default to 'simple'
+					$reason = isset($_POST['ban_reason']) ? $_POST['ban_reason'] : "No reason";
+					$soft = (isset($_POST['soft'])) ? true : false;
+					if ($soft)
+						$bantype = "soft-$bantype";
+					if ($rpc->spamfilter()->add($sf, $match_type, $targ_chars, $bantype, $duration, $reason))
+						Message::Success("Added spamfilter entry \"$sf\" [match type: $match_type] [targets: $targ_chars] [reason: $reason]");
+					else
+						Message::Fail("Could not add spamfilter entry \"$sf\" [match type: $match_type] [targets: $targ_chars] [reason: $reason]: $rpc->error");
+			}
 		}
 	}
 	else if (!empty($_POST['sf']))
-		foreach ($_POST as $key => $value)
-			foreach ($value as $tok)
+	{
+		if (!current_user_can(PERMISSION_SPAMFILTER_DEL))
+			Message::Fail("Could not delete Spamfilter entry or entries: Permission denied");
+		else
+			foreach ($_POST['sf'] as $key => $value)
 			{
-				$tok = explode(",", $tok);
+				$tok = explode(",", $value);
 				$name = base64_decode($tok[0]);
 				$match_type = base64_decode($tok[1]);
 				$spamfilter_targets = base64_decode($tok[2]);
@@ -141,6 +150,7 @@ if (!empty($_POST))
 				else
 					Message::Fail("Unable to remove spamfilter on $name: $rpc->error");
 			}
+	}
 	
 }
 
@@ -148,7 +158,7 @@ $spamfilter = $rpc->spamfilter()->getAll();
 ?>
 
 <h4>Spamfilter Overview</h4><br>
-<p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+<p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" <?php echo (current_user_can(PERMISSION_SPAMFILTER_ADD)) ? "" : "disabled"; ?>>
 			Add entry
 	</button></p>
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
@@ -285,7 +295,7 @@ $spamfilter = $rpc->spamfilter()->getAll();
 			echo "<td>".$sf->set_at_string."</td>";
 			
 		}
-	?></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2">
+	?></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2" <?php echo (current_user_can(PERMISSION_SPAMFILTER_ADD)) ? "" : "disabled"; ?>>
 	Delete selected
 	</button></p>
 	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">

@@ -10,47 +10,54 @@ if (!empty($_POST))
 
 	if (isset($_POST['tklch']) && !empty($_POST['tklch'])) // User has asked to delete these tkls
 	{
-		foreach ($_POST['tklch'] as $key => $value)
-		{
-			$tok = base64_decode($value);
-			$success = false;
-			$success = $rpc->nameban()->delete($tok);
+		if (!current_user_can(PERMISSION_NAME_BAN_DEL))
+			Message::Fail("Could not delete name ban(s): Permission denied");
+		else
+			foreach ($_POST['tklch'] as $key => $value)
+			{
+				$tok = base64_decode($value);
+				$success = false;
+				$success = $rpc->nameban()->delete($tok);
 
 
-			if ($success)
-				Message::Success("Name Ban has been removed for $tok");
-			else
-				Message::Fail("Unable to remove Name Ban on $tok: $rpc->error");
-		}
+				if ($success)
+					Message::Success("Name Ban has been removed for $tok");
+				else
+					Message::Fail("Unable to remove Name Ban on $tok: $rpc->error");
+			}
 	}
 	elseif (isset($_POST['tkl_add']) && !empty($_POST['tkl_add']))
 	{
-		if (!($iphost = $_POST['tkl_add']))
-			Message::Fail("No mask was specified");
-		
-		/* duplicate code for now [= */
-		$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
-		$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
-		$banlen_h = (isset($_POST['banlen_h'])) ? $_POST['banlen_h'] : NULL;
-		$duration = "";
-		if (!$banlen_d && !$banlen_h && !$banlen_w)
-			$duration .= "0";
-		else {
-			if ($banlen_w)
-				$duration .= $banlen_w;
-			if ($banlen_d)
-				$duration .= $banlen_d;
-			if ($banlen_h)
-				$duration .= $banlen_h;
-		}
-		$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for " . rpc_convert_duration_string($duration);
-		$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
-	
-		if ($rpc->nameban()->add($iphost, $reason, $duration))
-			Message::Success("Name Ban set against \"$iphost\": $reason");
+		if (!current_user_can(PERMISSION_NAME_BAN_ADD))
+			Message::Fail("Could not add name ban(s): Permission denied");
 		else
-			Message::Fail("Name Ban could not be set against \"$iphost\": $rpc->error");
+		{
+			if (!($iphost = $_POST['tkl_add']))
+				Message::Fail("No mask was specified");
+			
+			/* duplicate code for now [= */
+			$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
+			$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
+			$banlen_h = (isset($_POST['banlen_h'])) ? $_POST['banlen_h'] : NULL;
+			$duration = "";
+			if (!$banlen_d && !$banlen_h && !$banlen_w)
+				$duration .= "0";
+			else {
+				if ($banlen_w)
+					$duration .= $banlen_w;
+				if ($banlen_d)
+					$duration .= $banlen_d;
+				if ($banlen_h)
+					$duration .= $banlen_h;
+			}
+			$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for " . rpc_convert_duration_string($duration);
+			$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
 		
+			if ($rpc->nameban()->add($iphost, $reason, $duration))
+				Message::Success("Name Ban set against \"$iphost\": $reason");
+			else
+				Message::Fail("Name Ban could not be set against \"$iphost\": $rpc->error");
+		}
 	}
 	elseif (isset($_POST['search_types']) && !empty($_POST['search_types']))
 	{
@@ -66,7 +73,7 @@ $name_bans = $rpc->nameban()->getAll();
 Here you can essentially forbid the use of a nick or channel name. This is useful to reserve services nicks so they cannot be used by normal users.<br>
 You can also forbid the use of channel names. This is useful in such cases where an admin might need to close a channel for reasons relating to their own policy.<br>
 <br>
-<p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+<p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" <?php echo (current_user_can(PERMISSION_NAME_BAN_ADD)) ? "" : "disabled"; ?>>
 			Add entry
 	</button></p></table>
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
@@ -170,7 +177,7 @@ You can also forbid the use of channel names. This is useful in such cases where
 			echo "<td scope=\"col\">".$name_bans->expire_at_string."</td>";
 			echo "</tr>";
 		}
-	?></tbody></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2">
+	?></tbody></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2" <?php echo (current_user_can(PERMISSION_NAME_BAN_DEL)) ? "" : "disabled"; ?>>
 	Delete selected
 	</button></p>
 	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">

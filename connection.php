@@ -18,7 +18,7 @@ try {
 		(
 			"wss://".UNREALIRCD_HOST.":".UNREALIRCD_PORT,
 			$api_login,
-			Array("tls_verify"=>$tls_verify)
+			["tls_verify" => $tls_verify]
 		);
 }
 catch (Exception $e)
