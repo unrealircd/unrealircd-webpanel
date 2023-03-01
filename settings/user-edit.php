@@ -2,12 +2,29 @@
 
 require_once "../common.php";
 require_once "../header.php";
-do_log($_POST, $_GET, $_FILES);
+
 
 $us = unreal_get_current_user();
 $id = (isset($_GET['id'])) ? $_GET['id'] : $us->id;
 $edit_user = new PanelUser(NULL, $id);
-$can_edit = (user_can($us, PERMISSION_MANAGE_USERS) || $edit_user->id == $us->id) ? "" : "disabled";
+$canedit = (user_can($us, PERMISSION_MANAGE_USERS) || $edit_user->id == $us->id) ? true : false;
+$can_edit = ($canedit) ? "" : "disabled";
+
+$permissions = (isset($_POST['permissions'])) ? $_POST['permissions'] : false;
+$edit_perms = (isset($edit_user->user_meta['permissions'])) ? unserialize($edit_user->user_meta['permissions']) : [];
+/* Check if they can edit their permissions and if the permissions have indeed been changed */
+if (is_array($permissions) && $canedit
+        && $permissions != $edit_perms)
+{
+    foreach ($permissions as $p)
+        if (!in_array($p, $edit_perms))
+            $edit_user->add_permission($p);
+
+    foreach($edit_perms as $p)
+        if (!in_array($p, $permissions))
+            $edit_user->delete_permission($p);
+}
+
 
 ?>
 <h4>Edit User: "<?php echo $edit_user->username; ?>"</h4>
@@ -54,7 +71,7 @@ $can_edit = (user_can($us, PERMISSION_MANAGE_USERS) || $edit_user->id == $us->id
 <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" style="width: 100px;">Email</span>
-    </div><input <?php echo $can_edit; ?> type="text" class="form-control" name="email" id="email" autocomplete="off">
+    </div><input <?php echo $can_edit; ?> type="text" class="form-control" name="email" id="email" autocomplete="off" value="<?php echo $edit_user->email; ?>">
 </div>
 
 <div class="input-group mb-3">

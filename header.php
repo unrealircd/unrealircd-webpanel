@@ -45,6 +45,7 @@
 
 $active_page = NULL;
 
+
 foreach ($pages as $name => $page)
 {
 	$script = $_SERVER['SCRIPT_FILENAME'];
@@ -91,17 +92,16 @@ foreach($pages as $name=>$page)
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <?php echo $name; ?>
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-			<?php foreach($page as $k => $p)
-			{
-				?>
-					<a class="dropdown-item" href="<?php echo BASE_URL.$p;?>"><?php echo $k; ?></a>
-				<?php
-			} ?>
-        </div>
-      </li>
-	  <?php
-		
+			<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+				<?php foreach($page as $k => $p)
+				{
+					?>
+						<a class="dropdown-item" href="<?php echo BASE_URL.$p;?>"><?php echo $k; ?></a>
+					<?php
+				} ?>
+			</div>
+		</li>
+		<?php
 	}
 
 }

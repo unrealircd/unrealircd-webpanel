@@ -58,7 +58,6 @@ class sql_auth
 			session_set_cookie_params(3600);
 			session_start();
 		}
-		do_log($_SESSION);
 		if (!isset($_SESSION['id']) || empty($_SESSION))
 		{
 			$secure = ($_SERVER['HTTPS'] == 'on') ? "https://" : "http://";
@@ -109,6 +108,7 @@ class sql_auth
 		$columns = $conn->query("SHOW COLUMNS FROM " . SQL_PREFIX . "users");
 		$column_names = array();
 		$c = $columns->fetchAll();
+
 		foreach($c as $column) {
 			$column_names[] = $column['Field'];
 		}
@@ -116,6 +116,15 @@ class sql_auth
 		if (!$column_exists) {
 			$conn->query("ALTER TABLE " . SQL_PREFIX . "users ADD COLUMN user_email varchar(255)");
 		}
+
+		/**
+		 * Another patch for beta users
+		 * This changes the size of the meta_value so we can store more
+		 */
+		$columns = $conn->query("SHOW COLUMNS FROM ".SQL_PREFIX."user_meta");
+		$c = $columns->fetchAll();
+		if (!empty($c))
+			$conn->query("ALTER TABLE `".SQL_PREFIX."user_meta` CHANGE `meta_value` `meta_value` VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
 
 
 		$conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "user_meta (
@@ -178,7 +187,6 @@ class sql_auth
 
 	public static function get_usermeta(&$u)
 	{
-		//do_log($u);
 		$list = &$u['meta'];
 		$id = $u['id'];
 		$conn = sqlnew();
