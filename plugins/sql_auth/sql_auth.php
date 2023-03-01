@@ -36,6 +36,9 @@ class sql_auth
 				$user['err'] = "";
 				create_new_user($user);
 			}
+			$lkup = new PanelUser(SQL_DEFAULT_USER['username']);
+			if (!user_can($lkup, PERMISSION_MANAGE_USERS))
+				$lkup->add_permission(PERMISSION_MANAGE_USERS);
 		}
 	}
 
