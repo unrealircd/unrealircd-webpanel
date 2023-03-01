@@ -33,7 +33,7 @@ $pages = Array(
 		"IP WHOIS" => "tools/ip-whois.php",
 	],
 	"Settings" => [
-		"Panel Users" => "settings",
+		"Panel Access" => "settings",
 		"Plugins" => "settings/plugins.php",
 	],
 	
