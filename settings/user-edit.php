@@ -7,13 +7,15 @@ require_once "../header.php";
 $us = unreal_get_current_user();
 $id = (isset($_GET['id'])) ? $_GET['id'] : $us->id;
 $edit_user = new PanelUser(NULL, $id);
-$canedit = (user_can($us, PERMISSION_MANAGE_USERS) || $edit_user->id == $us->id) ? true : false;
-$can_edit = ($canedit) ? "" : "disabled";
+$can_edit_profile = (user_can($us, PERMISSION_MANAGE_USERS) || $edit_user->id == $us->id) ? true : false;
+$caneditpermissions = (user_can($us, PERMISSION_MANAGE_USERS)) ? true : false;
+$can_edit = ($caneditpermissions) ? "" : "disabled";
 
 $permissions = (isset($_POST['permissions'])) ? $_POST['permissions'] : false;
 $edit_perms = (isset($edit_user->user_meta['permissions'])) ? unserialize($edit_user->user_meta['permissions']) : [];
+
 /* Check if they can edit their permissions and if the permissions have indeed been changed */
-if (is_array($permissions) && $canedit
+if (is_array($permissions) && $caneditpermissions
         && $permissions != $edit_perms)
 {
     foreach ($permissions as $p)
@@ -28,9 +30,10 @@ if (is_array($permissions) && $canedit
 
 ?>
 <h4>Edit User: "<?php echo $edit_user->username; ?>"</h4>
-<br><br>
+<br>
 <form method="post" action="user-edit.php?id=<?php echo $edit_user->id; ?>" autocomplete="off" enctype="multipart/form-data">
-<a class="btn btn-<?php echo (user_can($us, PERMISSION_MANAGE_USERS)) ? "danger" : "primary"; ?>" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+<?php if ($can_edit_profile) { ?>
+<a class="btn btn-<?php echo (user_can($us, PERMISSION_MANAGE_USERS)) ? "danger" : "info"; ?>" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
 <?php echo (user_can($us, PERMISSION_MANAGE_USERS)) ? "Edit" : "View"; ?> Permissions
 </a>
 <div class="collapse" id="collapseExample">
@@ -40,6 +43,7 @@ if (is_array($permissions) && $canedit
     <?php generate_panel_user_permission_table($edit_user); ?>
   </div>
 </div>
+<?php } ?>
 <br><br>
 <div class="input-group mb-3">
     <div class="input-group-prepend">
