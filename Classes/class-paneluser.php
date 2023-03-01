@@ -275,7 +275,7 @@ function get_panel_user_permission_list()
 	$list = [
 		"Can add/delete/edit Admin Panel users" => PERMISSION_MANAGE_USERS,
 		"Can ban/kill IRC users" => PERMISSION_BAN_USERS,
-		"Can hange properties of a user, i.e. vhost, modes and more" => PERMISSION_EDIT_USER,
+		"Can change properties of a user, i.e. vhost, modes and more" => PERMISSION_EDIT_USER,
 		"Can change properties of a channel, i.e. topic, modes and more" => PERMISSION_EDIT_CHANNEL,
 		"Change properties of a user on a channel i.e give/remove voice or ops and more" => PERMISSION_EDIT_CHANNEL_USER,
 		"Can add manual bans, including G-Lines, Z-Lines and more" => PERMISSION_SERVER_BAN_ADD,
