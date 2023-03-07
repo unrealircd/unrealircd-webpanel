@@ -4,7 +4,6 @@ require_once "../common.php";
 
 $logout = false;
 $redirect = (isset($_GET['redirect'])) ? $_GET['redirect'] : BASE_URL;
-
 if (!empty($_GET['logout']))
 {
 	if (!isset($_SESSION['id']))
@@ -23,7 +22,6 @@ if (!empty($_POST))
 		/* securitah */
 		security_check();
 		$user = new PanelUser($_POST['username']);
-		
 		/* not being too informative with the login error in case of attackers */
 		if (isset($user->id) && $user->password_verify($_POST['password']))
 		{

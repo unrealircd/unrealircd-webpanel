@@ -18,7 +18,7 @@ require_once UPATH . "/Classes/class-rpc.php";
 require_once UPATH . "/Classes/class-paneluser.php";
 require_once UPATH . "/plugins.php";
 
-$pages = Array(
+$pages = [
 	"Overview"     => "",
 	"Users"        => "users",
 	"Channels"     => "channels",
@@ -38,7 +38,7 @@ $pages = Array(
 	],
 	
 	"News"         => "news.php",
-);
+];
 if (unreal_get_current_user())
 {
 	$pages["Logout"] = "login/?logout=true";

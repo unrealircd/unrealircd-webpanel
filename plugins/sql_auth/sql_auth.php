@@ -23,6 +23,7 @@ class sql_auth
 		Hook::func(HOOKTYPE_USER_CREATE, 'sql_auth::user_create');
 		Hook::func(HOOKTYPE_GET_USER_LIST, 'sql_auth::get_user_list');
 		Hook::func(HOOKTYPE_USER_DELETE, 'sql_auth::user_delete');
+		Hook::func(HOOKTYPE_EDIT_USER, 'sql_auth::edit_core');
 
 		if (defined('SQL_DEFAULT_USER')) // we've got a default account
 		{
@@ -293,6 +294,37 @@ class sql_auth
 			$u['boolint'] = 0;
 		}
 	}
+
+	public static function edit_core($arr)
+	{
+		$conn = sqlnew();
+		$user = $arr['user'];
+		$info = $arr['info'];
+		foreach($info as $key => $val)
+		{
+			if (!$val)
+				continue;
+			if (!strcmp($key,"update_fname"))
+				$value = "user_fname";
+
+			elseif (!strcmp($key,"update_lname"))
+				$value = "user_lname";
+
+			elseif (!strcmp($key,"update_bio"))
+				$value = "user_bio";
+			
+			elseif (!strcmp($key,"update_pass") || !strcmp($key,"update_pass_conf"))
+				$value = "user_pass";
+
+			elseif(!strcmp($key,"update_email"))
+				$value = "user_email";
+			else
+				die("Malfunction");
+			$query = "UPDATE " . SQL_PREFIX . "users SET $value=:value WHERE user_id = :id";
+			$stmt = $conn->prepare($query);
+			$stmt->execute(["value" => $val, "id" => $user->id]);
+		}
+	}
 }
 
 
@@ -310,6 +342,9 @@ function security_check()
 
 function dnsbl_check($ip)
 {
+
+	if (!defined('DNSBL'))
+		return;
 	$dnsbl_lookup = DNSBL;
 
 	// clear variable just in case

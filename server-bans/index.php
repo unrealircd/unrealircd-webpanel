@@ -6,8 +6,6 @@ require_once "../header.php";
 if (!empty($_POST))
 {
 
-	do_log($_POST);
-
 	if (isset($_POST['tklch']) && !empty($_POST['tklch'])) // User has asked to delete these tkls
 	{
 		if (!current_user_can(PERMISSION_SERVER_BAN_DEL))

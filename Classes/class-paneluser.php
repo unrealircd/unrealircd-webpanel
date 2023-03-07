@@ -25,6 +25,8 @@ define('PERMISSION_BAN_EXCEPTION_DEL', 'be_del');
 define('PERMISSION_SPAMFILTER_ADD', 'sf_add'); 
 /** Can delete spamfilter entries */
 define('PERMISSION_SPAMFILTER_DEL', 'sf_del'); 
+/** Can rehash servers */
+define('PERMISSION_REHASH', 'rhs');
 /**
  * PanelUser
  * This is the User class for the SQL_Auth plugin
@@ -51,7 +53,6 @@ class PanelUser
 		$user["name"] = $name;
 		$user["id"] = $id;
 		$user["object"] = NULL;
-
 		Hook::run(HOOKTYPE_USER_LOOKUP, $user);
 		foreach ($user['object'] as $key => $value)
 			$this->$key = $value;
@@ -131,6 +132,15 @@ class PanelUser
 		$this->user_meta['permissions'] = serialize($meta);
 	}
 
+	/** Updates core user info.
+	 * CAUTION: Updating a non-existent column will crash
+	 * your shit
+	 */
+	function update_core_info($array)
+	{
+		$arr = ['info' => $array, 'user' => $this];
+		Hook::run(HOOKTYPE_EDIT_USER, $arr);
+	}
 }
 
 
@@ -148,7 +158,6 @@ class PanelUser_Meta
 		$arr["id"] = $id;
 		$arr['meta'] = &$array;
 		Hook::run(HOOKTYPE_USERMETA_GET, $arr);
-		do_log($array);
 		$this->list = $arr['meta'];
 		
 	}
