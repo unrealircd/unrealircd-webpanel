@@ -295,7 +295,7 @@ $spamfilter = $rpc->spamfilter()->getAll();
 			echo "<td>".$sf->set_at_string."</td>";
 			
 		}
-	?></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2" <?php echo (current_user_can(PERMISSION_SPAMFILTER_ADD)) ? "" : "disabled"; ?>>
+	?></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2" <?php echo (current_user_can(PERMISSION_SPAMFILTER_DEL)) ? "" : "disabled"; ?>>
 	Delete selected
 	</button></p>
 	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
