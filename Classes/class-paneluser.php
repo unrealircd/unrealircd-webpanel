@@ -234,6 +234,8 @@ function unreal_get_current_user() : PanelUser|bool
 function current_user_can($permission) : bool
 {
 	$user = unreal_get_current_user();
+	if (!$user)
+		return false;
 	return user_can($user, $permission);
 }
 
