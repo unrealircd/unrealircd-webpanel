@@ -65,7 +65,13 @@ function show_nick_only($str)
 	return $str;
 }
 
-
+/**
+ * Figures out how long ago a given time was
+ * returns string example:
+ *  - "32 minutes ago"
+ *  - "5 hours ago"
+ *  - "12 seconds ago"
+ */
 function how_long_ago($timestamp)
 {
 	$now = time();
@@ -87,6 +93,13 @@ function how_long_ago($timestamp)
 	}
 }
 
+/**
+ * Uses system time.
+ * Returns:
+ * 	- evening
+ *  - morning
+ *  - afternoon
+ */
 function time_of_day()
 {
 	$timeofday = "day"; // in case something went wrong? lol
@@ -99,4 +112,57 @@ function time_of_day()
 		$timeofday = "afternoon";
 
 	return $timeofday;
+}
+
+
+/**
+ * Concatenate a string to a string
+ */
+function strcat(&$targ,$string) : void
+{ $targ .= $string; }
+
+
+/**
+ * Concatenate a string to a string and limits the string to a certain length
+ */
+function strlcat(&$targ,$string,$size) : void
+{
+	strcat($targ,$string);
+	$targ = mb_substr($targ,0,$size);
+}
+
+
+/**
+ * Prefixes a string to a string
+ */
+function strprefix(&$targ,$string) : void
+{ $targ = $string.$targ; }
+
+
+/**
+ * Prefixes a string to a string and limits the string to a certain length
+ */
+function strlprefix(&$targ,$string,$size) : void
+{
+	if (sizeof($targ) >= $size)
+		return;
+
+	strprefix($targ,$string);
+	$targ = mb_substr($targ,0,$size);
+}
+
+/** Checks if the token provided is a bad pointer, by reference
+ * Returns Bool value true if it IS bad
+ *
+ * Syntax:
+ * BadPtr($variable)
+ * 
+ * Returns:
+ * @
+*/
+function BadPtr(&$tok)
+{
+	if (!isset($tok) || empty($tok) || !$tok || strlen($tok) == 0)
+		return true;
+	return false;
 }
