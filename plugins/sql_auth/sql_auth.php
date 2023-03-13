@@ -246,11 +246,11 @@ class sql_auth
 	public static function user_create(&$u)
 	{
 		$username = $u['user_name'];
-		$first_name = $u['fname'];
-		$last_name = $u['lname'];
-		$password = $u['user_pass'];
-		$user_bio = $u['user_bio'];
-		$user_email = $u['user_email'];
+		$first_name = $u['fname'] ?? NULL;
+		$last_name = $u['lname'] ?? NULL;
+		$password = $u['user_pass'] ?? NULL;
+		$user_bio = $u['user_bio'] ?? NULL;
+		$user_email = $u['user_email'] ?? NULL;
 		$conn = sqlnew();
 		$prep = $conn->prepare("INSERT INTO " . SQL_PREFIX . "users (user_name, user_pass, user_fname, user_lname, user_bio, user_email, created) VALUES (:name, :pass, :fname, :lname, :user_bio, :user_email, :created)");
 		$prep->execute(["name" => $username, "pass" => $password, "fname" => $first_name, "lname" => $last_name, "user_bio" => $user_bio, "user_email" => $user_email, "created" => date("Y-m-d H:i:s")]);

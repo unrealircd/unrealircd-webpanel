@@ -40,13 +40,13 @@ if ($postbutton && $can_edit_profile)
     if ($array['update_pass'] == $array['update_pass_conf'])
     {
         $array['update_pass_conf'] = password_hash($array['update_pass_conf'], PASSWORD_ARGON2ID);
-        $array['update_pass'] = false;
+        unset($array['update_pass']);
     }
     else
     {
         Message::Fail("Could not update password: Passwords did not match");
-        $array['update_pass'] = false;
-        $array['update_pass_conf'] = false;
+        unset($array['update_pass']);
+        unset($array['update_pass_conf']);
     }
     $edit_user->update_core_info($array);
     $edit_user = new PanelUser($edit_user->username);
