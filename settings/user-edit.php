@@ -2,7 +2,7 @@
 
 require_once "../common.php";
 require_once "../header.php";
-
+do_log($_POST);
 
 $us = unreal_get_current_user();
 $id = (isset($_GET['id'])) ? $_GET['id'] : $us->id;
@@ -10,12 +10,12 @@ $edit_user = new PanelUser(NULL, $id);
 $can_edit_profile = (user_can($us, PERMISSION_MANAGE_USERS) || $edit_user->id == $us->id) ? true : false;
 $caneditpermissions = (user_can($us, PERMISSION_MANAGE_USERS)) ? true : false;
 $can_edit = ($caneditpermissions) ? "" : "disabled";
-
-$permissions = (isset($_POST['permissions'])) ? $_POST['permissions'] : false;
+$postbutton = (isset($_POST['update_user'])) ? true : false;
+$permissions = (isset($_POST['permissions'])) ? $_POST['permissions'] : [];
 $edit_perms = (isset($edit_user->user_meta['permissions'])) ? unserialize($edit_user->user_meta['permissions']) : [];
 
 /* Check if they can edit their permissions and if the permissions have indeed been changed */
-if (is_array($permissions) && $caneditpermissions
+if ($postbutton && is_array($permissions) && $caneditpermissions
         && $permissions != $edit_perms)
 {
     foreach ($permissions as $p)
@@ -25,9 +25,32 @@ if (is_array($permissions) && $caneditpermissions
     foreach($edit_perms as $p)
         if (!in_array($p, $permissions))
             $edit_user->delete_permission($p);
+
+    Message::Success("Permissions for <strong>$edit_user->username</strong> have been updated");
 }
 
-
+if ($postbutton && $can_edit_profile)
+{
+    $array['update_fname'] = (isset($_POST['first_name']) && strlen($_POST['first_name'])) ? $_POST['first_name'] : false;
+    $array['update_lname'] = (isset($_POST['last_name']) && strlen($_POST['last_name'])) ? $_POST['last_name'] : false;
+    $array['update_bio'] = (isset($_POST['bio']) && strlen($_POST['bio'])) ? $_POST['bio'] : false;
+    $array['update_email'] = (isset($_POST['email']) && strlen($_POST['email'])) ? $_POST['email'] : false;
+    $array['update_pass'] = (isset($_POST['password']) && strlen($_POST['password'])) ? $_POST['password'] : false;
+    $array['update_pass_conf'] = (isset($_POST['passwordconfirm']) && strlen($_POST['passwordconfirm'])) ? $_POST['passwordconfirm'] : false;
+    if ($array['update_pass'] == $array['update_pass_conf'])
+    {
+        $array['update_pass_conf'] = password_hash($array['update_pass_conf'], PASSWORD_ARGON2ID);
+        $array['update_pass'] = false;
+    }
+    else
+    {
+        Message::Fail("Could not update password: Passwords did not match");
+        $array['update_pass'] = false;
+        $array['update_pass_conf'] = false;
+    }
+    $edit_user->update_core_info($array);
+    $edit_user = new PanelUser($edit_user->username);
+}
 ?>
 <h4>Edit User: "<?php echo $edit_user->username; ?>"</h4>
 <br>
@@ -85,7 +108,7 @@ if (is_array($permissions) && $caneditpermissions
 </div><div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" style="width: 150px;">Confirm Password</span>
-    </div><input <?php echo $can_edit; ?> type="password" class="form-control" name="password" id="password" autocomplete="off">
+    </div><input <?php echo $can_edit; ?> type="password" class="form-control" name="passwordconfirm" id="passwordconfirm" autocomplete="off">
 </div>
 
 <br>
