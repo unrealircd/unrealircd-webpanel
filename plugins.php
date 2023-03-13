@@ -46,6 +46,15 @@ class Plugins
 			self::$list[] = $plugin;
 		}
 	}
+	static function plugin_exists($name, $version = NULL)
+	{
+		foreach(self::$list as $p)
+			if (!strcasecmp($p->name,$name) && (!$version || ($version >= $p->version)))
+				return true;
+
+		return false;
+	}
+
 }
 
 class Plugin
@@ -105,4 +114,11 @@ if (defined('PLUGINS'))
 {
 	foreach(PLUGINS as $plugin)
 		Plugins::load($plugin);
+}
+
+/* Requires the plugin */
+function require_plugin($name, $version)
+{
+	if (!Plugins::plugin_exists($name,$version))
+		die("Missing plugin: $name v$version");
 }
