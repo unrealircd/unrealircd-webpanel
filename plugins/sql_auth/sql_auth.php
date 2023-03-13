@@ -46,7 +46,7 @@ class sql_auth
 
 	public static function add_footer_info($empty)
 	{
-		if (!($user = unreal_get_current_user())->id)
+		if (!($user = unreal_get_current_user()))
 			return;
 
 		else {
@@ -76,7 +76,7 @@ class sql_auth
 		}
 		else
 		{
-			if (!unreal_get_current_user()->id) // user no longer exists
+			if (!unreal_get_current_user()) // user no longer exists
 			{
 				session_destroy();
 				header("Location: ".BASE_URL."login");
