@@ -81,11 +81,11 @@ define('SQL_IP', "127.0.0.1");
 /**
  * SQL Dabase name
  */
-define('SQL_DATABASE', "unrealircd");
+define('SQL_DATABASE', "unrealircdwebpanel");
 /**
  * SQL Username
  */
-define('SQL_USERNAME', "unrealircd");
+define('SQL_USERNAME', "unrealircdwebpanel");
 
 /**
  * SQL Password
