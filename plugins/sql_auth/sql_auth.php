@@ -24,6 +24,7 @@ class sql_auth
 		Hook::func(HOOKTYPE_GET_USER_LIST, 'sql_auth::get_user_list');
 		Hook::func(HOOKTYPE_USER_DELETE, 'sql_auth::user_delete');
 		Hook::func(HOOKTYPE_EDIT_USER, 'sql_auth::edit_core');
+		Hook::func(HOOKTYPE_PRE_OVERVIEW_CARD, 'sql_auth::add_pre_overview_card');
 
 		if (defined('SQL_DEFAULT_USER')) // we've got a default account
 		{
@@ -52,6 +53,12 @@ class sql_auth
 		else {
 			echo "<code>Admin Panel v" . WEBPANEL_VERSION . "</code>";
 		}
+	}
+
+	public static function add_pre_overview_card($empty)
+	{
+		if (defined('SQL_DEFAULT_USER'))
+			Message::Fail("Warning: SQL_DEFAULT_USER is set in config.php. You should remove that item now, as it is only used during installation.");
 	}
 
 	/* pre-Header hook */
