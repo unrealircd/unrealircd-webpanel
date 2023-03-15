@@ -64,14 +64,13 @@ class sql_auth
 		}
 		if (!isset($_SESSION['id']) || empty($_SESSION))
 		{
-			$secure = ($_SERVER['HTTPS'] == 'on') ? "https://" : "http://";
-			$current_url = "$secure$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+			$current_page = $_SERVER['REQUEST_URI'];
 			$tok = split($_SERVER['SCRIPT_FILENAME'], "/");
 			if ($check = security_check() && $tok[count($tok) - 1] !== "error.php") {
 				header("Location: " . BASE_URL . "plugins/sql_auth/error.php");
 				die();
 			}
-			header("Location: ".BASE_URL."login/?redirect=".urlencode($current_url));
+			header("Location: ".BASE_URL."login/?redirect=".urlencode($current_page));
 			die();
 		}
 		else

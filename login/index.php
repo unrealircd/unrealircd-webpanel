@@ -3,6 +3,15 @@
 require_once "../common.php";
 
 $logout = false;
+
+$redirect = BASE_URL;
+if (!empty($_GET['redirect']))
+{
+	$str = urldecode($_GET['redirect']);
+	if (str_starts_with($str, BASE_URL)) // prevent redirects to like https://othersite/
+		$redirect = $_GET['redirect'];
+}
+
 $redirect = (isset($_GET['redirect'])) ? $_GET['redirect'] : BASE_URL;
 if (!empty($_GET['logout']))
 {
