@@ -78,27 +78,34 @@ composer install
 ## Authentication
 Right now, by default everyone being able to access the URL can use the
 webpanel. In future versions this will no longer be the case.
-There are currently two authentication methods under development:
 
-- SQL (available but still in development!)
-- Local File DB (not public yet)
+### SQL Authentication
+First, create a database and a user in MySQL or MariaDB. Typical commands to
+do so are:
 
-### SQL Authentication (Work In Progress)
-<img width="130" height="100" src="https://cdn.shopify.com/s/files/1/1140/2002/products/UV-10073Cautionuseatyourownrisk-01_1024x1024.png?v=1588174823">
-In order to use the SQL Authentication plugin you must first make
-sure you have an SQL database which UnrealIRCd Admin Panel can
-access.
+```sql
+CREATE DATABASE unrealircdwebpanel;
+CREATE USER 'unrealircdwebpanel'@'localhost' IDENTIFIED BY 'enter-some-random-password-here';
+GRANT ALL ON unrealircdwebpanel.* TO 'unrealircdwebpanel'@'localhost';
+```
 
-Make sure you've put your SQL details in `config.php` and that you
-have `"sql_auth",` in the plugins section of the config.
+Now, open your `config.php` and in the define PLUGINS section load the `sql_auth`
+module by uncommenting the // from the `"sql_auth"` line.
+And fill in the information for your SQL setup, so set `SQL_IP`,
+`SQL_DATABASE`, `SQL_USERNAME` and `SQL_PASSWORD` properly.
 
-You can create the first user by following the example in `config.php`. 
-After you've logged in, you will have two new tabs: `Panel Access` and `Logout`. 
-You will be able to add and delete users from the `Panel Access` tab.
+Finally, configure a first admin user by setting the information in
+`SQL_DEFAULT_USER`. This will be added to the SQL database first time you
+start the panel.
 
-### Local File DB
-<img width="27" height="27" src="https://media2.giphy.com/media/3o7TKtnuHOHHUjR38Y/giphy.gif?cid=6c09b95281771195a917f87730a56bcdcfa5b6f418dcaf5e&rid=giphy.gif&ct=s"> This might take a while. Please wait a few days.
+Then, surf to the webpanel page and you should see a login page. If you
+don't see a login page then you have not loaded the sql_auth plugin
+properly.
 
+Once succesfully logged in you should remove the `SQL_DEFAULT_USER` item
+again from your `config.php` because it is no longer needed.
+
+You can now add and delete users through the `Panel Access` tab.
 
 ## Developers ##
 Developers of the webpanel will naturally use the same procedure as
