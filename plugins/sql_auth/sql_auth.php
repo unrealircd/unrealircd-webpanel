@@ -310,27 +310,46 @@ class sql_auth
 		$info = $arr['info'];
 		foreach($info as $key => $val)
 		{
+			$value = NULL;
 			if (!$val)
 				continue;
-			if (!strcmp($key,"update_fname"))
+			if (!strcmp($key,"update_fname") && $val != $user->first_name)
+			{
 				$value = "user_fname";
-
-			elseif (!strcmp($key,"update_lname"))
+				$valuestr = "first name";
+			}
+			elseif (!strcmp($key,"update_lname") && $val != $user->last_name)
+			{
 				$value = "user_lname";
-
-			elseif (!strcmp($key,"update_bio"))
+				$valuestr = "last name";
+			}
+			elseif (!strcmp($key,"update_bio") && $val != $user->bio)
+			{
 				$value = "user_bio";
-			
+				$valuestr = "bio";
+			}
 			elseif (!strcmp($key,"update_pass") || !strcmp($key,"update_pass_conf"))
+			{
 				$value = "user_pass";
-
-			elseif(!strcmp($key,"update_email"))
+				$valuestr = "password";
+			}
+			elseif(!strcmp($key,"update_email") && $val != $user->email)
+			{
 				$value = "user_email";
-			else
-				die("Malfunction");
+				$valuestr = "email address";
+			}
+			
+			if (!$value)
+				continue;
 			$query = "UPDATE " . SQL_PREFIX . "users SET $value=:value WHERE user_id = :id";
 			$stmt = $conn->prepare($query);
 			$stmt->execute(["value" => $val, "id" => $user->id]);
+
+			if (!$stmt->rowCount() && $stmt->errorInfo()[0] != "00000")
+				Message::Fail("Could not update $valuestr for $user->username: ".$stmt->errorInfo()[0]." (CODE: ".$stmt->errorCode().")");
+
+			else
+				Message::Success("Successfully updated the $valuestr for $user->username");
 		}
 	}
 }
