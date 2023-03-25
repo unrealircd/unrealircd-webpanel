@@ -130,6 +130,31 @@ if (isset($_POST))
 			foreach($chanban_errors as $err)
 				Message::Fail($err);
 	}
+	if ((isset($_POST['kickban']) || isset($_POST['muteban'])) && current_user_can(PERMISSION_EDIT_CHANNEL_USER))
+	{
+		$mute = (isset($_POST['muteban'])) ? true : false;
+		$mutestr = ($mute) ? "~quiet:" : "";
+		$user = (!$mute) ? $_POST['kickban'] : $_POST['muteban'];
+
+		$kbuser = $rpc->user()->get($user);
+
+		if (!$kbuser)
+			Message::Fail("Could not kickban user: User does not exist");
+		else
+		{
+			$rpc->channel()->set_mode($channelObj->name, "+b", "~time:".DEFAULT_CHAN_DETAIL_QUICK_ACTION_TIME.":".$mutestr."*!*@".$kbuser->user->cloakedhost);
+			if (!$mute)
+				$rpc->channel()->kick($channelObj->name, $kbuser->name, DEFAULT_CHAN_DETAIL_QUICK_BAN_REASON);
+
+			$msgbox_str = ($mute)
+			?
+				"User \"$kbuser->name\" has been muted for ".DEFAULT_CHAN_DETAIL_QUICK_ACTION_TIME." minutes."
+			:
+				"User \"$kbuser->name\" has been banned for ".DEFAULT_CHAN_DETAIL_QUICK_ACTION_TIME." minutes."
+			;
+			Message::Success($msgbox_str);
+		}
+	}
 	/* and finally re-grab the channel because updates lol */
 	$channelObj = $rpc->channel()->get($channel);
 
@@ -395,6 +420,69 @@ if ($topicset)
 	Message::Success("The topic for $channelObj->name has been updated to be: \"".htmlspecialchars($channelObj->topic)."\"");
 ?>
 <br>
+
+<!-- Modal for User Action -->
+<div class="modal fade" id="useraction" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="myModalLabel">Add New Channel Ban</h5>
+			<div type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</div>
+		</div>
+		<div class="modal-body">
+			<form method="post">
+			<div class="input-group mb-3">
+				<label for="ban_nick">Mask
+					<a href="https://www.unrealircd.org/docs/Extended_bans" target="__blank"><i class="fa fa-info-circle" aria-hidden="true"
+					title="The mask or other value. For example if you are matching a country in 'Ban Type' then you would put the country code as this value. Click to view more information on Extended Bans"
+					></i></a>
+					<input style="width: 170%;" name="ban_nick" id="ban_nick" class="form-control curvy" type="text"
+							placeholder="nick!user@host or something else"
+					></label>
+					
+			</div>
+			<div class="input-group mb-3">
+				<label for="bantype_action">Ban Action
+					<select class="form-control" name="bantype_sel_action" id="bantype_sel">
+						<option></option>
+						<option>Quiet (Mute)</option>
+						<option>Nick-change</option>
+						<option>Join</option>
+					</select>
+				</label>
+			</div>
+			<div class="input-group mb-3">
+				<label for="bantype_sel_type">Ban Type
+					<select class="form-control" name="bantype_sel_type" id="bantype_sel_type">
+						<option></option>
+						<option>Match Account</option>
+						<option>Match Channel</option>
+						<option>Match Country</option>
+						<option>Match OperClass</option>
+						<option>Match RealName / GECOS</option>
+						<option>Match Security Group</option>
+						<option>Match Certificate Fingerprint</option>
+					</select>
+				</label>
+			</div>
+			<div class="input-group mb-3">
+			<label for="bantype_sel_ex">Expiry Date-Time <br><small>Leave blank to mean "Permanent"</small>
+					<input type="datetime-local" name="bantype_sel_ex" id="bantype_sel_ex" class="form-control">
+				</label>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<input type="hidden" id="server" name="add_chban" value="b"></input>
+			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="submit" action="post" class="btn btn-danger">Add Channel Ban</button>
+			</form>
+		</div>
+		</div>
+	</div>
+</div>
+
 <div class="row" style="margin-left: 0px">
 	<div class="p-1">
 		<button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Bans</button>
@@ -420,53 +508,24 @@ if ($topicset)
 </div>
 <br>
 
-
 <div class="container-xxl">
-	<div class="accordion" id="accordionExample">
-		<div class="card">
-			<div class="card-header" id="headingOne">
-			<h2 class="mb-0">
-				<button class="btn" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-				User List
-				</button>
-			</h2>
-			</div>
-
-			<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-			<div class="card-body">
-				<?php generate_chan_occupants_table($channelObj); ?>
-			</div>
-			</div>
-		</div>
-		<div class="card">
-			<div class="card-header" id="headingTwo">
-			<h2 class="mb-0">
-				<button class="btn collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-				Collapsible Group Item #2
-				</button>
-			</h2>
-			</div>
-			<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-			<div class="card-body">
-				Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-			</div>
-			</div>
-		</div>
-		<div class="card">
-			<div class="card-header" id="headingThree">
-			<h2 class="mb-0">
-				<button class="btn collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-				Collapsible Group Item #3
-				</button>
-			</h2>
-			</div>
-			<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-			<div class="card-body">
-				Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-			</div>
-			</div>
-		</div>
-	</div>
+  <div class="row">
+    <div class="col-sm-5">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">User List</h5>
+          <p class="card-text"><?php generate_chan_occupants_table($channelObj); ?></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Channel Settings</h5>
+          <p class="card-text"><?php generate_html_chansettings($channelObj); ?></p>
+        </div>
+      </div>
+    </div>
 </div>
 
 <?php 

@@ -16,6 +16,7 @@ require_once UPATH . "/Classes/class-log.php";
 require_once UPATH . "/Classes/class-message.php";
 require_once UPATH . "/Classes/class-rpc.php";
 require_once UPATH . "/Classes/class-paneluser.php";
+require_once UPATH . "/Classes/class-cmodes.php";
 require_once UPATH . "/plugins.php";
 
 $pages = [

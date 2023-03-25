@@ -8,7 +8,7 @@ function generate_chanbans_table($channel)
 	<form method="post"><p>
 	<button class="btn btn-info btn-sm" type="submit" name="delete_sel_ban">Delete</button>
 	</p>
-	<table class="table table-responsive table-hover">
+	<table class="table table-responsive table-hover caption-top table-striped">
 	<thead class="table-info">
 		<th><input type="checkbox" label='selectall' onClick="toggle_chanbans(this)" /></th>
 		<th>Name</th>
@@ -44,7 +44,7 @@ function generate_chaninvites_table($channel)
 	<form method="post"><p>
 	<button class="btn btn-info btn-sm" type="submit" name="delete_sel_inv">Delete</button>
 	</p>
-	<table class="table table-responsive table-hover">
+	<table class="table table-responsive table-hover caption-top table-striped">
 	<thead class="table-info">
 		<th><input type="checkbox" label='selectall' onClick="toggle_chaninvs(this)" /></th>
 		<th>Name</th>
@@ -82,7 +82,7 @@ function generate_chanexcepts_table($channel)
 	<form method="post"><p>
 	<button class="btn btn-info btn-sm" type="submit" name="delete_sel_ex">Delete</button>
 	</p>
-	<table class="table table-responsive table-hover">
+	<table class="table table-responsive table-hover caption-top table-striped">
 	<thead class="table-info">
 		<th><input type="checkbox" label='selectall' onClick="toggle_chanexs(this)" /></th>
 		<th>Name</th>
@@ -126,23 +126,58 @@ function generate_chan_occupants_table($channel)
 	<form method="post"><p>
 	
 	</p>
-	<table class="table table-responsive table-hover">
+	<table class="table table-responsive table-hover table-striped">
 	<thead class="table-info">
 		<th><input type="checkbox" label='selectall' onClick="toggle_checkbox(this)" /></th>
 		<th>Name</th>
 		<th>Status</th>
-		<th>Actions</th>
+		<th>Quick Actions</th>
 		<th></th>
 	</thead>
 	<tbody>
 		<?php
-		foreach ($channel->members as $member) {
+		foreach ($channel->members as $member)
+		{
+			$lvlstring = "";
+
+			if (isset($member->level))
+			{
+				for ($i = 0; isset($member->level[$i]) && $m = $member->level[$i]; $i++)
+				{
+					switch ($m)
+					{
+						case "v":
+							$lvlstring .= "<div class='badge rounded-pill badge-primary'>Voice</div>";
+							break;
+						case "h":
+							$lvlstring .= "<div class='badge rounded-pill badge-secondary'>Half-Op</div>";
+							break;
+						case "o":
+							$lvlstring .= "<div class='badge rounded-pill badge-warning'>Op</div>";
+							break;
+						case "a":
+							$lvlstring .= "<div class='badge rounded-pill badge-danger'>Admin</div>";
+							break;
+						case "q":
+							$lvlstring .= "<div class='badge rounded-pill badge-success'>Owner</div>";
+							break;
+						
+						// providing support third/ojoin
+						case "Y":
+							$lvlstring .= "<div class='badge rounded-pill'>OJOIN</div>";
+							break;
+					}
+				}
+			}
 			echo "<tr>";
+			?><form method="post" action=""><?php
+			$disabled = (current_user_can(PERMISSION_EDIT_CHANNEL_USER)) ? "" : "disabled";
+			$disabledcolor = ($disabled) ? "btn-secondary" : "btn-primary";
 			echo "<td scope=\"row\"><input type=\"checkbox\" value='$member->id' name=\"checkboxes[]\"></td>";
 			echo "<td><a href=\"".BASE_URL."users/details.php?nick=$member->id\">".htmlspecialchars($member->name)."</a></td>";
-			echo "<td>Status</td>";
-			echo "<td>Op</td>";
-			echo "<td>Deop</td>";
+			echo "<td>$lvlstring</td>";
+			echo "<td><button name=\"kickban\" value=\"$member->id\" type=\"submit\" class=\"btn-sm $disabledcolor\" $disabled>Kick ban</button></td>";
+			echo "<td><button name=\"muteban\" value=\"$member->id\" type=\"submit\" class=\"btn-sm $disabledcolor\" $disabled>Mute ban</button></td>";
 			echo "</tr>";
 		}
 
@@ -152,6 +187,57 @@ function generate_chan_occupants_table($channel)
 	</form>
 
 	<?php
+}
+
+function generate_html_chansettings($channel)
+{
+	global $rpc;
+	?>
+
+    <table class="table-sm table-responsive caption-top table-hover">
+        <tbody>
+           <?php
+		   		if (BadPtr($channel->modes))
+				{
+					echo "No modes set";
+					return;
+				}
+				$fmodes = $channel->modes;
+				$tok = split($fmodes);
+				$modes = $tok[0];
+				$params = rparv($fmodes);
+				$uplink = NULL;
+
+				/* We get our uplink server so we can see what modes there are and in what group */
+				$servlist = $rpc->server()->getAll();
+				foreach($servlist as $serv) // find the one with no "->server->uplink" which will be our uplink
+					if (BadPtr($serv->server->uplink)) // found it
+						$uplink = $serv;
+
+				if (!$uplink) // whaaaa?!¿
+					die("Could not find our uplink. Weird and should not have happened");
+				
+				$groups = $uplink->server->features->chanmodes;
+				
+                for ($i=0; ($mode = (isset($modes[$i])) ? $modes[$i] : NULL); $i++)
+                {
+					$modeinfo = IRCList::$cmodes[$mode];
+					?>
+						<tr>
+							<th><?php echo $modeinfo['name']; ?></th>
+							<td>
+								<?php echo $modeinfo['description']; ?>
+							</td>
+						</tr>
+                	<?php
+                }
+				
+
+           ?>
+        </tbody>
+    </table>
+
+    <?php
 }
 
 /**

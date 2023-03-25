@@ -166,3 +166,25 @@ function BadPtr(&$tok)
 		return true;
 	return false;
 }
+
+/** This function takes a string, tokenizes
+ * it by a space (chr 32), removes the first
+ * word/token, and returns the result.
+ * Mostly used for string manipulation around
+ * the source.
+ * 
+ * Syntax:
+ * rparv(String $sentence)
+ * 
+ * Returns:
+ * string|false
+ */
+function rparv($string)
+{
+	$parv = split($string);
+	$first = strlen($parv[0]) + 1;
+	$string = substr($string, $first);
+	if ($string)
+		return $string;
+	return false;
+}
