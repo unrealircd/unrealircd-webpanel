@@ -13,7 +13,7 @@ do_log($_POST);
 if (isset($_GET['chan']))
 {
 	$channel = $_GET['chan'];
-	$channelObj = $rpc->channel()->get($channel);
+	$channelObj = $rpc->channel()->get($channel, 4);
 	if (!$channelObj && strlen($channel))
 	{
 		Message::Fail("Could not find channel: \"$channel\"");
@@ -31,7 +31,7 @@ $del_ban = false;
 $checkboxes = [];
 
 $chanban_errors = [];
-if (isset($_POST))
+if (!empty($_POST))
 {
 	if (isset($_POST['update_topic']) && isset($_POST['set_topic']))
 	{
@@ -152,9 +152,8 @@ if (isset($_POST))
 			Message::Success($msgbox_str);
 		}
 	}
-	/* and finally re-grab the channel because updates lol */
-	$channelObj = $rpc->channel()->get($channel);
-
+	/* Re-grab the channel because of updates */
+	$channelObj = $rpc->channel()->get($channel, 4);
 }
 
 ?>
