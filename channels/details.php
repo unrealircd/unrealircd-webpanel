@@ -421,7 +421,7 @@ if ($topicset)
 
 <div class="container-xxl">
   <div class="row">
-    <div class="col-sm-3">
+    <div class="col-sm-4">
       <div class="card">
         <div class="card-body">
           <h6 class="card-title">User List</h6>
@@ -429,7 +429,7 @@ if ($topicset)
         </div>
       </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-8">
       <div class="card">
         <div class="card-body">
         	<h6 class="card-title">Channel Settings</h6>
