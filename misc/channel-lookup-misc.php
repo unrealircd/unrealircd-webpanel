@@ -135,6 +135,7 @@ function generate_chan_occupants_table($channel)
 	<thead class="table-info">
 		<th><input type="checkbox" label='selectall' onClick="toggle_checkbox(this)" /></th>
 		<th>Name</th>
+		<th>Host</th>
 		<th>Status</th>
 	</thead>
 	<tbody>
@@ -175,12 +176,11 @@ function generate_chan_occupants_table($channel)
 			}
 			echo "<tr>";
 			?><form method="post" action=""><?php
-			//$target = $rpc->user()->get($member->id);
 			$disabled = (current_user_can(PERMISSION_EDIT_CHANNEL_USER)) ? "" : "disabled";
 			$disabledcolor = ($disabled) ? "btn-secondary" : "btn-primary";
 			echo "<td scope=\"row\"><input type=\"checkbox\" value='$member->id' name=\"checkboxes[]\"></td>";
 			echo "<td><a href=\"".BASE_URL."users/details.php?nick=$member->id\">".htmlspecialchars($member->name)."</a></td>";
-			//echo "<td><code>".htmlspecialchars($target->hostname)."</code></td>";
+			echo "<td><code>".(property_exists($member, 'hostname') ? htmlspecialchars($member->hostname) : "")."</code></td>";
 			echo "<td class='text-right'>$lvlstring</td>";
 			echo "</tr>";
 		}
