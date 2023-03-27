@@ -135,7 +135,6 @@ function generate_chan_occupants_table($channel)
 	<thead class="table-info">
 		<th><input type="checkbox" label='selectall' onClick="toggle_checkbox(this)" /></th>
 		<th>Name</th>
-		<th>Host</th>
 		<th>Status</th>
 	</thead>
 	<tbody>
@@ -152,36 +151,36 @@ function generate_chan_occupants_table($channel)
 					switch ($m)
 					{
 						case "v":
-							$lvlstring .= "<div class='badge rounded-pill badge-primary'>Voice</div>";
+							$lvlstring .= "<div class='badge rounded-pill badge-primary'>Voice</div> ";
 							break;
 						case "h":
-							$lvlstring .= "<div class='badge rounded-pill badge-secondary'>Half-Op</div>";
+							$lvlstring .= "<div class='badge rounded-pill badge-secondary'>Half-Op</div> ";
 							break;
 						case "o":
-							$lvlstring .= "<div class='badge rounded-pill badge-warning'>Op</div>";
+							$lvlstring .= "<div class='badge rounded-pill badge-warning'>Op</div> ";
 							break;
 						case "a":
-							$lvlstring .= "<div class='badge rounded-pill badge-danger'>Admin</div>";
+							$lvlstring .= "<div class='badge rounded-pill badge-danger'>Admin</div> ";
 							break;
 						case "q":
-							$lvlstring .= "<div class='badge rounded-pill badge-success'>Owner</div>";
+							$lvlstring .= "<div class='badge rounded-pill badge-success'>Owner</div> ";
 							break;
 						
 						// providing support third/ojoin
 						case "Y":
-							$lvlstring .= "<div class='badge rounded-pill'>OJOIN</div>";
+							$lvlstring .= "<div class='badge rounded-pill'>OJOIN</div> ";
 							break;
 					}
 				}
 			}
 			echo "<tr>";
 			?><form method="post" action=""><?php
-			$target = $rpc->user()->get($member->id);
+			//$target = $rpc->user()->get($member->id);
 			$disabled = (current_user_can(PERMISSION_EDIT_CHANNEL_USER)) ? "" : "disabled";
 			$disabledcolor = ($disabled) ? "btn-secondary" : "btn-primary";
 			echo "<td scope=\"row\"><input type=\"checkbox\" value='$member->id' name=\"checkboxes[]\"></td>";
 			echo "<td><a href=\"".BASE_URL."users/details.php?nick=$member->id\">".htmlspecialchars($member->name)."</a></td>";
-			echo "<td><code>".htmlspecialchars($target->hostname)."</code></td>";
+			//echo "<td><code>".htmlspecialchars($target->hostname)."</code></td>";
 			echo "<td class='text-right'>$lvlstring</td>";
 			echo "</tr>";
 		}
