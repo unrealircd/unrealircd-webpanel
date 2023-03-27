@@ -4,11 +4,12 @@ function generate_chanbans_table($channel)
 {
 	global $rpc;
 	$channel = $rpc->channel()->get($channel->name);
-	?>
-	<form method="post"><p>
+	?><p><table class="container-xxl table table-responsive caption-top table-striped">
+	<button class="btn btn-primary mr-1 btn-sm" data-toggle="modal" data-target="#ban">Add New</button>
+	<form method="post">
 	<button class="btn btn-info btn-sm" type="submit" name="delete_sel_ban">Delete</button>
 	</p>
-	<table class="table table-responsive table-hover caption-top table-striped">
+	
 	<thead class="table-info">
 		<th><input type="checkbox" label='selectall' onClick="toggle_chanbans(this)" /></th>
 		<th>Name</th>
@@ -40,11 +41,12 @@ function generate_chaninvites_table($channel)
 {
 	global $rpc;
 	$channel = $rpc->channel()->get($channel->name);
-	?>
-	<form method="post"><p>
+	?><p><table class="table table-responsive table-hover caption-top table-striped">
+	<button class="btn btn-primary btn-sm mr-1" data-toggle="modal" data-target="#invite">Add New</button>
+	<form method="post">
 	<button class="btn btn-info btn-sm" type="submit" name="delete_sel_inv">Delete</button>
 	</p>
-	<table class="table table-responsive table-hover caption-top table-striped">
+	
 	<thead class="table-info">
 		<th><input type="checkbox" label='selectall' onClick="toggle_chaninvs(this)" /></th>
 		<th>Name</th>
@@ -77,12 +79,14 @@ function generate_chaninvites_table($channel)
 function generate_chanexcepts_table($channel)
 {
 	global $rpc;
+	echo "<form method=\"post\">";
 	$channel = $rpc->channel()->get($channel->name);
-	?>
-	<form method="post"><p>
+	?><p><table class="table table-responsive table-hover caption-top table-striped">
+	<button class="btn btn-primary mr-1 btn-sm" data-toggle="modal" data-target="#except">Add New</button>
+	
 	<button class="btn btn-info btn-sm" type="submit" name="delete_sel_ex">Delete</button>
 	</p>
-	<table class="table table-responsive table-hover caption-top table-striped">
+	
 	<thead class="table-info">
 		<th><input type="checkbox" label='selectall' onClick="toggle_chanexs(this)" /></th>
 		<th>Name</th>
@@ -122,21 +126,22 @@ function generate_chanexcepts_table($channel)
  */
 function generate_chan_occupants_table($channel)
 {
+	global $rpc;
 	?>
 	<form method="post"><p>
 	
 	</p>
-	<table class="table table-responsive table-hover table-striped">
+	<table class="container-xxl table table-sm table-responsive caption-top table-striped">
 	<thead class="table-info">
 		<th><input type="checkbox" label='selectall' onClick="toggle_checkbox(this)" /></th>
 		<th>Name</th>
+		<th>Host</th>
 		<th>Status</th>
-		<th>Quick Actions</th>
-		<th></th>
 	</thead>
 	<tbody>
 		<?php
-		foreach ($channel->members as $member)
+		$m = sort_user_list($channel->members);
+		foreach ($m as $member)
 		{
 			$lvlstring = "";
 
@@ -171,13 +176,13 @@ function generate_chan_occupants_table($channel)
 			}
 			echo "<tr>";
 			?><form method="post" action=""><?php
+			$target = $rpc->user()->get($member->id);
 			$disabled = (current_user_can(PERMISSION_EDIT_CHANNEL_USER)) ? "" : "disabled";
 			$disabledcolor = ($disabled) ? "btn-secondary" : "btn-primary";
 			echo "<td scope=\"row\"><input type=\"checkbox\" value='$member->id' name=\"checkboxes[]\"></td>";
 			echo "<td><a href=\"".BASE_URL."users/details.php?nick=$member->id\">".htmlspecialchars($member->name)."</a></td>";
-			echo "<td>$lvlstring</td>";
-			echo "<td><button name=\"kickban\" value=\"$member->id\" type=\"submit\" class=\"btn-sm $disabledcolor\" $disabled>Kick ban</button></td>";
-			echo "<td><button name=\"muteban\" value=\"$member->id\" type=\"submit\" class=\"btn-sm $disabledcolor\" $disabled>Mute ban</button></td>";
+			echo "<td><code>".htmlspecialchars($target->hostname)."</code></td>";
+			echo "<td class='text-right'>$lvlstring</td>";
 			echo "</tr>";
 		}
 
@@ -275,7 +280,7 @@ function _do_chan_item_delete($chan, string $type, array $list, array &$errors) 
 		$n .= $char;
 		$str .= " ".$l;
 	}
-	if ($rpc->channel()->set_mode($chan->name, "-$n", $str))
+	if ($rpc->channel()->set_mode($chan->name, htmlspecialchars("-$n"), htmlspecialchars($str)))
 	{
 		Message::Success("Deleted successfully");
 		return true;
@@ -301,4 +306,84 @@ function do_delete_chanex($chan, $list)
 {
 	$errs = [];
 	_do_chan_item_delete($chan, "except", $list, $errs);
+}
+
+
+
+/**
+ * Sort the channels user list:
+ */
+function sort_user_list($list) : array
+{
+	if (empty($list))
+		return $list;
+
+	$new = [];
+	foreach($list as $k => $user)
+	{
+		if (!property_exists($user,"level"))
+		{
+			$new["rest"][] = $user;
+			$list[$k] = NULL;
+		}
+		else if (strstr($user->level,"Y"))
+		{
+			$new["Y"][] = $user;
+			$list[$k] = NULL;
+		}
+		else if (strstr($user->level,"q"))
+		{
+			$new["q"][] = $user;
+			$list[$k] = NULL;
+		}
+		else if (strstr($user->level,"a"))
+		{
+			$new["a"][] = $user;
+			$list[$k] = NULL;
+		}
+		else if (strstr($user->level,"o"))
+		{
+			$new["o"][] = $user;
+			$list[$k] = NULL;
+		}
+		else if (strstr($user->level,"h"))
+		{
+			$new["h"][] = $user;
+			$list[$k] = NULL;
+		}
+		else if (strstr($user->level,"v"))
+		{
+			$new["v"][] = $user;
+			$list[$k] = NULL;
+		}
+		
+	}
+
+	unset($list);
+	$list = [];
+	if (isset($new["q"]))
+		foreach($new["q"] as $u)
+			$list[] = $u;
+
+	if (isset($new["a"]))
+		foreach($new["a"] as $u)
+			$list[] = $u;
+
+	if (isset($new["o"]))
+		foreach($new["o"] as $u)
+			$list[] = $u;
+
+	if (isset($new["h"]))
+		foreach($new["h"] as $u)
+			$list[] = $u;
+
+	if (isset($new["v"]))
+		foreach($new["v"] as $u)
+			$list[] = $u;
+
+	if (isset($new["rest"]))
+		foreach($new["rest"] as $u)
+			$list[] = $u;
+
+	return $list;
 }

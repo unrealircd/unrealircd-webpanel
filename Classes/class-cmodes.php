@@ -111,6 +111,10 @@ class IRCList {
             "description" => "Delay showing joins until someone actually speaks.",
             "requires" => "Operator"
         ],
+        "F" => [
+            "name" => "Flood Profile",
+            "description" => "Use a Flood Profile to easily apply flood protection mechanisms",
+        ],
         "G" => [
             "name" => "Filter",
             "description" => "Filters out all Bad words in messages with \"&lt;censored&gt;</pre>\".",

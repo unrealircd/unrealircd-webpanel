@@ -6,9 +6,11 @@ require_once "Classes/class-hook.php";
 if (!is_dir(UPATH . "/vendor"))
 	die("The vendor/ directory is missing. Most likely the admin forgot to run 'composer install'\n");
 require_once UPATH . '/vendor/autoload.php';
+require_once UPATH . "/Classes/class-cmodes.php";
 require_once UPATH . "/cfg/defines.php";
 require_once UPATH . "/connection.php";
 require_once UPATH . "/misc/strings.php";
+require_once UPATH . "/misc/channel-lookup-misc.php";
 require_once UPATH . "/misc/user-lookup-misc.php";
 require_once UPATH . "/misc/server-lookup-misc.php";
 require_once UPATH . "/misc/ip-whois-misc.php";
@@ -16,7 +18,6 @@ require_once UPATH . "/Classes/class-log.php";
 require_once UPATH . "/Classes/class-message.php";
 require_once UPATH . "/Classes/class-rpc.php";
 require_once UPATH . "/Classes/class-paneluser.php";
-require_once UPATH . "/Classes/class-cmodes.php";
 require_once UPATH . "/plugins.php";
 
 $pages = [

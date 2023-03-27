@@ -50,22 +50,19 @@ if (isset($_POST))
 	{
 		foreach($_POST['ce_checkboxes'] as $c)
 			$checkboxes[] = $c;
-		$del_ex = true;
-		chlkup_autoload_modal("excepts_modal");
+		do_delete_chanex($channelObj, $checkboxes);
 	}
-	else if (isset($_POST['delete_sel_inv']))
+	if (isset($_POST['delete_sel_inv']))
 	{
 		foreach($_POST['ci_checkboxes'] as $c)
 			$checkboxes[] = $c;
-		$del_inv = true;
-		chlkup_autoload_modal("invites_modal");
+		do_delete_invite($channelObj, $checkboxes);
 	}
 	else if (isset($_POST['delete_sel_ban']))
 	{
 		foreach($_POST['cb_checkboxes'] as $c)
 			$checkboxes[] = $c;
-		$del_ban = true;
-		chlkup_autoload_modal("bans_modal");
+		do_delete_chanban($channelObj, $checkboxes);
 	}
 	if (isset($_POST['add_chban']) || isset($_POST['add_chinv']) || isset($_POST['add_chex']))
 	{
@@ -162,14 +159,14 @@ if (isset($_POST))
 
 ?>
 <title><?php echo $title; ?></title>
-<h4><?php echo $title; ?></h4>
+<h6><?php echo $title; ?></h6>
 <br>
 
 
 <div class="container-xl">
 <form method="get" action="details.php">
-	<div class="input-group">
-		<input  class="form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
+	<div class="text-left input-group">
+		<input class="form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
 		<div class="input-group-append">
 			<button type="submit" class="btn btn-primary">Go</button>
 		</div>
@@ -178,67 +175,6 @@ if (isset($_POST))
 </form>
 <?php if (!$channelObj)
 		return; ?>
-
-
-<!-- Modal for Channel Bans -->
-<div class="modal fade" id="bans_modal" name="bans_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
-	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-		<div class="modal-content">
-		<div class="modal-header">
-			<h5 class="modal-title" id="myModalLabel">Channel Bans</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<div class="modal-body">
-			<?php if ($del_ban) do_delete_chanban($channelObj, $checkboxes); ?>
-			<form method="post">
-			<?php generate_chanbans_table($channelObj); ?>		
-			</form>
-		</div>
-		</div>
-	</div>
-</div>
-<!-- Modal for Channel Invited -->
-<div class="modal fade" id="invites_modal" name="#invites_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
-	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-		<div class="modal-content">
-		<div class="modal-header">
-			<h5 class="modal-title" id="myModalLabel">Channel Invites</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<div class="modal-body">
-			<?php if ($del_inv) do_delete_invite($channelObj, $checkboxes); ?>
-			<form method="post">
-			<?php generate_chaninvites_table($channelObj); ?>		
-			</form>
-		</div>
-		</div>
-	</div>
-</div>
-
-<!-- Modal for Channel Exceptions -->
-<div class="modal fade" id="excepts_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
-	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-		<div class="modal-content">
-		<div class="modal-header">
-			<h5 class="modal-title" id="myModalLabel">Channel Exceptions</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<div class="modal-body">
-			<?php if ($del_ex) do_delete_chanex($channelObj, $checkboxes); ?>
-			<form method="post">
-			<?php generate_chanexcepts_table($channelObj); ?>		
-			</form>
-		</div>
-		</div>
-	</div>
-</div>
-
 
 <!-- Modal for Add Ban -->
 <div class="modal fade" id="ban" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
@@ -408,8 +344,8 @@ if (isset($_POST))
 </div>
 
 <br>
-<h3>
-	Topic:<br></h3>
+<h6>
+	Topic:<br></h6>
 	<form method="post" action="details.php?chan=<?php echo urlencode($channelObj->name); ?>">
 	<div class="input-group">
 	<input maxlength="360" type="text" class="input-group form-control" name="set_topic" value="<?php echo (isset($channelObj->topic)) ? htmlspecialchars($channelObj->topic) : ""; ?>">
@@ -483,37 +419,12 @@ if ($topicset)
 	</div>
 </div>
 
-<div class="row" style="margin-left: 0px">
-	<div class="p-1">
-		<button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Bans</button>
-		<div class="dropdown-menu">
-			<div class="dropdown-item" data-toggle="modal" data-target="#ban">Add New</div>
-			<div class="dropdown-item" data-toggle="modal" data-target="#bans_modal">List</div>
-		</div>
-	</div>
-	<div class="p-1">
-		<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Invites</button>
-		<div class="dropdown-menu">
-			<div class="dropdown-item" data-toggle="modal" data-target="#invite">Add New</div>
-			<div class="dropdown-item" data-toggle="modal" data-target="#invites_modal">List</div>
-		</div>
-	</div>
-	<div class="p-1">	
-	<button class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Excepts</button>
-		<div class="dropdown-menu">
-			<div class="dropdown-item" data-toggle="modal" data-target="#except">Add New</div>
-			<div class="dropdown-item" data-toggle="modal" data-target="#excepts_modal">List</div>
-		</div>
-	</div>
-</div>
-<br>
-
 <div class="container-xxl">
   <div class="row">
     <div class="col-sm-5">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">User List</h5>
+          <h6 class="card-title">User List</h6>
           <p class="card-text"><?php generate_chan_occupants_table($channelObj); ?></p>
         </div>
       </div>
@@ -521,13 +432,39 @@ if ($topicset)
     <div class="col-sm-6">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Channel Settings</h5>
-          <p class="card-text"><?php generate_html_chansettings($channelObj); ?></p>
+        	<h6 class="card-title">Channel Settings</h6>
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="nav-item" role="presentation"><a class="nav-link" href="#chanmodes" aria-controls="chanmodes" role="tab" data-toggle="tab">Settings / Modes</a></li>
+				<li class="nav-item" role="presentation"><a class="nav-link" href="#chanbans" aria-controls="chanbans" role="tab" data-toggle="tab">Bans</a></li>
+				<li class="nav-item" role="presentation"><a class="nav-link" href="#chaninv" aria-controls="chaninv" role="tab" data-toggle="tab">Invites</a></li>
+				<li class="nav-item" role="presentation"><a class="nav-link" href="#chanex" aria-controls="chanex" role="tab" data-toggle="tab">Excepts</a></li>
+			</ul>
+		
+		<div class="tab-content">
+		
+		<div role="tabpanel" class="tab-pane fade in" id="chanmodes">
+			<p class="card-text"><?php generate_html_chansettings($channelObj); ?></p>
+		</div>
+		
+		<div role="tabpanel" class="tab-pane fade in" id="chanbans">
+			<p class="card-text"><?php generate_chanbans_table($channelObj); ?></p>
+		</div>
+		<div role="tabpanel" class="tab-pane fade in" id="chaninv">
+			<p class="card-text"><?php generate_chaninvites_table($channelObj); ?></p>
+		</div>
+		<div role="tabpanel" class="tab-pane fade in" id="chanex">
+			<p class="card-text"><?php generate_chanexcepts_table($channelObj); ?></p>
+		</div>
+		
+		</div>
         </div>
       </div>
     </div>
 </div>
-
+<script>
+    // show dat first tab
+$('.nav-tabs a[href="#chanmodes"]').tab('show')
+</script>
 <?php 
 require_once("../footer.php");
 
