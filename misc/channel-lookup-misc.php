@@ -210,14 +210,7 @@ function generate_html_chansettings($channel)
 				$tok = split($fmodes);
 				$modes = $tok[0];
 				$params = rparv($fmodes);
-				$uplink = NULL;
-
-				/* We get our uplink server so we can see what modes there are and in what group */
-				$servlist = $rpc->server()->getAll();
-				foreach($servlist as $serv) // find the one with no "->server->uplink" which will be our uplink
-					if (BadPtr($serv->server->uplink)) // found it
-						$uplink = $serv;
-
+				$uplink = $rpc->server()->get();
 				if (!$uplink) // whaaaa?!¿
 					die("Could not find our uplink. Weird and should not have happened");
 				
