@@ -1,5 +1,4 @@
 <?php
-
 function generate_chanbans_table($channel)
 {
 	global $rpc;
@@ -135,12 +134,14 @@ function generate_chan_occupants_table($channel)
 	<thead class="table-info">
 		<th><input type="checkbox" label='selectall' onClick="toggle_checkbox(this)" /></th>
 		<th>Name</th>
-		<th>Host</th>
 		<th>Status</th>
+		<th>Host</th>
 	</thead>
 	<tbody>
 		<?php
 		$m = sort_user_list($channel->members);
+
+		$i = 0;
 		foreach ($m as $member)
 		{
 			$lvlstring = "";
@@ -174,14 +175,15 @@ function generate_chan_occupants_table($channel)
 					}
 				}
 			}
+			
 			echo "<tr>";
 			?><form method="post" action=""><?php
 			$disabled = (current_user_can(PERMISSION_EDIT_CHANNEL_USER)) ? "" : "disabled";
 			$disabledcolor = ($disabled) ? "btn-secondary" : "btn-primary";
 			echo "<td scope=\"row\"><input type=\"checkbox\" value='$member->id' name=\"checkboxes[]\"></td>";
 			echo "<td><a href=\"".BASE_URL."users/details.php?nick=$member->id\">".htmlspecialchars($member->name)."</a></td>";
-			echo "<td><code>".(property_exists($member, 'hostname') ? htmlspecialchars($member->hostname) : "")."</code></td>";
 			echo "<td class='text-right'>$lvlstring</td>";
+			echo "<td><code>".((property_exists($member, 'hostname')) ? htmlspecialchars($member->hostname) : "")."</code></td>";
 			echo "</tr>";
 		}
 
@@ -195,9 +197,11 @@ function generate_chan_occupants_table($channel)
 
 function generate_html_chansettings($channel)
 {
-	global $rpc;
 	?>
-
+	
+	<p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editchmodes" <?php echo (current_user_can(PERMISSION_EDIT_CHANNEL)) ? "" : "disabled"; ?>>
+			Edit
+	</button></p>
     <table class="table-sm table-responsive caption-top table-hover">
         <tbody>
            <?php
@@ -210,15 +214,12 @@ function generate_html_chansettings($channel)
 				$tok = split($fmodes);
 				$modes = $tok[0];
 				$params = rparv($fmodes);
-				$uplink = $rpc->server()->get();
-				if (!$uplink) // whaaaa?!¿
-					die("Could not find our uplink. Weird and should not have happened");
-				
-				$groups = $uplink->server->features->chanmodes;
 				
                 for ($i=0; ($mode = (isset($modes[$i])) ? $modes[$i] : NULL); $i++)
                 {
 					$modeinfo = IRCList::$cmodes[$mode];
+					if (!$modeinfo)
+						continue;
 					?>
 						<tr>
 							<th><?php echo $modeinfo['name']; ?></th>
@@ -237,6 +238,71 @@ function generate_html_chansettings($channel)
     <?php
 }
 
+function generate_edit_chmodes($chan)
+{
+	?>
+	
+    <table class="table-sm table-responsive caption-top table-hover">
+        <tbody>
+           <?php
+		   		if (!isset($chan->modes))
+				{
+					echo "No modes set";
+					return;
+				}
+				$fmodes = $chan->modes;
+				$tok = split($fmodes);
+				$modes = $tok[0];
+				$params = rparv($fmodes);
+				$paramed_modes = sort_paramed_modes($modes, $params);
+				foreach (IRCList::$uplink as $m)
+					for ($i=0; ($mode = (isset($m[$i])) ? $m[$i] : NULL); $i++)
+					{
+						$group = get_chmode_group($mode);
+						if (!$group || $group == 1)
+							continue;
+						$modeinfo = (isset(IRCList::$cmodes[$mode])) ? IRCList::$cmodes[$mode] : ['name' => "Unknown mode", 'description' => "Unknown mode +$mode"];
+						$checked = (strstr($modes,$mode)) ? "checked" : "";
+						$disabled = "";
+						switch($mode)
+						{
+							case "Z":
+							case "d":
+								$disabled = "disabled";
+						}
+						?>
+							<tr><th scope="row"><input <?php echo $checked." ".$disabled; ?> type="checkbox" value='$mode' name="newmodes[]"></th>
+								<th data-toggle="tooltip" data-placement="top" title="<?php echo htmlspecialchars($modeinfo['description']); ?>"><?php echo htmlspecialchars($modeinfo['name'])." (<code>+$mode</code>)";  ?></th>
+								<td>
+									<?php
+										
+										if ($group == 2 || $group == 3)
+										{
+											?><input type="text" class="form-control" name="<?php echo $mode; ?>" id="<?php echo $mode; ?>" value="<?php echo ($checked) ? htmlspecialchars($paramed_modes[$mode]) : ""; ?>"><?php
+										}
+									?>
+								</td>
+							</tr>
+						<?php
+					}
+				
+
+           ?>
+        </tbody>
+    </table>
+
+    <?php
+}
+
+function get_chmode_group(string $mode) : int
+{
+	foreach(IRCList::$uplink as $i => $grp)
+		if (strstr($grp,$mode))
+			return $i + 1;
+
+	return 0; // invalid
+}
+
 /**
  * 	Force loading of a particular modal by name
  */
@@ -251,6 +317,24 @@ function chlkup_autoload_modal($name)
 	<?php
 }
 
+/**
+ * Returns an array of parametered modes and their params
+ */
+function sort_paramed_modes($modes, $params) : array
+{
+	$m = [];
+	for ($i=0; isset($modes[$i]) && $mode = $modes[$i]; $i++)
+	{
+		$group = get_chmode_group($mode);
+		if ($group != 2 && $group != 3)
+			continue;
+		$p = split($params);
+		$m[$mode] = $p[0];
+		$p[0] = NULL;
+		$params = glue($p);
+	}
+	return $m;
+}
 
 function _do_chan_item_delete($chan, string $type, array $list, array &$errors) : bool
 {

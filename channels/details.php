@@ -1,8 +1,9 @@
 <?php
 require_once "../common.php";
 require_once "../header.php";
-require_once "../misc/channel-lookup-misc.php";
 
+if ($uplink = $rpc->server()->get())
+	IRCList::setmodes($uplink->server->features->chanmodes);
 $title = "Channel Lookup";
 $channel = "";
 $channame = "";
@@ -291,11 +292,11 @@ if (!empty($_POST))
 </div>
 
 <!-- Modal for Add Ban Exceptions -->
-<div class="modal fade" id="except" tabindex="-1" role="dialog" aria-labelledby="add_except_modal" aria-hidden="true">
+<div class="modal fade" id="except" tabindex="-1" role="dialog" aria-labelledby="except" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 		<div class="modal-content">
 		<div class="modal-header">
-			<h5 class="modal-title" id="add_except_modal">Add New Channel Ban Exception</h5>
+			<h5 class="modal-title" >Add New Channel Ban Exception</h5>
 			<div type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
 		</div>
@@ -336,6 +337,32 @@ if (!empty($_POST))
 			<input type="hidden" id="server" name="add_chex" value="e"></input>
 			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 			<button type="submit" action="post" class="btn btn-danger">Add Exception</button>
+			</form>
+		</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal for Edit Channel Modes -->
+<div class="modal fade" id="editchmodes" tabindex="-1" role="dialog" aria-labelledby="editchmodes" aria-hidden="true">
+	<div class="modal-dialog  modal-dialog-centered" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="editchmodes">Edit Channel Modes</h5>
+			<div type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</div>
+		</div>
+		<div class="modal-body">
+			<form method="post">
+			
+			<?php generate_edit_chmodes($channelObj); ?>
+
+		</div>
+		<div class="modal-footer">
+			<input type="hidden" id="server" name="add_chex" value="e"></input>
+			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="submit" action="post" class="btn btn-danger">Update</button>
 			</form>
 		</div>
 		</div>
@@ -441,19 +468,22 @@ if ($topicset)
 		
 		<div class="tab-content">
 		
-		<div role="tabpanel" class="tab-pane fade in" id="chanmodes">
-			<p class="card-text"><?php generate_html_chansettings($channelObj); ?></p>
-		</div>
-		
-		<div role="tabpanel" class="tab-pane fade in" id="chanbans">
-			<p class="card-text"><?php generate_chanbans_table($channelObj); ?></p>
-		</div>
-		<div role="tabpanel" class="tab-pane fade in" id="chaninv">
-			<p class="card-text"><?php generate_chaninvites_table($channelObj); ?></p>
-		</div>
-		<div role="tabpanel" class="tab-pane fade in" id="chanex">
-			<p class="card-text"><?php generate_chanexcepts_table($channelObj); ?></p>
-		</div>
+			<div role="tabpanel" class="tab-pane fade in" id="chanmodes">
+				<p class="card-text"><?php generate_html_chansettings($channelObj); ?></p>
+			</div>
+			
+			<div role="tabpanel" class="tab-pane fade in" id="chanbans">
+				<p class="card-text"><?php generate_chanbans_table($channelObj); ?></p>
+			</div>
+			<div role="tabpanel" class="tab-pane fade in" id="chaninv">
+				<p class="card-text"><?php generate_chaninvites_table($channelObj); ?></p>
+			</div>
+			<div role="tabpanel" class="tab-pane fade in" id="chanex">
+				<p class="card-text"><?php generate_chanexcepts_table($channelObj); ?></p>
+			</div>
+			<div role="tabpanel" class="tab-pane fade in" id="chanmodes_edit">
+				<p class="card-text"><?php /* insert hacks here */ ?></p>
+			</div>
 		
 		</div>
         </div>

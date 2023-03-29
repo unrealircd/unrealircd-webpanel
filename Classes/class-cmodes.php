@@ -4,7 +4,8 @@
  * A set of reference lists
  */
 class IRCList {
-    static $cmodes =
+
+    public static $cmodes =
     [
         "a" =>  [
             "name" => "Admin",
@@ -20,6 +21,11 @@ class IRCList {
             "name" => "No CTCPs",
             "description" => "Prevents users from sending CTCP's to the channel",
             "requires" => "HalfOp"
+        ],
+        "d" => [
+            "name" => "Delay Join",
+            "description" => "Delay showing joins until someone actually speaks.",
+            "requires" => "Operator"
         ],
         "e" => [
             "name" => "Ban Exemption",
@@ -191,4 +197,19 @@ class IRCList {
             "requires" => "Server"
         ]
     ];
+    static function setmodes($modes)
+    {
+        $g = [];
+        if (is_array($modes))
+        {
+            self::$uplink = $modes;
+            return;
+        }
+        else if (!strstr($modes,","))
+            $g = [$modes];
+        else $g = split($g,",");
+        self::$uplink = $g;
+    }
+    static $uplink = [];
+    
 }
