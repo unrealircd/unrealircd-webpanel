@@ -275,7 +275,7 @@ function generate_edit_chmodes($chan)
 										
 										if ($group == 2 || $group == 3)
 										{ 
-											?><input type="text" class="form-control" name="paramed_modes[<?php echo $mode; ?>]"
+											?><input type="text" class="input-group-sm" name="paramed_modes[<?php echo $mode; ?>]"
 											id="<?php echo $mode; ?>" value="<?php echo ($checked)
 											?
 												htmlspecialchars(
