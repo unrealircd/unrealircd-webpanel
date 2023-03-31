@@ -41,9 +41,14 @@ $pages = [
 	
 	"News"         => "news.php",
 ];
-if (unreal_get_current_user())
+$user = unreal_get_current_user();
+if ($user)
 {
+	/* Add logout page, if logged in */
 	$pages["Logout"] = "login/?logout=true";
+
+	/* Set issuer for all the RPC commands */
+	$rpc->rpc()->set_issuer($user->username);
 }
 
 Hook::run(HOOKTYPE_NAVBAR, $pages);
