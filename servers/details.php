@@ -117,32 +117,6 @@ if (!empty($rehash_success)) {
 	return;
 ?>
 <br>
-<div class="row">
-	<div class="col-sm-3">
-		<div class="btn btn-sm btn-info" data-toggle="modal" data-target="#module_modal">Modules</div>	
-		<div class="btn btn-sm btn-warning" data-toggle="modal" data-target="#rehash_modal">Rehash</div>
-		<div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#disconnect_modal">Disconnect</div>
-	</div>
-</div>
-<br>
-	<div class="col-sm-3">
-		<div class="card">
-			<div class="card-body">
-				<h5 class="card-title">Basic Information</h5>
-				<p class="card-text"><?php generate_html_serverinfo($srv); ?></p>
-			</div>
-		</div>
-	</div>
-	<div class="col-sm-4">
-		<div class="card">
-			<div class="card-body">
-				<h5 class="card-title">Channel Modes</h5>
-				<p class="card-text"><?php generate_html_servermodes($srv); ?></p>
-			</div>
-		</div>
-	</div>
-</div>
-
 <div class="modal fade" id="disconnect_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -224,6 +198,32 @@ if (!empty($rehash_success)) {
 		<div class="modal-footer">
 				<button id="CloseButton" action="post" type="submit" class="btn btn-secondary" data-dismiss="modal">Close</button>
 		</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-3">
+		<div class="btn btn-sm btn-info" data-toggle="modal" data-target="#module_modal">Modules</div>	
+		<div class="btn btn-sm btn-warning" data-toggle="modal" data-target="#rehash_modal">Rehash</div>
+		<div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#disconnect_modal">Disconnect</div>
+	</div>
+</div>
+<br>
+	<div class="col-sm-3">
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">Basic Information</h5>
+				<p class="card-text"><?php generate_html_serverinfo($srv); ?></p>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-4">
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">Channel Modes</h5>
+				<p class="card-text"><?php generate_html_servermodes($srv); ?></p>
+			</div>
 		</div>
 	</div>
 </div>
