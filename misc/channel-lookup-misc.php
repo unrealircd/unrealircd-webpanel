@@ -78,11 +78,11 @@ function generate_chaninvites_table($channel)
 function generate_chanexcepts_table($channel)
 {
 	global $rpc;
-	echo "<form method=\"post\">";
+	
 	$channel = $rpc->channel()->get($channel->name);
 	?><p><table class="table table-responsive table-hover caption-top table-striped">
 	<button class="btn btn-primary mr-1 btn-sm" data-toggle="modal" data-target="#except">Add New</button>
-	
+	<form method="post">
 	<button class="btn btn-info btn-sm" type="submit" name="delete_sel_ex">Delete</button>
 	</p>
 	
@@ -211,15 +211,17 @@ function generate_html_chansettings($channel)
 				$tok = split($fmodes);
 				$modes = $tok[0];
 				$params = rparv($fmodes);
-				
+				$paramed_modes = sort_paramed_modes($modes, $params);
+
                 for ($i=0; ($mode = (isset($modes[$i])) ? $modes[$i] : NULL); $i++)
                 {
-					$modeinfo = IRCList::$cmodes[$mode];
+					$modeinfo = IRCList::lookup($mode);
 					if (!$modeinfo)
 						continue;
 					?>
 						<tr>
 							<th><?php echo $modeinfo['name']; ?></th>
+							<td><code><?php echo $paramed_modes[$mode]; ?></code></td>
 							<td>
 								<?php echo $modeinfo['description']; ?>
 							</td>

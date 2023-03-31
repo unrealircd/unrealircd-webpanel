@@ -9,6 +9,8 @@ $channel = "";
 $channame = "";
 $nick = NULL;
 $channelObj = NULL;
+
+$can_edit = current_user_can(PERMISSION_EDIT_CHANNEL);
 do_log($_GET);
 do_log($_POST);
 if (isset($_GET['chan']))
@@ -154,7 +156,7 @@ if (!empty($_POST))
 		}
 	}
 
-	if (isset($_POST['newmodes']) && isset($_POST['paramed_modes']))
+	if (isset($_POST['newmodes']) && isset($_POST['paramed_modes']) && $can_edit)
 	{
 		$m = $_POST['newmodes'];
 		$p = $_POST['paramed_modes'];
@@ -512,7 +514,7 @@ if ($topicset)
 		<div class="tab-content">
 			<br>
 			<div class="tab-pane fade in" id="chanmodes">
-				<button id="editlol" class="btn btn-sm btn-primary">Change Settings</button>
+				<button id="editlol" class="btn btn-sm btn-primary" <?php echo ($can_edit) ? "" : "disabled"; ?>>Change Settings</button>
 				<p class="card-text"><?php generate_html_chansettings($channelObj); ?></p>
 			</div><form id="editchanmodes" method="post" name="editchanmodes">
 			<div class="tab-pane" style="display: none" id="chanmodes_edit">
