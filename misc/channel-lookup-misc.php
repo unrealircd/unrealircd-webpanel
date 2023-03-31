@@ -3,7 +3,7 @@ function generate_chanbans_table($channel)
 {
 	global $rpc;
 	$channel = $rpc->channel()->get($channel->name);
-	?><p><table class="container-xxl table table-responsive caption-top table-striped">
+	?><p><table class="container-xxl table table-sm table-responsive caption-top table-striped">
 	<button class="btn btn-primary mr-1 btn-sm" data-toggle="modal" data-target="#ban">Add New</button>
 	<form method="post">
 	<button class="btn btn-info btn-sm" type="submit" name="delete_sel_ban">Delete</button>
@@ -40,7 +40,7 @@ function generate_chaninvites_table($channel)
 {
 	global $rpc;
 	$channel = $rpc->channel()->get($channel->name);
-	?><p><table class="table table-responsive table-hover caption-top table-striped">
+	?><p><table class="table table-sm table-responsive table-hover caption-top table-striped">
 	<button class="btn btn-primary btn-sm mr-1" data-toggle="modal" data-target="#invite">Add New</button>
 	<form method="post">
 	<button class="btn btn-info btn-sm" type="submit" name="delete_sel_inv">Delete</button>
@@ -80,7 +80,7 @@ function generate_chanexcepts_table($channel)
 	global $rpc;
 	
 	$channel = $rpc->channel()->get($channel->name);
-	?><p><table class="table table-responsive table-hover caption-top table-striped">
+	?><p><table class="table table-sm table-responsive table-hover caption-top table-striped">
 	<button class="btn btn-primary mr-1 btn-sm" data-toggle="modal" data-target="#except">Add New</button>
 	<form method="post">
 	<button class="btn btn-info btn-sm" type="submit" name="delete_sel_ex">Delete</button>
