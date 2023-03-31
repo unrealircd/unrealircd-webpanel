@@ -221,7 +221,7 @@ function generate_html_chansettings($channel)
 					?>
 						<tr>
 							<th><?php echo $modeinfo['name']; ?></th>
-							<td><code><?php echo $paramed_modes[$mode]; ?></code></td>
+							<td><code><?php echo isset($paramed_modes[$mode]) ? $paramed_modes[$mode] : ""; ?></code></td>
 							<td>
 								<?php echo $modeinfo['description']; ?>
 							</td>
@@ -275,7 +275,18 @@ function generate_edit_chmodes($chan)
 										
 										if ($group == 2 || $group == 3)
 										{ 
-											?><input type="text" class="form-control" name="paramed_modes[<?php echo $mode; ?>]" id="<?php echo $mode; ?>" value="<?php echo ($checked) ? htmlspecialchars($paramed_modes[$mode]) : ""; ?>"><?php
+											?><input type="text" class="form-control" name="paramed_modes[<?php echo $mode; ?>]"
+											id="<?php echo $mode; ?>" value="<?php echo ($checked)
+											?
+												htmlspecialchars(
+													isset($paramed_modes[$mode])
+													?
+														$paramed_modes[$mode]
+													:
+														""
+												)
+											:
+											 ""; ?>"><?php
 										}
 									?>
 								</td>
