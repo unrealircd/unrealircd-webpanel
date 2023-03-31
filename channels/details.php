@@ -153,6 +153,51 @@ if (!empty($_POST))
 			Message::Success($msgbox_str);
 		}
 	}
+
+	if (isset($_POST['newmodes']) && isset($_POST['paramed_modes']))
+	{
+		$m = $_POST['newmodes'];
+		$p = $_POST['paramed_modes'];
+
+		do_log($p,$m);
+		$addmodestring = "+";
+		$addparamstring = "";
+		$delmodestring = "-";
+		$delparamstring = "";
+		foreach ($m as $mode)
+		{
+			strcat($addmodestring, $mode);
+			if (isset($p[$mode]) && strlen($p[$mode]))
+				strcat($addparamstring, $p[$mode]." ");
+		}
+
+		$fmodes = $channelObj->modes;
+		$tok = split($fmodes);
+		$modes = $tok[0];
+		$params = rparv($fmodes);
+		$paramed_modes = sort_paramed_modes($modes, $params);
+		for ($i = 0; isset($modes[$i]) && $mode = $modes[$i]; $i++)
+		{
+			if (!strstr($addmodestring, $mode))
+			{
+				$req = IRCList::lookup($mode)['requires'];
+				if ($req == "Server")
+					continue;
+				strcat($delmodestring, $mode);
+				$grp = get_chmode_group($mode);
+				if ($grp == 2)
+					strcat($delparamstring, $paramed_modes[$mode]." ");
+			}
+			
+		}
+
+
+		if ($rpc->channel()->set_mode($channel, $delmodestring.$addmodestring, $delparamstring." ".$addparamstring))
+			Message::Success("Channel settings have been successfully updated");
+		else
+			Message::Fail("Could not change channel settings: $rpc->error");
+	}
+
 	/* Re-grab the channel because of updates */
 	$channelObj = $rpc->channel()->get($channel, 4);
 }
@@ -163,15 +208,13 @@ if (!empty($_POST))
 <br>
 
 
-<div class="container-xl">
 <form method="get" action="details.php">
-	<div class="text-left input-group">
+	<div class="text-left input-group" style="width: 35%;">
 		<input class="form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
 		<div class="input-group-append">
 			<button type="submit" class="btn btn-primary">Go</button>
 		</div>
 	</div>
-</div>
 </form>
 <?php if (!$channelObj)
 		return; ?>
@@ -467,21 +510,29 @@ if ($topicset)
 			</ul>
 		
 		<div class="tab-content">
-		
-			<div role="tabpanel" class="tab-pane fade in" id="chanmodes">
+			<br>
+			<div class="tab-pane fade in" id="chanmodes">
+				<button id="editlol" class="btn btn-sm btn-primary">Change Settings</button>
 				<p class="card-text"><?php generate_html_chansettings($channelObj); ?></p>
+			</div><form id="editchanmodes" method="post" name="editchanmodes">
+			<div class="tab-pane" style="display: none" id="chanmodes_edit">
+				
+					<div class="btn btn-sm btn-secondary" id="editchmodesbk">Go back</div>
+					<button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
+					<p class="card-text"><?php generate_edit_chmodes($channelObj); ?></p>
+				</form>
 			</div>
 			
-			<div role="tabpanel" class="tab-pane fade in" id="chanbans">
+			<div class="tab-pane fade in" id="chanbans">
 				<p class="card-text"><?php generate_chanbans_table($channelObj); ?></p>
 			</div>
-			<div role="tabpanel" class="tab-pane fade in" id="chaninv">
+			<div class="tab-pane fade in" id="chaninv">
 				<p class="card-text"><?php generate_chaninvites_table($channelObj); ?></p>
 			</div>
-			<div role="tabpanel" class="tab-pane fade in" id="chanex">
+			<div class="tab-pane fade in" id="chanex">
 				<p class="card-text"><?php generate_chanexcepts_table($channelObj); ?></p>
 			</div>
-			<div role="tabpanel" class="tab-pane fade in" id="chanmodes_edit">
+			<div class="tab-pane fade in" id="chanmodes_edit">
 				<p class="card-text"><?php /* insert hacks here */ ?></p>
 			</div>
 		
@@ -491,6 +542,20 @@ if ($topicset)
     </div>
 </div>
 <script>
+	const toggleBtn = document.getElementById('editlol');
+	const staticInfo = document.getElementById('chanmodes');
+	const options = document.getElementById('chanmodes_edit');
+	const backBtn = document.getElementById('editchmodesbk');
+
+	backBtn.addEventListener('click', function() {
+		staticInfo.style.display = '';
+		options.style.display = 'none';
+	});
+	toggleBtn.addEventListener('click', function() {
+		staticInfo.style.display = 'none';
+		options.style.display = '';
+	});
+
     // show dat first tab
 $('.nav-tabs a[href="#chanmodes"]').tab('show')
 </script>

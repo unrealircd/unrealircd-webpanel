@@ -199,9 +199,6 @@ function generate_html_chansettings($channel)
 {
 	?>
 	
-	<p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editchmodes" <?php echo (current_user_can(PERMISSION_EDIT_CHANNEL)) ? "" : "disabled"; ?>>
-			Edit
-	</button></p>
     <table class="table-sm table-responsive caption-top table-hover">
         <tbody>
            <?php
@@ -261,32 +258,28 @@ function generate_edit_chmodes($chan)
 						$group = get_chmode_group($mode);
 						if (!$group || $group == 1)
 							continue;
-						$modeinfo = (isset(IRCList::$cmodes[$mode])) ? IRCList::$cmodes[$mode] : ['name' => "Unknown mode", 'description' => "Unknown mode +$mode"];
-						$checked = (strstr($modes,$mode)) ? "checked" : "";
+						$modeinfo = IRCList::lookup($mode);
+						$checked = (strstr($modes,$mode)) ? "checked " : " ";
+
 						$disabled = "";
-						switch($mode)
-						{
-							case "Z":
-							case "d":
+						if (isset($modeinfo) && $modeinfo['requires'] == "Server")
 								$disabled = "disabled";
-						}
+						
 						?>
-							<tr><th scope="row"><input <?php echo $checked." ".$disabled; ?> type="checkbox" value='$mode' name="newmodes[]"></th>
+							<tr><th scope="row"><input <?php echo $checked.$disabled; ?> type="checkbox" value='<?php echo $mode; ?>' name="newmodes[]"></th>
 								<th data-toggle="tooltip" data-placement="top" title="<?php echo htmlspecialchars($modeinfo['description']); ?>"><?php echo htmlspecialchars($modeinfo['name'])." (<code>+$mode</code>)";  ?></th>
 								<td>
 									<?php
 										
 										if ($group == 2 || $group == 3)
-										{
-											?><input type="text" class="form-control" name="<?php echo $mode; ?>" id="<?php echo $mode; ?>" value="<?php echo ($checked) ? htmlspecialchars($paramed_modes[$mode]) : ""; ?>"><?php
+										{ 
+											?><input type="text" class="form-control" name="paramed_modes[<?php echo $mode; ?>]" id="<?php echo $mode; ?>" value="<?php echo ($checked) ? htmlspecialchars($paramed_modes[$mode]) : ""; ?>"><?php
 										}
 									?>
 								</td>
 							</tr>
 						<?php
 					}
-				
-
            ?>
         </tbody>
     </table>

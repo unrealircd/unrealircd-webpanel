@@ -24,8 +24,8 @@ class IRCList {
         ],
         "d" => [
             "name" => "Delay Join",
-            "description" => "Delay showing joins until someone actually speaks.",
-            "requires" => "Operator"
+            "description" => "This ",
+            "requires" => "Server"
         ],
         "e" => [
             "name" => "Ban Exemption",
@@ -85,7 +85,7 @@ class IRCList {
         "r" => [
             "name" => "Registered",
             "description" => "Channel has been registered to an account",
-            "requires" => "Services"
+            "requires" => "Server"
         ],
         "s" => [
             "name" => "Secret",
@@ -119,7 +119,8 @@ class IRCList {
         ],
         "F" => [
             "name" => "Flood Profile",
-            "description" => "Use a Flood Profile to easily apply flood protection mechanisms",
+            "description" => "Uses a Flood Profile to easily apply flood protection mechanisms",
+            "requires" => "Operator"
         ],
         "G" => [
             "name" => "Filter",
@@ -197,6 +198,16 @@ class IRCList {
             "requires" => "Server"
         ]
     ];
+
+    static function lookup($mode)
+    {
+        return (isset(self::$cmodes[$mode])) ? self::$cmodes[$mode] :
+        [
+            'name' => "Unknown mode",
+            'description' => "Unknown mode +$mode",
+            'requires' => 'Unknown'
+        ];
+    }
     static function setmodes($modes)
     {
         $g = [];
