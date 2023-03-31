@@ -323,7 +323,7 @@ function generate_html_userchannels($user)
                 {
                     ?>
                     <tr>
-                        <td><?php echo $chan->name; ?></td>
+                        <td><?php echo "<a href=\"".BASE_URL."channels/details.php?chan=".urlencode($chan->name)."\">$chan->name</a>"; ?></td>
                         <td>
                             
                             <?php
