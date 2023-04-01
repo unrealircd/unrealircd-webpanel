@@ -9,87 +9,87 @@ class IRCList {
     [
         "a" =>  [
             "name" => "Admin",
-            "description" => "Marks someone as channel admin (&)",
+            "description" => "Marks someone as channel admin (&).",
             "requires" => "Admin"
         ],
         "b" => [
             "name" => "Ban",
-            "description" => "Marks a ban from a channel",
+            "description" => "Marks a ban from a channel.",
             "requires" => "HalfOp"
         ],
         "c" => [
             "name" => "No CTCPs",
-            "description" => "Prevents users from sending CTCP's to the channel",
+            "description" => "Prevents users from sending CTCP's to the channel.",
             "requires" => "HalfOp"
         ],
         "d" => [
             "name" => "Delay Join",
-            "description" => "This ",
+            "description" => "When unsetting +D, Unreal needs to process all remaining delayed users to make them JOIN. d is an intermediate/temporary mod.",
             "requires" => "Server"
         ],
         "e" => [
             "name" => "Ban Exemption",
-            "description" => "Marks an exemption from channel bans",
+            "description" => "Marks an exemption from channel bans.",
             "requires" => "HalfOp"
         ],
         "f" => [
             "name" => "Flood Protection",
-            "description" => "Implements channel flood protection",
+            "description" => "Implements channel flood protection.",
             "requires" => "Operator"
         ],
         "h" => [
             "name" => "Half Op",
-            "description" => "Marks someone as channel admin (%)",
+            "description" => "Marks someone as channel halfop (%).",
             "requires" => "Operator"
         ],
         "i" => [
             "name" => "Invite Only",
-            "description" => "Requires an invitation to join",
+            "description" => "Requires an invitation to join.",
             "requires" => "HalfOp"
         ],
         "k" => [
             "name" => "Key",
-            "description" => "Requires a key/password to join",
+            "description" => "Requires a key/password to join.",
             "requires" => "HalfOp"
         ],
         "l" => [
             "name" => "Limit",
-            "description" => "Limits a channel to a specific amount of users",
+            "description" => "Limits a channel to a specific amount of users.",
             "requires" => "HalfOp"
         ],
         "m" => [
             "name" => "Moderation",
-            "description" => "Prevents non-voiced users from speaking in a channel",
+            "description" => "Prevents non-voiced users from speaking in a channel.",
             "requires" => "HalfOp"
         ],
         "n" => [
             "name" => "No External Messages",
-            "description" => "Messages cannot be sent to the channel from outside it",
+            "description" => "Messages cannot be sent to the channel from outside it.",
             "requires" => "HalfOp"
         ],
         "o" => [
             "name" => "Operator",
-            "description" => "Marks someone as channel operator (@)",
+            "description" => "Marks someone as channel operator (@).",
             "requires" => "Operator"
         ],
         "p" => [
             "name" => "Private",
-            "description" => "Prevents the channel from showing up in <code>/WHOIS</code> outputs and is replaces with \"*\" in <code>/LIST</code> outputs",
+            "description" => "Prevents the channel from showing up in <code>/WHOIS</code> outputs and is replaces with \"*\" in <code>/LIST</code> outputs.",
             "requires" => "Operator"
         ],
         "q" => [
             "name" => "Owner",
-            "description" => "Marks someone as channel owner (~)",
+            "description" => "Marks someone as channel owner (~).",
             "requires" => "Owner"
         ],
         "r" => [
             "name" => "Registered",
-            "description" => "Channel has been registered to an account",
+            "description" => "Channel has been registered to an account.",
             "requires" => "Server"
         ],
         "s" => [
             "name" => "Secret",
-            "description" => "Prevents the channel from showing up in <code>/WHOIS</code> and <code>/LIST</code> outputs",
+            "description" => "Prevents the channel from showing up in <code>/WHOIS</code> and <code>/LIST</code> outputs.",
             "requires" => "Operator"
         ],
         "t" => [
@@ -99,7 +99,7 @@ class IRCList {
         ],
         "v" => [
             "name" => "Voice",
-            "description" => "Marks someone as voiced in the channel (+)",
+            "description" => "Marks someone as voiced in the channel (+).",
             "requires" => "HalfOp"
         ],
         "z" => [
@@ -119,7 +119,7 @@ class IRCList {
         ],
         "F" => [
             "name" => "Flood Profile",
-            "description" => "Uses a Flood Profile to easily apply flood protection mechanisms",
+            "description" => "Uses a Flood Profile to easily apply flood protection mechanisms.",
             "requires" => "Operator"
         ],
         "G" => [
@@ -144,7 +144,7 @@ class IRCList {
         ],
         "L" => [
             "name" => "Link",
-            "description" => "Link to another channel when unable to join",
+            "description" => "Link to another channel when unable to join.",
             "requires" => "Operator"
         ],
         "M" => [
