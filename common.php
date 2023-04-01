@@ -8,7 +8,6 @@ if (!is_dir(UPATH . "/vendor"))
 require_once UPATH . '/vendor/autoload.php';
 require_once UPATH . "/Classes/class-cmodes.php";
 require_once UPATH . "/cfg/defines.php";
-require_once UPATH . "/connection.php";
 require_once UPATH . "/misc/strings.php";
 require_once UPATH . "/misc/channel-lookup-misc.php";
 require_once UPATH . "/misc/user-lookup-misc.php";
@@ -46,9 +45,6 @@ if ($user)
 {
 	/* Add logout page, if logged in */
 	$pages["Logout"] = "login/?logout=true";
-
-	/* Set issuer for all the RPC commands */
-	$rpc->rpc()->set_issuer($user->username);
 }
 
 Hook::run(HOOKTYPE_NAVBAR, $pages);

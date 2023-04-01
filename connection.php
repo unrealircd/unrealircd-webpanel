@@ -29,3 +29,10 @@ catch (Exception $e)
 	     "an rpc-user block with the correct IP allowed and the correct username and password).";
 	throw $e;
 }
+
+$user = unreal_get_current_user();
+if ($user)
+{
+	/* Set issuer for all the RPC commands */
+	$rpc->rpc()->set_issuer($user->username);
+}

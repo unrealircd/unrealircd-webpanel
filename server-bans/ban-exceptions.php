@@ -1,5 +1,6 @@
 <?php
 require_once "../common.php";
+require_once "../connection.php";
 require_once "../header.php";
 require_once "../misc/ban-exceptions-misc.php";
 if (!empty($_POST))

@@ -1,6 +1,7 @@
 <?php
 require_once "../common.php";
-require_once UPATH . "/header.php";
+require_once "../connection.php";
+require_once "../header.php";
 
 $rehash_errors = [];
 $rehash_warnings = [];
