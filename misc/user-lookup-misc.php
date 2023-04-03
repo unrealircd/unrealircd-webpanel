@@ -93,9 +93,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Service Bot</th>
-                                <td>
-                                This user is a Services Bot.
-                                </td>
+                                <td>This user is a Services Bot.</td>
                             </tr>
                         <?php
                     }
@@ -104,7 +102,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Deaf</th>
-                                <td>User is ignoring channel messages.</td>
+                                <td>The user ignores channel messages.</td>
                             </tr>
                         <?php
                     }
@@ -113,7 +111,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Invisible</th>
-                                <td>Not shown in /WHO searches.</td>
+                                <td>The user wont be shown in /WHO searches.</td>
                             </tr>
                         <?php
                     }
@@ -122,7 +120,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Private channels</th>
-                                <td>Channels hidden in /WHOIS outputs.</td>
+                                <td>Channels are hidden in /WHOIS outputs.</td>
                             </tr>
                         <?php
                     }
@@ -131,7 +129,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Registered Nick</th>
-                                <td>This user is using a registered nick.</td>
+                                <td>The user's nick is registered in services.</td>
                             </tr>
                         <?php
                     }
@@ -140,7 +138,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Server Notices</th>
-                                <td>This user is receiving server notices.</td>
+                                <td>The user is receiving server notices.</td>
                             </tr>
                         <?php
                     }
@@ -149,7 +147,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Virtual Host</th>
-                                <td>Using a custom hostmask</td>
+                                <td>The user is using a custom hostmask.</td>
                             </tr>
                         <?php
                     }
@@ -158,7 +156,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Wallops</th>
-                                <td>Listening to <code>/WALLOPS</code> notices from IRC Operators.</td>
+                                <td>User is listening to <code>/WALLOPS</code> notices from IRC Operators.</td>
                             </tr>
                         <?php
                     }
@@ -167,7 +165,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Hostmask</th>
-                                <td>Using a hostmask (hiding their IP from non-IRCops).</td>
+                                <td>The user is using a hostmask (hiding their IP from non-IRCops).</td>
                             </tr>
                         <?php
                     }
@@ -199,9 +197,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Bot</th>
-                                <td colspan="2">
-                                User is marked as a Bot.
-                                </td>
+                                <td colspan="2">User is marked as a Bot.</td>
                             </tr>
                         <?php
                     }
@@ -210,9 +206,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>PrivDeaf</th>
-                                <td colspan="2">
-                                User is rejecting incoming private messages.
-                                </td>
+                                <td colspan="2">User is rejecting incoming private messages.</td>
                             </tr>
                         <?php
                     }
@@ -221,9 +215,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Filter</th>
-                                <td colspan="2">
-                                User is filtering Bad Words.
-                                </td>
+                                <td colspan="2">User is filtering Bad Words.</td>
                             </tr>
                         <?php
                     }
@@ -232,9 +224,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Hide IRCop</th>
-                                <td colspan="2">
-                                User is hiding their IRCop status.
-                                </td>
+                                <td colspan="2">User is hiding their IRCop status.</td>
                             </tr>
                         <?php
                     }
@@ -243,9 +233,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Hide Idle</th>
-                                <td colspan="2">
-                                User is hiding their idle time.
-                                </td>
+                                <td colspan="2">User is hiding their idle time.</td>
                             </tr>
                         <?php
                     }
@@ -254,9 +242,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>RegOnly Messages</th>
-                                <td colspan="2">
-                                User is only accepting private messages from registered users.
-                                </td>
+                                <td colspan="2">The user is only accepting private messages from registered users.</td>
                             </tr>
                         <?php
                     }
@@ -265,9 +251,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Deny CTCPs</th>
-                                <td colspan="2">
-                                Denying CTCP requests.
-                                </td>
+                                <td colspan="2">The user denies CTCP requests.</td>
                             </tr>
                         <?php
                     }
@@ -276,9 +260,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>View /WHOIS</th>
-                                <td colspan="2">
-                                User is receiving notifications when someone does a <code>/WHOIS</code> on them.
-                                </td>
+                                <td colspan="2">User is receiving notifications when someone does a <code>/WHOIS</code> on them.</td>
                             </tr>
                         <?php
                     }
@@ -287,9 +269,7 @@ function generate_html_usersettings($user)
                         ?>
                             <tr>
                                 <th>Deny Insecure Messages</th>
-                                <td colspan="2">
-                                User is only accepting messages from users using a secure connection.
-                                </td>
+                                <td colspan="2">User is only accepting messages from users using a secure connection.</td>
                             </tr>
                         <?php
                     }
