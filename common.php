@@ -1,6 +1,6 @@
 <?php
 if (version_compare(PHP_VERSION, '8.0.0', '<'))
-	die("This webserver is PHP version ".PHP_VERSION." but we require at least PHP 8.0.0.<br>".
+	die("This webserver is using PHP version ".PHP_VERSION." but we require at least PHP 8.0.0.<br>".
 	    "If you already installed PHP8 but are still seeing this error, then it means ".
 	    "apache/nginx/.. is loading an older PHP version. Eg. on Debian/Ubuntu you need ".
 	    "<code>apt-get install libapache2-mod-php8.2</code> (or a similar version) and ".
