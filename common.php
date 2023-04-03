@@ -1,4 +1,12 @@
 <?php
+if (version_compare(PHP_VERSION, '8.0.0', '<'))
+	die("This webserver is PHP version ".PHP_VERSION." but we require at least PHP 8.0.0.<br>".
+	    "If you already installed PHP8 but are still seeing this error, then it means ".
+	    "apache/nginx/.. is loading an older PHP version. Eg. on Debian/Ubuntu you need ".
+	    "<code>apt-get install libapache2-mod-php8.2</code> (or a similar version) and ".
+	    "<code>apt-get remove libapache2-mod-php7.4</code> (or a similar version). ".
+	    "You may also need to choose again the PHP module to load in apache via <code>a2enmod php8.2</code>");
+
 define('UPATH', dirname(__FILE__));
 require_once UPATH . "/config.php";
 if (!defined('BASE_URL')) die("You need to define BASE_URL in config.php (see config.php.sample for documentation)");
