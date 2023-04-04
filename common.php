@@ -42,19 +42,23 @@ $pages = [
 		"IP WHOIS" => "tools/ip-whois.php",
 	],
 	"Settings" => [
-		"Panel Access" => "settings",
 		"Plugins" => "settings/plugins.php",
 	],
 	
-	"News"         => "news.php",
+	"News" => "news.php",
 ];
-$user = unreal_get_current_user();
-if ($user)
-{
-	/* Add logout page, if logged in */
-	$pages["Logout"] = "login/?logout=true";
-}
 
+if (is_auth_provided())
+{
+	$pages["Settings"]["Panel Access"] = "settings";
+
+	$user = unreal_get_current_user();
+	if ($user)
+	{
+		/* Add logout page, if logged in */
+		$pages["Logout"] = "login/?logout=true";
+	}
+}
 Hook::run(HOOKTYPE_NAVBAR, $pages);
 
 /* Example to add new menu item:

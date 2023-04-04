@@ -132,6 +132,10 @@ define('HOOKTYPE_USER_LOGIN_FAIL', 115);
 define('HOOKTYPE_USER_PERMISSION_LIST', 116);
 
 define('HOOKTYPE_EDIT_USER', 117);
+
+
+
+define('HOOKTYPE_AUTH_MOD', 200);
 /** 
  *  Class for "Hook"
  * This is the main function which gets called whenever you want to use a Hook.

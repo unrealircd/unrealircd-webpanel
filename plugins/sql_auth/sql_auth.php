@@ -25,6 +25,7 @@ class sql_auth
 		Hook::func(HOOKTYPE_USER_DELETE, 'sql_auth::user_delete');
 		Hook::func(HOOKTYPE_EDIT_USER, 'sql_auth::edit_core');
 		Hook::func(HOOKTYPE_PRE_OVERVIEW_CARD, 'sql_auth::add_pre_overview_card');
+		AuthModLoaded::$status = 1;
 
 		if (defined('SQL_DEFAULT_USER')) // we've got a default account
 		{

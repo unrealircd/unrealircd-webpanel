@@ -122,3 +122,16 @@ function require_plugin($name, $version)
 	if (!Plugins::plugin_exists($name,$version))
 		die("Missing plugin: $name v$version");
 }
+
+
+
+/* I'm not a fan of globals */
+class AuthModLoaded
+{
+	public static $status = 0;
+}
+
+function is_auth_provided()
+{
+	return AuthModLoaded::$status;
+}
