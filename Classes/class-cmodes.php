@@ -18,9 +18,9 @@ class IRCList {
             "requires" => "HalfOp"
         ],
         "c" => [
-            "name" => "No CTCPs",
-            "description" => "Prevents users from sending CTCP's to the channel",
-            "requires" => "HalfOp"
+            "name" => "No colors",
+            "description" => "Block messages containing mIRC color codes",
+            "requires" => "Operator"
         ],
         "d" => [
             "name" => "Delay Join",
