@@ -37,7 +37,13 @@ if ($postbutton && $can_edit_profile)
     $array['update_email'] = (isset($_POST['email']) && strlen($_POST['email'])) ? $_POST['email'] : false;
     $array['update_pass'] = (isset($_POST['password']) && strlen($_POST['password'])) ? $_POST['password'] : false;
     $array['update_pass_conf'] = (isset($_POST['passwordconfirm']) && strlen($_POST['passwordconfirm'])) ? $_POST['passwordconfirm'] : false;
-    if ($array['update_pass'] == $array['update_pass_conf'])
+
+    if (!$array['update_pass'])
+    {
+        unset($array['update_pass']);
+        unset($array['update_pass_conf']);
+    }
+    elseif ($array['update_pass'] == $array['update_pass_conf'])
     {
         $array['update_pass_conf'] = password_hash($array['update_pass_conf'], PASSWORD_ARGON2ID);
         unset($array['update_pass']);

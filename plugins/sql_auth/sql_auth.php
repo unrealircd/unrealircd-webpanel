@@ -312,7 +312,7 @@ class sql_auth
 		foreach($info as $key => $val)
 		{
 			$value = NULL;
-			if (!$val)
+			if (!$val || !strlen($val) || BadPtr($val))
 				continue;
 			if (!strcmp($key,"update_fname") && $val != $user->first_name)
 			{
