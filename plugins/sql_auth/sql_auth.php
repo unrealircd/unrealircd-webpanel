@@ -99,67 +99,13 @@ class sql_auth
 	 */
 	public static function create_tables()
 	{
+		$script = $_SERVER['SCRIPT_FILENAME'];
+		if (str_ends_with($script,"setup.php"))
+			return;
 		$conn = sqlnew();
-		$conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "users (
-			user_id int AUTO_INCREMENT NOT NULL,
-			user_name VARCHAR(255) NOT NULL,
-			user_pass VARCHAR(255) NOT NULL,
-			user_email VARCHAR(255),
-			user_fname VARCHAR(255),
-			user_lname VARCHAR(255),
-			user_bio VARCHAR(255),
-			created VARCHAR(255),
-			PRIMARY KEY (user_id)
-		)");
-
-		/**
-		 * Patch for beta users
-		 * This adds the email column to existing tables without it
-		*/
-		$columns = $conn->query("SHOW COLUMNS FROM " . SQL_PREFIX . "users");
-		$column_names = array();
-		$c = $columns->fetchAll();
-
-		foreach($c as $column) {
-			$column_names[] = $column['Field'];
-		}
-		$column_exists = in_array("user_email", $column_names);
-		if (!$column_exists) {
-			$conn->query("ALTER TABLE " . SQL_PREFIX . "users ADD COLUMN user_email varchar(255)");
-		}
-
-		/**
-		 * Another patch for beta users
-		 * This changes the size of the meta_value so we can store more
-		 */
-		
-		$conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "user_meta (
-			meta_id int AUTO_INCREMENT NOT NULL,
-			user_id int NOT NULL,
-			meta_key VARCHAR(255) NOT NULL,
-			meta_value VARCHAR(255),
-			PRIMARY KEY (meta_id)
-		)");
-		$conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "auth_settings (
-			id int AUTO_INCREMENT NOT NULL,
-			setting_key VARCHAR(255) NOT NULL,
-			setting_value VARCHAR(255),
-			PRIMARY KEY (id)
-		)");
-		$conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "fail2ban (
-			id int AUTO_INCREMENT NOT NULL,
-			ip VARCHAR(255) NOT NULL,
-			count VARCHAR(255),
-			PRIMARY KEY (id)
-		)");
-		$c = [];
-		if (($columns = $conn->query("SHOW COLUMNS FROM ".SQL_PREFIX."user_meta")));
-			$c = $columns->fetchAll();
-		if (!empty($c))
-			$conn->query("ALTER TABLE `".SQL_PREFIX."user_meta` CHANGE `meta_value` `meta_value` VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
-
-
-		new AuthSettings();
+		$stmt = $conn->query("SHOW TABLES LIKE '".SQL_PREFIX."%'");
+		if ($stmt->rowCount() < 5)
+			header("Location: ".BASE_URL."plugins/sql_auth/setup.php");
 	}
 
 	/* We convert $u with a full user as an object ;D*/
