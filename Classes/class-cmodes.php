@@ -83,7 +83,7 @@ class IRCList {
             "requires" => "Owner"
         ],
         "r" => [
-            "name" => "Registered",
+            "name" => "Is Registered",
             "description" => "Channel has been registered to an account.",
             "requires" => "Server"
         ],
