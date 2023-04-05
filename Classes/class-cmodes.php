@@ -24,7 +24,7 @@ class IRCList {
         ],
         "d" => [
             "name" => "Delay Join",
-            "description" => "This ",
+            "description" => "Indicates there are invisible users left over due to unsetting 'D'",
             "requires" => "Server"
         ],
         "e" => [
@@ -39,7 +39,7 @@ class IRCList {
         ],
         "h" => [
             "name" => "Half Op",
-            "description" => "Marks someone as channel admin (%)",
+            "description" => "Marks someone as channel halfop (%)",
             "requires" => "Operator"
         ],
         "i" => [
