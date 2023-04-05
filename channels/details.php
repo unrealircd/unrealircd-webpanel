@@ -208,7 +208,6 @@ if (!empty($_POST))
 ?>
 <title><?php echo $title; ?></title>
 <h6><?php echo $title; ?></h6>
-<br>
 
 
 <form method="get" action="details.php">

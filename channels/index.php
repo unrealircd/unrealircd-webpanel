@@ -32,7 +32,8 @@ $channels = $rpc->channel()->getAll();
 		{
 			echo "<tr>";
 			echo "<td><a href=\"details.php?chan=".urlencode(htmlspecialchars($channel->name))."\">".htmlspecialchars($channel->name)."</a></td>";
-			echo "<td>".$channel->num_users."</td>";
+			$s = ($channel->num_users) ? "success" : "danger";
+			echo "<td><span class=\"badge rounded-pill badge-$s\">".$channel->num_users."</span></td>";
 			$modes = (isset($channel->modes)) ? "+" . $channel->modes : "<none>";
 			echo "<td>".htmlspecialchars($modes)."</td>";
 			$topic = (isset($channel->topic)) ? htmlspecialchars($channel->topic) : "";
