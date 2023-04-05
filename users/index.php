@@ -112,8 +112,8 @@ Click on a username to view more information.
 		<form action="" method="post">
 			<tr>	
 				<th scope="col"><h5>Filter:</h5></th>
-				<th scope="col" colspan="2"><input <?php echo (isset($_POST['operonly'])) ? "checked" : ""; ?> name="operonly" type="checkbox" value=""> Opers Only</th>
-				<th scope="col" colspan="2"><input <?php echo (isset($_POST['servicesonly'])) ? "checked" : ""; ?> name="servicesonly" type="checkbox" value=""> Services Only</th>
+				<th scope="col"><input <?php echo (isset($_POST['operonly'])) ? "checked" : ""; ?> name="operonly" type="checkbox" value=""> Opers Only</th>
+				<th scope="col"><input <?php echo (isset($_POST['servicesonly'])) ? "checked" : ""; ?> name="servicesonly" type="checkbox" value=""> Services Only</th>
 			</tr>
 			<tr>			
 				<th scope="col" colspan="2">Nick: <input name="uf_nick" type="text" class="short-form-control">

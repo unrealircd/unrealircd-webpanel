@@ -211,22 +211,37 @@ if (!empty($rehash_success)) {
 	</div>
 </div>
 <br>
+<div class="row">
 	<div class="col-sm-3">
-		<div class="card">
+		<div class="card mb-4">
 			<div class="card-body">
 				<h5 class="card-title">Basic Information</h5>
 				<p class="card-text"><?php generate_html_serverinfo($srv); ?></p>
 			</div>
 		</div>
+		<div class="card mb-4">
+			<div class="card-body">
+				<h5 class="card-title">Extra Information</h5>
+				<p class="card-text"><?php generate_html_extserverinfo($srv); ?></p>
+			</div>
+		</div>
 	</div>
-	<div class="col-sm-4">
-		<div class="card">
+	
+	<div class="col">
+		<div class="card mb-4">
 			<div class="card-body">
 				<h5 class="card-title">Channel Modes</h5>
 				<p class="card-text"><?php generate_html_servermodes($srv); ?></p>
 			</div>
 		</div>
 	</div>
+	<div class="col">
+		<div class="card mb-4">
+			<div class="card-body">
+				<h5 class="card-title">User Modes</h5>
+				<p class="card-text"><?php generate_html_usermodes($srv); ?></p>
+			</div>
+		</div>
+	</div>
 </div>
-
 <?php require_once UPATH.'/footer.php'; ?>
