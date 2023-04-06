@@ -65,6 +65,10 @@ class sql_auth
 	/* pre-Header hook */
 	public static function session_start($n)
 	{
+		$current_page = $_SERVER['REQUEST_URI'];
+		if (str_ends_with($current_page,"setup.php"))
+			return;
+
 		if (!isset($_SESSION))
 		{
 			session_set_cookie_params(3600);
@@ -72,7 +76,7 @@ class sql_auth
 		}
 		if (!isset($_SESSION['id']) || empty($_SESSION))
 		{
-			$current_page = $_SERVER['REQUEST_URI'];
+			
 			$tok = split($_SERVER['SCRIPT_FILENAME'], "/");
 			if ($check = security_check() && $tok[count($tok) - 1] !== "error.php") {
 				header("Location: " . BASE_URL . "plugins/sql_auth/error.php");
@@ -105,7 +109,10 @@ class sql_auth
 		$conn = sqlnew();
 		$stmt = $conn->query("SHOW TABLES LIKE '".SQL_PREFIX."%'");
 		if ($stmt->rowCount() < 5)
+		{
 			header("Location: ".BASE_URL."plugins/sql_auth/setup.php");
+			die();
+		}
 	}
 
 	/* We convert $u with a full user as an object ;D*/
