@@ -37,7 +37,7 @@ $num_of_panel_admins = count($userlist);
 						</span>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo $stats->user->total; ?></h3>
+							<h3 id="stats_user_total" class="display-4"><?php echo $stats->user->total; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -61,7 +61,7 @@ $num_of_panel_admins = count($userlist);
 							<i class="fa fa-hashtag fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo $stats->channel->total; ?></h3>
+							<h3 id="stats_channel_total" class="display-4"><?php echo $stats->channel->total; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -83,7 +83,7 @@ $num_of_panel_admins = count($userlist);
 							<i class="fa fa-shield-halved fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo $stats->user->oper; ?></h3>
+							<h3 id="stats_oper_total" class="display-4"><?php echo $stats->user->oper; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -106,7 +106,7 @@ $num_of_panel_admins = count($userlist);
 							<i class="fa fa-network-wired fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo $stats->server->total; ?></h3>
+							<h3 id="stats_server_total" class="display-4"><?php echo $stats->server->total; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -133,7 +133,7 @@ $num_of_panel_admins = count($userlist);
 							<i class="fa fa-ban fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo $stats->server_ban->server_ban; ?></h3>
+							<h3 id="num_server_bans" class="display-4"><?php echo $stats->server_ban->server_ban; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -155,7 +155,7 @@ $num_of_panel_admins = count($userlist);
 							<i class="fa fa-filter fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo $stats->server_ban->spamfilter; ?></h3>
+							<h3 id="num_spamfilter_entries" class="display-4"><?php echo $stats->server_ban->spamfilter; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -177,7 +177,7 @@ $num_of_panel_admins = count($userlist);
 							<i class="fa fa-door-open fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 class="display-4"><?php echo $stats->server_ban->server_ban_exception; ?></h3>
+							<h3 id="num_ban_exceptions" class="display-4"><?php echo $stats->server_ban->server_ban_exception; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -213,7 +213,8 @@ $num_of_panel_admins = count($userlist);
 							<i class="fa fa-database fa-3x"> </i>
 						</div>
 						<div class="col">
-						<span data-toggle="tooltip" title="<?php echo $tooltip; ?>" style="border-bottom: 1px dotted #000000"><h3 class="display-4"><?php echo $stats->user->ulined; ?>/<?php echo $stats->server->ulined; ?></h3>
+						<span data-toggle="tooltip" title="<?php echo $tooltip; ?>" style="border-bottom: 1px dotted #000000">
+						<h3 id="stats_uline_total" class="display-4"><?php echo $stats->user->ulined; ?>/<?php echo $stats->server->ulined; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -230,6 +231,31 @@ $num_of_panel_admins = count($userlist);
 		</div>
 	</div>
 </div>
+
+
+<script>
+    function updateStats() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var data = JSON.parse(this.responseText);
+                document.getElementById("stats_user_total").innerHTML = data.user.total;
+                document.getElementById("stats_channel_total").innerHTML = data.channel.total;
+				document.getElementById("stats_oper_total").innerHTML = data.user.oper;
+				document.getElementById("stats_server_total").innerHTML = data.server.total;
+				document.getElementById("num_server_bans").innerHTML = data.server_ban.server_ban;
+				document.getElementById("num_spamfilter_entries").innerHTML = data.server_ban.spamfilter;
+				document.getElementById("num_ban_exceptions").innerHTML = data.server_ban.server_ban_exception;
+				document.getElementByID("stats_uline_total").innerHTML = data.user.ulined;
+            }
+        };
+        xhttp.open("GET", "api/overview.php", true);
+        xhttp.send();
+    }
+    updateStats();
+    setInterval(updateStats, 1000); // Update stats every second
+</script>
+
 <div class="container mt-3">
 
 			<div class="row">
