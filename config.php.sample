@@ -18,9 +18,9 @@ define( 'BASE_URL', '/unrealircd-webpanel/' );
 
 /**
  *  The RPC User name as defined in your unrealircd.conf
- *  Guide / Documentation: https://www.unrealircd.org/docs/JSON-RPC
+ *  https://www.unrealircd.org/docs/UnrealIRCd_webpanel#Configuring_UnrealIRCd
 */
-define( 'UNREALIRCD_RPC_USER', 'apiuser' );
+define( 'UNREALIRCD_RPC_USER', 'adminpanel' );
 
 /**
  *  The RPC User password as defined in your unrealircd.conf
