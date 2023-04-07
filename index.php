@@ -195,12 +195,7 @@ $num_of_panel_admins = count($userlist);
 		<?php
 		if ($stats->server->ulined) {
 			$bg = "bg-success";
-
-			/* honestly can't think of a case where there would actually be only one uline... but... well here we are, worrying over the small stuff =] */
-			$user_noun = ($stats->user->ulined == 1) ? "user" : "users"; // use "users" even if 0, sounds better.
-			$is_are = ($stats->user->ulined == 1) ? "is" : "are";
-			$server_noun = ($stats->server->ulined == 1) ? "server" : "servers";
-			$tooltip = "There $is_are " . $stats->user->ulined . " U-Lined $user_noun over " . $stats->server->ulined . " U-Lined $server_noun";
+			$tooltip = "Users / Servers";
 		}
 		else
 			$bg = "bg-warning";
@@ -246,7 +241,7 @@ $num_of_panel_admins = count($userlist);
 				document.getElementById("num_server_bans").innerHTML = data.server_ban.server_ban;
 				document.getElementById("num_spamfilter_entries").innerHTML = data.server_ban.spamfilter;
 				document.getElementById("num_ban_exceptions").innerHTML = data.server_ban.server_ban_exception;
-				document.getElementByID("stats_uline_total").innerHTML = data.user.ulined;
+				document.getElementById("stats_uline_total").innerHTML = data.user.ulined + "/" + data.server.ulined;
             }
         };
         xhttp.open("GET", "api/overview.php", true);
