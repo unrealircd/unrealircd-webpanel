@@ -19,3 +19,8 @@ define('DEFAULT_CHAN_DETAIL_QUICK_BAN_REASON', "You have been removed from this 
  */
 define('WEBPANEL_VERSION', "1.0-git");
 
+/**
+ * After how long to log a user out for inactivity
+ * Default is 15 mins
+ */
+define('INACTIVITY_TIMEOUT', 900);

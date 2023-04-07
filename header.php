@@ -1,4 +1,25 @@
-<?php $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
+<?php
+if (is_auth_provided())
+{?>
+	<script>
+		var BASE_URL = "<?php echo BASE_URL; ?>";
+		function timeoutCheck() {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var data = JSON.parse(this.responseText);
+					if (data.session == 'none')
+						window.location = BASE_URL + 'login/?timeout=1&redirect=' + encodeURIComponent(window.location.pathname);
+				}
+			};
+			xhttp.open("GET", BASE_URL + "api/timeout.php", true);
+			xhttp.send();
+		}
+		timeoutCheck();
+		setInterval(timeoutCheck, 15000);
+	</script>
+<?php }
+$arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 <!DOCTYPE html>
 <head>
 <div class="media">
@@ -30,6 +51,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
 <!-- Bootstrap JS -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
 
 <div class="container-fluid">
 	

@@ -23,6 +23,12 @@ if (!empty($_GET['logout']))
 		$logout = true;
 	}
 }
+if (!empty($_GET['timeout']))
+{
+	$failmsg = "Your session has timed out. Please login again to continue";
+	$_SESSION = NULL;
+	session_destroy();
+}
 if (!empty($_POST))
 {
 	if ($_POST['username'] && $_POST['password'])

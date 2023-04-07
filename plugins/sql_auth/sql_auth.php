@@ -94,6 +94,8 @@ class sql_auth
 				die();
 			}
 			// you'll be automatically logged out after one hour of inactivity
+			$_SESSION['last-activity'] = time();
+
 		}
 	}
 
