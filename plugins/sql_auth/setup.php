@@ -1,12 +1,45 @@
 <?php
 
 require_once "../../common.php";
-require_once "../../header.php";
+?>
+<!DOCTYPE html>
+<head>
+<div class="media">
+<div class="media-body">
 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="HandheldFriendly" content="true">
+
+<link href="<?php echo BASE_URL; ?>css/unrealircd-admin.css" rel="stylesheet">
+
+
+ <!-- Latest compiled and minified CSS -->
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+<!-- Font Awesome JS -->
+<script defer src="https://use.fontawesome.com/releases/v6.2.1/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+<script defer src="https://use.fontawesome.com/releases/v6.2.1/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+<!-- Font Awesome icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+<script src="<?php echo BASE_URL; ?>js/unrealircd-admin.js"></script>
+<title>UnrealIRCd Panel</title>
+<link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>img/favicon.ico">
+</head>
+<body role="document">
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<!-- Popper.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+
+<?php
 if (!isset($_POST) || empty($_POST))
 {
     ?>
-
+    <div class="container">
     <h4>SQL Setup</h4>
     In order to use SQL Auth, the relevant SQL tables must be created.<br>
     If, for some reason, that's not what you want, please remove <code>"sql_auth"</code> from the plugins option in your webpanel configuration.<br><br>
@@ -15,6 +48,7 @@ if (!isset($_POST) || empty($_POST))
     <form method="post">
     <button id="createbtn" name="createbtn" class="btn btn-primary" type="submit">Create the tables!</button>
     </form>
+    </div>
     <?php
 }
 elseif (isset($_POST['createbtn']))
