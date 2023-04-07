@@ -160,5 +160,5 @@ new Chart("myChart", {
         xhttp.send();
     }
     updateStats();
-    setInterval(updateStats, 350); // Update stats every second
+    setInterval(updateStats, 1000); // Update stats every second
 </script>
