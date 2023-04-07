@@ -110,7 +110,7 @@ class sql_auth
 			return;
 		$conn = sqlnew();
 		$stmt = $conn->query("SHOW TABLES LIKE '".SQL_PREFIX."%'");
-		if ($stmt->rowCount() < 5)
+		if ($stmt->rowCount() < 4)
 		{
 			header("Location: ".BASE_URL."plugins/sql_auth/setup.php");
 			die();
