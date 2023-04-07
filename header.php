@@ -1,5 +1,5 @@
 <?php
-if (is_auth_provided())
+if (is_auth_provided() && !str_ends_with($_SERVER['SCRIPT_FILENAME'], "setup.php"))
 {?>
 	<script>
 		var BASE_URL = "<?php echo BASE_URL; ?>";
