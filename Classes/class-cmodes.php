@@ -4,7 +4,14 @@
  * A set of reference lists
  */
 class IRCList {
-
+    public static $grouping = 
+    [
+        "Join restrictions"=>"kliRzOL",
+        "Message restrictions"=>"cSmMnGT",
+        "Anti-flood and other restrictions"=>"FftCNKVQ",
+        "Visibility"=>"sp",
+        "Other"=>"rPHzZDd",
+    ];
     public static $cmodes =
     [
         "a" =>  [

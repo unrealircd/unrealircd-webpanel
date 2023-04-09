@@ -400,11 +400,7 @@ if (!empty($_POST))
 		</div>
 		<div class="modal-body">
 			<form method="post">
-			
 			<?php generate_edit_chmodes($channelObj); ?>
-
-		</div>
-		<div class="modal-footer">
 			<input type="hidden" id="server" name="add_chex" value="e"></input>
 			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 			<button type="submit" action="post" class="btn btn-danger">Update</button>

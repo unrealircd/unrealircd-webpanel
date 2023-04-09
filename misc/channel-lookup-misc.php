@@ -237,66 +237,104 @@ function generate_html_chansettings($channel)
     <?php
 }
 
+/** Return user-friendly mode group names as an array like:
+ * "Join restrictions"=>"kliRzOL", ...
+ * The group "Other" has a number of preset ones PLUS
+ * will be automatically filled with any remaining modes
+ * that are detected and that we forgot to put in Other.
+ */
+function group_modes()
+{
+	$modes = '';
+	foreach(IRCList::$uplink as $mode_groups)
+		$modes .= $mode_groups;
+		
+	$grouping = IRCList::$grouping;
+
+	foreach (str_split($modes) as $letter)
+	{
+		$found = false;
+		foreach($grouping as $groupname=>$value)
+		{
+			if (str_contains($value, $letter))
+			{
+				$found = true;
+				break;
+			}
+		}
+		if (!$found)
+			$grouping["Other"] .= $letter;
+		
+	}
+	return $grouping;
+}
+
 function generate_edit_chmodes($chan)
 {
 	?>
-	
-    <table class="table-sm table-responsive caption-top table-hover">
-        <tbody>
            <?php
-		   		if (!isset($chan->modes))
-				{
-					echo "No modes set";
-					return;
-				}
-				$fmodes = $chan->modes;
-				$tok = split($fmodes);
-				$modes = $tok[0];
-				$params = rparv($fmodes);
-				$paramed_modes = sort_paramed_modes($modes, $params);
-				foreach (IRCList::$uplink as $m)
-					for ($i=0; ($mode = (isset($m[$i])) ? $m[$i] : NULL); $i++)
-					{
-						$group = get_chmode_group($mode);
-						if (!$group || $group == 1)
-							continue;
-						$modeinfo = IRCList::lookup($mode);
-						$checked = (strstr($modes,$mode)) ? "checked " : " ";
+		if (!isset($chan->modes))
+		{
+			echo "No modes set";
+			return;
+		}
+		$fmodes = $chan->modes;
+		$tok = split($fmodes);
+		$modes = $tok[0];
+		$params = rparv($fmodes);
+		$paramed_modes = sort_paramed_modes($modes, $params);
 
-						$disabled = "";
-						if (isset($modeinfo) && $modeinfo['requires'] == "Server")
-								$disabled = "disabled";
-						
-						?>
-							<tr><th scope="row"><input <?php echo $checked.$disabled; ?> type="checkbox" value='<?php echo $mode; ?>' name="newmodes[]"></th>
-								<th data-toggle="tooltip" data-placement="top" title="<?php echo htmlspecialchars($modeinfo['description']); ?>"><?php echo htmlspecialchars($modeinfo['name'])." (<code>+$mode</code>)";  ?></th>
-								<td>
-									<?php
-										
-										if ($group == 2 || $group == 3)
-										{ 
-											?><input type="text" class="input-group-sm" name="paramed_modes[<?php echo $mode; ?>]"
-											id="<?php echo $mode; ?>" value="<?php echo ($checked)
-											?
-												htmlspecialchars(
-													isset($paramed_modes[$mode])
-													?
-														$paramed_modes[$mode]
-													:
-														""
-												)
-											:
-											 ""; ?>"><?php
-										}
-									?>
-								</td>
-							</tr>
+		$all_modes = IRCList::$uplink;
+		$groups = group_modes();
+
+		foreach ($groups as $group_name=>$m)
+		{
+			echo "<fieldset class=\"border p-1 col-sm-6\">\n";
+			echo "<legend class=\"w-auto\" style=\"font-size: 16px\">$group_name</legend>\n";
+			for ($i=0; ($mode = (isset($m[$i])) ? $m[$i] : NULL); $i++)
+			{
+				$group = get_chmode_group($mode);
+				if (!$group || $group == 1)
+					continue;
+				$modeinfo = IRCList::lookup($mode);
+				$checked = (strstr($modes,$mode)) ? "checked " : " ";
+
+				$disabled = "";
+				if (isset($modeinfo) && $modeinfo['requires'] == "Server")
+						$disabled = "disabled";
+				
+				?>
+				<div class="form-group row">
+					<div class="col-sm-5">
+						<input <?php echo $checked.$disabled; ?> type="checkbox" value='<?php echo $mode; ?>' name="newmodes[]">
+						<span data-toggle="tooltip" data-placement="top" title="<?php echo htmlspecialchars($modeinfo['description']); ?>"><?php echo htmlspecialchars($modeinfo['name'])." (<code>+$mode</code>)";  ?>
+					</div>
+					<div class="col-sm-2">
 						<?php
-					}
+							
+							if ($group == 2 || $group == 3)
+							{ 
+								?><input type="text" class="input-group-sm" name="paramed_modes[<?php echo $mode; ?>]"
+								id="<?php echo $mode; ?>" value="<?php echo ($checked)
+								?
+									htmlspecialchars(
+										isset($paramed_modes[$mode])
+										?
+											$paramed_modes[$mode]
+										:
+											""
+									)
+								:
+								 ""; ?>"><?php
+							}
+						?>
+					</div>
+				</div>
+				<?php
+			}
+			echo "</fieldset>\n";
+		}
            ?>
-        </tbody>
-    </table>
-
     <?php
 }
 
