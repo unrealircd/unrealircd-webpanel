@@ -1,6 +1,23 @@
 <?php
 
 /**
+ * language settings section
+ * 
+ */
+
+$locale = "en_US"; // Language Option Please Change
+if(empty($_GET["locale"]) === false) {
+	$locale = filter_input(INPUT_GET, "locale", FILTER_SANITIZE_STRING);
+}
+putenv("LANG=" . $locale);
+setlocale(LC_ALL, $locale);
+
+$lang = "en_US"; // Language Option Please Change
+bindtextdomain($lang, "locale");
+bind_textdomain_codeset($lang, "UTF-8");
+textdomain($lang);
+
+/**
  * The configuration file for your admin panel.
  * 
  */
