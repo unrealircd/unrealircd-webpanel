@@ -67,7 +67,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 		transition: padding-left 0.3s;
 	}
 	.list-group-item-action {
-		color: white;
+		color: #e0e0e0;
 	}
 </style>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -88,18 +88,31 @@ function show_page_item($name, $page, $nestlevel)
 	{
 		echo "<small>";
 		$name = "&nbsp; ".$name;
-		$style = "padding-bottom: 0px; padding-top: 0px";
-	} else
+		$style = "padding-bottom: 1px; padding-top: 1px";
+	} else {
+		echo "<b>";
+	}
 	if (is_array($page))
+	{
 		$style = "padding-bottom: 0px;";
-	echo "<a href=\"".BASE_URL.$page."\" style=\"text-decoration: none\"><div class=\"d-flex justify-content-between align-items-center $class list-group-item-action\" style=\"$style\">$name
+	} else {
+		echo "<a href=\"".BASE_URL.$page."\" style=\"text-decoration: none\">\n";
+	}
+	echo "<div class=\"d-flex justify-content-between align-items-center $class list-group-item-action\" style=\"$style\">$name
 		<div class=\"text-right padding-top\">
 			<i class=\"fa fa-$icon\"></i>
-		</div></div></a>\n";
+		</div></div>\n";
+	if (!is_array($page))
+		echo "</a>";
 	if ($nestlevel > 0)
 		echo "</small>";
-	foreach ($page as $subname=>$subpage)
-		show_page_item($subname, $subpage, 1);
+	else
+		echo "</b>";
+	if (is_array($page))
+	{
+		foreach ($page as $subname=>$subpage)
+			show_page_item($subname, $subpage, 1);
+	}
 }
 foreach($pages as $name=>$page)
 	show_page_item($name, $page, 0);
