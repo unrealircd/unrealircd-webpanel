@@ -51,12 +51,55 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
 <!-- Bootstrap JS -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+<style>
+	#optionsopen {
+		transition: left 0.3s;
+	}
+	#optionsclose {
+		transition: left 0.3s;
+	}
+	.w3-sidebar {
+		top: 50px;
+		color: white;
+		transition: left 0.3s;
+	}
+	.container-fluid {
+		transition: padding-left 0.3s;
+	}
+	.list-group-item-action {
+		color: white;
+	}
+</style>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<nav id="sidebarlol" style="left: 0" class="w3-sidebar navbar-expand-sm bg-dark padding-top me-5 ma-5">
+<div class="sidebarlol list-group">
+	<div class="badge badge-secondary rounded-pill">Main Menu</div>
+	<?php 
+$active_page = NULL;
 
+foreach($pages as $name=>$page)
+{
+	$icon = "";
+	$class = "nav-link nav-item";
+	if (is_string($active_page) && $page == $active_page)
+		$class .= " active";
+
+	if (is_string($page))
+	echo "<a  href=\"".BASE_URL.$page."\" style=\"text-decoration: none\"><div class=\"rounded-pill d-flex justify-content-between align-items-center $class list-group-item-action\">$name
+		<div class=\"text-right padding-top\">
+			<i class=\"fa fa-$icon\"></i>
+		</div></div></a>\n";
+
+
+} ?>
+</div>
+</nav>
 
 <div class="container-fluid">
 	
 	<!-- Fixed navbar -->
-	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top z-index padding-top"><a class="navbar-brand" href="<?php echo BASE_URL; ?>"><img src="<?php echo BASE_URL; ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
+	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top z-index padding-top" style="max-height: 50px">
+	<a class="navbar-brand" href="<?php echo BASE_URL; ?>"><img src="<?php echo BASE_URL; ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -64,9 +107,6 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 			<ul class="navbar-nav mr-auto">
 				
 <?php
-
-$active_page = NULL;
-
 
 foreach ($pages as $name => $page)
 {
@@ -93,40 +133,7 @@ foreach ($pages as $name => $page)
 	} elseif (!$active_page)
 		$active_page = false;
 }
-foreach($pages as $name=>$page)
-{
-	$class = "class=\"nav-item\"";
-	if (is_string($active_page) && $page == $active_page)
-		$class = str_replace("\"nav-item\"", "\"nav-item active\"", $class);
-	
-	if (is_string($page))
-		echo "<li $class><a class=\"nav-link\" href=\"".BASE_URL.$page."\">$name</a></li>\n";
 
-	elseif (is_array($page))
-	{
-		foreach ($page as $k => $v)
-		{
-			$first_page = $v;
-			break;
-		}
-		?>
-		<li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <?php echo $name; ?>
-        </a>
-			<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-				<?php foreach($page as $k => $p)
-				{
-					?>
-						<a class="dropdown-item" href="<?php echo BASE_URL.$p;?>"><?php echo $k; ?></a>
-					<?php
-				} ?>
-			</div>
-		</li>
-		<?php
-	}
-
-}
 $ToD = time_of_day();
 $user = unreal_get_current_user();
 if ($user)
@@ -152,4 +159,5 @@ if ($user)
 	</nav><br>
 </div>
 
-<div class="container-fluid" role="main">
+<div id="main_contain" class="container-fluid" style="padding-left: 210px" role="main">
+

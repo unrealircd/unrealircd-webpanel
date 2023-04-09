@@ -32,25 +32,20 @@ $pages = [
 	"Users"        => "users",
 	"Channels"     => "channels",
 	"Servers"      => "servers",
-	"Server Bans"  => [
-		"Server Bans" => "server-bans",
-		"Name Bans" => "server-bans/name-bans.php",
-		"Ban Exceptions" => "server-bans/ban-exceptions.php"
-	],
+	"Server Bans" => "server-bans",
+	"Name Bans" => "server-bans/name-bans.php",
+	"Ban Exceptions" => "server-bans/ban-exceptions.php",
 	"Spamfilter"   => "spamfilter.php",
-	"Tools" => [
-		"IP WHOIS" => "tools/ip-whois.php",
-	],
-	"Settings" => [
-		"Plugins" => "settings/plugins.php",
-	],
+	"IP WHOIS" => "tools/ip-whois.php",
+	"Network Checkup" => "tools/checkup.php",
+	"Plugins" => "settings/plugins.php",
 	
 	"News" => "news.php",
 ];
 
 if (is_auth_provided())
 {
-	$pages["Settings"]["Panel Access"] = "settings";
+	$pages["Panel Access"] = "settings";
 
 	$user = unreal_get_current_user();
 	if ($user)
