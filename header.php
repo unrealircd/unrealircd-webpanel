@@ -77,21 +77,30 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 	<?php 
 $active_page = NULL;
 
-foreach($pages as $name=>$page)
+function show_page_item($name, $page, $nestlevel)
 {
 	$icon = "";
 	$class = "nav-link nav-item";
 	if (is_string($active_page) && $page == $active_page)
 		$class .= " active";
 
-	if (is_string($page))
-	echo "<a  href=\"".BASE_URL.$page."\" style=\"text-decoration: none\"><div class=\"rounded-pill d-flex justify-content-between align-items-center $class list-group-item-action\">$name
+	if ($nestlevel > 0)
+	{
+		echo "<div style=\"font-size:12px\">";
+		$name = "- ".$name;
+	}
+	echo "<a href=\"".BASE_URL.$page."\" style=\"text-decoration: none\"><div class=\"rounded-pill d-flex justify-content-between align-items-center $class list-group-item-action\">$name
 		<div class=\"text-right padding-top\">
 			<i class=\"fa fa-$icon\"></i>
 		</div></div></a>\n";
-
-
-} ?>
+	if ($nestlevel > 0)
+		echo "</div>";
+	foreach ($page as $subname=>$subpage)
+		show_page_item($subname, $subpage, 1);
+}
+foreach($pages as $name=>$page)
+	show_page_item($name, $page, 0);
+?>
 </div>
 </nav>
 
