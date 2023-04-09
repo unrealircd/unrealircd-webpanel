@@ -22,14 +22,14 @@
 				href="https://github.com/unrealircd/unrealircd-webpanel"
 				role="button"
 				data-mdb-ripple-color="dark"
-				><i class="fab fa-github"></i
+				><i style="margin-left: -18px" class="fab fa-github"></i
 			></a>
 			<!-- UnrealIRCd -->
 			<a
 				href="https://unrealircd.org"
 				role="button"
 				data-mdb-ripple-color="dark">
-				<img class="btn btn-link btn-floating btn-xs text-white" src="<?php echo BASE_URL; ?>img/favicon.ico" width="25" height="25"></a>
+				<img src="<?php echo BASE_URL; ?>img/unreal.jpg" width="23" height="23" style="margin-right: 25px"></a>
 		
 		
 		<?php
