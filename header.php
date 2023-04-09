@@ -86,15 +86,15 @@ function show_page_item($name, $page, $nestlevel)
 
 	if ($nestlevel > 0)
 	{
-		echo "<div style=\"font-size:12px\">";
-		$name = "- ".$name;
+		echo "<small>";
+		$name = "&nbsp; ".$name;
 	}
-	echo "<a href=\"".BASE_URL.$page."\" style=\"text-decoration: none\"><div class=\"rounded-pill d-flex justify-content-between align-items-center $class list-group-item-action\">$name
+	echo "<a href=\"".BASE_URL.$page."\" style=\"text-decoration: none\"><div class=\"d-flex justify-content-between align-items-center $class list-group-item-action\" style=\"padding-bottom: 0px\">$name
 		<div class=\"text-right padding-top\">
 			<i class=\"fa fa-$icon\"></i>
 		</div></div></a>\n";
 	if ($nestlevel > 0)
-		echo "</div>";
+		echo "</small>";
 	foreach ($page as $subname=>$subpage)
 		show_page_item($subname, $subpage, 1);
 }
