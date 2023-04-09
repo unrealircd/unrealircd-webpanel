@@ -146,6 +146,8 @@ Click on a username to view more information.
 	<form method="post">
 	<?php
 		$currentNumberUsers=0;
+		$currentNumberUsersIdentified=0;
+		$registrationOfaAllFlags = array();
 		foreach($users as $user)
 		{
 
@@ -199,7 +201,7 @@ Click on a username to view more information.
 			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge rounded-pill badge-dark">Bot</span>' : "";
 			echo "<td><a href=\"details.php?nick=".$user->id."\">$user->name$isBot</a></td>";
 			echo "<td>".(isset($user->geoip->country_code) ? '<img src="https://flagcdn.com/48x36/'.htmlspecialchars(strtolower($user->geoip->country_code)).'.png" width="20" height="15"> '.$user->geoip->country_code : "")."</td>";
-			echo "<td>".htmlspecialchars($user->hostname)." (".htmlspecialchars($user->ip ?? "None").")</td>";
+			echo "<td>".htmlspecialchars($user->hostname)." (".($user->hostname == $user->ip ? 'the same' : htmlspecialchars($user->ip ?? "None")).")</td>";
 			$account = (isset($user->user->account)) ? "<a href=\"".BASE_URL."users/?account=".$user->user->account."\">".htmlspecialchars($user->user->account)."</a>" : '<span class="badge rounded-pill badge-primary">None</span>';
 			echo "<td>".$account."</td>";
 			$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
@@ -217,10 +219,15 @@ Click on a username to view more information.
 			echo "<td>".$user->user->reputation."</td>";
 			echo "</tr>";
 			$currentNumberUsers++;
+			if (isset($user->user->account))
+			$currentNumberUsersIdentified++;
+			if (isset($user->geoip->country_code))
+			array_push($registrationOfaAllFlags, $user->geoip->country_code);
 		}
+		$registrationOfaAllFlags = array_count_values($registrationOfaAllFlags);
 	?>
 	</tbody></table>
-	<div id="currentNumberUsers"><?=$currentNumberUsers?> connected users</div>
+	<div id="currentNumberUsers"><?=$currentNumberUsers?> connected users including <?=$currentNumberUsersIdentified?> identified and <?=($currentNumberUsers-$currentNumberUsersIdentified)?> not identified.</div>
 	<table class="table table-responsive table-light">
 	<tr>
 	<td colspan="2">
@@ -308,8 +315,25 @@ Click on a username to view more information.
 	</div>
 	
 	</form>
-	
-		</div>
+
+	<h3>Top country</h3>
+	<div id="top-country">
+		<ul>
+		<?php
+			arsort($registrationOfaAllFlags);
+			foreach($registrationOfaAllFlags as $country_code => $count){
+				echo '<li>
+				<div class="drag"><img src="https://flagcdn.com/108x81/'.htmlspecialchars(strtolower($country_code)).'.png" width="108" height="81"><br />
+				'.$country_code . '
+				</div>
+				<div class="count">' . $count . ' <span>connected</span></div>
+				</li>';
+			}
+		?>
+		</ul>
+	</div>
+
+</div>
 
 <script>
     
