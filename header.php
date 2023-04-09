@@ -79,7 +79,7 @@ $active_page = NULL;
 
 function show_page_item($name, $page, $nestlevel)
 {
-	$icon = "";
+	$icon = $style = "";
 	$class = "nav-link nav-item";
 	if (is_string($active_page) && $page == $active_page)
 		$class .= " active";
@@ -88,8 +88,11 @@ function show_page_item($name, $page, $nestlevel)
 	{
 		echo "<small>";
 		$name = "&nbsp; ".$name;
-	}
-	echo "<a href=\"".BASE_URL.$page."\" style=\"text-decoration: none\"><div class=\"d-flex justify-content-between align-items-center $class list-group-item-action\" style=\"padding-bottom: 0px\">$name
+		$style = "padding-bottom: 0px; padding-top: 0px";
+	} else
+	if (is_array($page))
+		$style = "padding-bottom: 0px;";
+	echo "<a href=\"".BASE_URL.$page."\" style=\"text-decoration: none\"><div class=\"d-flex justify-content-between align-items-center $class list-group-item-action\" style=\"$style\">$name
 		<div class=\"text-right padding-top\">
 			<i class=\"fa fa-$icon\"></i>
 		</div></div></a>\n";
