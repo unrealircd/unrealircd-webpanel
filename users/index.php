@@ -112,13 +112,14 @@ Click on a username to view more information.
 		<form action="" method="post">
 			<tr>	
 				<th scope="col"><h5>Filter:</h5></th>
-				<th scope="col"><input <?php echo (isset($_POST['operonly'])) ? "checked" : ""; ?> name="operonly" type="checkbox" value=""> Opers Only</th>
-				<th scope="col"><input <?php echo (isset($_POST['servicesonly'])) ? "checked" : ""; ?> name="servicesonly" type="checkbox" value=""> Services Only</th>
+				<th scope="col" colspan="2"><input <?php echo (isset($_POST['operonly'])) ? "checked" : ""; ?> name="operonly" type="checkbox" value=""> Opers Only</th>
+				<th scope="col" colspan="2"><input <?php echo (isset($_POST['servicesonly'])) ? "checked" : ""; ?> name="servicesonly" type="checkbox" value=""> Services Only</th>
 			</tr>
 			<tr>			
 				<th scope="col" colspan="2">Nick: <input name="uf_nick" type="text" class="short-form-control">
 				<th scope="col" colspan="2">Host: <input name="uf_host" type="text" class="short-form-control"></th>
 				<th scope="col" colspan="2">IP: <input name="uf_ip" type="text" class="short-form-control"></th>
+				<th scope="col" colspan="2">Country: <input name="uf_country" type="text" class="short-form-control" placeholder="ca, fr or other"></th>
 				<th scope="col" colspan="2">Account: <input name="uf_account" type="text" class="short-form-control"></th>
 				<th scope="col" colspan="2">Server: <input name="uf_server" type="text" class="short-form-control"></th>
 				
@@ -131,6 +132,7 @@ Click on a username to view more information.
 	<thead class="table-primary">
 		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_user(this)" /></th>
 		<th scope="col">Nick</th>
+		<th scope="col">Country</th>
 		<th scope="col">Host / IP</th>
 		<th scope="col"><span data-toggle="tooltip" data-placement="bottom" title="The services account name, if the user identified to services." style="border-bottom: 1px dotted #000000">Account</span></th>
 		<th scope="col">Usermodes <a href="https://www.unrealircd.org/docs/User_modes" target="_blank">ℹ️</a></th>
@@ -143,7 +145,7 @@ Click on a username to view more information.
 	<tbody>
 	<form method="post">
 	<?php
-
+		$currentNumberUsers=0;
 		foreach($users as $user)
 		{
 
@@ -152,6 +154,11 @@ Click on a username to view more information.
 			if (isset($_POST['uf_nick']) && strlen($_POST['uf_nick']) && 
 			strpos(strtolower($user->name), strtolower($_POST['uf_nick'])) !== 0 &&
 			strpos(strtolower($user->name), strtolower($_POST['uf_nick'])) == false)
+				continue;
+
+			/* Some basic filtering for COUNTRY */
+			if (isset($_POST['uf_country']) && strlen($_POST['uf_country']) && 
+			@strtolower($user->geoip->country_code) !== strtolower($_POST['uf_country']))
 				continue;
 
 			/* Some basic filtering for HOST */
@@ -191,6 +198,7 @@ Click on a username to view more information.
 			echo "<th scope=\"row\"><input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\"></th>";
 			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge rounded-pill badge-dark">Bot</span>' : "";
 			echo "<td><a href=\"details.php?nick=".$user->id."\">$user->name$isBot</a></td>";
+			echo "<td>".(isset($user->geoip->country_code) ? '<img src="https://flagcdn.com/48x36/'.htmlspecialchars(strtolower($user->geoip->country_code)).'.png" width="20" height="15"> '.$user->geoip->country_code : "")."</td>";
 			echo "<td>".htmlspecialchars($user->hostname)." (".htmlspecialchars($user->ip ?? "None").")</td>";
 			$account = (isset($user->user->account)) ? "<a href=\"".BASE_URL."users/?account=".$user->user->account."\">".htmlspecialchars($user->user->account)."</a>" : '<span class="badge rounded-pill badge-primary">None</span>';
 			echo "<td>".$account."</td>";
@@ -208,9 +216,11 @@ Click on a username to view more information.
 			echo "<td><a href=\"".BASE_URL."servers/details.php?server=".substr($user->id, 0, 3)."\">".$user->user->servername."</a></td>";
 			echo "<td>".$user->user->reputation."</td>";
 			echo "</tr>";
+			$currentNumberUsers++;
 		}
 	?>
 	</tbody></table>
+	<div id="currentNumberUsers"><?=$currentNumberUsers?> connected users</div>
 	<table class="table table-responsive table-light">
 	<tr>
 	<td colspan="2">
