@@ -316,6 +316,7 @@ Click on a username to view more information.
 	
 	</form>
 
+<?php /* ?>
 	<h3>Top country</h3>
 	<div id="top-country">
 		<ul>
@@ -332,6 +333,7 @@ Click on a username to view more information.
 		?>
 		</ul>
 	</div>
+<?php */ ?>
 
 </div>
 
