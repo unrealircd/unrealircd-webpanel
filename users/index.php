@@ -138,7 +138,7 @@ Click on a username to view more information.
 		<th scope="col">Usermodes <a href="https://www.unrealircd.org/docs/User_modes" target="_blank">ℹ️</a></th>
 		<th scope="col">Oper</th>
 		<th scope="col"><span data-toggle="tooltip" data-placement="bottom" title="This shows [Secure] if the user is using SSL/TLS or is on localhost." style="border-bottom: 1px dotted #000000">Secure</span></th>
-		<th scope="col">Connected to</th>
+		<th scope="col" class="d-none d-xl-block">Connected to</th>
 		<th scope="col"><span data-toggle="tooltip" data-placement="bottom" title="The reputation score gets higher when someone with this IP address has been connected in the past weeks. A low reputation score (like <10) is an indication of a new IP." style="border-bottom: 1px dotted #000000">Reputation</span> <a href="https://www.unrealircd.org/docs/Reputation_score" target="_blank">ℹ️</a></th>
 	</thead>
 	
@@ -209,13 +209,13 @@ Click on a username to view more information.
 			$oper = (isset($user->user->operlogin)) ? $user->user->operlogin." <span class=\"badge rounded-pill badge-secondary\">".$user->user->operclass."</span>" : "";
 			if (!strlen($oper))
 				$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="badge rounded-pill badge-warning">Services Bot</span>' : "";
-			echo "<td>".$oper."</td>";
+			echo "<td class=\"\">".$oper."</td>";
 
 			$secure = (isset($user->tls) || $user->hostname !== "localhost") ? "<span class=\"badge rounded-pill badge-success\">Secure</span>" : "<span class=\"badge rounded-pill badge-danger\">Insecure</span>";
 			if (strpos($user->user->modes, "S") !== false)
 				$secure = "";
-			echo "<td>".$secure."</td>";
-			echo "<td><a href=\"".BASE_URL."servers/details.php?server=".substr($user->id, 0, 3)."\">".$user->user->servername."</a></td>";
+			echo "<td class=\"\">".$secure."</td>";
+			echo "<td class=\"d-none d-xl-block\"><a href=\"".BASE_URL."servers/details.php?server=".substr($user->id, 0, 3)."\">".$user->user->servername."</a></td>";
 			echo "<td>".$user->user->reputation."</td>";
 			echo "</tr>";
 			$currentNumberUsers++;
