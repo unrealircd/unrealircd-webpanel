@@ -57,8 +57,7 @@ $config["plugins"] = [
 		//"example_plugin", /* An example plugin */
 		//"sql_auth", /* Provides a login page which uses SQL */
 		//"php_mailer", /* Provides ability to send emails on behalf of the admin panel */
-	]
-);
+	];
 
 
 /**
