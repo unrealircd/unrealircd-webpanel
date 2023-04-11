@@ -50,9 +50,7 @@ $config["debug"] = false;
 /**
  * Your list of plugins:
  */
-define(
-	'get_config("plugins")', [
-
+$config["plugins"] = [
 		/*  This is where you should type the name(s) of your plugins. 
 		 *  Uncomment the following line to view the live example
 		*/
@@ -72,7 +70,7 @@ define(
   * SQL IP address or hostname
   * You may specify a unix domain socket directory address
   * E.g:
-  *     define('get_config("mysql::host")', "/path/to/unix/domain/socket");
+  *     $config["mysql"]["host"] = "/path/to/unix/domain/socket";
   *
   * Path to unix socket MUST start with a slash "/"
   */
