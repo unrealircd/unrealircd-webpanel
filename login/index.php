@@ -33,9 +33,7 @@ if (!empty($_POST))
 {
 	if ($_POST['username'] && $_POST['password'])
 	{
-		
 		/* securitah */
-		security_check();
 		$user = new PanelUser($_POST['username']);
 		/* not being too informative with the login error in case of attackers */
 		if (isset($user->id) && $user->password_verify($_POST['password']))
