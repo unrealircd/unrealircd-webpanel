@@ -116,10 +116,7 @@ define(
  * This is a list of DNS Blacklists that get checked for non-logged-in
  * users.
 */
-define('DNSBL', [
-	"dnsbl.dronebl.org",
-	"rbl.efnetrbl.org"
-]);
+//$config["dnsbl"] = ["dnsbl.dronebl.org", "rbl.efnetrbl.org"];
 
 /** Your email settings
  * Requires plugin "php_mailer"

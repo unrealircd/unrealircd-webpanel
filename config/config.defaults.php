@@ -52,6 +52,4 @@ $config["debug"] = false;
 /* No SQL config by default, except for default table prefix: */
 $config["mysql"]["table_prefix"] = "unreal_";
 
-// TODO: DNSBL defaults ?
-
 // TODO: mailer defaults ?

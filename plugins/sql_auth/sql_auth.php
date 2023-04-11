@@ -325,10 +325,9 @@ function security_check()
 
 function dnsbl_check($ip)
 {
-
-	if (!defined('DNSBL'))
+	$dnsbl_lookup = config_get("dnsbl");
+	if (!$dnsbl_lookup)
 		return;
-	$dnsbl_lookup = DNSBL;
 
 	// clear variable just in case
 	$listed = NULL;

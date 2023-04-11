@@ -39,3 +39,5 @@ if (defined('SQL_PREFIX'))
 	$config["mysql"]["table_prefix"] = SQL_PREFIX;
 
 // TODO: blacklist thingy and email thingy
+if (defined('DNSBL'))
+	$config["dnsbl"] = DNSBL;
