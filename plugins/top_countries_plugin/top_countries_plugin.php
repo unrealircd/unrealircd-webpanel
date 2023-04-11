@@ -5,7 +5,7 @@ class top_countries_plugin
 	public $name = "top countries plugin";
 	public $author = "Valware";
 	public $version = "1.0";
-	public $description = "Allows to display a 'Top countries' in the menu";
+	public $description = "Display a 'Top Countries' menu in the sidebar.";
 	public $email = "v.a.pond@outlook.com";
 
 	function __construct()
