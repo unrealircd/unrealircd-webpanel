@@ -254,7 +254,7 @@ if (!empty($_POST))
 				</label>
 			</div>
 			<div class="input-group mb-3">
-				<label for="bantype_sel_type">Ban Type
+				<label for="bantype_sel_type">Ban Type <small>Leave this blank for a "normal" ban</small>
 					<select class="form-control" name="bantype_sel_type" id="bantype_sel_type">
 						<option></option>
 						<option>Match Account</option>
