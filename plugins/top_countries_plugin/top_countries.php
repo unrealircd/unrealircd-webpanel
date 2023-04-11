@@ -56,7 +56,7 @@ $html = <<<HTML
 }
 
 </style>
-<div class="container-fluid" role="main">
+<div id="main_contain" class="container-fluid" style="padding-left: 210px" role="main">
     <h4>Top Countries</h4>
     <div id="Top-countries">
         <ul>
