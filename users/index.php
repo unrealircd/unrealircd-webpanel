@@ -8,6 +8,9 @@ if (!empty($_GET))
 	if (isset($_GET['account']) && !isset($_POST['uf_account']))
 		$_POST['uf_account'] = $_GET['account'];
 
+	if (isset($_GET['country']) && !isset($_POST['uf_country']))
+		$_POST['uf_country'] = $_GET['country'];
+
 	if (isset($_GET['operonly']) && !isset($_POST['operonly']))
 		$_POST['operonly'] = $_GET['operonly'];
 
@@ -119,8 +122,8 @@ Click on a username to view more information.
 				<th scope="col" colspan="2">Nick: <input name="uf_nick" type="text" class="short-form-control">
 				<th scope="col" colspan="2">Host: <input name="uf_host" type="text" class="short-form-control"></th>
 				<th scope="col" colspan="2">IP: <input name="uf_ip" type="text" class="short-form-control"></th>
-				<th scope="col" colspan="2">Country: <input name="uf_country" type="text" class="short-form-control" placeholder="ca, fr or other"></th>
-				<th scope="col" colspan="2">Account: <input name="uf_account" type="text" class="short-form-control"></th>
+				<th scope="col" colspan="2">Country: <input name="uf_country" type="text" class="short-form-control" placeholder="ca, fr or other" value="<?=(isset($_POST['uf_country']) ? $_POST['uf_country'] : '')?>"></th>
+				<th scope="col" colspan="2">Account: <input name="uf_account" type="text" class="short-form-control" value="<?=(isset($_POST['uf_account']) ? $_POST['uf_account'] : '')?>"></th>
 				<th scope="col" colspan="2">Server: <input name="uf_server" type="text" class="short-form-control"></th>
 				
 				<th scope="col"> <input class="btn btn-primary" type="submit" value="Search"></th>
