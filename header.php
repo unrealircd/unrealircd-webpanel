@@ -40,17 +40,15 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-<script src="<?php echo BASE_URL; ?>js/unrealircd-admin.js"></script>
 <title>UnrealIRCd Panel</title>
 <link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>img/favicon.ico">
 </head>
 <body role="document">
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<!-- Popper.JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-<!-- Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+<script src="<?php echo BASE_URL; ?>js/unrealircd-admin.js"></script>
 <style>
 	#optionsopen {
 		transition: left 0.3s;
@@ -75,10 +73,10 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 <div class="sidebarlol list-group">
 	<div class="badge badge-secondary rounded-pill">Main Menu</div>
 	<?php 
-$active_page = NULL;
 
 function show_page_item($name, $page, $nestlevel)
 {
+	$active_page = NULL;
 	$icon = $style = "";
 	$class = "nav-link nav-item";
 	if (is_string($active_page) && $page == $active_page)
