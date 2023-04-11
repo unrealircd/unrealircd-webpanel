@@ -3,7 +3,7 @@
 require_once "../../common.php";
 if (!current_user_can(PERMISSION_CONFIG_BLOCKS))
 {
-    header("Location: ".BASE_URL);
+    header("Location: ".get_config("base_url"));
     die();
 }
 require_once "../../header.php";

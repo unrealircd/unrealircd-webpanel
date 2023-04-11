@@ -8,7 +8,7 @@ require_once "../header.php";
 
 <h2>Active Plugins</h2>
 <br>
-To load and unload plugins, see the <code>PLUGINS</code> section of your <code>config.php</code><br>
+To load and unload plugins, see the plugins section of your <code>config.php</code><br>
 <br>
 <table class="container-xxl table table-sm table-responsive caption-top table-striped">
 	<thead class="table-primary">

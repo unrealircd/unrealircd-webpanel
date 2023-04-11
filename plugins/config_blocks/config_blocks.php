@@ -46,7 +46,7 @@ class config_blocks
 	public static function create_sql_table()
 	{
 		$conn = sqlnew();
-		$conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "configblocks (
+		$conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "configblocks (
 			block_id int AUTO_INCREMENT NOT NULL,
 			block_name VARCHAR(255) NOT NULL,
 			block_value VARCHAR(255) NOT NULL,

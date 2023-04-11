@@ -46,7 +46,7 @@ $num_of_panel_admins = count($userlist);
 						<div class="col">
 							<h6>Users Online</h6>
 						</div>
-						<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL; ?>users">View</a></div>
+						<div class="col"> <a class="btn btn-primary" href="<?php echo get_config("base_url"); ?>users">View</a></div>
 					</div>
 				</div>
 			</div>
@@ -70,7 +70,7 @@ $num_of_panel_admins = count($userlist);
 						<div class="col">
 							<h6>Channels</h6>
 						</div>
-						<div class="col"><a class="btn btn-primary" href="<?php echo BASE_URL; ?>channels">View</a></div>
+						<div class="col"><a class="btn btn-primary" href="<?php echo get_config("base_url"); ?>channels">View</a></div>
 					</div>
 				</div>
 			</div>
@@ -92,7 +92,7 @@ $num_of_panel_admins = count($userlist);
 						<div class="col">
 							<h6>Opers</h6>
 						</div>
-						<div class="col"><a class="btn btn-primary" href="<?php echo BASE_URL."users/?operonly"; ?>">View</a></div>
+						<div class="col"><a class="btn btn-primary" href="<?php echo get_config("base_url")."users/?operonly"; ?>">View</a></div>
 					</div>
 				</div>
 			</div>
@@ -115,7 +115,7 @@ $num_of_panel_admins = count($userlist);
 						<div class="col">
 							<h6>Servers</h6>
 						</div>
-						<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL; ?>servers">View</a></div>
+						<div class="col"> <a class="btn btn-primary" href="<?php echo get_config("base_url"); ?>servers">View</a></div>
 					</div>
 				</div>
 			</div>
@@ -142,7 +142,7 @@ $num_of_panel_admins = count($userlist);
 						<div class="col">
 							<h6>Server Bans</h6>
 						</div>
-						<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL; ?>server-bans">View</a></div>
+						<div class="col"> <a class="btn btn-primary" href="<?php echo get_config("base_url"); ?>server-bans">View</a></div>
 					</div>
 				</div>
 			</div>
@@ -164,7 +164,7 @@ $num_of_panel_admins = count($userlist);
 						<div class="col">
 							<h6>Spamfilter</h6>
 						</div>
-						<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL; ?>spamfilter.php">View</a></div>
+						<div class="col"> <a class="btn btn-primary" href="<?php echo get_config("base_url"); ?>spamfilter.php">View</a></div>
 					</div>
 				</div>
 			</div>
@@ -187,7 +187,7 @@ $num_of_panel_admins = count($userlist);
 						<div class="col">
 							<h6>Server Ban Exceptions</h6>
 						</div>
-						<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL; ?>server-bans/ban-exceptions.php">View</a></div>
+						<div class="col"> <a class="btn btn-primary" href="<?php echo get_config("base_url"); ?>server-bans/ban-exceptions.php">View</a></div>
 					</div>
 				</div>
 			</div>
@@ -218,7 +218,7 @@ $num_of_panel_admins = count($userlist);
 						<div class="col">
 							<h6>Services Online</h6>
 						</div>
-						<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL."users/?servicesonly"; ?>">View</a></div>
+						<div class="col"> <a class="btn btn-primary" href="<?php echo get_config("base_url")."users/?servicesonly"; ?>">View</a></div>
 					</div>
 				</div>
 				
@@ -271,7 +271,7 @@ $num_of_panel_admins = count($userlist);
 								<div class="col">
 									<h6>Panel Access</h6>
 								</div>
-								<div class="col"> <a class="btn btn-primary" href="<?php echo BASE_URL; ?>settings">View</a></div>
+								<div class="col"> <a class="btn btn-primary" href="<?php echo get_config("base_url"); ?>settings">View</a></div>
 							</div>
 						</div>
 					</div>

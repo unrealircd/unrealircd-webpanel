@@ -4,15 +4,15 @@ require_once "../common.php";
 
 $logout = false;
 
-$redirect = BASE_URL;
+$redirect = get_config("base_url");
 if (!empty($_GET['redirect']))
 {
 	$str = urldecode($_GET['redirect']);
-	if (str_starts_with($str, BASE_URL)) // prevent redirects to like https://othersite/
+	if (str_starts_with($str, get_config("base_url"))) // prevent redirects to like https://othersite/
 		$redirect = $_GET['redirect'];
 }
 
-$redirect = (isset($_GET['redirect'])) ? $_GET['redirect'] : BASE_URL;
+$redirect = (isset($_GET['redirect'])) ? $_GET['redirect'] : get_config("base_url");
 if (!empty($_GET['logout']))
 {
 	if (!isset($_SESSION['id']))
@@ -63,8 +63,8 @@ if (!empty($_POST))
 
 ?><!DOCTYPE html>
 <head>
-<link href="<?php echo BASE_URL; ?>css/unrealircd-admin.css" rel="stylesheet">
-<script src="<?php echo BASE_URL; ?>js/unrealircd-admin.js"></script>
+<link href="<?php echo get_config("base_url"); ?>css/unrealircd-admin.css" rel="stylesheet">
+<script src="<?php echo get_config("base_url"); ?>js/unrealircd-admin.js"></script>
  <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
@@ -80,7 +80,7 @@ if (!empty($_POST))
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 
-<link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>img/favicon.ico">
+<link rel="icon" type="image/x-icon" href="<?php echo get_config("base_url"); ?>img/favicon.ico">
 <title>UnrealIRCd Panel</title>
 </head>
 <section class="vh-100">
@@ -90,7 +90,7 @@ if (!empty($_POST))
 		<div class="card shadow-2-strong" style="border-radius: 1rem;">
 		  <div class="card-body p-5 text-center">
 			<form id="login" method="post" action="index.php?redirect=<?php echo $redirect; ?>">
-				<h3><img src="<?php echo BASE_URL; ?>img/favicon.ico">	Log in to use Admin Panel</h3>
+				<h3><img src="<?php echo get_config("base_url"); ?>img/favicon.ico">	Log in to use Admin Panel</h3>
 				
 					<?php 
 					if (isset($failmsg)) Message::Fail($failmsg);

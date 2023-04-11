@@ -8,7 +8,7 @@ class AuthSettings {
     function __construct()
     {
         $conn = sqlnew();
-        $query = "SELECT * FROM " . SQL_PREFIX . "auth_settings";
+        $query = "SELECT * FROM " . get_config("mysql::table_prefix") . "auth_settings";
         $result = $conn->query($query);
         while ($row = $result->fetch())
         {

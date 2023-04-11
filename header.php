@@ -2,17 +2,17 @@
 if (is_auth_provided() && !str_ends_with($_SERVER['SCRIPT_FILENAME'], "setup.php"))
 {?>
 	<script>
-		var BASE_URL = "<?php echo BASE_URL; ?>";
+		var get_config("base_url") = "<?php echo get_config("base_url"); ?>";
 		function timeoutCheck() {
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
 					var data = JSON.parse(this.responseText);
 					if (data.session == 'none')
-						window.location = BASE_URL + 'login/?timeout=1&redirect=' + encodeURIComponent(window.location.pathname);
+						window.location = get_config("base_url") + 'login/?timeout=1&redirect=' + encodeURIComponent(window.location.pathname);
 				}
 			};
-			xhttp.open("GET", BASE_URL + "api/timeout.php", true);
+			xhttp.open("GET", get_config("base_url") + "api/timeout.php", true);
 			xhttp.send();
 		}
 		timeoutCheck();
@@ -28,7 +28,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="HandheldFriendly" content="true">
 
-<link href="<?php echo BASE_URL; ?>css/unrealircd-admin.css" rel="stylesheet">
+<link href="<?php echo get_config("base_url"); ?>css/unrealircd-admin.css" rel="stylesheet">
 
 
  <!-- Latest compiled and minified CSS -->
@@ -41,14 +41,14 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 <title>UnrealIRCd Panel</title>
-<link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>img/favicon.ico">
+<link rel="icon" type="image/x-icon" href="<?php echo get_config("base_url"); ?>img/favicon.ico">
 </head>
 <body role="document">
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
-<script src="<?php echo BASE_URL; ?>js/unrealircd-admin.js"></script>
+<script src="<?php echo get_config("base_url"); ?>js/unrealircd-admin.js"></script>
 <style>
 	#optionsopen {
 		transition: left 0.3s;
@@ -94,7 +94,7 @@ function show_page_item($name, $page, $nestlevel)
 	{
 		$style = "padding-bottom: 0px;";
 	} else {
-		echo "<a href=\"".BASE_URL.$page."\" style=\"text-decoration: none\">\n";
+		echo "<a href=\"".get_config("base_url").$page."\" style=\"text-decoration: none\">\n";
 	}
 	echo "<div class=\"d-flex justify-content-between align-items-center $class list-group-item-action\" style=\"$style\">$name
 		<div class=\"text-right padding-top\">
@@ -122,7 +122,7 @@ foreach($pages as $name=>$page)
 	
 	<!-- Fixed navbar -->
 	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top z-index padding-top" style="max-height: 50px">
-	<a class="navbar-brand" href="<?php echo BASE_URL; ?>"><img src="<?php echo BASE_URL; ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
+	<a class="navbar-brand" href="<?php echo get_config("base_url"); ?>"><img src="<?php echo get_config("base_url"); ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -140,7 +140,7 @@ foreach ($pages as $name => $page)
 	if (is_string($page) && strlen($page) == 0) {
 		$active_page = "";
 	}
-	else if (str_ends_with($script, BASE_URL . "index.php") && BASE_URL != "/" && !strlen($tok[0]))
+	else if (str_ends_with($script, get_config("base_url") . "index.php") && get_config("base_url") != "/" && !strlen($tok[0]))
 	{
 		$active_page = $tok[0];
 	}

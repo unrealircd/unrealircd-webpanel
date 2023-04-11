@@ -23,7 +23,7 @@ class Log
 	{
 		foreach($string as $str)
 		{
-			if (defined('UNREALIRCD_DEBUG') && UNREALIRCD_DEBUG) {
+			if (defined('get_config("debug")') && get_config("debug")) {
 				highlight_string(var_export($str, true));
 			}
 		}

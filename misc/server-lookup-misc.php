@@ -103,7 +103,7 @@ function generate_html_serverinfo($server)
             </tr><tr>
                 <th>Uplink</th>
                 <?php $serverlkup = (isset($server->server->uplink)) ? $rpc->server()->get($server->server->uplink) : "<span class=\"badge rounded-pill badge-info\">None</span>"; ?>
-                <td colspan="2"><code><?php echo "<a href=\"".BASE_URL."servers/details.php?server=".htmlspecialchars($serverlkup->id)."\">".htmlspecialchars($server->server->uplink)."</a>"; ?></code></td>
+                <td colspan="2"><code><?php echo "<a href=\"".get_config("base_url")."servers/details.php?server=".htmlspecialchars($serverlkup->id)."\">".htmlspecialchars($server->server->uplink)."</a>"; ?></code></td>
             </tr><tr>
                 <th>User count</th>
                 <td colspan="2"><code><?php echo htmlspecialchars($server->server->num_users); ?></code></td>

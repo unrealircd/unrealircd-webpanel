@@ -79,10 +79,10 @@ class sql_auth
 			
 			$tok = split($_SERVER['SCRIPT_FILENAME'], "/");
 			if ($check = security_check() && $tok[count($tok) - 1] !== "error.php") {
-				header("Location: " . BASE_URL . "plugins/sql_auth/error.php");
+				header("Location: " . get_config("base_url") . "plugins/sql_auth/error.php");
 				die();
 			}
-			header("Location: ".BASE_URL."login/?redirect=".urlencode($current_page));
+			header("Location: ".get_config("base_url")."login/?redirect=".urlencode($current_page));
 			die();
 		}
 		else
@@ -90,7 +90,7 @@ class sql_auth
 			if (!unreal_get_current_user()) // user no longer exists
 			{
 				session_destroy();
-				header("Location: ".BASE_URL."login");
+				header("Location: ".get_config("base_url")."login");
 				die();
 			}
 			// you'll be automatically logged out after one hour of inactivity
@@ -109,10 +109,10 @@ class sql_auth
 		if (str_ends_with($script,"setup.php"))
 			return;
 		$conn = sqlnew();
-		$stmt = $conn->query("SHOW TABLES LIKE '".SQL_PREFIX."%'");
+		$stmt = $conn->query("SHOW TABLES LIKE '".get_config("mysql::table_prefix")."%'");
 		if ($stmt->rowCount() < 4)
 		{
-			header("Location: ".BASE_URL."plugins/sql_auth/setup.php");
+			header("Location: ".get_config("base_url")."plugins/sql_auth/setup.php");
 			die();
 		}
 	}
@@ -126,12 +126,12 @@ class sql_auth
 
 		if ($id)
 		{
-			$prep = $conn->prepare("SELECT * FROM " . SQL_PREFIX . "users WHERE user_id = :id LIMIT 1");
+			$prep = $conn->prepare("SELECT * FROM " . get_config("mysql::table_prefix") . "users WHERE user_id = :id LIMIT 1");
 			$prep->execute(["id" => strtolower($id)]);
 		}
 		elseif ($name)
 		{
-			$prep = $conn->prepare("SELECT * FROM " . SQL_PREFIX . "users WHERE LOWER(user_name) = :name LIMIT 1");
+			$prep = $conn->prepare("SELECT * FROM " . get_config("mysql::table_prefix") . "users WHERE LOWER(user_name) = :name LIMIT 1");
 			$prep->execute(["name" => strtolower($name)]);
 		}
 		$data = NULL;
@@ -160,7 +160,7 @@ class sql_auth
 		$conn = sqlnew();
 		if (isset($id))
 		{
-			$prep = $conn->prepare("SELECT * FROM " . SQL_PREFIX . "user_meta WHERE user_id = :id");
+			$prep = $conn->prepare("SELECT * FROM " . get_config("mysql::table_prefix") . "user_meta WHERE user_id = :id");
 			$prep->execute(["id" => $id]);
 		}
 		foreach ($prep->fetchAll() as $row)
@@ -174,12 +174,12 @@ class sql_auth
 		$meta = $meta['meta'];
 		$conn = sqlnew();
 		/* check if it exists first, update it if it does */
-		$query = "SELECT * FROM " . SQL_PREFIX . "user_meta WHERE user_id = :id AND meta_key = :key";
+		$query = "SELECT * FROM " . get_config("mysql::table_prefix") . "user_meta WHERE user_id = :id AND meta_key = :key";
 		$stmt = $conn->prepare($query);
 		$stmt->execute(["id" => $meta['id'], "key" => $meta['key']]);
 		if ($stmt->rowCount()) // it exists, update instead of insert
 		{
-			$query = "UPDATE " . SQL_PREFIX . "user_meta SET meta_value = :value WHERE user_id = :id AND meta_key = :key";
+			$query = "UPDATE " . get_config("mysql::table_prefix") . "user_meta SET meta_value = :value WHERE user_id = :id AND meta_key = :key";
 			$stmt = $conn->prepare($query);
 			$stmt->execute($meta);
 			if ($stmt->rowCount())
@@ -189,7 +189,7 @@ class sql_auth
 
 		else
 		{
-			$query = "INSERT INTO " . SQL_PREFIX . "user_meta (user_id, meta_key, meta_value) VALUES (:id, :key, :value)";
+			$query = "INSERT INTO " . get_config("mysql::table_prefix") . "user_meta (user_id, meta_key, meta_value) VALUES (:id, :key, :value)";
 			$stmt = $conn->prepare($query);
 			$stmt->execute($meta);
 			if ($stmt->rowCount())
@@ -200,7 +200,7 @@ class sql_auth
 	public static function del_usermeta(&$u)
 	{
 		$conn = sqlnew();
-		$query = "DELETE FROM " . SQL_PREFIX . "user_meta WHERE user_id = :id AND meta_key = :key";
+		$query = "DELETE FROM " . get_config("mysql::table_prefix") . "user_meta WHERE user_id = :id AND meta_key = :key";
 		$stmt = $conn->prepare($query);
 		$stmt->execute($u['meta']);
 		if ($stmt->rowCount())
@@ -216,7 +216,7 @@ class sql_auth
 		$user_bio = $u['user_bio'] ?? NULL;
 		$user_email = $u['user_email'] ?? NULL;
 		$conn = sqlnew();
-		$prep = $conn->prepare("INSERT INTO " . SQL_PREFIX . "users (user_name, user_pass, user_fname, user_lname, user_bio, user_email, created) VALUES (:name, :pass, :fname, :lname, :user_bio, :user_email, :created)");
+		$prep = $conn->prepare("INSERT INTO " . get_config("mysql::table_prefix") . "users (user_name, user_pass, user_fname, user_lname, user_bio, user_email, created) VALUES (:name, :pass, :fname, :lname, :user_bio, :user_email, :created)");
 		$prep->execute(["name" => $username, "pass" => $password, "fname" => $first_name, "lname" => $last_name, "user_bio" => $user_bio, "user_email" => $user_email, "created" => date("Y-m-d H:i:s")]);
 		if ($prep->rowCount())
 			$u['success'] = true;
@@ -227,7 +227,7 @@ class sql_auth
 	public static function get_user_list(&$list)
 	{
 		$conn = sqlnew();
-		$result = $conn->query("SELECT user_id FROM " . SQL_PREFIX . "users");
+		$result = $conn->query("SELECT user_id FROM " . get_config("mysql::table_prefix") . "users");
 		if (!$result) // impossible
 		{
 			die("Something went wrong.");
@@ -244,7 +244,7 @@ class sql_auth
 	public static function user_delete(&$u)
 	{
 		$user = $u['user'];
-		$query = "DELETE FROM " . SQL_PREFIX . "users WHERE user_id = :id";
+		$query = "DELETE FROM " . get_config("mysql::table_prefix") . "users WHERE user_id = :id";
 		$conn = sqlnew();
 		$stmt = $conn->prepare($query);
 		$stmt->execute(["id" => $user->id]);
@@ -297,7 +297,7 @@ class sql_auth
 			
 			if (!$value)
 				continue;
-			$query = "UPDATE " . SQL_PREFIX . "users SET $value=:value WHERE user_id = :id";
+			$query = "UPDATE " . get_config("mysql::table_prefix") . "users SET $value=:value WHERE user_id = :id";
 			$stmt = $conn->prepare($query);
 			$stmt->execute(["value" => $val, "id" => $user->id]);
 

@@ -202,7 +202,7 @@ Click on a username to view more information.
 			echo "<td><a href=\"details.php?nick=".$user->id."\">$user->name$isBot</a></td>";
 			echo "<td>".(isset($user->geoip->country_code) ? '<img src="https://flagcdn.com/48x36/'.htmlspecialchars(strtolower($user->geoip->country_code)).'.png" width="20" height="15"> '.$user->geoip->country_code : "")."</td>";
 			echo "<td class=\"hostname\">".htmlspecialchars($user->hostname)." (".($user->hostname == $user->ip ? 'the same' : htmlspecialchars($user->ip ?? "None")).")</td>";
-			$account = (isset($user->user->account)) ? "<a href=\"".BASE_URL."users/?account=".$user->user->account."\">".htmlspecialchars($user->user->account)."</a>" : '<span class="badge rounded-pill badge-primary">None</span>';
+			$account = (isset($user->user->account)) ? "<a href=\"".get_config("base_url")."users/?account=".$user->user->account."\">".htmlspecialchars($user->user->account)."</a>" : '<span class="badge rounded-pill badge-primary">None</span>';
 			echo "<td>".$account."</td>";
 			$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
 			echo "<td>".$modes."</td>";
@@ -215,7 +215,7 @@ Click on a username to view more information.
 			if (strpos($user->user->modes, "S") !== false)
 				$secure = "";
 			echo "<td class=\"securecol\">".$secure."</td>";
-			echo "<td class=\"uplinkcol\"><a href=\"".BASE_URL."servers/details.php?server=".substr($user->id, 0, 3)."\">".$user->user->servername."</a></td>";
+			echo "<td class=\"uplinkcol\"><a href=\"".get_config("base_url")."servers/details.php?server=".substr($user->id, 0, 3)."\">".$user->user->servername."</a></td>";
 			echo "<td>".$user->user->reputation."</td>";
 			echo "</tr>";
 			$currentNumberUsers++;

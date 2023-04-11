@@ -8,8 +8,35 @@ if (version_compare(PHP_VERSION, '8.0.0', '<'))
 	    "You may also need to choose again the PHP module to load in apache via <code>a2enmod php8.2</code>");
 
 define('UPATH', dirname(__FILE__));
-require_once UPATH . "/config.php";
-if (!defined('BASE_URL')) die("You need to define BASE_URL in config.php (see config.php.sample for documentation)");
+
+function get_config($setting)
+{
+	GLOBAL $config;
+
+	$item = $config;
+	foreach(explode("::", $setting) as $x)
+	{
+		if (isset($item[$x]))
+			$item = $item[$x];
+		else
+			return NULL;
+	}
+	return $item;
+}
+
+/* Load config defaults */
+$config = Array();
+require_once UPATH . "/config/config.defaults.php";
+
+if (!file_exists(UPATH."/config/config.php") && file_exists(UPATH."/config.php"))
+{
+	require_once UPATH . "/config.php";
+	require_once UPATH . "/config/compat.php";
+} else {
+	require_once UPATH . "/config/config.php";
+}
+
+if (!get_config("base_url")) die("You need to define the base_url in config/config.php");
 require_once "Classes/class-hook.php";
 if (!is_dir(UPATH . "/vendor"))
 	die("The vendor/ directory is missing. Most likely the admin forgot to run 'composer install'\n");

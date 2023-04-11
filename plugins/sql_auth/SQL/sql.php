@@ -2,10 +2,10 @@
 
 function sqlnew()
 {
-	$host = SQL_IP;
-	$user = SQL_USERNAME;
-	$pass = SQL_PASSWORD;
-	$db = SQL_DATABASE;
+	$host = get_config("mysql::host");
+	$user = get_config("mysql::username");
+	$pass = get_config("mysql::password");
+	$db = get_config("mysql::database");
 	$charset = 'utf8mb4';
 
 	if ($host[0] == "/")

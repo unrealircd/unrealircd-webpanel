@@ -1,9 +1,5 @@
 <?php
-
-require_once "config.php";
-
 require_once "common.php";
-
 require_once "Classes/class-message.php";
 
 
@@ -110,9 +106,9 @@ class Plugin
 	}
 }
 
-if (defined('PLUGINS'))
+if (get_config("plugins"))
 {
-	foreach(PLUGINS as $plugin)
+	foreach(get_config("plugins") as $plugin)
 		Plugins::load($plugin);
 }
 

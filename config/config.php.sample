@@ -5,7 +5,7 @@
  * 
  */
 
- if (!defined('UPATH'))
+if (!defined('UPATH'))
 	die("Access denied");
 
 /**
@@ -14,44 +14,44 @@
  * or something like '/webpanel/' if you go to http://x.y.z/webpanel
  * IMPORTANT: needs a trailing slash!
 */
-define( 'BASE_URL', '/unrealircd-webpanel/' );
+$config["base_url"] = '/unrealircd-webpanel/';
 
 /**
  *  The RPC User name as defined in your unrealircd.conf
  *  https://www.unrealircd.org/docs/UnrealIRCd_webpanel#Configuring_UnrealIRCd
 */
-define( 'UNREALIRCD_RPC_USER', 'adminpanel' );
+$config["unrealircd"]["rpc_user"] = 'adminpanel';
 
 /**
  *  The RPC User password as defined in your unrealircd.conf
 */
-define( 'UNREALIRCD_RPC_PASSWORD', 'securepassword' );
+$config["unrealircd"]["rpc_password"] = 'securepassword';
 
 /** 
  * The host IP or name of your RPC server
 */
-define( 'UNREALIRCD_HOST', '127.0.0.1' );
+$config["unrealircd"]["host"] = '127.0.0.1';
 
 /**
  * The port of your RPC server as defined in your unrealircd.conf
 */
-define( 'UNREALIRCD_PORT', '8600' );
+$config["unrealircd"]["port"] = '8600';
 
 /** 
  * You should set this to true, if your RPC server is not on your local host
 */
-define( 'UNREALIRCD_SSL_VERIFY', false );
+$config["unrealircd"]["tls_verify_cert"] = false;
 
 /**
  * You should only need this, if you're developing something.
 */
-define( 'UNREALIRCD_DEBUG', false );
+$config["debug"] = false;
 
 /**
  * Your list of plugins:
  */
 define(
-	'PLUGINS', [
+	'get_config("plugins")', [
 
 		/*  This is where you should type the name(s) of your plugins. 
 		 *  Uncomment the following line to view the live example
@@ -72,32 +72,33 @@ define(
   * SQL IP address or hostname
   * You may specify a unix domain socket directory address
   * E.g:
-  *     define('SQL_IP', "/path/to/unix/domain/socket");
+  *     define('get_config("mysql::host")', "/path/to/unix/domain/socket");
   *
   * Path to unix socket MUST start with a slash "/"
   */
-define('SQL_IP', "127.0.0.1");
+//$config["mysql"]["host"] = "127.0.0.1";
 
 /**
  * SQL Dabase name
  */
-define('SQL_DATABASE', "unrealircdwebpanel");
+//$config["mysql"]["database"] = "unrealircdwebpanel";
+
 /**
  * SQL Username
  */
-define('SQL_USERNAME', "unrealircdwebpanel");
+//$config["mysql"]["username"] = "unrealircdwebpanel";
 
 /**
  * SQL Password
  */
-define('SQL_PASSWORD', "replace_this_with_your_sql_password");
+//$config["mysql"]["password"] = "replace_this_with_your_sql_password";
 
 /**
  * SQL Table prefix
  * You should only need to change this if you have already have one
  * or more instances of webpanel on the same database
  */
-define('SQL_PREFIX', "unreal_");
+//$config["mysql"]["table_prefix"] = "unreal_";
 
 
 /** 
@@ -105,10 +106,10 @@ define('SQL_PREFIX', "unreal_");
  * the plugin, the user defined below will be created. It suggested
  * that you remove it after you've logged in successfully.
  */
-define('SQL_DEFAULT_USER', [
-	"username" => "default",
-	"password" => "testing"
-]);
+//define('SQL_DEFAULT_USER', [
+//	"username" => "default",
+//	"password" => "testing"
+//]);
 
 /**
  * Also part of the SQL_Auth plugin. This protects your login page.

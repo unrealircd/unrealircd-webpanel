@@ -26,7 +26,7 @@ function generate_html_whois($user)
                             width="20"
                             height="15">
                     <?php } ?>
-                    <a href="<?php echo htmlspecialchars(BASE_URL."tools/ip-whois.php?ip=$user->ip"); ?>"><button class="btn-sm btn-primary">WHOIS IP</button></a>
+                    <a href="<?php echo htmlspecialchars(get_config("base_url")."tools/ip-whois.php?ip=$user->ip"); ?>"><button class="btn-sm btn-primary">WHOIS IP</button></a>
                 </td>
             </tr><tr>
                 <th>Ident</th>
@@ -41,12 +41,12 @@ function generate_html_whois($user)
                 <th>Connected to</th>
                 <?php $serverlkup = $rpc->server()->get($user->user->servername); ?>
 			   
-                <td colspan="2"><a href="<?php echo BASE_URL."servers/details.php?server=$serverlkup->id"; ?>"><code><?php echo htmlspecialchars($user->user->servername); ?></code></td>
+                <td colspan="2"><a href="<?php echo get_config("base_url")."servers/details.php?server=$serverlkup->id"; ?>"><code><?php echo htmlspecialchars($user->user->servername); ?></code></td>
 
             </tr>
             <tr>
                 <th>Logged in as</th>
-                <td colspan="2"><code><?php echo (isset($user->user->account)) ? "<a href=\"".BASE_URL."users/?account=".htmlspecialchars($user->user->account)."\">".htmlspecialchars($user->user->account)."</a>" : ""; ?></code></td>
+                <td colspan="2"><code><?php echo (isset($user->user->account)) ? "<a href=\"".get_config("base_url")."users/?account=".htmlspecialchars($user->user->account)."\">".htmlspecialchars($user->user->account)."</a>" : ""; ?></code></td>
             </tr>
                 
 
@@ -323,7 +323,7 @@ function generate_html_userchannels($user)
                 {
                     ?>
                     <tr>
-                        <td><?php echo "<a href=\"".BASE_URL."channels/details.php?chan=".urlencode($chan->name)."\">$chan->name</a>"; ?></td>
+                        <td><?php echo "<a href=\"".get_config("base_url")."channels/details.php?chan=".urlencode($chan->name)."\">$chan->name</a>"; ?></td>
                         <td>
                             
                             <?php

@@ -181,7 +181,7 @@ function generate_chan_occupants_table($channel)
 			$disabled = (current_user_can(PERMISSION_EDIT_CHANNEL_USER)) ? "" : "disabled";
 			$disabledcolor = ($disabled) ? "btn-secondary" : "btn-primary";
 			echo "<td scope=\"row\"><input type=\"checkbox\" value='$member->id' name=\"checkboxes[]\"></td>";
-			echo "<td><a href=\"".BASE_URL."users/details.php?nick=$member->id\">".htmlspecialchars($member->name)."</a></td>";
+			echo "<td><a href=\"".get_config("base_url")."users/details.php?nick=$member->id\">".htmlspecialchars($member->name)."</a></td>";
 			echo "<td class='text-right'>$lvlstring</td>";
 			echo "<td><code>".((property_exists($member, 'hostname')) ? htmlspecialchars($member->hostname) : "")."</code></td>";
 			echo "</tr>";

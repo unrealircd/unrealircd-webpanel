@@ -27,7 +27,7 @@ if (isset($_POST))
 			if ($us->id == $user->id) // if it's the current user
 			{
 				session_destroy();
-				header("Location: " . BASE_URL . "plugins/sql_auth/login.php");
+				header("Location: " . get_config("base_url") . "plugins/sql_auth/login.php");
 				die();
 			}
 			$msg = ($deleted = 1) ? "Message::Success" : "Message::Fail";
@@ -146,7 +146,7 @@ Click on a username to view more information.
 		{
 			
 			echo "<td scope=\"col\"><input type=\"checkbox\" value='" .$user->id . "' name=\"userch[]\"></td>";
-			echo "<td scope=\"col\"><a href=\"".BASE_URL."settings/user-edit.php?id=$user->id\">$user->username</a></td>";
+			echo "<td scope=\"col\"><a href=\"".get_config("base_url")."settings/user-edit.php?id=$user->id\">$user->username</a></td>";
 			echo "<td scope=\"col\">".$user->first_name."</td>";
 			echo "<td scope=\"col\">".$user->last_name."</td>";
 			echo "<td scope=\"col\"><a href=\"mailto:$user->email\">$user->email</a></td>";

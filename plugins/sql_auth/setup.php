@@ -10,7 +10,7 @@ require_once "../../common.php";
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="HandheldFriendly" content="true">
 
-<link href="<?php echo BASE_URL; ?>css/unrealircd-admin.css" rel="stylesheet">
+<link href="<?php echo get_config("base_url"); ?>css/unrealircd-admin.css" rel="stylesheet">
 
 
  <!-- Latest compiled and minified CSS -->
@@ -22,9 +22,9 @@ require_once "../../common.php";
 
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-<script src="<?php echo BASE_URL; ?>js/unrealircd-admin.js"></script>
+<script src="<?php echo get_config("base_url"); ?>js/unrealircd-admin.js"></script>
 <title>UnrealIRCd Panel</title>
-<link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>img/favicon.ico">
+<link rel="icon" type="image/x-icon" href="<?php echo get_config("base_url"); ?>img/favicon.ico">
 </head>
 <body role="document">
 
@@ -54,7 +54,7 @@ if (!isset($_POST) || empty($_POST))
 elseif (isset($_POST['createbtn']))
 {
     $conn = sqlnew();
-    $conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "users (
+    $conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "users (
         user_id int AUTO_INCREMENT NOT NULL,
         user_name VARCHAR(255) NOT NULL,
         user_pass VARCHAR(255) NOT NULL,
@@ -70,7 +70,7 @@ elseif (isset($_POST['createbtn']))
      * Patch for beta users
      * This adds the email column to existing tables without it
     */
-    $columns = $conn->query("SHOW COLUMNS FROM " . SQL_PREFIX . "users");
+    $columns = $conn->query("SHOW COLUMNS FROM " . get_config("mysql::table_prefix") . "users");
     $column_names = array();
     $c = $columns->fetchAll();
 
@@ -79,7 +79,7 @@ elseif (isset($_POST['createbtn']))
     }
     $column_exists = in_array("user_email", $column_names);
     if (!$column_exists) {
-        $conn->query("ALTER TABLE " . SQL_PREFIX . "users ADD COLUMN user_email varchar(255)");
+        $conn->query("ALTER TABLE " . get_config("mysql::table_prefix") . "users ADD COLUMN user_email varchar(255)");
     }
 
     /**
@@ -87,38 +87,38 @@ elseif (isset($_POST['createbtn']))
      * This changes the size of the meta_value so we can store more
      */
     
-    $conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "user_meta (
+    $conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "user_meta (
         meta_id int AUTO_INCREMENT NOT NULL,
         user_id int NOT NULL,
         meta_key VARCHAR(255) NOT NULL,
         meta_value VARCHAR(255),
         PRIMARY KEY (meta_id)
     )");
-    $conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "auth_settings (
+    $conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "auth_settings (
         id int AUTO_INCREMENT NOT NULL,
         setting_key VARCHAR(255) NOT NULL,
         setting_value VARCHAR(255),
         PRIMARY KEY (id)
     )");
-    $conn->query("CREATE TABLE IF NOT EXISTS " . SQL_PREFIX . "fail2ban (
+    $conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "fail2ban (
         id int AUTO_INCREMENT NOT NULL,
         ip VARCHAR(255) NOT NULL,
         count VARCHAR(255),
         PRIMARY KEY (id)
     )");
     $c = [];
-    if (($columns = $conn->query("SHOW COLUMNS FROM ".SQL_PREFIX."user_meta")));
+    if (($columns = $conn->query("SHOW COLUMNS FROM ".get_config("mysql::table_prefix")."user_meta")));
         $c = $columns->fetchAll();
     if (!empty($c))
-        $conn->query("ALTER TABLE `".SQL_PREFIX."user_meta` CHANGE `meta_value` `meta_value` VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
+        $conn->query("ALTER TABLE `".get_config("mysql::table_prefix")."user_meta` CHANGE `meta_value` `meta_value` VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
 
 
     new AuthSettings();
 
     Message::Success("Congratulations, you're all ready to go!");
     ?>
-    <a class="btn btn-primary" href="<?php echo BASE_URL; ?>">Take me home!</a>
-    <a class="btn btn-warning" href="<?php echo BASE_URL."settings"; ?>">Settings</a>
+    <a class="btn btn-primary" href="<?php echo get_config("base_url"); ?>">Take me home!</a>
+    <a class="btn btn-warning" href="<?php echo get_config("base_url")."settings"; ?>">Settings</a>
     <?php
 }
 require_once "../../footer.php";

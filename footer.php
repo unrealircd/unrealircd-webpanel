@@ -29,7 +29,7 @@
 				href="https://unrealircd.org"
 				role="button"
 				data-mdb-ripple-color="dark">
-				<img src="<?php echo BASE_URL; ?>img/unreal.jpg" width="23" height="23" style="margin-right: 25px"></a>
+				<img src="<?php echo get_config("base_url"); ?>img/unreal.jpg" width="23" height="23" style="margin-right: 25px"></a>
 		
 		
 		<?php
