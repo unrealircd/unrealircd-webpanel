@@ -348,7 +348,7 @@ Click on a username to view more information.
 		var width = window.innerWidth;
 		var elements = document.querySelectorAll('.hostname, .opercol, .uplinkcol, .securecol');
 		var show = '';
-		if (width < 900 || alert(typeof screen.orientation) !== 'undefined')
+		if (width < 900)
 			show = 'none';
 
 		for (let i = 0; i < elements.length; i++)
