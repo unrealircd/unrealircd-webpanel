@@ -59,7 +59,7 @@ define(
 		//"example_plugin", /* An example plugin */
 		//"sql_auth", /* Provides a login page which uses SQL */
 		//"php_mailer", /* Provides ability to send emails on behalf of the admin panel */
-    //"top_countries_plugin", /* Allows to display a 'Top countries' in the menu */
+		//"top_countries_plugin", /* Display a 'Top Countries' menu in the sidebar */
 	]
 );
 
