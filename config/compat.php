@@ -38,6 +38,10 @@ if (defined('SQL_PASSWORD'))
 if (defined('SQL_PREFIX'))
 	$config["mysql"]["table_prefix"] = SQL_PREFIX;
 
-// TODO: blacklist thingy and email thingy
+/* DNS Blacklist */
 if (defined('DNSBL'))
 	$config["dnsbl"] = DNSBL;
+
+/* Mailer */
+if (defined('EMAIL_SETTINGS'))
+	$config["smtp"] = EMAIL_SETTINGS;

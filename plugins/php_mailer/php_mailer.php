@@ -23,20 +23,20 @@ class php_mailer
 		try {
 			//Server settings
 			//$mail->SMTPDebug = 2;
-			$mail->isSMTP();                                            //Send using SMTP
-			$mail->Host       = EMAIL_SETTINGS['host'];                     //Set the SMTP server to send through
-			$mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-			$mail->Username   = EMAIL_SETTINGS['username'];                     //SMTP username
-			$mail->Password = EMAIL_SETTINGS['password'];                               //SMTP password
-			$mail->SMTPSecure = EMAIL_SETTINGS['encryption'];            //Enable implicit TLS encryption
-			$mail->Port       = EMAIL_SETTINGS['port'];                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+			$mail->isSMTP();                                    // Send using SMTP
+			$mail->Host       = get_config("smtp::host");       // Set the SMTP server to send through
+			$mail->SMTPAuth   = true;                           // Enable SMTP authentication
+			$mail->Username   = get_config("smtp::username");   // SMTP username
+			$mail->Password = get_config("smtp::password");     // SMTP password
+			$mail->SMTPSecure = get_config("smtp::encryption"); // Enable implicit TLS encryption
+			$mail->Port       = get_config("smtp::port");       // TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
 			//Recipients
-			$mail->setFrom(EMAIL_SETTINGS['username'], EMAIL_SETTINGS['from_name']);
-			$mail->addAddress($to['email'], $to['name']);     //Add a recipient
+			$mail->setFrom(get_config("smtp::username"), get_config("smtp::from_name"));
+			$mail->addAddress($to['email'], $to['name']);       // Add a recipient
 
 			//Content
-			$mail->isHTML(true);                                  //Set email format to HTML
+			$mail->isHTML(true);                                // Set email format to HTML
 			$mail->Subject = $subject;
 			$mail->Body    = $body . "<br><br>Thank you for using UnrealIRCd!";
 			$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
@@ -55,7 +55,7 @@ class php_mailer
 	public static function user_login_notif($user)
 	{
 		self::send_mail(
-			["email" => EMAIL_SETTINGS['username'], "name" => EMAIL_SETTINGS['from_name']],
+			["email" => get_config("smtp::username"), "name" => get_config("smtp::from_name")],
 			"New login to Unreal Admin Panel",
 			"There was a new login to the admin panel.<br>User: \"$user->username\"<br>IP: \"".$_SERVER['REMOTE_ADDR']."\" (".$_SERVER['HTTP_CF_IPCOUNTRY'].")<br>".
 			"User Agent: ".$_SERVER['HTTP_USER_AGENT']
@@ -76,7 +76,7 @@ class php_mailer
 	public static function user_login_fail_notif($fail)
 	{
 		self::send_mail(
-			["email" => EMAIL_SETTINGS['username'], "name" => EMAIL_SETTINGS['from_name']],
+			["email" => get_config("smtp::username"), "name" => get_config("smtp::from_name")],
 			"Failed login attempt - Unreal Admin Panel",
 			"There was a failed login attempt to the admin panel.<br>User: \"".$fail['login']."\"<br>IP: \"".$fail['IP']."\""
 		);
