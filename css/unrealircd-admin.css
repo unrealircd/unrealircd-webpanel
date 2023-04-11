@@ -223,28 +223,3 @@ body {
 	line-height: 74px;
 }
 
-#top-country ul {
-	list-style: none;
-}
-
-#top-country li {
-  padding: 5px;
-  display: inline-block;
-  margin: 9px;
-  border: solid 1px #ccc;
-}
-
-#top-country li .drag {
-  text-align: center;
-}
-
-#top-country li .count {
-  text-align: center;
-  font-size: 2.2rem;
-}
-
-#top-country li .count span {
-  display:block;
-  text-align: center;
-  font-size: 1rem;
-}
