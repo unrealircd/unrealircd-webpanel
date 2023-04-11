@@ -89,7 +89,7 @@ if (!empty($_POST))
 	  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
 		<div class="card shadow-2-strong" style="border-radius: 1rem;">
 		  <div class="card-body p-5 text-center">
-			<form method="post" action="index.php?redirect=<?php echo $redirect; ?>">
+			<form id="login" method="post" action="index.php?redirect=<?php echo $redirect; ?>">
 				<h3><img src="<?php echo BASE_URL; ?>img/favicon.ico">	Log in to use Admin Panel</h3>
 				
 					<?php 
@@ -98,15 +98,23 @@ if (!empty($_POST))
 						Message::Success("You have been logged out");
 					?>
 					<div class="input-group">
-					<div class="input-group mb-3">
+					<div id="username" class="input-group mb-3">
 						<div class="input-group-prepend">
 							<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-						</div><input type="text" class="form-control" name="username" id="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+						</div><input type="text" id="userinp" class="form-control" name="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+						<div id="user_inv" class="invalid-feedback">
+							Username cannot be empty.
+						</div>
+
 					</div>
-					<div class="input-group mb-3">
+					<div id="password" class="input-group mb-3">
 						<div class="input-group-prepend">
 							<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
-						</div><input type="password" class="form-control" name="password" id="password" placeholder="Password">
+						</div><input type="password" id="passinp" class="form-control" name="password" placeholder="Password">
+						<div id="pass_inv" class="invalid-feedback">
+						Password cannot be empty.
+						</div>
+
 					</div>
 
 				</div>
@@ -117,4 +125,31 @@ if (!empty($_POST))
 	</div>
 </div>
 </div></section>
+
+<script>
+	var form = document.getElementById('login');
+	var pinp = document.getElementById('passinp');
+	var uinp = document.getElementById('userinp');
+	
+	form.addEventListener('submit', (event) =>
+	{
+		event.preventDefault();
+		var err = 0;
+		if (uinp.value.length == 0)
+		{
+			$('#user_inv').show();
+			err++;
+		}
+		if (pinp.value.length == 0)
+		{
+			$('#pass_inv').show();
+			err++;
+		}
+		if (err)
+			return;
+		else
+			form.submit();
+	});
+</script>
+
 <?php require_once "../footer.php";
