@@ -79,6 +79,7 @@ $active_page = NULL;
 
 function show_page_item($name, $page, $nestlevel)
 {
+	$active_page = NULL;
 	$icon = $style = "";
 	$class = "nav-link nav-item";
 	if (is_string($active_page) && $page == $active_page)
