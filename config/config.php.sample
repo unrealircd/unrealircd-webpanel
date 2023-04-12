@@ -55,10 +55,27 @@ $config["plugins"] = [
 		 *  Uncomment the following line to view the live example
 		*/
 		//"example_plugin", /* An example plugin */
+		//"file_auth", /* Provides a login page - uses a db file */
 		//"sql_auth", /* Provides a login page which uses SQL */
 		//"php_mailer", /* Provides ability to send emails on behalf of the admin panel */
 	];
 
+/* If you want a simple file-based database, and you have enabled
+ * "file_auth" in plugins above, then make sure your data/ directory
+ * is writable by the www user! Usually you need something like:
+ * chown www-data:www-data /var/www/html/webpanel/data/ -R
+ */
+
+/**
+ * If you load any of the auth plugins the first time, then this
+ * will create a "default user" as soon as you load the webpanel.
+ * Define a username and password here, start the webpanel, and
+ * after you have successfully logged in, remove the define here again:
+ */
+//define('DEFAULT_USER', [
+//	"username" => "default",
+//	"password" => "testing"
+//]);
 
 /**
  * If you wish to use the SQL user authentication system "sql_auth",
@@ -97,16 +114,6 @@ $config["plugins"] = [
  */
 //$config["mysql"]["table_prefix"] = "unreal_";
 
-
-/** 
- * The default user for the plugin "SQL_Auth". As soon as you load
- * the plugin, the user defined below will be created. It suggested
- * that you remove it after you've logged in successfully.
- */
-//define('SQL_DEFAULT_USER', [
-//	"username" => "default",
-//	"password" => "testing"
-//]);
 
 /**
  * Also part of the SQL_Auth plugin. This protects your login page.
