@@ -86,7 +86,7 @@ $users = $rpc->user()->getAll();
 
 Click on a username to view more information.
 
-<div id="Users">
+<div class="usertable">
 	
 	<?php
 
@@ -196,7 +196,7 @@ Click on a username to view more information.
 			(strpos($user->user->modes,"S") == false))
 				continue;
 
-			echo "\n<tr>";
+			echo "\n<tr id=\"$user->id\" value=\"$user->name\" class=\"userselector\">";
 			echo "<th scope=\"row\"><input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\"></th>";
 			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge rounded-pill badge-dark">Bot</span>' : "";
 			echo "<td><a href=\"details.php?nick=".$user->id."\">$user->name$isBot</a></td>";
@@ -316,6 +316,35 @@ Click on a username to view more information.
 	
 	</form>
 
+	<style>
+		#rclickmenu {
+			position: fixed;
+			z-index: 10000;
+			width: 250px;
+			background: #1b1a1a;
+			border-radius: 5px;
+		}
+		#rclickmenu.visible {
+			display: block;
+		}
+		#rclickmenu .item {
+			padding: 8px 10px;
+			font-size: 15px;
+			color: #eee;
+			cursor: pointer;
+			border-radius: inherit;
+		}
+		#rclickmenu .item:hover {
+			background: #343434;
+			text-decoration: none;
+		}
+	</style>
+
+	<div id='rclickmenu'>
+		<div id="rclick_opt1" class="item list-group-item-action">View details</div>
+		<div id="rclick_opt2" class="item list-group-item-action">Kill</div>
+	</div>
+
 <?php /* ?>
 	<h3>Top country</h3>
 	<div id="top-country">
@@ -358,6 +387,28 @@ Click on a username to view more information.
 	resize_check();
 	window.addEventListener('resize', function() {
 		resize_check();
+	});
+	var rclickmenu = document.getElementById('rclickmenu');
+	var scopes = document.querySelectorAll('.userselector');
+	var usertable = document.querySelector('body');
+	usertable.addEventListener("click", (e) =>
+	{
+		rclickmenu.classList.remove("visible");
+		rclickmenu.style.display = 'none';
+	});
+	scopes.forEach((scope) => {
+		scope.addEventListener("contextmenu", (event) =>
+		{
+			event.preventDefault();
+			var { clientX: mouseX, clientY: mouseY } = event;
+			var name = $('#' + scope.id).attr('value')
+			document.getElementById("rclick_opt1").innerHTML = '<a style="text-decoration: none" href="<?php echo get_config("base_url"); ?>users/details.php?nick=' + scope.id + '">View details for ' + name + '</a>';
+			rclickmenu.style.top = `${mouseY}px`;
+			rclickmenu.style.left = `${mouseX}px`;
+			rclickmenu.classList.add("visible");
+			rclickmenu.style.display = '';
+		});
+		
 	});
 </script>
 
