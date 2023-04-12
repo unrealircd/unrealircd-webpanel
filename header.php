@@ -1,11 +1,10 @@
 <?php
-if (is_auth_provided() && !str_ends_with($_SERVER['SCRIPT_FILENAME'], "setup.php"))
-{?>
-	
-<?php }
 $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 <!DOCTYPE html>
-<head><script>
+<head>
+<?php if (is_auth_provided() && !str_ends_with($_SERVER['SCRIPT_FILENAME'], "setup.php"))
+{?>
+<script>
 		var BASE_URL = "<?php echo get_config("base_url"); ?>";
 		function timeoutCheck() {
 			var xhttp = new XMLHttpRequest();
@@ -21,7 +20,8 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 		}
 		timeoutCheck();
 		setInterval(timeoutCheck, 15000);
-	</script>
+</script>
+<?php } ?>
 <div class="media">
 <div class="media-body">
 
