@@ -2,7 +2,7 @@
 if (is_auth_provided() && !str_ends_with($_SERVER['SCRIPT_FILENAME'], "setup.php"))
 {?>
 	<script>
-		var get_config("base_url") = "<?php echo get_config("base_url"); ?>";
+		var BASE_URL = "<?php echo get_config("base_url"); ?>";
 		function timeoutCheck() {
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
@@ -12,7 +12,7 @@ if (is_auth_provided() && !str_ends_with($_SERVER['SCRIPT_FILENAME'], "setup.php
 						window.location = get_config("base_url") + 'login/?timeout=1&redirect=' + encodeURIComponent(window.location.pathname);
 				}
 			};
-			xhttp.open("GET", get_config("base_url") + "api/timeout.php", true);
+			xhttp.open("GET", BASE_URL + "api/timeout.php", true);
 			xhttp.send();
 		}
 		timeoutCheck();

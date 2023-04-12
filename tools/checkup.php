@@ -148,7 +148,7 @@ new Chart("myChart", {
 <script>
     function updateStats() {
         var xhttp = new XMLHttpRequest();
-        var get_config("base_url") = "<?php echo get_config("base_url"); ?>";
+        var BASE_URL = "<?php echo get_config("base_url"); ?>";
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 var data = JSON.parse(this.responseText);
@@ -156,7 +156,7 @@ new Chart("myChart", {
                 document.getElementById("memory-usage").innerHTML = "Memory Usage: <code>" + data.memory + "</code>";
             }
         };
-        xhttp.open("GET", get_config("base_url") + "api/data.php", true);
+        xhttp.open("GET", BASE_URL + "api/data.php", true);
         xhttp.send();
     }
     updateStats();
