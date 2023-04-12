@@ -19,4 +19,5 @@ require_once "../common.php";
 require_once "../connection.php";
 require_once "connection.php";
 require_once "unreal_irc_users.php";
+require_once "unreal_irc_channels.php";
 
