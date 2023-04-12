@@ -27,19 +27,19 @@ class sql_auth
 		Hook::func(HOOKTYPE_PRE_OVERVIEW_CARD, 'sql_auth::add_pre_overview_card');
 		AuthModLoaded::$status = 1;
 
-		if (defined('SQL_DEFAULT_USER')) // we've got a default account
+		if (defined('DEFAULT_USER')) // we've got a default account
 		{
-			$lkup = new PanelUser(SQL_DEFAULT_USER['username']);
+			$lkup = new PanelUser(DEFAULT_USER['username']);
 
 			if (!$lkup->id) // doesn't exist, add it with full privileges
 			{
 				$user = [];
-				$user['user_name'] = SQL_DEFAULT_USER['username'];
-				$user['user_pass'] = SQL_DEFAULT_USER['password'];
+				$user['user_name'] = DEFAULT_USER['username'];
+				$user['user_pass'] = DEFAULT_USER['password'];
 				$user['err'] = "";
 				create_new_user($user);
 			}
-			$lkup = new PanelUser(SQL_DEFAULT_USER['username']);
+			$lkup = new PanelUser(DEFAULT_USER['username']);
 			if (!user_can($lkup, PERMISSION_MANAGE_USERS))
 				$lkup->add_permission(PERMISSION_MANAGE_USERS);
 		}
@@ -60,6 +60,8 @@ class sql_auth
 	{
 		if (defined('SQL_DEFAULT_USER'))
 			Message::Fail("Warning: SQL_DEFAULT_USER is set in config.php. You should remove that item now, as it is only used during installation.");
+		if (defined('DEFAULT_USER'))
+			Message::Fail("Warning: DEFAULT_USER is set in config.php. You should remove that item now, as it is only used during installation.");
 	}
 
 	/* pre-Header hook */
