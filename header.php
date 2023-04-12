@@ -1,7 +1,11 @@
 <?php
 if (is_auth_provided() && !str_ends_with($_SERVER['SCRIPT_FILENAME'], "setup.php"))
 {?>
-	<script>
+	
+<?php }
+$arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
+<!DOCTYPE html>
+<head><script>
 		var BASE_URL = "<?php echo get_config("base_url"); ?>";
 		function timeoutCheck() {
 			var xhttp = new XMLHttpRequest();
@@ -9,7 +13,7 @@ if (is_auth_provided() && !str_ends_with($_SERVER['SCRIPT_FILENAME'], "setup.php
 				if (this.readyState == 4 && this.status == 200) {
 					var data = JSON.parse(this.responseText);
 					if (data.session == 'none')
-						window.location = get_config("base_url") + 'login/?timeout=1&redirect=' + encodeURIComponent(window.location.pathname);
+						window.location = BASE_URL + 'login/?timeout=1&redirect=' + encodeURIComponent(window.location.pathname);
 				}
 			};
 			xhttp.open("GET", BASE_URL + "api/timeout.php", true);
@@ -18,10 +22,6 @@ if (is_auth_provided() && !str_ends_with($_SERVER['SCRIPT_FILENAME'], "setup.php
 		timeoutCheck();
 		setInterval(timeoutCheck, 15000);
 	</script>
-<?php }
-$arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
-<!DOCTYPE html>
-<head>
 <div class="media">
 <div class="media-body">
 
