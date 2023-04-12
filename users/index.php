@@ -323,6 +323,7 @@ Click on a username to view more information.
 			width: 250px;
 			background: #1b1a1a;
 			border-radius: 5px;
+			display: none;
 		}
 		#rclickmenu.visible {
 			display: block;
