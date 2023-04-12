@@ -66,10 +66,17 @@ function api_timer_loop(int $every_msec, string $method, array|null $params = nu
 	$rpc->rpc()->add_timer("timer", $every_msec, $method, $params);
 	if ($rpc->error)
 	{
-		echo $rpc->error;
-		die;
+		/* Have to resort to old style: client-side timer */
+		while(1)
+		{
+			$res = $rpc->query($method, $params);
+			if (!$res)
+				die;
+			send_sse($res);
+		}
 	}
 
+	/* New style: use server-side timers */
 	for(;;)
 	{
 		$res = $rpc->eventloop();
