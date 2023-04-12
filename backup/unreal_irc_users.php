@@ -1,46 +1,5 @@
 <?php
-/*
-    A file named backup_sql.php is used to backup the list of connected users in UnrealIRCd into a MySQL table nommed "unreal_irc_users" which is created automatically if it does not exist.
-    This backup is more detailed than the one created by 'anope_user'. 
-
-    To set up the backup, add something like this to your crontab:
-    php /home/<account>/unrealircd-webpanel/backup.php
-    and run this command every 5 minutes or 1 minute.
-
-    In this file I also wanted to make that creates the following new tables:
-    - unreal_irc_top_countries
-    - unreal_irc_spamfilter
-    - unreal_irc_servers
-    - unreal_irc_channels
-    - unreal_irc_name_bans
-*/
-
-require_once "common.php";
-require_once "connection.php";
-
-/* connection sql */
-$host = get_config("mysql::host");
-$user = get_config("mysql::username");
-$pass = get_config("mysql::password");
-$db   = get_config("mysql::database");
-$charset = 'utf8mb4';
-
-if ($host[0] == "/")
-    $host_type = "unix_socket";
-else
-    $host_type = "host";
-$dsn = "mysql:$host_type=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES => false,
-];
-try {
-     $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (\PDOException $e) {
-     throw new \PDOException($e->getMessage(), (int)$e->getCode());
-}
-
+/* unreal_irc_users */
 try {
     $result = $pdo->query("SELECT 1 FROM " . get_config("mysql::table_prefix") . "irc_users LIMIT 1");
 } catch (\PDOException $e) {
@@ -70,8 +29,6 @@ try {
     }
 }
 
-
-/* unreal_irc_users */
 $users = $rpc->user()->getAll();
 
 /*
