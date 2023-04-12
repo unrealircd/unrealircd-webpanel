@@ -1,17 +1,4 @@
 <?php
+require_once('common_api.php');
 
-session_start();
-if (!isset($_SESSION["id"]))
-    die("{\"error\": \"Access denied\"}");
-
-include "../common.php";
-
-// Close the session now, otherwise other pages block too long
-session_write_close();
-
-include "../connection.php";
-
-header("Content-type: application/json");
-
-$stats = $rpc->stats()->get();
-echo json_encode($stats);
+api_timer_loop(1000, "stats.get");

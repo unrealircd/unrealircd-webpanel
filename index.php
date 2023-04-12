@@ -229,26 +229,33 @@ $num_of_panel_admins = count($userlist);
 
 
 <script>
-    function updateStats() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                var data = JSON.parse(this.responseText);
-                document.getElementById("stats_user_total").innerHTML = data.user.total;
-                document.getElementById("stats_channel_total").innerHTML = data.channel.total;
-				document.getElementById("stats_oper_total").innerHTML = data.user.oper;
-				document.getElementById("stats_server_total").innerHTML = data.server.total;
-				document.getElementById("num_server_bans").innerHTML = data.server_ban.server_ban;
-				document.getElementById("num_spamfilter_entries").innerHTML = data.server_ban.spamfilter;
-				document.getElementById("num_ban_exceptions").innerHTML = data.server_ban.server_ban_exception;
-				document.getElementById("stats_uline_total").innerHTML = data.user.ulined + "/" + data.server.ulined;
-            }
-        };
-        xhttp.open("GET", "api/overview.php", true);
-        xhttp.send();
-    }
-    updateStats();
-    setInterval(updateStats, 1000); // Update stats every second
+	function updateStats(e)
+	{
+		var data;
+		try {
+			data = JSON.parse(e.data);
+		} catch(e) {
+			return;
+		}
+		document.getElementById("stats_user_total").innerHTML = data.user.total;
+		document.getElementById("stats_channel_total").innerHTML = data.channel.total;
+		document.getElementById("stats_oper_total").innerHTML = data.user.oper;
+		document.getElementById("stats_server_total").innerHTML = data.server.total;
+		document.getElementById("num_server_bans").innerHTML = data.server_ban.server_ban;
+		document.getElementById("num_spamfilter_entries").innerHTML = data.server_ban.spamfilter;
+		document.getElementById("num_ban_exceptions").innerHTML = data.server_ban.server_ban_exception;
+		document.getElementById("stats_uline_total").innerHTML = data.user.ulined + "/" + data.server.ulined;
+	}
+	function initStats()
+	{
+		if (!!window.EventSource) {
+			var source = new EventSource('api/overview.php');
+			source.addEventListener('message', updateStats, false);
+		}
+	}
+	initStats();
+	//setInterval(updateStats, 1000); // Update stats every second
+	// ^ commented out but may want to restart initStats() when connection is lost.
 </script>
 
 <div class="container mt-3">
