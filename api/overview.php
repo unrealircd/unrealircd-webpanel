@@ -13,5 +13,5 @@ include "../connection.php";
 
 header("Content-type: application/json");
 
-$stats = $rpc->query("stats.get", []);
+$stats = $rpc->stats()->get();
 echo json_encode($stats);
