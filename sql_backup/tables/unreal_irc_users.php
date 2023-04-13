@@ -20,7 +20,8 @@ try {
             `connected_since` varchar(255) NOT NULL,
             `idle_since` varchar(255) NOT NULL,
             `idle` varchar(255) NOT NULL,
-            `modes` varchar(255) NOT NULL
+            `modes` varchar(255) NOT NULL,
+            `channels` TEXT NOT NULL
           ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;'
     ];
 
@@ -55,8 +56,18 @@ foreach ($users as $user) {
     $idle_since         = $user->idle_since ?? '';
     $idle               = abs(strtotime($connected_since) - strtotime($idle_since));
     $modes              = $user->user->modes ?? '';
-    $prep = $pdo->prepare("INSERT INTO " . get_config("mysql::table_prefix") . "irc_users (id, id_user, name, username, realname, vhost, account, reputation, hostname, ip, country_code, connected_since, idle_since, idle, modes) 
-    VALUES (:id, :id_user, :name, :username, :realname, :vhost, :account, :reputation, :hostname, :ip, :country_code, :connected_since, :idle_since, :idle, :modes)");
+
+    $channels = $user->user->channels ?? '';
+    $chans = '';
+    if ($channels!="") {
+        foreach ($channels as $chan) {
+            $chans .= ",".$chan->name;
+        }
+    }
+
+    
+    $prep = $pdo->prepare("INSERT INTO " . get_config("mysql::table_prefix") . "irc_users (id, id_user, name, username, realname, vhost, account, reputation, hostname, ip, country_code, connected_since, idle_since, idle, modes, channels) 
+    VALUES (:id, :id_user, :name, :username, :realname, :vhost, :account, :reputation, :hostname, :ip, :country_code, :connected_since, :idle_since, :idle, :modes, :channels)");
     $prep->execute([
         "id" => '',
         "id_user" => $id,
@@ -72,6 +83,7 @@ foreach ($users as $user) {
         "connected_since" => $connected_since, 
         "idle_since" => $idle_since,
         "idle" => $idle,
-        "modes" => $modes
+        "modes" => $modes,
+        "channels" => ltrim($chans, ",")
     ]);
   }
