@@ -85,8 +85,9 @@ function generate_notif(title, body)
     theTitle.classList.add('mr-auto');
     theTitle.textContent = title;
     
-    const notiftime = document.createElement('small');
-    notiftime.textContent = "Just now"; // always just now I think right :D
+    const notiftime = document.createElement('div');
+    notiftime.classList.add('badge', 'rounded-pill', 'badge-primary', 'ml-1');
+    notiftime.textContent = 'Just now'; // always just now I think right :D
 
     const closebutton = document.createElement('button');
     closebutton.type = 'button';
