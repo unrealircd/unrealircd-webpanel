@@ -4,23 +4,6 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 <head>
 <?php if (is_auth_provided() && !str_ends_with($_SERVER['SCRIPT_FILENAME'], "setup.php"))
 {?>
-<script>
-		var BASE_URL = "<?php echo get_config("base_url"); ?>";
-		function timeoutCheck() {
-			var xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {
-					var data = JSON.parse(this.responseText);
-					if (data.session == 'none')
-						window.location = BASE_URL + 'login/?timeout=1&redirect=' + encodeURIComponent(window.location.pathname);
-				}
-			};
-			xhttp.open("GET", BASE_URL + "api/timeout.php", true);
-			xhttp.send();
-		}
-		timeoutCheck();
-		setInterval(timeoutCheck, 15000);
-</script>
 <?php } ?>
 <div class="media">
 <div class="media-body">
@@ -49,6 +32,25 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
 <script src="<?php echo get_config("base_url"); ?>js/unrealircd-admin.js"></script>
+<script>
+		var BASE_URL = "<?php echo get_config("base_url"); ?>";
+		function timeoutCheck() {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var data = JSON.parse(this.responseText);
+					if (data.session == 'none')
+						window.location = BASE_URL + 'login/?timeout=1&redirect=' + encodeURIComponent(window.location.pathname);
+				}
+			};
+			xhttp.open("GET", BASE_URL + "api/timeout.php", true);
+			xhttp.send();
+		}
+		timeoutCheck();
+		StartStreamNotifs(BASE_URL + "api/notification.php");
+		setInterval(timeoutCheck, 15000);
+</script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
 	#optionsopen {
 		transition: left 0.3s;
@@ -60,6 +62,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 		top: 50px;
 		color: white;
 		transition: left 0.3s;
+		width: 160px;
 	}
 	.container-fluid {
 		transition: padding-left 0.3s;
@@ -68,9 +71,8 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 		color: #e0e0e0;
 	}
 </style>
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <nav id="sidebarlol" style="left: 0" class="w3-sidebar navbar-expand-sm bg-dark padding-top me-5 ma-5">
-<div class="sidebarlol list-group">
+<div class="list-group">
 	<div class="badge badge-secondary rounded-pill">Main Menu</div>
 	<?php 
 
