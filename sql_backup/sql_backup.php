@@ -1,7 +1,7 @@
 <?php
 /*
     The idea is to execute a cron task every 1 minute :
-    php /home/<account>/unrealircd-webpanel/backup/backup.php
+    php /home/<account>/unrealircd-webpanel/sql_backup/sql_backup.php
 
     And it creates the following SQL tables:
 
