@@ -323,10 +323,12 @@ Click on a username to view more information.
 			width: 250px;
 			background: #1b1a1a;
 			border-radius: 5px;
-			display: none;
+			transform: scale(0);
+			transform-origin: top left;
 		}
 		#rclickmenu.visible {
-			display: block;
+			transform: scale(1);
+			transition: transform 120ms ease-in-out;
 		}
 		#rclickmenu .item {
 			padding: 8px 10px;
@@ -341,9 +343,10 @@ Click on a username to view more information.
 		}
 	</style>
 
-	<div id='rclickmenu'>
+	<div id='rclickmenu' class="nav-item list-group">
 		<div id="rclick_opt1" class="item list-group-item-action">View details</div>
 		<div id="rclick_opt2" class="item list-group-item-action">Kill</div>
+		<div id="rclick_opt3" class="item list-group-item-action">Copy
 	</div>
 
 <?php /* ?>
@@ -369,9 +372,92 @@ Click on a username to view more information.
 
 <script>
     
+
+	function generate_notif(title, body)
+	{
+		/* generate a random number between 1000 and 90000 to use as an id */
+		const min = 1000;
+		const max = 90000;
+		const id = Math.floor(Math.random() * (max - min + 1)) + min;
+
+		const toast = document.createElement('div');
+		toast.classList.add('position-fixed', 'bottom-0', 'right-0', 'p-4');
+		toast.style.right = 0;
+		toast.style.zIndex = 5;
+		toast.style.bottom = "50px";
+
+		const inner = document.createElement('div');
+		inner.classList.add('toast', 'hide');
+		inner.id = 'toast' + id;
+		inner.role = 'alert';
+		inner.ariaLive = 'assertive';
+		inner.ariaAtomic = 'true';
+		inner.setAttribute('data-delay', '5000');
+
+		const header = document.createElement('div');
+		header.classList.add('toast-header');
+
+		const theTitle = document.createElement('strong');
+		theTitle.classList.add('mr-auto');
+		theTitle.textContent = title;
+		
+		const notiftime = document.createElement('small');
+		notiftime.textContent = "Just now"; // always just now I think right :D
+
+		const closebutton = document.createElement('button');
+		closebutton.type = 'button';
+		closebutton.classList.add('ml-2', 'mb-1', 'close');
+		closebutton.setAttribute('data-dismiss', 'toast');
+		closebutton.ariaLabel = 'Close';
+
+		const closebuttonspan = document.createElement('span');
+		closebuttonspan.ariaHidden = 'true';
+		closebuttonspan.innerHTML = "&times;";
+
+		const toastbody = document.createElement('div');
+		toastbody.classList.add('toast-body');
+		toastbody.textContent = body;
+
+
+		/* put it all together */
+		closebutton.appendChild(closebuttonspan);
+		header.appendChild(theTitle);
+		header.appendChild(notiftime);
+		header.appendChild(closebutton);
+		inner.appendChild(header);
+		inner.appendChild(toastbody);
+		toast.appendChild(inner);
+
+		document.body.appendChild(toast);
+		$('#' + inner.id).toast('show');
+	}
     $("#myModal").on('shown.bs.modal', function(){
         $("#CloseButton").focus();
     });
+	function StreamNotifs(e)
+	{
+		var data;
+		try {
+			data = JSON.parse(e.data);
+		} catch(e) {
+			return;
+		}
+		title = data.subsystem + '.' + data.event_id;
+		msg = data.msg;
+		generate_notif(title, msg);
+
+		
+	}
+	function StartStreamNotifs()
+	{
+		var base_url = '<?php echo get_config("base_url") ?>';
+		if (!!window.EventSource) {
+			var source = new EventSource(base_url + 'api/notification.php');
+			source.addEventListener('message', StreamNotifs, false);
+		}
+	}
+	StartStreamNotifs();
+
 
 	function resize_check()
 	{
@@ -391,11 +477,12 @@ Click on a username to view more information.
 	});
 	var rclickmenu = document.getElementById('rclickmenu');
 	var scopes = document.querySelectorAll('.userselector');
-	var usertable = document.querySelector('body');
-	usertable.addEventListener("click", (e) =>
+	document.addEventListener("click", (e) =>
 	{
-		rclickmenu.classList.remove("visible");
-		rclickmenu.style.display = 'none';
+		if (e.target.offsetParent != rclickmenu)
+		{
+			rclickmenu.classList.remove("visible");
+		}
 	});
 	scopes.forEach((scope) => {
 		scope.addEventListener("contextmenu", (event) =>
@@ -403,14 +490,19 @@ Click on a username to view more information.
 			event.preventDefault();
 			var { clientX: mouseX, clientY: mouseY } = event;
 			var name = $('#' + scope.id).attr('value')
-			document.getElementById("rclick_opt1").innerHTML = '<a style="text-decoration: none" href="<?php echo get_config("base_url"); ?>users/details.php?nick=' + scope.id + '">View details for ' + name + '</a>';
+			document.getElementById("rclick_opt1").innerHTML = 'View details for ' + name;
 			rclickmenu.style.top = `${mouseY}px`;
 			rclickmenu.style.left = `${mouseX}px`;
-			rclickmenu.classList.add("visible");
-			rclickmenu.style.display = '';
+			rclickmenu.classList.remove("visible");
+			setTimeout(() => { rclickmenu.classList.add("visible"); });
 		});
-		
 	});
+	document.addEventListener('keydown', (event) => {
+	if (event.key === 'Escape')
+	{
+		rclickmenu.classList.remove("visible");
+	}
+});
 </script>
 
 <?php require_once UPATH.'/footer.php'; ?>

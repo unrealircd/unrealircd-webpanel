@@ -62,21 +62,3 @@ function toggle_checkbox(source) {
         checkboxes[i].checked = source.checked;
     }
 }
-
-function generate_bs_notif(id, title, body)
-{
-    document.write('<div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 50px;">');
-    document.write('    <div id="' + id + '" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="10000">');
-    document.write('        <div class="toast-header">');
-    document.write('            <strong class="mr-auto">' + title + '</strong>');
-    document.write('            <small>11 mins ago</small>');
-    document.write('            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">');
-    document.write('                <span aria-hidden="true">&times;</span>');
-    document.write('            </button>');
-    document.write('        </div>');
-    document.write('        <div class="toast-body">');
-    document.write(body);
-    document.write('        </div>');
-    document.write('        </div>');
-    document.write('</div>');
-}

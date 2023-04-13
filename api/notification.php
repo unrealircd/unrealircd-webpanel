@@ -3,7 +3,6 @@ include "../common.php";
 include "../connection.php";
 
 
-session_start();
 if (!isset($_SESSION['id']))
     die("Access denied");
 
@@ -34,9 +33,9 @@ ob_end_flush();
 if (function_exists('fastcgi_finish_request'))
     fastcgi_finish_request();
 
-$sources = ["!debug","all"];
+
+$sources = (isset($_GET['s']) && !empty($_GET['s'])) ? split($_GET['s'],",") : ["!debug","all"];
 $rpc->log()->subscribe($sources);
-echo $rpc->error;
 for(;;)
 {
     $res = $rpc->eventloop();
