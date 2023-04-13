@@ -5,7 +5,7 @@ try {
 } catch (\PDOException $e) {
     // We got an exception (table not found)
     $statements = [
-        'CREATE TABLE `unreal_irc_users` (
+        'CREATE TABLE `' . get_config("mysql::table_prefix") . 'irc_users` (
             `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `id_user` varchar(255) NOT NULL,
             `name` varchar(255) NOT NULL,
