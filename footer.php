@@ -30,7 +30,8 @@
 				role="button"
 				data-mdb-ripple-color="dark">
 				<img src="<?php echo get_config("base_url"); ?>img/unreal.jpg" width="23" height="23" style="margin-right: 25px"></a>
-		
+
+			<i id="bugreport" style="margin-left: -18px; margin-right: 10px;" height="1000px" class="fa fa-bug" data-toggle="tooltip" data-placement="top" title="Report a bug (Opens in new tab)"></i>
 		
 		<?php
 
@@ -38,9 +39,16 @@
 		
 		?>
 		
+		
 </div>
 </div><!-- Second div is because there is a container div in the header-->
 
 </footer>
 </body>
 </html>
+<script>
+	var bugreport = document.getElementById('bugreport');
+	bugreport.addEventListener('click', (e) => {
+		window.open("https://github.com/unrealircd/unrealircd-webpanel/issues/new?labels=bug&template=bug_report.md", '_blank');
+	});
+</script>
