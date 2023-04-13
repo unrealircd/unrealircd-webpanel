@@ -71,18 +71,12 @@ function generate_notif(title, body)
     const id = Math.floor(Math.random() * (max - min + 1)) + min;
 
     const toast = document.createElement('div');
-    toast.classList.add('position-fixed', 'bottom-0', 'right-0', 'p-4');
-    toast.style.right = 0;
-    toast.style.zIndex = 5;
-    toast.style.bottom = "50px";
-
-    const inner = document.createElement('div');
-    inner.classList.add('toast', 'hide');
-    inner.id = 'toast' + id;
-    inner.role = 'alert';
-    inner.ariaLive = 'assertive';
-    inner.ariaAtomic = 'true';
-    inner.setAttribute('data-delay', '5000');
+    toast.classList.add('toast', 'hide');
+    toast.id = 'toast' + id;
+    toast.role = 'alert';
+    toast.ariaLive = 'assertive';
+    toast.ariaAtomic = 'true';
+    toast.setAttribute('data-delay', '5000');
 
     const header = document.createElement('div');
     header.classList.add('toast-header');
@@ -114,13 +108,13 @@ function generate_notif(title, body)
     header.appendChild(theTitle);
     header.appendChild(notiftime);
     header.appendChild(closebutton);
-    inner.appendChild(header);
-    inner.appendChild(toastbody);
-    toast.appendChild(inner);
+    toast.appendChild(header);
+    toast.appendChild(toastbody);
+    document.getElementById('toaster').append(toast);
 
-    document.body.appendChild(toast);
-    $('#' + inner.id).toast('show');
+    $('#' + toast.id).toast('show');
 }
+
 $("#myModal").on('shown.bs.modal', function(){
     $("#CloseButton").focus();
 });
