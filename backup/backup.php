@@ -1,18 +1,27 @@
 <?php
 /*
-    A file named backup.php is used to backup the list of connected users in UnrealIRCd into a MySQL table nommed "unreal_irc_users" which is created automatically if it does not exist.
-    This backup is more detailed than the one created by 'anope_user'. 
-
-    To set up the backup, add something like this to your crontab:
+    The idea is to execute a cron task every 1 minute :
     php /home/<account>/unrealircd-webpanel/backup/backup.php
-    and run this command every 5 minutes or 1 minute.
 
-    In this file I also wanted to make that creates the following new tables:
-    - unreal_irc_top_countries
-    - unreal_irc_spamfilter
-    - unreal_irc_servers
-    - unreal_irc_channels
-    - unreal_irc_name_bans
+    And it creates the following SQL tables:
+
+        unreal_irc_users, equivalent to the anope_user table (or anope_db_user)
+        unreal_irc_channels, equivalent to the anope_chan table
+
+    It would also be necessary to create the following:
+
+        unreal_irc_spamfilter
+        unreal_irc_top_countries
+        unreal_irc_servers
+        unreal_irc_channels
+        unreal_irc_name_bans
+        unreal_irc_ison (for unreal_irc_channels and unreal_irc_users)
+
+    This way, it would be possible to display the desired statistics on the websites.
+
+    The only thing that bothers me is that I would like it to be real-time by executing it every 1 second, but I'm afraid it would overload the web server php, causing it to slow down or self-DDOS.
+
+    What do you think?
 */
 
 require_once "../common.php";

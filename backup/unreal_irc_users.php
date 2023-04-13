@@ -21,7 +21,7 @@ try {
             `idle_since` varchar(255) NOT NULL,
             `idle` varchar(255) NOT NULL,
             `modes` varchar(255) NOT NULL
-          ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;'
+          ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;'
     ];
 
     foreach ($statements as $statement) {

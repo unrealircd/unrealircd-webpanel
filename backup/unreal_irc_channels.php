@@ -22,7 +22,7 @@ try {
         'CREATE TABLE `unreal_irc_channels` (
             `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY
             '.$line.'
-          ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;'
+          ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;'
     ];
 
     foreach ($statements as $statement) {
