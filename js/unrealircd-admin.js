@@ -76,7 +76,7 @@ function generate_notif(title, body)
     toast.role = 'alert';
     toast.ariaLive = 'assertive';
     toast.ariaAtomic = 'true';
-    toast.setAttribute('data-delay', '5000');
+    toast.setAttribute('data-delay', '10000');
 
     const header = document.createElement('div');
     header.classList.add('toast-header');
