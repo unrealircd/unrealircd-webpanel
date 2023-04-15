@@ -38,87 +38,129 @@ require_once "../../common.php";
 <?php
 if (!isset($_POST) || empty($_POST))
 {
-    ?>
-    <div class="container">
-    <h4>SQL Setup</h4>
-    In order to use SQL Auth, the relevant SQL tables must be created.<br>
-    If, for some reason, that's not what you want, please remove <code>"sql_auth"</code> from the plugins option in your webpanel configuration.<br><br>
-    Thanks for using SQL Auth plugin!<br><br>
+	?>
+	<div class="container">
+	<h4>SQL Setup</h4>
+	In order to use SQL Auth, the relevant SQL tables must be created.<br>
+	If, for some reason, that's not what you want, please remove <code>"sql_auth"</code> from the plugins option in your webpanel configuration.<br><br>
+	Thanks for using SQL Auth plugin!<br><br>
 
-    <form method="post">
-    <button id="createbtn" name="createbtn" class="btn btn-primary" type="submit">Create the tables!</button>
-    </form>
-    </div>
-    <?php
+	<form method="post">
+	<button id="createbtn" name="createbtn" class="btn btn-primary" type="submit">Create the tables!</button>
+	</form>
+	</div>
+	<?php
 }
 elseif (isset($_POST['createbtn']))
 {
-    $conn = sqlnew();
-    $conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "users (
-        user_id int AUTO_INCREMENT NOT NULL,
-        user_name VARCHAR(255) NOT NULL,
-        user_pass VARCHAR(255) NOT NULL,
-        user_email VARCHAR(255),
-        user_fname VARCHAR(255),
-        user_lname VARCHAR(255),
-        user_bio VARCHAR(255),
-        created VARCHAR(255),
-        PRIMARY KEY (user_id)
-    )");
+	$conn = sqlnew();
+	$conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "users (
+		user_id int AUTO_INCREMENT NOT NULL,
+		user_name VARCHAR(255) NOT NULL,
+		user_pass VARCHAR(255) NOT NULL,
+		user_email VARCHAR(255),
+		user_fname VARCHAR(255),
+		user_lname VARCHAR(255),
+		user_bio VARCHAR(255),
+		created VARCHAR(255),
+		PRIMARY KEY (user_id)
+	)");
 
-    /**
-     * Patch for beta users
-     * This adds the email column to existing tables without it
-    */
-    $columns = $conn->query("SHOW COLUMNS FROM " . get_config("mysql::table_prefix") . "users");
-    $column_names = array();
-    $c = $columns->fetchAll();
+	/**
+	 * Patch for beta users
+	 * This adds the email column to existing tables without it
+	*/
+	$columns = $conn->query("SHOW COLUMNS FROM " . get_config("mysql::table_prefix") . "users");
+	$column_names = array();
+	$c = $columns->fetchAll();
 
-    foreach($c as $column) {
-        $column_names[] = $column['Field'];
-    }
-    $column_exists = in_array("user_email", $column_names);
-    if (!$column_exists) {
-        $conn->query("ALTER TABLE " . get_config("mysql::table_prefix") . "users ADD COLUMN user_email varchar(255)");
-    }
+	foreach($c as $column) {
+		$column_names[] = $column['Field'];
+	}
+	$column_exists = in_array("user_email", $column_names);
+	if (!$column_exists) {
+		$conn->query("ALTER TABLE " . get_config("mysql::table_prefix") . "users ADD COLUMN user_email varchar(255)");
+	}
 
-    /**
-     * Another patch for beta users
-     * This changes the size of the meta_value so we can store more
-     */
-    
-    $conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "user_meta (
-        meta_id int AUTO_INCREMENT NOT NULL,
-        user_id int NOT NULL,
-        meta_key VARCHAR(255) NOT NULL,
-        meta_value VARCHAR(255),
-        PRIMARY KEY (meta_id)
-    )");
-    $conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "auth_settings (
-        id int AUTO_INCREMENT NOT NULL,
-        setting_key VARCHAR(255) NOT NULL,
-        setting_value VARCHAR(255),
-        PRIMARY KEY (id)
-    )");
-    $conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "fail2ban (
-        id int AUTO_INCREMENT NOT NULL,
-        ip VARCHAR(255) NOT NULL,
-        count VARCHAR(255),
-        PRIMARY KEY (id)
-    )");
-    $c = [];
-    if (($columns = $conn->query("SHOW COLUMNS FROM ".get_config("mysql::table_prefix")."user_meta")));
-        $c = $columns->fetchAll();
-    if (!empty($c))
-        $conn->query("ALTER TABLE `".get_config("mysql::table_prefix")."user_meta` CHANGE `meta_value` `meta_value` VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
+	/**
+	 * Another patch for beta users
+	 * This changes the size of the meta_value so we can store more
+	 */
+	
+	$conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "user_meta (
+		meta_id int AUTO_INCREMENT NOT NULL,
+		user_id int NOT NULL,
+		meta_key VARCHAR(255) NOT NULL,
+		meta_value VARCHAR(255),
+		PRIMARY KEY (meta_id)
+	)");
+	$conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "auth_settings (
+		id int AUTO_INCREMENT NOT NULL,
+		setting_key VARCHAR(255) NOT NULL,
+		setting_value VARCHAR(255),
+		PRIMARY KEY (id)
+	)");
+	$conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "fail2ban (
+		id int AUTO_INCREMENT NOT NULL,
+		ip VARCHAR(255) NOT NULL,
+		count VARCHAR(255),
+		PRIMARY KEY (id)
+	)");
+	$c = [];
+	if (($columns = $conn->query("SHOW COLUMNS FROM ".get_config("mysql::table_prefix")."user_meta")));
+		$c = $columns->fetchAll();
+	if (!empty($c))
+		$conn->query("ALTER TABLE `".get_config("mysql::table_prefix")."user_meta` CHANGE `meta_value` `meta_value` VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
 
 
-    new AuthSettings();
+	new AuthSettings();
+	
 
-    Message::Success("Congratulations, you're all ready to go!");
-    ?>
-    <a class="btn btn-primary" href="<?php echo get_config("base_url"); ?>">Take me home!</a>
-    <a class="btn btn-warning" href="<?php echo get_config("base_url")."settings"; ?>">Settings</a>
-    <?php
+	/* make sure everything went well */
+	$tables = ["users", "user_meta", "fail2ban", "auth_settings"];
+	$errors = 0; // counter
+	$error_messages = "";
+	foreach($tables as $table)
+	{
+		$prefix = get_config("sql::prefix");
+		$sql = "SHOW TABLES LIKE '$prefix$table'"; // SQL query to check if table exists
+
+		$result = $conn->query($sql);
+
+		if ($result->rowCount() == 1)
+		{   /* great! */ }
+
+		else {
+			$errors++;
+			strcat($error_messages,"Table '$prefix$table' was not created successfully.<br>");
+		}
+	}
+	if (!$errors)
+	{
+		if (defined('DEFAULT_USER')) // we've got a default account
+		{
+			$lkup = new PanelUser(DEFAULT_USER['username']);
+
+			if (!$lkup->id) // doesn't exist, add it with full privileges
+			{
+				$user = [];
+				$user['user_name'] = DEFAULT_USER['username'];
+				$user['user_pass'] = DEFAULT_USER['password'];
+				$user['err'] = "";
+				create_new_user($user);
+			}
+			$lkup = new PanelUser(DEFAULT_USER['username']);
+			if (!user_can($lkup, PERMISSION_MANAGE_USERS))
+				$lkup->add_permission(PERMISSION_MANAGE_USERS);
+		}
+		Message::Success("Congratulations, you're all ready to go!");
+	}
+	else
+		Message::Fail("An error was encountered:", $error_messages);
+	
+	?>
+	<a class="btn btn-primary" href="<?php echo get_config("base_url"); ?>">Take me home!</a>
+	<a class="btn btn-warning" href="<?php echo get_config("base_url")."settings"; ?>">Settings</a>
+	<?php
 }
 require_once "../../footer.php";
