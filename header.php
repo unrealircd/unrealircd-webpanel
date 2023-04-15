@@ -64,7 +64,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 		transition: left 0.3s;
 	}
 	.w3-sidebar {
-		top: 50px;
+		top: 53px;
 		color: white;
 		transition: left 0.3s;
 		width: 160px;
@@ -103,7 +103,46 @@ function show_page_item($name, $page, $nestlevel)
 	} else {
 		echo "<a href=\"".get_config("base_url").$page."\" style=\"text-decoration: none\">\n";
 	}
-	echo "<div class=\"d-flex justify-content-between align-items-center $class list-group-item-action\" style=\"$style\">$name
+	echo "<div class=\"big-page-item d-flex justify-content-between align-items-center $class list-group-item-action\" style=\"$style\">$name
+		<div class=\"text-right padding-top\">
+			<i class=\"fa fa-$icon\"></i>
+		</div></div>\n";
+	if (!is_array($page))
+		echo "</a>";
+	if ($nestlevel > 0)
+		echo "</small>";
+	else
+		echo "</b>";
+	if (is_array($page))
+	{
+		foreach ($page as $subname=>$subpage)
+			show_page_item($subname, $subpage, 1);
+	}
+}
+
+function show_page_item_mobile($name, $page, $nestlevel)
+{
+	$active_page = NULL;
+	$icon = $style = "";
+	$class = "nav-link nav-item";
+	if (is_string($active_page) && $page == $active_page)
+		$class .= " active";
+
+	if ($nestlevel > 0)
+	{
+		echo "<small>";
+		$name = "&nbsp; ".$name;
+		$style = "padding-bottom: 1px; padding-top: 1px";
+	} else {
+		echo "<b>";
+	}
+	if (is_array($page))
+	{
+		$style = "padding-bottom: 0px;";
+	} else {
+		echo "<a href=\"".get_config("base_url").$page."\" >\n";
+	}
+	echo "<div class=\"bg-dark lil-page-item d-flex justify-content-between align-items-center $class\" style=\"$style\">$name
 		<div class=\"text-right padding-top\">
 			<i class=\"fa fa-$icon\"></i>
 		</div></div>\n";
@@ -128,66 +167,49 @@ foreach($pages as $name=>$page)
 <div class="container-fluid">
 	
 	<!-- Fixed navbar -->
-	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top z-index padding-top" style="max-height: 50px">
+	<nav class="topbar navbar navbar-expand-sm navbar-dark bg-dark fixed-top z-index padding-top">
 	<a class="navbar-brand" href="<?php echo get_config("base_url"); ?>"><img src="<?php echo get_config("base_url"); ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
-			<ul class="navbar-nav mr-auto">
+			<ul id="big-nav-items" class="navbar-nav mr-auto">
 				
 <?php
 
 foreach ($pages as $name => $page)
-{
-	$script = $_SERVER['SCRIPT_FILENAME'];
-	$tok = split($script, "/");
-	if (is_array($page))
-		continue;
-	if (is_string($page) && strlen($page) == 0) {
-		$active_page = "";
-	}
-	else if (str_ends_with($script, get_config("base_url") . "index.php") && get_config("base_url") != "/" && !strlen($tok[0]))
-	{
-		$active_page = $tok[0];
-	}
-	else if (!str_ends_with($page, ".php"))
-	{
-		$script2 = rtrim($script, "/index.php");
-		if (str_ends_with($script2, $page))
-			$active_page = $page;
-	}
-	else if (str_ends_with($script, $page))
-	{
-		$active_page = $page;
-	} elseif (!$active_page)
-		$active_page = false;
-}
+	show_page_item($name, $page, 0);
 
-$ToD = time_of_day();
-$user = unreal_get_current_user();
-if ($user)
-{
-	$name = ($user->first_name && strlen($user->first_name)) ? $user->first_name : $user->username; // address them by first name, else username
-}
+
 ?>
 	
 		</ul>
-		
-		
-		<?php if ($user) { ?>
-			<div class="nav-item form-inline my-2 my-lg-0 mr-sm-2">
-				<div class="collapse navbar-collapse" id="collapsibleNavbar">
-					<ul class="navbar-nav mr-auto">
-						<li class="nav-item dropdown">
-							<h6 style="color:white;">Good <?php echo "$ToD, $name!"; ?></h6>
-						</li>
-					</ul>
-				</div>
-			</div>
-		<?php } ?>
+
 	</nav><br>
 </div>
 
 <div id="main_contain" class="container-fluid" style="padding-left: 180px" role="main">
 
+<script>
+	function nav_resize_check()
+	{
+		var width = window.innerWidth;
+		var sidebar = document.getElementById('sidebarlol');
+		var top = document.getElementById('big-nav-items');
+		
+		if (width < 575)
+		{
+			sidebar.style.display = 'none';
+			top.style.display = '';
+		}
+		else
+		{
+			sidebar.style.display = '';
+			top.style.display = 'none';
+		}
+	}
+	nav_resize_check();
+	window.addEventListener('resize', function() {
+		nav_resize_check();
+	});
+</script>
