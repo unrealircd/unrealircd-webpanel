@@ -123,11 +123,10 @@ elseif (isset($_POST['createbtn']))
 	foreach($tables as $table)
 	{
 		$prefix = get_config("sql::prefix");
-		$sql = "SHOW TABLES LIKE '$prefix$table'"; // SQL query to check if table exists
+		$sql = "SHOW TABLES LIKE '$prefix%'"; // SQL query to check if table exists
 
 		$result = $conn->query($sql);
-
-		if ($result->rowCount() == 1)
+		if ($result->rowCount())
 		{   /* great! */ }
 
 		else {
