@@ -196,16 +196,19 @@ foreach ($pages as $name => $page)
 		var width = window.innerWidth;
 		var sidebar = document.getElementById('sidebarlol');
 		var top = document.getElementById('big-nav-items');
+		var maincontainer = document.getElementById('main_contain');
 		
 		if (width < 575)
 		{
 			sidebar.style.display = 'none';
 			top.style.display = '';
+			maincontainer.style.paddingLeft = "10px";
 		}
 		else
 		{
 			sidebar.style.display = '';
 			top.style.display = 'none';
+			maincontainer.style.paddingLeft = "180px";
 		}
 	}
 	nav_resize_check();
