@@ -64,6 +64,7 @@ class file_auth
 	// duplicate code
 	public static function session_start($n)
 	{
+		$current_page = $_SERVER['REQUEST_URI'];
 		if (!isset($_SESSION))
 		{
 			session_set_cookie_params(3600);
