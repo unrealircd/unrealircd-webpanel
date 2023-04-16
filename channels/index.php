@@ -68,7 +68,7 @@ $channels = $rpc->channel()->getAll();
 			hide_elements = '.modescol';
 		} else
 		{
-			show_elements = '.createdcol, .modes, .topiccol';
+			show_elements = '.createdcol, .modescol, .topiccol';
 			hide_elements = '';
 		}
 
