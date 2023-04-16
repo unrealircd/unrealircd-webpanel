@@ -76,7 +76,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
 		color: #e0e0e0;
 	}
 </style>
-<nav id="sidebarlol" style="left: 0" class="w3-sidebar navbar-expand-sm bg-dark padding-top me-5 ma-5">
+<nav id="sidebarlol" style="left: 0" class="w3-sidebar navbar-expand-md bg-dark padding-top me-5 ma-5">
 <div class="list-group">
 	<div class="badge badge-secondary rounded-pill">Main Menu</div>
 	<?php 
@@ -167,7 +167,7 @@ foreach($pages as $name=>$page)
 <div class="container-fluid">
 	
 	<!-- Fixed navbar -->
-	<nav class="topbar navbar navbar-expand-sm navbar-dark bg-dark fixed-top z-index padding-top">
+	<nav class="topbar navbar navbar-expand-md navbar-dark bg-dark fixed-top z-index padding-top">
 	<a class="navbar-brand" href="<?php echo get_config("base_url"); ?>"><img src="<?php echo get_config("base_url"); ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -198,7 +198,7 @@ foreach ($pages as $name => $page)
 		var top = document.getElementById('big-nav-items');
 		var maincontainer = document.getElementById('main_contain');
 		
-		if (width < 575)
+		if (width < 768)
 		{
 			sidebar.style.display = 'none';
 			top.style.display = '';
