@@ -28,7 +28,9 @@ function get_config($setting)
 $config = Array();
 require_once UPATH . "/config/config.defaults.php";
 
-if (!file_exists(UPATH."/config/config.php") && file_exists(UPATH."/config.php"))
+if (!file_exists(UPATH."/config/config.php")) 
+exit("The ".UPATH . "/config/config.php file does not exist. Please configure the config.php.sample file and rename it to config.php.");
+else if (!file_exists(UPATH."/config/config.php") && file_exists(UPATH."/config.php"))
 {
 	require_once UPATH . "/config.php";
 	require_once UPATH . "/config/compat.php";
@@ -106,3 +108,54 @@ Hook::run(HOOKTYPE_NAVBAR, $pages);
  *	  }
  * }
 */
+
+ /**
+ * Returns the given text with html tags for colors and styling
+ * @param string $text IRC text
+ * @return string HTML text
+ * This is a code taken here :
+ * https://github.com/h9k/magirc/blob/887596259c9ca1980f07df84d415c6d14f477cc7/lib/magirc/Magirc.class.php#L294
+ * it had been retouched a little bit
+ * 
+ */
+function irc2html($text) {
+	$lines = explode("\n", mb_convert_encoding($text, 'UTF-8', 'ISO-8859-1'));
+	$out = '';
+	$colors = array('#FFFFFF', '#000000', '#00007F', '#009300', '#FF0000', '#7F0000', '#9C009C', '#FC7F00', '#FFFF00', '#00FC00', '#009393', '#00FFFF', '#0000FC', '#FF00FF', '#7F7F7F', '#D2D2D2');
+	
+	foreach ($lines as $line) {
+		$line = nl2br(mb_convert_encoding($line, 'UTF-8', 'ISO-8859-1'));
+		// replace control codes
+		$line = preg_replace_callback('/\x03(\d{0,2})(,\d{1,2})?([^\x03\x0F]*)(?:\x03(?!\d))?/', function($matches) use ($colors) {
+			$options = '';
+			$bgcolor = trim(substr($matches[2], 1));
+
+			if ($bgcolor !== '' && (int) $bgcolor < count($colors)) {
+				$options .= 'background-color: ' . $colors[(int) $bgcolor] . '; ';
+			}
+
+			$forecolor = trim($matches[1]);
+
+			if ($forecolor !== '' && (int) $forecolor < count($colors)) {
+				$options .= 'color: ' . $colors[(int) $forecolor] . ';';
+			}
+
+			return '<span style="' . $options . '">' . $matches[3] . '</span>';
+		}, $line);
+
+		$line = preg_replace('/\x02([^\x02\x0F]*)(?:\x02)?/', '<strong>$1</strong>', $line);
+		$line = preg_replace('/\x1F([^\x1F\x0F]*)(?:\x1F)?/', '<span style="text-decoration: underline;">$1</span>', $line);
+		$line = preg_replace('/\x12([^\x12\x0F]*)(?:\x12)?/', '<span style="text-decoration: line-through;">$1</span>', $line);
+		$line = preg_replace('/\x16([^\x16\x0F]*)(?:\x16)?/', '<span style="font-style: italic;">$1</span>', $line);
+		//$line = preg_replace('@(https?://([-\w\.]+)+(:\d+)?(/([\S+]*(\?\S+)?)?)?)@', "<a href='$1' class='topic'>$1</a>", $line);
+		// remove dirt
+		$line = preg_replace('/[\x00-\x1F]/', '', $line);
+		$line = preg_replace('/[\x7F-\xFF]/', '', $line);
+		// append line
+		if (!empty($line)) {
+			$out .= $line;
+		}
+	}
+
+	return $out;
+}
