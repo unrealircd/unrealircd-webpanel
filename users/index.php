@@ -132,14 +132,14 @@ Click on a username to view more information.
 	<thead class="table-primary">
 		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_user(this)" /></th>
 		<th scope="col">Nick</th>
-		<th scope="col">Country</th>
+		<th class="countrycol" scope="col">Country</th>
 		<th class="hostname" scope="col">Host / IP</th>
-		<th scope="col"><span data-toggle="tooltip" data-placement="bottom" title="The services account name, if the user identified to services." style="border-bottom: 1px dotted #000000">Account</span></th>
-		<th scope="col">Usermodes <a href="https://www.unrealircd.org/docs/User_modes" target="_blank">ℹ️</a></th>
+		<th class="accountcol" scope="col"><span data-toggle="tooltip" data-placement="bottom" title="The services account name, if the user identified to services." style="border-bottom: 1px dotted #000000">Account</span></th>
+		<th class="umodescol" scope="col">Usermodes <a href="https://www.unrealircd.org/docs/User_modes" target="_blank">ℹ️</a></th>
 		<th class="opercol" scope="col">Oper</th>
 		<th class="securecol" scope="col"><span data-toggle="tooltip" data-placement="bottom" title="This shows [Secure] if the user is using SSL/TLS or is on localhost." style="border-bottom: 1px dotted #000000">Secure</span></th>
 		<th class="uplinkcol" scope="col">Connected to</th>
-		<th scope="col"><span data-toggle="tooltip" data-placement="bottom" title="The reputation score gets higher when someone with this IP address has been connected in the past weeks. A low reputation score (like <10) is an indication of a new IP." style="border-bottom: 1px dotted #000000">Reputation</span> <a href="https://www.unrealircd.org/docs/Reputation_score" target="_blank">ℹ️</a></th>
+		<th class="reputationcol" scope="col"><span id="reputationheader" data-toggle="tooltip" data-placement="bottom" title="The reputation score gets higher when someone with this IP address has been connected in the past weeks. A low reputation score (like <10) is an indication of a new IP." style="border-bottom: 1px dotted #000000">Rep.</span> <a href="https://www.unrealircd.org/docs/Reputation_score" target="_blank">ℹ️</a></th>
 	</thead>
 	
 	<tbody>
@@ -200,12 +200,12 @@ Click on a username to view more information.
 			echo "<th scope=\"row\"><input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\"></th>";
 			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge rounded-pill badge-dark">Bot</span>' : "";
 			echo "<td><a href=\"details.php?nick=".$user->id."\">$user->name$isBot</a></td>";
-			echo "<td>".(isset($user->geoip->country_code) ? '<img src="https://flagcdn.com/48x36/'.htmlspecialchars(strtolower($user->geoip->country_code)).'.png" width="20" height="15"> '.$user->geoip->country_code : "")."</td>";
+			echo "<td class=\"countrycol\">".(isset($user->geoip->country_code) ? '<img src="https://flagcdn.com/48x36/'.htmlspecialchars(strtolower($user->geoip->country_code)).'.png" width="20" height="15"> '.$user->geoip->country_code : "")."</td>";
 			echo "<td class=\"hostname\">".htmlspecialchars($user->hostname)." (".($user->hostname == $user->ip ? 'the same' : htmlspecialchars($user->ip ?? "None")).")</td>";
 			$account = (isset($user->user->account)) ? "<a href=\"".get_config("base_url")."users/?account=".$user->user->account."\">".htmlspecialchars($user->user->account)."</a>" : '<span class="badge rounded-pill badge-primary">None</span>';
-			echo "<td>".$account."</td>";
+			echo "<td class=\"accountcol\">".$account."</td>";
 			$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
-			echo "<td>".$modes."</td>";
+			echo "<td class=\"umodescol\">".$modes."</td>";
 			$oper = (isset($user->user->operlogin)) ? $user->user->operlogin." <span class=\"badge rounded-pill badge-secondary\">".$user->user->operclass."</span>" : "";
 			if (!strlen($oper))
 				$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="badge rounded-pill badge-warning">Services Bot</span>' : "";
@@ -216,7 +216,7 @@ Click on a username to view more information.
 				$secure = "";
 			echo "<td class=\"securecol\">".$secure."</td>";
 			echo "<td class=\"uplinkcol\"><a href=\"".get_config("base_url")."servers/details.php?server=".substr($user->id, 0, 3)."\">".$user->user->servername."</a></td>";
-			echo "<td>".$user->user->reputation."</td>";
+			echo "<td class=\"reputationcol\">".$user->user->reputation."</td>";
 			echo "</tr>";
 			$currentNumberUsers++;
 			if (isset($user->user->account))
@@ -374,14 +374,54 @@ Click on a username to view more information.
 	function resize_check()
 	{
 		var width = window.innerWidth;
-		var elements = document.querySelectorAll('.hostname, .opercol, .uplinkcol, .securecol');
-		var show = '';
-		if (width < 900)
-			show = 'none';
+		var show_elements = '';
+		var hide_elements = '';
+		//alert(width);
+		if (width < 500)
+		{
+			show_elements = '';
+			hide_elements = '.hostname, .opercol, .uplinkcol, .securecol, .umodescol, .countrycol';
+		} else
+		{
+			if (width < 900)
+			{
+				show_elements = '.countrycol';
+				hide_elements = '.hostname, .opercol, .uplinkcol, .securecol, .umodescol';
+			} else if (width < 1000)
+			{
+				show_elements = '.securecol, .umodescol, .countrycol';
+				hide_elements = '.hostname, .uplinkcol, .opercol';
+			} else if (width < 1200)
+			{
+				show_elements = '.opercol, .securecol, .umodescol, .countrycol';
+				hide_elements = '.hostname, .uplinkcol';
+			} else if (width < 1550)
+			{
+				show_elements = '.opercol, .uplinkcol, .securecol, .umodescol, .countrycol';
+				hide_elements = '.hostname';
+			} else if (width < 1750)
+			{
+				show_elements = '.hostname, .opercol, .securecol, .umodescol, .countrycol';
+				hide_elements = '.uplinkcol';
+			} else {
+				show_elements = '.hostname, .opercol, .uplinkcol, .securecol, .umodescol, .countrycol';
+				hide_elements = '';
+			}
+		}
 
-		for (let i = 0; i < elements.length; i++)
-			elements[i].style.display = show;
+		if (show_elements != '')
+		{
+			show_elements=document.querySelectorAll(show_elements);
+			for (let i = 0; i < show_elements.length; i++)
+				show_elements[i].style.display = '';
+		}
 
+		if (hide_elements != '')
+		{
+			hide_elements=document.querySelectorAll(hide_elements);
+			for (let i = 0; i < hide_elements.length; i++)
+				hide_elements[i].style.display = 'none';
+		}
 	}
 	resize_check();
 	window.addEventListener('resize', function() {
