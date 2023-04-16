@@ -56,7 +56,14 @@ function api_log_loop($sources)
 	{
 		$res = $rpc->eventloop();
 		if (!$res)
+		{
+			/* Output at least something every timeout (10) seconds,
+			 * otherwise PHP may not
+			 * notice when the webclient is gone.
+			 */
+			echo "\n";
 			continue;
+		}
 		send_sse($res);
 	}
 }
@@ -83,7 +90,14 @@ function api_timer_loop(int $every_msec, string $method, array|null $params = nu
 	{
 		$res = $rpc->eventloop();
 		if (!$res)
+		{
+			/* Output at least something every timeout (10) seconds,
+			 * otherwise PHP may not
+			 * notice when the webclient is gone.
+			 */
+			echo "\n";
 			continue;
+		}
 		send_sse($res);
 	}
 }
