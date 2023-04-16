@@ -37,7 +37,7 @@ $channels = $rpc->channel()->getAll();
 			$modes = (isset($channel->modes)) ? "+" . $channel->modes : "<none>";
 			echo "<td>".htmlspecialchars($modes)."</td>";
 			$topic = (isset($channel->topic)) ? htmlspecialchars($channel->topic) : "";
-			echo "<td>".$topic."</td>";
+			echo "<td>".irc2html($topic)."</td>";
 			echo "<td>".$channel->creation_time."</td>";
 			echo "</tr>";
 		}
