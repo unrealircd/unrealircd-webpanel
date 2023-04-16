@@ -82,6 +82,7 @@ function api_timer_loop(int $every_msec, string $method, array|null $params = nu
 			if (!$res)
 				die;
 			send_sse($res);
+			usleep($every_msec * 1000);
 		}
 	}
 
