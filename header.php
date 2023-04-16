@@ -168,10 +168,10 @@ foreach($pages as $name=>$page)
 	
 	<!-- Fixed navbar -->
 	<nav class="topbar navbar navbar-expand-md navbar-dark bg-dark fixed-top z-index padding-top">
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
 	<a class="navbar-brand" href="<?php echo get_config("base_url"); ?>"><img src="<?php echo get_config("base_url"); ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
 			<ul id="big-nav-items" class="navbar-nav mr-auto">
 				
