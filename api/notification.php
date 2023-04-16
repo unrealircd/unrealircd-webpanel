@@ -2,4 +2,4 @@
 
 require_once('common_api.php');
 
-api_log_loop(["!debug", "all"]);
+api_log_loop(["!debug", "warn", "error", "link"]);
