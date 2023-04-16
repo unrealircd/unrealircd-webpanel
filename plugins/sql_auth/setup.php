@@ -1,5 +1,7 @@
 <?php
 
+die("WORK IN PROGRESS: This setup is being recoded to an all in one 'online install screen'. Try a 'git pull' tomorrow, maybe then the new setup is working.");
+
 require_once "../../common.php";
 ?>
 <!DOCTYPE html>
