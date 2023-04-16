@@ -220,7 +220,11 @@ body {
 }
 
 .card-header i.fa {
-	line-height: 74px;
+	line-height: 83px;
+}
+
+.card-header h3 {
+	white-space: nowrap;
 }
 
 #top-country ul {

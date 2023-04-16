@@ -177,7 +177,7 @@ Click on a username to view more information.
 
 			/* Some basic filtering for ACCOUNT */
 			if (isset($_POST['uf_account']) && strlen($_POST['uf_account']) && 
-			strtolower($user->user->account) !== strtolower($_POST['uf_account']))
+			@strtolower($user->user->account) !== strtolower($_POST['uf_account']))
 				continue;
 
 			/* Some basic filtering for SERVER */
