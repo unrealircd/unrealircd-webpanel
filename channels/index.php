@@ -39,7 +39,7 @@ $channels = $rpc->channel()->getAll();
 			$topic = (isset($channel->topic)) ? htmlspecialchars($channel->topic) : "";
 			echo "<td class=\"topiccol\" style=\"overflow:hidden;\">".$topic."</td>";
 			$date = explode("T", $channel->creation_time)[0];
-			echo "<td class=\"createdcol\">".
+			echo "<td class=\"createdcol\" style=\"white-space:nowrap\">".
 			     "<span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"".$channel->creation_time."\">".
 			     "$date</td>";
 			echo "</tr>";
