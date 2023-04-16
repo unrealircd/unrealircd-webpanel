@@ -24,6 +24,17 @@ function get_config($setting)
 	return $item;
 }
 
+function page_requires_no_config()
+{
+	if (str_ends_with($_SERVER['SCRIPT_FILENAME'],"install.php") ||
+	    str_ends_with($_SERVER['SCRIPT_FILENAME'],"test_connection.php"))
+	{
+		return TRUE;
+	}
+	return FALSE;
+}
+
+
 /* Load config defaults */
 $config = Array();
 require_once UPATH . "/config/config.defaults.php";
@@ -33,7 +44,7 @@ if (!file_exists(UPATH."/config/config.php") && file_exists(UPATH."/config.php")
 	require_once UPATH . "/config.php";
 	require_once UPATH . "/config/compat.php";
 } else
-if (str_ends_with($_SERVER['SCRIPT_FILENAME'],"install.php"))
+if (page_requires_no_config())
 {
 	/* Allow empty conf */
 } else
