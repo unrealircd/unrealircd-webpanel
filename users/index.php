@@ -376,37 +376,50 @@ Click on a username to view more information.
 		var width = window.innerWidth;
 		var show_elements = '';
 		var hide_elements = '';
-		//alert(width);
 		if (width < 500)
 		{
 			show_elements = '';
 			hide_elements = '.hostname, .opercol, .uplinkcol, .securecol, .umodescol, .countrycol';
 		} else
+		if (width < 600)
 		{
-			if (width < 900)
-			{
-				show_elements = '.countrycol';
-				hide_elements = '.hostname, .opercol, .uplinkcol, .securecol, .umodescol';
-			} else if (width < 1000)
-			{
-				show_elements = '.securecol, .umodescol, .countrycol';
-				hide_elements = '.hostname, .uplinkcol, .opercol';
-			} else if (width < 1200)
-			{
-				show_elements = '.opercol, .securecol, .umodescol, .countrycol';
-				hide_elements = '.hostname, .uplinkcol';
-			} else if (width < 1550)
-			{
-				show_elements = '.opercol, .uplinkcol, .securecol, .umodescol, .countrycol';
-				hide_elements = '.hostname';
-			} else if (width < 1750)
-			{
-				show_elements = '.hostname, .opercol, .securecol, .umodescol, .countrycol';
-				hide_elements = '.uplinkcol';
-			} else {
-				show_elements = '.hostname, .opercol, .uplinkcol, .securecol, .umodescol, .countrycol';
-				hide_elements = '';
-			}
+			show_elements = '.countrycol';
+			hide_elements = '.hostname, .opercol, .uplinkcol, .securecol, .umodescol';
+		} else
+		if (width < 700)
+		{
+			show_elements = '.umodescol, .countrycol';
+			hide_elements = '.hostname, .opercol, .uplinkcol, .securecol';
+		} else
+		if (width < 768)
+		{
+			show_elements = '.securecol, .umodescol, .countrycol';
+			hide_elements = '.hostname, .opercol, .uplinkcol';
+		} else
+		if (width < 875)
+		{
+			// left nav kicks in at 768+ so need to drop one column between 768..875
+			show_elements = '.umodescol, .countrycol';
+			hide_elements = '.hostname, .opercol, .uplinkcol, .securecol';
+		} else if (width < 1000)
+		{
+			show_elements = '.securecol, .umodescol, .countrycol';
+			hide_elements = '.hostname, .uplinkcol, .opercol';
+		} else if (width < 1200)
+		{
+			show_elements = '.opercol, .securecol, .umodescol, .countrycol';
+			hide_elements = '.hostname, .uplinkcol';
+		} else if (width < 1550)
+		{
+			show_elements = '.opercol, .uplinkcol, .securecol, .umodescol, .countrycol';
+			hide_elements = '.hostname';
+		} else if (width < 1750)
+		{
+			show_elements = '.hostname, .opercol, .securecol, .umodescol, .countrycol';
+			hide_elements = '.uplinkcol';
+		} else {
+			show_elements = '.hostname, .opercol, .uplinkcol, .securecol, .umodescol, .countrycol';
+			hide_elements = '';
 		}
 
 		if (show_elements != '')
