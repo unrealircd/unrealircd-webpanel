@@ -34,14 +34,16 @@ $channels = $rpc->channel()->getAll();
 			echo "<td><a href=\"details.php?chan=".urlencode(htmlspecialchars($channel->name))."\">".htmlspecialchars($channel->name)."</a></td>";
 			$s = ($channel->num_users) ? "success" : "danger";
 			echo "<td><span class=\"badge rounded-pill badge-$s\">".$channel->num_users."</span></td>";
-			$modes = (isset($channel->modes)) ? "+" . $channel->modes : "<none>";
-			echo "<td class=\"modescol\">".htmlspecialchars($modes)."</td>";
+			$modes = (isset($channel->modes)) ? "+" . explode(" ",$channel->modes)[0] : "<none>";
+			echo "<td class=\"modescol\">".
+			     "<span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"+".htmlspecialchars($channel->modes)."\">".
+			     htmlspecialchars($modes)."</span></td>";
 			$topic = (isset($channel->topic)) ? htmlspecialchars($channel->topic) : "";
 			echo "<td class=\"topiccol\" style=\"overflow:hidden;\">".$topic."</td>";
 			$date = explode("T", $channel->creation_time)[0];
 			echo "<td class=\"createdcol\" style=\"white-space:nowrap\">".
 			     "<span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"".$channel->creation_time."\">".
-			     "$date</td>";
+			     "$date</span></td>";
 			echo "</tr>";
 		}
 
