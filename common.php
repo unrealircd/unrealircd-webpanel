@@ -32,7 +32,12 @@ if (!file_exists(UPATH."/config/config.php") && file_exists(UPATH."/config.php")
 {
 	require_once UPATH . "/config.php";
 	require_once UPATH . "/config/compat.php";
-} else {
+} else
+if (str_ends_with($_SERVER['SCRIPT_FILENAME'],"install.php"))
+{
+	/* Allow empty conf */
+} else
+{
 	require_once UPATH . "/config/config.php";
 }
 
