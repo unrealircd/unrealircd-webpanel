@@ -24,7 +24,12 @@ Hook::run(HOOKTYPE_GET_USER_LIST, $userlist);
 $num_of_panel_admins = count($userlist);
 
 ?>
-<div class="container">
+<style>
+	.card {
+		min-height: 100%;
+	}
+	</style>
+<div class="container" style="margin-left:40px;margin-top:30px">
 
 	<div class="row mt-3">
 		<div class="col-sm mb-3">
@@ -122,7 +127,7 @@ $num_of_panel_admins = count($userlist);
 		</div>
 	</div>
 </div>
-<div class="container mt-3">
+<div class="container" style="margin-left:40px;margin-top:30px">
 
 	<div class="row">
 		<div class="col-sm mb-3">
@@ -258,7 +263,7 @@ $num_of_panel_admins = count($userlist);
 	// ^ commented out but may want to restart initStats() when connection is lost.
 </script>
 
-<div class="container mt-3">
+<div class="container" style="margin-left:40px;margin-top:10px">
 
 			<div class="row">
 				<div class="col-sm-3">
