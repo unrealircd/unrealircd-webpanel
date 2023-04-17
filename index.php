@@ -29,7 +29,7 @@ $num_of_panel_admins = count($userlist);
 		min-height: 100%;
 	}
 	</style>
-<div class="container" style="margin-left:40px;margin-top:30px">
+<div class="container card-container" style="margin-left:40px;margin-top:30px">
 
 	<div class="row mt-3">
 		<div class="col-sm mb-3">
@@ -127,7 +127,7 @@ $num_of_panel_admins = count($userlist);
 		</div>
 	</div>
 </div>
-<div class="container" style="margin-left:40px;margin-top:30px">
+<div class="container card-container" style="margin-left:40px;margin-top:30px">
 
 	<div class="row">
 		<div class="col-sm mb-3">
@@ -261,9 +261,29 @@ $num_of_panel_admins = count($userlist);
 	initStats();
 	//setInterval(updateStats, 1000); // Update stats every second
 	// ^ commented out but may want to restart initStats() when connection is lost.
+
+	
+	window.addEventListener('resize', function() {
+		var containers = document.querySelectorAll('.card-container');
+		var width = window.innerWidth;
+		if (width < 768)
+		{
+			containers.forEach((container) => {
+				container.removeAttribute('style');
+
+			});
+		} else 
+		{
+			containers.forEach((container) => {
+				container.style.marginLeft = "40px";
+				container.style.marginTop = "30px";
+
+			});
+		}
+	});
 </script>
 
-<div class="container" style="margin-left:40px;margin-top:10px">
+<div class="container card-container card-container" style="margin-left:40px;margin-top:10px">
 
 			<div class="row">
 				<div class="col-sm-3">
