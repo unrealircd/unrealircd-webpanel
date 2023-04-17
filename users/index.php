@@ -201,7 +201,13 @@ Click on a username to view more information.
 			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge rounded-pill badge-dark">Bot</span>' : "";
 			echo "<td><a href=\"details.php?nick=".$user->id."\">$user->name$isBot</a></td>";
 			echo "<td class=\"countrycol\">".(isset($user->geoip->country_code) ? '<img src="https://flagcdn.com/48x36/'.htmlspecialchars(strtolower($user->geoip->country_code)).'.png" width="20" height="15"> '.$user->geoip->country_code : "")."</td>";
-			echo "<td class=\"hostname\">".htmlspecialchars($user->hostname)." (".($user->hostname == $user->ip ? 'the same' : htmlspecialchars($user->ip ?? "None")).")</td>";
+			if ($user->hostname == $user->ip)
+				$hostip = $user->ip;
+			else if ($user->ip == null)
+				$hostip = $user->hostname;
+			else
+				$hostip = $user->hostname . " (".$user->ip.")";
+			echo "<td class=\"hostname\">".htmlspecialchars($hostip)."</td>";
 			$account = (isset($user->user->account)) ? "<a href=\"".get_config("base_url")."users/?account=".$user->user->account."\">".htmlspecialchars($user->user->account)."</a>" : '<span class="badge rounded-pill badge-primary">None</span>';
 			echo "<td class=\"accountcol\">".$account."</td>";
 			$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
