@@ -2,8 +2,8 @@
 
 require_once "../common.php";
 
-$uri = $_SERVER['SCRIPT_FILENAME'];
-define('BASE_URL', str_replace("settings/install.php","",$uri));
+$uri = $_SERVER['REQUEST_URI'];
+define('BASE_URL', preg_replace("/settings\/install.*/","",$uri));
 
 $writable = (is_writable("../config/")) ? true: false;
 ?>
