@@ -276,7 +276,7 @@ $num_of_panel_admins = count($userlist);
 						<div class="card-body">
 							<div class="row">
 								<div class="col">
-									<h6>Panel Access</h6>
+									<h6>Panel Accounts</h6>
 								</div>
 								<div class="col"> <a class="btn btn-primary" href="<?php echo get_config("base_url"); ?>settings">View</a></div>
 							</div>

@@ -93,7 +93,7 @@ $pages = [
 
 if (is_auth_provided())
 {
-	$pages["Settings"]["Panel Access"] = "settings";
+	$pages["Settings"]["Accounts"] = "settings";
 
 	$user = unreal_get_current_user();
 	if ($user)

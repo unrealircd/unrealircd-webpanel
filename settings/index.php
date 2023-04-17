@@ -9,7 +9,7 @@ do_log($_POST);
 
 
 ?>
-<h4>Panel Settings Overview</h4>
+<h4>Panel Accounts</h4>
 
 <?php
 
@@ -65,8 +65,6 @@ $userlist = [];
 Hook::run(HOOKTYPE_GET_USER_LIST, $userlist);
 
 ?>
-<br>
-<h5>Panel Access</h5>
 Click on a username to view more information.
 <br><br>
 <div id="Users">
