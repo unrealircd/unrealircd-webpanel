@@ -2,7 +2,7 @@
 
 require_once "../common.php";
 
-$uri = $_SERVER['REQUEST_URI'];
+$uri = $_SERVER['SCRIPT_FILENAME'];
 define('BASE_URL', str_replace("settings/install.php","",$uri));
 
 $writable = (is_writable("../config/")) ? true: false;
@@ -90,26 +90,26 @@ $writable = (is_writable("../config/")) ? true: false;
 	<form>
 	<div class="form-group">
 		<label for="rpc_iphost">Hostname or IP</label>
-		<input name="rpc_iphost" type="text" class="form-control" id="rpc_iphost" aria-describedby="hostname_help" placeholder="127.0.0.1">
+		<input name="rpc_iphost" type="text" class="revalidation-needed-rpc form-control" id="rpc_iphost" aria-describedby="hostname_help" placeholder="127.0.0.1">
 		<small id="hostname_help" class="form-text text-muted">The hostname or IP address of your UnrealIRCd server. You should use <code>127.0.0.1</code> for the same machine.</small>
 	</div>
 	<div class="form-group">
 		<label for="rpc_port">Server Port</label>
-		<input name="rpc_port" type="text" class="form-control" id="rpc_port" aria-describedby="port_help" placeholder="8600">
+		<input name="rpc_port" type="text" class="revalidation-needed-rpc form-control" id="rpc_port" aria-describedby="port_help" placeholder="8600">
 		<small id="port_help" class="form-text text-muted">The port which you designated for RPC connections in your <code>unrealircd.conf</code></small>
 	</div>
 	<div class="form-group form-check">
-		<input name="rpc_ssl" type="checkbox" class="form-check-input" id="rpc_ssl">
+		<input name="rpc_ssl" type="checkbox" class="revalidation-needed-rpc form-check-input" id="rpc_ssl">
 		<label class="form-check-label" for="rpc_ssl">My UnrealIRCd server is on a different machine, verify the TLS connection.</label>
 	</div>
 	<div class="form-group">
 		<label for="rpc_username">Username</label>
-		<input name="rpc_user" type="text" class="form-control" id="rpc_user" aria-describedby="username_help" placeholder="apiuser">
+		<input name="rpc_user" type="text" class="revalidation-needed-rpc form-control" id="rpc_user" aria-describedby="username_help" placeholder="apiuser">
 		<small id="username_help" class="form-text text-muted">The name of your <code>rpc-user</code> block as defined in your <code>unrealircd.conf</code></small>
 	</div>
 	<div class="form-group">
 		<label for="rpc_password">Password</label>
-		<input name="rpc_password" type="password" class="form-control" id="rpc_password">
+		<input name="rpc_password" type="password" class="revalidation-needed-rpc form-control" id="rpc_password">
 	</div>
 	<div class="text-center">
 		<div id="page2_back" class="btn btn-secondary mr-3">Back</div>
@@ -144,22 +144,22 @@ $writable = (is_writable("../config/")) ? true: false;
 		Please enter your SQL information. <div id="sql_instructions" class="ml-4 btn btn-sm btn-info">View instructions</div>
 		<div class="form-group">
 			<label for="sql_iphost">Hostname or IP</label>
-			<input name="sql_iphost" type="text" class="form-control" id="sql_iphost" aria-describedby="hostname_help" placeholder="127.0.0.1">
+			<input name="sql_iphost" type="text" class="revalidation-needed-sql form-control" id="sql_iphost" aria-describedby="hostname_help" placeholder="127.0.0.1">
 			<small id="hostname_help" class="form-text text-muted">The hostname or IP address of your SQL server. You should use <code>127.0.0.1</code> for the same machine.</small>
 		</div>
 		<div class="form-group">
 			<label for="sql_db">Database name</label>
-			<input name="sql_db" type="text" class="form-control" id="sql_db" aria-describedby="port_help">
+			<input name="sql_db" type="text" class="revalidation-needed-sql form-control" id="sql_db" aria-describedby="port_help">
 			<small id="port_help" class="form-text text-muted">The name of the SQL database to write to and read from.</small>
 		</div>
 		<div class="form-group">
 			<label for="sql_username">Username</label>
-			<input name="sql_user" type="text" class="form-control" id="sql_user" aria-describedby="username_help">
+			<input name="sql_user" type="text" class="revalidation-needed-sql form-control" id="sql_user" aria-describedby="username_help">
 			<small id="username_help" class="form-text text-muted">The name of SQL user</small>
 		</div>
 		<div class="form-group">
 			<label for="sql_password">Password</label>
-			<input name="sql_password" type="password" class="form-control" id="sql_password">
+			<input name="sql_password" type="password" class="revalidation-needed-sql form-control" id="sql_password">
 		</div>
 	</div>
 	<div class="text-center">
@@ -168,41 +168,39 @@ $writable = (is_writable("../config/")) ? true: false;
 		<div id="page3_test_connection" class="btn btn-primary ml-3" style="display: none">Test connection</div>
 	</div>
 </div>
-<div id="page4" class="container" style="display:none">
+<div id="page4" class="container" >
 	<h5>Create your account</h5>
 	<br>
 	Great! Everything looks good so far! Just one last thing before we confirm everything and get you set up.<br>
 	You need an account! Let's make one.<br><br>
 	<div class="form-group">
-		<label for="account_username">Pick a username</label>
+		<label for="account_user" id="userlabel">Pick a username</label>
 		<input name="account_user" type="text" class="form-control" id="account_user" aria-describedby="username_help">
-		<small id="username_help" class="form-text text-muted">Pick a username! Please make sure it contains no spaces, and is made of only letters and numbers.</small>
+		<small id="username_help" class="form-text text-muted">Pick a username! Please make sure it's at least 3 characters long, contains no spaces, and is made of only letters and numbers.</small>
 	</div>
 	<div class="form-group">
-		<label for="account_password">Password</label>
+		<label for="account_password" id="passlabel">Password</label>
 		<input name="account_password" type="password" class="form-control" id="account_password" aria-describedby="password_help">
 		<small id="password_help" class="form-text text-muted">Please choose a password that at least 8 characters long, contains at least one uppercase letter, one lowercase letter, one number and one symbol.</small>
 	</div>
 	<div class="form-group">
-		<label for="account_password_conf">Confirm password</label>
+		<label for="account_password_conf" id="passconflabel">Confirm password</label>
 		<input name="account_password_conf" type="password" class="form-control" id="account_password_conf">
-		<small id="pass_not_match" class="form-text" style="color:red;display:none">Passwords do not match</small>
 	</div>
 	<div class="form-group">
-		<label for="account_email">Email address</label>
+		<label for="account_email" id="emaillabel">Email address</label>
 		<input name="account_email" type="text" class="form-control" id="account_email" aria-describedby="email_help">
-		<small id="email_help" class="form-text" style="color:red;display:none">Please enter a valid email address</small>
 	</div>
 	<div class="form-group">
-		<label for="account_fname">First name</label>
+		<label for="account_fname" id="fnamelabel">First name</label>
 		<input name="account_fname" type="text" class="form-control" id="account_lname">
 	</div>
 	<div class="form-group">
-		<label for="account_lname">Last name</label>
+		<label for="account_lname" id="lnamelabel">Last name</label>
 		<input name="account_lname" type="text" class="form-control" id="account_lname">
 	</div>
 	<div class="form-group">
-		<label for="account_bio">Bio</label>
+		<label for="account_bio" id="biolabel">Bio</label>
 		<textarea name="account_bio" type="text" class="form-control" id="account_bio"></textarea>
 	</div>
 	<div class="text-center">
@@ -249,6 +247,7 @@ $writable = (is_writable("../config/")) ? true: false;
 	let page3_back = document.getElementById('page3_back');
 	let page3_next = document.getElementById('page3_next');
 
+	
 
 	let page4_back = document.getElementById('page4_back');
 	let page4_next = document.getElementById('page4_next');
@@ -275,11 +274,31 @@ $writable = (is_writable("../config/")) ? true: false;
 		sql_form.style.display = 'none';
 	});
 
+	revalidate_rpc = document.querySelectorAll('.revalidation-needed-rpc');
+	for (let i = 0; i < revalidate_rpc.length; i++)
+	{
+		revalidate_rpc[i].addEventListener('input', e => {
+			page2_next.style.display = 'none';
+			test_conn.innerHTML = 'Test connection';
+			test_conn.style.display = '';
+			test_conn.classList.remove('disabled');
+		});
+	}
+	revalidate_sql = document.querySelectorAll('.revalidation-needed-sql');
+	for (let i = 0; i < revalidate_sql.length; i++)
+	{
+		revalidate_sql[i].addEventListener('input', e => {
+			page3_next.style.display = 'none';
+			sql_test_conn.innerHTML = 'Test connection';
+			sql_test_conn.style.display = '';
+			sql_test_conn.classList.remove('disabled');
+		});
+	}
 	/* The RPC connection tester! */
 	test_conn.addEventListener('click', e => {
 		test_conn.classList.add('disabled');
 		test_conn.innerHTML = "Checking...";
-		fetch(BASE_URL + 'api/test_connection.php?method=rpc&host='+rpc_host.value+'&port='+rpc_port.value+'&user='+rpc_user.value+'&password='+rpc_pass.value+'&tls_verify='+rpc_tls.checked)
+		fetch(BASE_URL + 'api/installation.php?method=rpc&host='+rpc_host.value+'&port='+rpc_port.value+'&user='+rpc_user.value+'&password='+rpc_pass.value+'&tls_verify='+rpc_tls.checked)
 		.then(response => response.json())
 		.then(data => {
 			if (data.success)
@@ -341,7 +360,7 @@ $writable = (is_writable("../config/")) ? true: false;
 	sql_test_conn.addEventListener('click', e => {
 		sql_test_conn.classList.add('disabled');
 		sql_test_conn.innerHTML = "Checking...";
-		fetch(BASE_URL + 'api/test_connection.php?method=sql&host='+sql_host.value+'&database='+sql_db.value+'&user='+sql_user.value+'&password='+sql_pass.value)
+		fetch(BASE_URL + 'api/installation.php?method=sql&host='+sql_host.value+'&database='+sql_db.value+'&user='+sql_user.value+'&password='+sql_pass.value)
 		.then(response => response.json())
 		.then(data => {
 			if (data.success)
@@ -369,15 +388,68 @@ $writable = (is_writable("../config/")) ? true: false;
 					sql_test_conn.classList.remove('disabled');
 				}, 2000);
 		});
-	 });
+	});
 
+	user_name_label = document.getElementById('userlabel');
+	user_name = document.getElementById('account_user');
+	user_pass_label = document.getElementById('passlabel');
+	user_pass = document.getElementById('account_password');
+	user_pass2_label = document.getElementById('passconflabel');
+	user_pass2 = document.getElementById('account_password_conf');
+	user_email_label = document.getElementById('emaillabel');
+	user_email = document.getElementById('account_email');
+	
 	page4_back.addEventListener('click', e => {
 		page4.style.display = 'none';
 		page3.style.display = '';
 	});
+
 	page4_next.addEventListener('click', e => {
+
+		/* Form validation */
+		let req_not_met = ' <small style="color:red">Does not meet requirements</small>';
+		let errs = 0;
+		const regex_username = /^[a-zA-Z\d]{3,}$/;
+		if (!regex_username.test(user_name.value))
+		{
+			user_name_label.innerHTML = 'Pick a username!' + req_not_met;
+			errs++;
+		} else
+			user_name_label.innerHTML = 'Pick a username!';
+
+		let regex_pass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+		if (!regex_pass.test(user_pass.value))
+		{
+			user_pass_label.innerHTML = 'Password' + req_not_met;
+			errs++;
+		} else
+			user_pass_label.innerHTML = 'Password';
+
+		if (user_pass2.value !== user_pass.value)
+		{
+			user_pass2_label.innerHTML = 'Confirm password <small style="color:red">Passwords do not match</small>';
+			errs++;
+		} else
+			user_pass2_label.innerHTML = 'Confirm password';
+
+		const regex_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		console.log(user_email.value);
+		if (!regex_email.test(user_email.value))
+		{
+			user_email_label.innerHTML = 'Email address' + req_not_met;
+			errs++;
+		}
+		else
+			user_email_label.innerHTML = 'Email address';
+
+		if (errs)
+			return;
+
+
 		page4.style.display = 'none';
 		page5.style.display = '';
 	});
+
+
 
 </script>

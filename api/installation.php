@@ -2,6 +2,9 @@
 
 require_once "../common.php";
 
+/* only let this happen pre-config */
+if (file_exists("../config/config.php"))
+    die(json_encode(["error" => "Configuration file exists."]));
 $method;
 
 if (!isset($_GET) || empty($_GET))
