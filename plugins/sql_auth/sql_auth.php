@@ -15,7 +15,6 @@ class sql_auth
 	{
 		self::create_tables();
 		Hook::func(HOOKTYPE_PRE_HEADER, 'sql_auth::session_start');
-		Hook::func(HOOKTYPE_FOOTER, 'sql_auth::add_footer_info');
 		Hook::func(HOOKTYPE_USER_LOOKUP, 'sql_auth::get_user');
 		Hook::func(HOOKTYPE_USERMETA_ADD, 'sql_auth::add_usermeta');
 		Hook::func(HOOKTYPE_USERMETA_DEL, 'sql_auth::del_usermeta');
@@ -27,17 +26,6 @@ class sql_auth
 		Hook::func(HOOKTYPE_PRE_OVERVIEW_CARD, 'sql_auth::add_pre_overview_card');
 		AuthModLoaded::$status = 1;
 
-	}
-
-
-	public static function add_footer_info($empty)
-	{
-		if (!($user = unreal_get_current_user()))
-			return;
-
-		else {
-			echo "<code>Admin Panel v" . WEBPANEL_VERSION . "</code>";
-		}
 	}
 
 	public static function add_pre_overview_card($empty)

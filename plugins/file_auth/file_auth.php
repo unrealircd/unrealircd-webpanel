@@ -11,7 +11,6 @@ class file_auth
 	function __construct()
 	{
 		Hook::func(HOOKTYPE_PRE_HEADER, 'file_auth::session_start');
-		Hook::func(HOOKTYPE_FOOTER, 'file_auth::add_footer_info');
 		Hook::func(HOOKTYPE_USER_LOOKUP, 'file_auth::get_user');
 		Hook::func(HOOKTYPE_USERMETA_ADD, 'file_auth::add_usermeta');
 		Hook::func(HOOKTYPE_USERMETA_DEL, 'file_auth::del_usermeta');
@@ -40,17 +39,6 @@ class file_auth
 			$lkup = new PanelUser(DEFAULT_USER['username']);
 			if (!user_can($lkup, PERMISSION_MANAGE_USERS))
 				$lkup->add_permission(PERMISSION_MANAGE_USERS);
-		}
-	}
-
-	// duplicate code
-	public static function add_footer_info($empty)
-	{
-		if (!($user = unreal_get_current_user()))
-			return;
-
-		else {
-			echo "<code>Admin Panel v" . WEBPANEL_VERSION . "</code>";
 		}
 	}
 

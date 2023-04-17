@@ -53,6 +53,7 @@ footer {
 	bottom: 0;
 	width: 100%;
 	height: 55px;
+	display: none !important;
   }
 
 .topnav {
@@ -247,4 +248,20 @@ body {
   display:block;
   text-align: center;
   font-size: 1rem;
+}
+
+/* Show version and 4-icons "footer" at bottom-left,
+ * if screen height is sufficient.
+ */
+@media only screen and (min-height: 650px) {
+    footer {
+        float: left;
+        width: 160px;
+        height: 60px;
+        display: block !important;
+    }
+
+    #sidebarlol {
+        height: calc(100% - 60px - 50px);
+    }
 }
