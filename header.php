@@ -1,5 +1,7 @@
 <?php
-$arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr); ?>
+$nav_shown = true;
+$arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
+?>
 <!DOCTYPE html>
 <head>
 <?php if (is_auth_provided() && !str_ends_with($_SERVER['SCRIPT_FILENAME'], "setup.php"))

@@ -253,7 +253,7 @@ body {
 /* Show version and 4-icons "footer" at bottom-left,
  * if screen height is sufficient.
  */
-@media only screen and (min-height: 650px) {
+@media only screen and (min-height: 650px) and (min-width: 768px) {
     footer {
         float: left;
         width: 160px;

@@ -1,3 +1,7 @@
+<?php
+	if (!isset($nav_shown))
+		return;
+?>
 <footer class="text-center bg-dark text-white fixed-bottom" style="background-color: #f1f1f1;">
 	<!-- Grid container -->
 	<div class="container">
