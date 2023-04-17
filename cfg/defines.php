@@ -21,6 +21,6 @@ define('WEBPANEL_VERSION', "1.0-git");
 
 /**
  * After how long to log a user out for inactivity
- * Default is 15 mins
+ * Set to 1 hour for now, will be customizable later.
  */
-define('INACTIVITY_TIMEOUT', 900);
+define('INACTIVITY_TIMEOUT', 3600);
