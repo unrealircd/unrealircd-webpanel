@@ -249,7 +249,7 @@ body {
   font-size: 1rem;
 }
 
-/* Best placement for the footer at the bottom of the sidebar for desktops wider than 768px, thus placing the footer at the very bottom provides more visibility */
+/* Best placement for the footer at the bottom of the sidebar for desktops wider than 1000px, thus placing the footer at the very bottom provides more visibility */
 @media only screen and (min-width: 1000px) {
 
     footer {
