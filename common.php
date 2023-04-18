@@ -27,7 +27,7 @@ function get_config($setting)
 function page_requires_no_config()
 {
 	if (str_ends_with($_SERVER['SCRIPT_FILENAME'],"install.php") ||
-	    str_ends_with($_SERVER['SCRIPT_FILENAME'],"test_connection.php"))
+	    str_ends_with($_SERVER['SCRIPT_FILENAME'],"installation.php"))
 	{
 		return TRUE;
 	}
@@ -47,6 +47,11 @@ if (!file_exists(UPATH."/config/config.php") && file_exists(UPATH."/config.php")
 if (page_requires_no_config())
 {
 	/* Allow empty conf */
+} else
+if (!file_exists(UPATH."/config/config.php") && !file_exists(UPATH."/config.php"))
+{
+	header("Location: settings/install.php");
+	die();
 } else
 {
 	require_once UPATH . "/config/config.php";

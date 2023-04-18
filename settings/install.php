@@ -5,11 +5,11 @@ require_once "../common.php";
 /* Get the base url */
 $uri = $_SERVER['REQUEST_URI'];
 $tok = split($uri, "/");
+$base_url = "";
 for ($i=0; isset($tok[$i]); $i++)
 {
-	if ($tok[$i] == "settings" && $tok[$i + 1] == "install.php")
+	if ($tok[$i] == "settings" && strstr($tok[$i + 1], "install.php"))
 	{
-		$base_url = "/";
 		if ($i)
 		{
 			for($j=0; $j < $i; $j++)
@@ -18,10 +18,12 @@ for ($i=0; isset($tok[$i]); $i++)
 				strcat($base_url,"/");
 			}
 		}
-		define('BASE_URL', $base_url);
 	}
 }
-echo highlight_string(json_encode($_GET, JSON_PRETTY_PRINT));
+if (!strlen($base_url))
+	$base_url = "/";
+define('BASE_URL', $base_url);
+
 $writable = (is_writable("../config/")) ? true: false;
 ?>
 <!DOCTYPE html>
@@ -32,7 +34,6 @@ $writable = (is_writable("../config/")) ? true: false;
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="HandheldFriendly" content="true">
 
-<link href="<?php echo get_config("base_url"); ?>css/unrealircd-admin.css" rel="stylesheet">
 
 
  <!-- Latest compiled and minified CSS -->
@@ -44,7 +45,7 @@ $writable = (is_writable("../config/")) ? true: false;
 
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-<script src="<?php echo get_config("base_url"); ?>js/unrealircd-admin.js"></script>
+<script src="../js/unrealircd-admin.js"></script>
 <title>UnrealIRCd Panel</title>
 <link rel="icon" type="image/x-icon" href="<?php echo get_config("base_url"); ?>img/favicon.ico">
 
@@ -58,29 +59,109 @@ $writable = (is_writable("../config/")) ? true: false;
 
 <body role="document">
 
-		<div class="container"><div class="row"><img src="../img/unreal.jpg" width="35px" height="35px" style="margin-right: 15px"><h3>UnrealIRCd Admin Panel Configuration and Setup</h3></div></div>
+		<div class="container mt-4"><div class="row justify-content-center"><img src="../img/unreal.jpg" width="35px" height="35px" style="margin-right: 15px"><h3>UnrealIRCd Admin Panel Configuration and Setup</h3></div></div>
 <?php
 
 	if (file_exists("../config/config.php"))
 	{
-		?><br><div class="container">You're already configured!
+		?><br><div class="container"><?php Message::Fail("You're already configured!"); ?>
 			<br>
 			<a class="text-center btn btn-primary" href="<?php echo BASE_URL; ?>">Take me home!</a>
 		</div>
 		<?php
 		return;
 	}
-	elseif (isset($_GET) && !empty($_GET))
+	elseif (isset($_POST) && !empty($_POST))
 	{
+		?><br><div class="container"><?php 
+		$opts = (object)$_POST;
 		/* pre-load the appropriate auth plugin */
-		$opts = (object)$_GET;
 		$auth_method = (isset($opts->auth_method)) ? $opts->auth_method : NULL;
+		$auth_method_name = NULL;
+		switch($auth_method)
+		{
+			case "sql_auth":
+				$auth_method_name = "SQLAuth";
+				break;
+			case "file_auth":
+				$auth_method_name = "FileAuth";
+				break;
+		}
 		if ($auth_method)
-			new Plugin($auth_method);
+			$am = new Plugin($auth_method);
 		else
-			die(json_encode(["error" => "Invalid params"]));
+		{
+			Message::Fail("Invalid parameters");
+			return;
+		}
+		if ($am->error)
+		{
+			Message::Fail("Couldn't load plugin \"$auth_method\": $am->error");
+			return;
+		}
 
-		
+		/* Assume we have a example config available and copy from that so we leave all the comments n things in there
+		 * If we're setting up it's unlikely anyone would have swooped in already and deleted the example config.
+		 * Throw an error if not
+		*/
+		if (!file_exists("../config/config.php.sample"))
+		{
+			Message::Fail("Could not get sample configuration. We need it to work with.");
+			return;
+		}
+		else {
+			$conf = file_get_contents("../config/config.php.sample");
+			$conf = str_replace('$config["base_url"] = \'/unrealircd-webpanel/\'', '$config["base_url"] = \''.BASE_URL.'\'', $conf);
+			$conf = str_replace('$config["unrealircd"]["rpc_user"] = \'adminpanel\'', '$config["unrealircd"]["rpc_user"] = \''.$opts->rpc_user.'\'', $conf);
+			$conf = str_replace('$config["unrealircd"]["rpc_password"] = \'securepassword\'', '$config["unrealircd"]["rpc_password"] = \''.$opts->rpc_password.'\'', $conf);
+			$conf = str_replace('$config["unrealircd"]["host"] = \'127.0.0.1\'', '$config["unrealircd"]["host"] = \''.$opts->rpc_iphost.'\'', $conf);
+			$conf = str_replace('$config["unrealircd"]["port"] = \'8600\'', '$config["unrealircd"]["port"] = \''.$opts->rpc_port.'\'', $conf);
+			if (isset($opts->rpc_ssl))
+			$conf = str_replace('$config["unrealircd"]["tls_verify_cert"] = false', '$config["unrealircd"]["port"] = true', $conf);
+
+			$conf = str_replace("//\"$auth_method\"", "\"$auth_method\"", $conf); // enable our auth method
+
+			if ($auth_method == "sql_auth")
+			{
+				$conf = str_replace('//$config["mysql"]["host"] = "127.0.0.1"', '$config["mysql"]["host"] = "'.$opts->sql_iphost.'"', $conf);
+				$conf = str_replace('//$config["mysql"]["database"] = "unrealircdwebpanel"', '$config["mysql"]["database"] = "'.$opts->sql_db.'"', $conf);
+				$conf = str_replace('//$config["mysql"]["username"] = "unrealircdwebpanel"', '$config["mysql"]["username"] = "'.$opts->sql_user.'"', $conf);
+				$conf = str_replace('//$config["mysql"]["password"] = "replace_this_with_your_sql_password"', '$config["mysql"]["password"] = "'.$opts->sql_password.'"', $conf);				
+			}
+			$file = fopen("../config/config.php", 'x+'); // only create it if it doesn't already exist even though we checked earlier
+			if ($file)
+			{
+				fwrite($file, $conf);
+			}
+			require_once("../config/config.php");
+
+			if ($auth_method == "sql_auth")
+				if (!sql_auth::create_tables())
+					Message::Fail("Could not create SQL tables");
+
+			$user = [
+				"user_name" => $opts->account_user,
+				"user_pass" => $opts->account_password,
+				"fname" => $opts->account_fname,
+				"lname" => $opts->account_lname,
+				"user_bio" => $opts->account_bio,
+				"email" => $opts->account_email
+			];
+
+			create_new_user($user);
+			$lkup = new PanelUser($opts->account_user);
+			if (!$lkup->id)
+			{
+				Message::Fail("Could not create user");
+				return;
+			}
+			?>			
+			<br>
+			Great! Everything has been completely set up for you, and you can now log in.
+			<a class="text-center btn btn-primary" href="<?php echo BASE_URL; ?>">Let's go!</a></div>
+			<?php
+			return;
+		}
 	}
 
 ?>
@@ -114,7 +195,7 @@ $writable = (is_writable("../config/")) ? true: false;
 </div>
 
 <!-- Form start -->
-<form>
+<form method="post">
 <div id="page2" class="container">
 	<h5>RPC Uplink Information</h5>
 	<br>
