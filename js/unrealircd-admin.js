@@ -116,9 +116,6 @@ function generate_notif(title, body)
     $('#' + toast.id).toast('show');
 }
 
-$("#myModal").on('shown.bs.modal', function(){
-    $("#CloseButton").focus();
-});
 function StreamNotifs(e)
 {
     var data;

@@ -2,9 +2,26 @@
 
 require_once "../common.php";
 
+/* Get the base url */
 $uri = $_SERVER['REQUEST_URI'];
-define('BASE_URL', preg_replace("/settings\/install.*/","",$uri));
-
+$tok = split($uri, "/");
+for ($i=0; isset($tok[$i]); $i++)
+{
+	if ($tok[$i] == "settings" && $tok[$i + 1] == "install.php")
+	{
+		$base_url = "/";
+		if ($i)
+		{
+			for($j=0; $j < $i; $j++)
+			{
+				strcat($base_url,$tok[$j]);
+				strcat($base_url,"/");
+			}
+		}
+		define('BASE_URL', $base_url);
+	}
+}
+echo highlight_string(json_encode($_GET, JSON_PRETTY_PRINT));
 $writable = (is_writable("../config/")) ? true: false;
 ?>
 <!DOCTYPE html>
@@ -41,7 +58,8 @@ $writable = (is_writable("../config/")) ? true: false;
 
 <body role="document">
 
-    <div class="container"><div class="row"><img src="../img/unreal.jpg" width="35px" height="35px" style="margin-right: 15px"><h3>UnrealIRCd Admin Panel Configuration and Setup</h3></div></div><?php
+		<div class="container"><div class="row"><img src="../img/unreal.jpg" width="35px" height="35px" style="margin-right: 15px"><h3>UnrealIRCd Admin Panel Configuration and Setup</h3></div></div>
+<?php
 
 	if (file_exists("../config/config.php"))
 	{
@@ -52,8 +70,25 @@ $writable = (is_writable("../config/")) ? true: false;
 		<?php
 		return;
 	}
+	elseif (isset($_GET) && !empty($_GET))
+	{
+		/* pre-load the appropriate auth plugin */
+		$opts = (object)$_GET;
+		$auth_method = (isset($opts->auth_method)) ? $opts->auth_method : NULL;
+		if ($auth_method)
+			new Plugin($auth_method);
+		else
+			die(json_encode(["error" => "Invalid params"]));
+
+		
+	}
 
 ?>
+<style>
+	table tr td {
+		font-style: italic;
+	}
+</style>
 <div id="page1" class="container">
 	<br>
 	Welcome to the IRC admin panel setup page. This setup process will guide you through the necessary steps to configure your IRC uplink and choose your preferred authentication method.
@@ -69,7 +104,7 @@ $writable = (is_writable("../config/")) ? true: false;
 	Should you wish to edit your config further, you will find it in the <code>config</code> directory called <code>config.php</code>
 	<br><br>
 	We recommend that you carefully read each page and fill in all the required information accurately to ensure a seamless setup process. Thank you for choosing UnrealIRCd Admin Panel, and we hope you find it useful for managing your server/network.
-    <br><br>
+		<br><br>
 	
 	<div id="proceed_div" class="text-center"><?php echo ($writable)
 		? '<div id="page1_proceed" class="btn btn-primary">Proceed</div>'
@@ -99,7 +134,7 @@ $writable = (is_writable("../config/")) ? true: false;
 		<small id="port_help" class="form-text text-muted">The port which you designated for RPC connections in your <code>unrealircd.conf</code></small>
 	</div>
 	<div class="form-group form-check">
-		<input name="rpc_ssl" type="checkbox" class="revalidation-needed-rpc form-check-input" id="rpc_ssl">
+		<input name="rpc_ssl" type="checkbox" class="revalidation-needed-rpc form-check-input" value="ssl" id="rpc_ssl">
 		<label class="form-check-label" for="rpc_ssl">My UnrealIRCd server is on a different machine, verify the TLS connection.</label>
 	</div>
 	<div class="form-group">
@@ -193,7 +228,7 @@ $writable = (is_writable("../config/")) ? true: false;
 	</div>
 	<div class="form-group">
 		<label for="account_fname" id="fnamelabel">First name</label>
-		<input name="account_fname" type="text" class="form-control" id="account_lname">
+		<input name="account_fname" type="text" class="form-control" id="account_fname">
 	</div>
 	<div class="form-group">
 		<label for="account_lname" id="lnamelabel">Last name</label>
@@ -209,6 +244,59 @@ $writable = (is_writable("../config/")) ? true: false;
 	</div>
 </div>
 
+<div class="container" id="page5">
+	<h5>Confirm details</h5>
+	<br>
+	<div class="accordion" id="results_accord">
+		<div class="card">
+			<div class="card-header" id="rpc_heading">
+				<h2 class="mb-0">
+					<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						RPC Uplink Information
+					</button>
+				</h2>
+			</div>
+
+			<div id="collapseOne" class="collapse show" aria-labelledby="rpc_heading" data-parent="#results_accord">
+				<div id="results_rpc" class="card-body">
+
+				</div>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-header" id="headingTwo">
+				<h2 class="mb-0">
+					<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+						Authentication Plugin
+					</button>
+				</h2>
+			</div>
+			<div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#results_accord">
+				<div id="results_auth_plugin" class="card-body">
+					
+				</div>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-header" id="headingThree">
+				<h2 class="mb-0">
+					<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+						Account Information
+					</button>
+				</h2>
+			</div>
+			<div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#results_accord">
+				<div id="results_account" class="card-body">
+
+				</div>
+			</div>
+		</div>
+	</div><br>
+	<div class="text-center">
+		<div id="page5_back" class="btn btn-secondary mr-3">Back</div>
+		<button id="page4_next" type="submit" class="btn btn-primary ml-3">Submit</div>
+	</div>
+</div>
 <!-- Form end -->
 </form>
 <script>
@@ -223,6 +311,8 @@ $writable = (is_writable("../config/")) ? true: false;
 	let page1 = document.getElementById('page1');
 	let page2 = document.getElementById('page2');
 	let page3 = document.getElementById('page3');
+	let page4 = document.getElementById('page4');
+	let page5_back = document.getElementById('page5');
 	let rpc_instructions = document.getElementById('rpc_instructions');
 	let setup_start = document.getElementById('page1_proceed');
 
@@ -247,13 +337,14 @@ $writable = (is_writable("../config/")) ? true: false;
 	let page3_back = document.getElementById('page3_back');
 	let page3_next = document.getElementById('page3_next');
 
-	
-
 	let page4_back = document.getElementById('page4_back');
 	let page4_next = document.getElementById('page4_next');
 	
 	page2.style.display = 'none';
 	page3.style.display = 'none';
+	page3.style.display = 'none';
+	page4.style.display = 'none';
+	page5.style.display = 'none';
 
 	rpc_instructions.addEventListener('click', e => {
 		window.open("https://www.unrealircd.org/docs/UnrealIRCd_webpanel#Configuring_UnrealIRCd");
@@ -284,6 +375,7 @@ $writable = (is_writable("../config/")) ? true: false;
 			test_conn.classList.remove('disabled');
 		});
 	}
+
 	revalidate_sql = document.querySelectorAll('.revalidation-needed-sql');
 	for (let i = 0; i < revalidate_sql.length; i++)
 	{
@@ -294,6 +386,7 @@ $writable = (is_writable("../config/")) ? true: false;
 			sql_test_conn.classList.remove('disabled');
 		});
 	}
+
 	/* The RPC connection tester! */
 	test_conn.addEventListener('click', e => {
 		test_conn.classList.add('disabled');
@@ -326,13 +419,13 @@ $writable = (is_writable("../config/")) ? true: false;
 					test_conn.classList.remove('disabled');
 				}, 2000);
 		});
-	 });
-
+	});
 
 	page3_back.addEventListener('click', e => {
 		page3.style.display = 'none';
 		page2.style.display = '';
 	});
+
 	page3_next.addEventListener('click', e => {
 		page3.style.display = 'none';
 		page4.style.display = '';
@@ -345,6 +438,7 @@ $writable = (is_writable("../config/")) ? true: false;
 			page3_next.style.display = '';
 		}
 	});
+
 	sql_auth_radio.addEventListener('click', e => {
 		if (!file_auth_radio.checked){
 			sql_form.style.display = '';
@@ -398,6 +492,9 @@ $writable = (is_writable("../config/")) ? true: false;
 	user_pass2 = document.getElementById('account_password_conf');
 	user_email_label = document.getElementById('emaillabel');
 	user_email = document.getElementById('account_email');
+	user_fname = document.getElementById('account_fname');
+	user_lname = document.getElementById('account_lname');
+	user_bio = document.getElementById('account_bio');
 	
 	page4_back.addEventListener('click', e => {
 		page4.style.display = 'none';
@@ -433,7 +530,6 @@ $writable = (is_writable("../config/")) ? true: false;
 			user_pass2_label.innerHTML = 'Confirm password';
 
 		const regex_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		console.log(user_email.value);
 		if (!regex_email.test(user_email.value))
 		{
 			user_email_label.innerHTML = 'Email address' + req_not_met;
@@ -445,6 +541,47 @@ $writable = (is_writable("../config/")) ? true: false;
 		if (errs)
 			return;
 
+		/* Start building the next page */
+		let result_rpc = document.getElementById('results_rpc');
+		let tls = '';
+		if (rpc_tls.checked)
+			tls = ` <div class="badge rounded-pill badge-success">Using TLS</div>`;
+		result_rpc.innerHTML = `<table class="table-sm table-responsive caption-top table-hover">
+								<tr><th>IP/Host</th><td>` + rpc_host.value + `</td></tr>
+								<tr><th>Port</th><td>` + rpc_port.value + tls + `</div>
+								<tr><th>Username</th><td>` + rpc_user.value + `</td></tr>
+								<tr><th>Password</th><td>(Hidden)</td></tr>
+								</table>`;
+
+		let result_auth = document.getElementById('results_auth_plugin');
+		if (file_auth_radio.checked)
+		{
+			result_auth.innerHTML = `<table class="table-sm table-responsive caption-top table-hover">
+									<tr><th>Authentication Plugin</th><td>File Auth</td></tr>
+									</table>`;
+		}
+		else if (!file_auth_radio.checked)
+		{
+			result_auth.innerHTML = `<table class="table-sm table-responsive caption-top table-hover">
+									<tr><th>Authentication Plugin</th><td>SQL Auth</td></tr>
+									
+									<tr><th>IP/Host</th><td>` + sql_host.value + `</td></tr>
+									<tr><th>Database</th><td>` + sql_db.value + `</div>
+									<tr><th>Username</th><td>` + sql_user.value + `</td></tr>
+									<tr><th>Password</th><td>(Hidden)</td></tr>
+									</table>`;
+		}
+
+
+		let result_account = document.getElementById('results_account');
+		result_account.innerHTML = `<table class="table-sm table-responsive caption-top table-hover">
+							<tr><th>Username</th><td>` + user_name.value + `</td></tr>
+							<tr><th>Email</th><td>` + user_email.value + `</div>
+							<tr><th>Password</th><td>(Hidden)</td></tr>
+							<tr><th>First Name</th><td>` + user_fname.value + `</td></tr>
+							<tr><th>Last Name</th><td>` + user_lname.value + `</td></tr>
+							<tr><th>Bio</th><td>` + user_bio.value + `</td></tr>
+							</table>`;
 
 		page4.style.display = 'none';
 		page5.style.display = '';
