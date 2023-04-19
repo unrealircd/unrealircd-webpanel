@@ -120,3 +120,5 @@ if ($postbutton && $can_edit_profile)
 <br>
 <button type="submit" name="update_user" class="btn btn-primary">Save Changes</button><br>
 </form>
+<?php
+require_once "../footer.php";

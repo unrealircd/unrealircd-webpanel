@@ -37,3 +37,5 @@ To load and unload plugins, see the plugins section of your <code>config.php</co
         ?>
     </tbody>
 </table>
+<?php
+require_once "../footer.php";

@@ -83,8 +83,8 @@ if ($ip)
     
     <?php
 }
-if (!isset($whois))
-    return;
+if (isset($whois))
+{
 ?>
 
 <div class="modal fade" id="ip_whois_raw" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
@@ -106,4 +106,6 @@ if (!isset($whois))
 	</div>
 </div>
 
-<?php require_once("../footer.php");
+<?php
+}
+require_once "../footer.php";
