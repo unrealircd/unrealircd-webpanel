@@ -155,6 +155,7 @@ $writable = (is_writable("../config/")) ? true: false;
 				Message::Fail("Could not create user");
 				return;
 			}
+			$lkup->add_permission(PERMISSION_MANAGE_USERS);
 			?>			
 			<br>
 			Great! Everything has been completely set up for you, and you can now log in.
