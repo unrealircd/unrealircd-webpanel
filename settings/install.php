@@ -117,7 +117,7 @@ $writable = (is_writable("../config/")) ? true: false;
 			$conf = str_replace('$config["unrealircd"]["host"] = \'127.0.0.1\'', '$config["unrealircd"]["host"] = \''.$opts->rpc_iphost.'\'', $conf);
 			$conf = str_replace('$config["unrealircd"]["port"] = \'8600\'', '$config["unrealircd"]["port"] = \''.$opts->rpc_port.'\'', $conf);
 			if (isset($opts->rpc_ssl))
-			$conf = str_replace('$config["unrealircd"]["tls_verify_cert"] = false', '$config["unrealircd"]["port"] = true', $conf);
+			$conf = str_replace('$config["unrealircd"]["tls_verify_cert"] = false', '$config["unrealircd"]["tls_verify_cert"] = true', $conf);
 
 			$conf = str_replace("//\"$auth_method\"", "\"$auth_method\"", $conf); // enable our auth method
 
