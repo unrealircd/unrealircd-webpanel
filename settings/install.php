@@ -123,7 +123,7 @@ $writable = (is_writable("../config/")) ? true: false;
 
 			if ($auth_method == "sql_auth")
 			{
-				$conf = str_replace('//$config["mysql"]["host"] = "127.0.0.1"', '$config["mysql"]["host"] = "'.$opts->sql_iphost.'"', $conf);
+				$conf = str_replace('//$config["mysql"]["host"] = "127.0.0.1"', '$config["mysql"]["host"] = "'.$opts->sql_host.'"', $conf);
 				$conf = str_replace('//$config["mysql"]["database"] = "unrealircdwebpanel"', '$config["mysql"]["database"] = "'.$opts->sql_db.'"', $conf);
 				$conf = str_replace('//$config["mysql"]["username"] = "unrealircdwebpanel"', '$config["mysql"]["username"] = "'.$opts->sql_user.'"', $conf);
 				$conf = str_replace('//$config["mysql"]["password"] = "replace_this_with_your_sql_password"', '$config["mysql"]["password"] = "'.$opts->sql_password.'"', $conf);				
@@ -206,12 +206,12 @@ $writable = (is_writable("../config/")) ? true: false;
 	<form>
 	<div class="form-group">
 		<label for="rpc_iphost">Hostname or IP</label>
-		<input name="rpc_iphost" type="text" class="revalidation-needed-rpc form-control" id="rpc_iphost" aria-describedby="hostname_help" placeholder="127.0.0.1">
+		<input name="rpc_iphost" type="text" class="revalidation-needed-rpc form-control" id="rpc_iphost" aria-describedby="hostname_help" value="127.0.0.1">
 		<small id="hostname_help" class="form-text text-muted">The hostname or IP address of your UnrealIRCd server. You should use <code>127.0.0.1</code> for the same machine.</small>
 	</div>
 	<div class="form-group">
 		<label for="rpc_port">Server Port</label>
-		<input name="rpc_port" type="text" class="revalidation-needed-rpc form-control" id="rpc_port" aria-describedby="port_help" placeholder="8600">
+		<input name="rpc_port" type="text" class="revalidation-needed-rpc form-control" id="rpc_port" aria-describedby="port_help" value="8600">
 		<small id="port_help" class="form-text text-muted">The port which you designated for RPC connections in your <code>unrealircd.conf</code></small>
 	</div>
 	<div class="form-group form-check">
@@ -220,7 +220,7 @@ $writable = (is_writable("../config/")) ? true: false;
 	</div>
 	<div class="form-group">
 		<label for="rpc_username">Username</label>
-		<input name="rpc_user" type="text" class="revalidation-needed-rpc form-control" id="rpc_user" aria-describedby="username_help" placeholder="apiuser">
+		<input name="rpc_user" type="text" class="revalidation-needed-rpc form-control" id="rpc_user" aria-describedby="username_help">
 		<small id="username_help" class="form-text text-muted">The name of your <code>rpc-user</code> block as defined in your <code>unrealircd.conf</code></small>
 	</div>
 	<div class="form-group">
@@ -259,8 +259,8 @@ $writable = (is_writable("../config/")) ? true: false;
 	<div id="sql_form" style="display:none">
 		Please enter your SQL information. <div id="sql_instructions" class="ml-4 btn btn-sm btn-info">View instructions</div>
 		<div class="form-group">
-			<label for="sql_iphost">Hostname or IP</label>
-			<input name="sql_iphost" type="text" class="revalidation-needed-sql form-control" id="sql_iphost" aria-describedby="hostname_help" placeholder="127.0.0.1">
+			<label for="sql_host">Hostname or IP</label>
+			<input name="sql_host" type="text" class="revalidation-needed-sql form-control" id="sql_host" aria-describedby="hostname_help" value="127.0.0.1">
 			<small id="hostname_help" class="form-text text-muted">The hostname or IP address of your SQL server. You should use <code>127.0.0.1</code> for the same machine.</small>
 		</div>
 		<div class="form-group">
@@ -410,7 +410,7 @@ $writable = (is_writable("../config/")) ? true: false;
 	let file_auth_radio = document.getElementById('file_auth_radio');
 	let sql_auth_radio = document.getElementById('sql_auth_radio');
 	let sql_form = document.getElementById('sql_form');
-	let sql_host = document.getElementById('sql_iphost');
+	let sql_host = document.getElementById('sql_host');
 	let sql_db = document.getElementById('sql_db');
 	let sql_user = document.getElementById('sql_user');
 	let sql_pass = document.getElementById('sql_password');
