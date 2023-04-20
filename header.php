@@ -66,7 +66,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 		transition: left 0.3s;
 	}
 	.w3-sidebar {
-		top: 53px;
+		top: 52px;
 		color: white;
 		transition: left 0.3s;
 		width: 160px;
