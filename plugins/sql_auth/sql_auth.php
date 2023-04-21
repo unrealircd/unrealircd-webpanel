@@ -114,7 +114,8 @@ class sql_auth
 			user_id int NOT NULL,
 			meta_key VARCHAR(255) NOT NULL,
 			meta_value VARCHAR(255),
-			PRIMARY KEY (meta_id)
+			PRIMARY KEY (meta_id),
+			CONSTRAINT meta_key_user_id UNIQUE(meta_key,user_id)
 		)");
 		$conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "settings (
 			id int AUTO_INCREMENT NOT NULL,
@@ -131,18 +132,27 @@ class sql_auth
 		)");
 
 		/* Upgrades: */
+		/* - user_meta: set charset and size */
 		$c = [];
 		if (($columns = $conn->query("SHOW COLUMNS FROM ".get_config("mysql::table_prefix")."user_meta")));
 			$c = $columns->fetchAll();
 		if (!empty($c))
 			$conn->query("ALTER TABLE `".get_config("mysql::table_prefix")."user_meta` CHANGE `meta_value` `meta_value` VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
 
+		/* - settings: add UNIQUE(setting_key) */
 		$c = [];
 		if (($columns = $conn->query("SHOW INDEXES FROM ".get_config("mysql::table_prefix")."settings WHERE Key_name='setting_key'")));
 			$c = $columns->fetchAll();
 		if (empty($c))
-			$conn->query("ALTER TABLE " . get_config("mysql::table_prefix") . "settings ADD CONSTRAINT setting_key UNIQUE(setting_key)"); // ignore failure? eg if exists
-		
+			$conn->query("ALTER TABLE " . get_config("mysql::table_prefix") . "settings ADD CONSTRAINT setting_key UNIQUE(setting_key)");
+
+		/* - user_meta: add UNIQUE(meta_key,user_id) */
+		$c = [];
+		if (($columns = $conn->query("SHOW INDEXES FROM ".get_config("mysql::table_prefix")."user_meta WHERE Key_name='meta_key_user_id'")));
+			$c = $columns->fetchAll();
+		if (empty($c))
+			$conn->query("ALTER TABLE " . get_config("mysql::table_prefix") . "user_meta ADD CONSTRAINT meta_key_user_id UNIQUE(meta_key,user_id)");
+
 		/* make sure everything went well */
 		$tables = ["users", "user_meta", "fail2ban", "settings"];
 		$errors = 0; // counter
