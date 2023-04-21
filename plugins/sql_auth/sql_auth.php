@@ -120,7 +120,8 @@ class sql_auth
 			id int AUTO_INCREMENT NOT NULL,
 			setting_key VARCHAR(255) NOT NULL,
 			setting_value VARCHAR(255),
-			PRIMARY KEY (id)
+			PRIMARY KEY (id),
+			UNIQUE(setting_key)
 		)");
 		$conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "fail2ban (
 			id int AUTO_INCREMENT NOT NULL,
