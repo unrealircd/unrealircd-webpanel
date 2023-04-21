@@ -5,9 +5,12 @@ require_once "header.php";
 
 $stats = $rpc->stats()->get();
 ?>
-
-<h2>Network Overview</h2>
-
+<div class="row ml-0">
+<h2>Network Overview</h2><div data-toggle="tooltip" data-placement="top" title="The stats on this page are updated in real-time"
+							class="card text-center row font-weight-bold"
+							style="margin-left:5%;height:26px;width:60px;background-color:red;color:white">
+<small style="margin-left:-40px;padding-top:3px;margin-right:-50px">⚪</small>LIVE</div>
+</div>
 <?php
 $array_of_stats = (array)$stats;
 
