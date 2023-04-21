@@ -37,6 +37,7 @@ function page_requires_no_config()
 function read_config_file()
 {
 	GLOBAL $config;
+	GLOBAL $config_transition_unreal_server;
 
 	$config = Array();
 	if (!file_exists(UPATH."/config/config.php") && file_exists(UPATH."/config.php"))
@@ -44,6 +45,8 @@ function read_config_file()
 		require_once UPATH . "/config.php";
 		require_once UPATH . "/config/compat.php";
 	}
+	if (isset($config['unrealircd']))
+		$config_transition_unreal_server = true;
 }
 
 function read_config_db()
@@ -60,9 +63,7 @@ function read_config_db()
 
 function config_is_file_item($name)
 {
-	// TODO: move 'unrealircd' and 'plugins' probably ;)
-	if (($name == "unrealircd") ||
-	    ($name == "plugins") ||
+	if (($name == "plugins") ||
 	    ($name == "mysql") ||
 	    ($name == "base_url"))
 	{
@@ -151,6 +152,7 @@ function write_config($setting = null)
 }
 
 /* Now read the config, and redirect to install screen if we don't have it */
+$config_transition_unreal_server = false;
 if (!read_config_file())
 {
 	if (page_requires_no_config())
@@ -166,7 +168,6 @@ if (!read_config_file())
 		require_once UPATH . "/config/config.php";
 	}
 }
-
 require_once "Classes/class-hook.php";
 if (!is_dir(UPATH . "/vendor"))
 	die("The vendor/ directory is missing. Most likely the admin forgot to run 'composer install'\n");
@@ -186,6 +187,9 @@ require_once UPATH . "/plugins.php";
 
 /* Now that plugins are loaded, read config from DB */
 read_config_db();
+/* Transition / update */
+if (isset($config_transition_unreal_server))
+	write_config();
 
 /* And a check... */
 if (!page_requires_no_config() && !get_config("base_url"))
