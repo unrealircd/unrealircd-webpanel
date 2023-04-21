@@ -298,6 +298,7 @@ if (!panel_start_session())
 	{
 		$current_page = $_SERVER['REQUEST_URI'];
 		header("Location: ".get_config("base_url")."login/?redirect=".urlencode($current_page));
+		die;
 	}
 }
 if (is_auth_provided())
