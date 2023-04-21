@@ -34,6 +34,16 @@ function page_requires_no_config()
 	return FALSE;
 }
 
+function page_requires_no_login()
+{
+	if (str_ends_with($_SERVER['SCRIPT_FILENAME'],"login/index.php") ||
+	    page_requires_no_config())
+	{
+		return TRUE;
+	}
+	return FALSE;
+}
+
 function read_config_file()
 {
 	GLOBAL $config;
@@ -45,7 +55,7 @@ function read_config_file()
 		require_once UPATH . "/config.php";
 		require_once UPATH . "/config/compat.php";
 	}
-	if ((include(UPATH . "/config/config.php")) !== 1)
+	if ((@include(UPATH . "/config/config.php")) !== 1)
 		return false;
 	if (isset($config['unrealircd']))
 		$config_transition_unreal_server = true;
@@ -204,10 +214,14 @@ function panel_start_session($user = false)
 			return false;
 	}
 
-	$timeout = (INT)$user->user_meta['session_timeout'] ?? 3600;
+	$timeout = 3600;
+	if (isset($user->user_meta['session_timeout']))
+		$timeout = (INT)$user->user_meta['session_timeout'];
+
 	if (!isset($_SESSION['session_timeout']))
 		$_SESSION['session_timeout'] = $timeout;
 
+	$_SESSION['last-activity'] = time();
 	return true;
 }
 
@@ -243,15 +257,19 @@ require_once UPATH . "/Classes/class-rpc.php";
 require_once UPATH . "/Classes/class-paneluser.php";
 require_once UPATH . "/plugins.php";
 
-/* Now that plugins are loaded, read config from DB */
-read_config_db();
+/* Do various checks and reading, except during setup step 1. */
+if (!page_requires_no_config())
+{
+	/* Now that plugins are loaded, read config from DB */
+	read_config_db();
 
-/* Check if anything needs upgrading (eg on panel version change) */
-upgrade_check();
+	/* Check if anything needs upgrading (eg on panel version change) */
+	upgrade_check();
 
-/* And a check... */
-if (!page_requires_no_config() && !get_config("base_url"))
-	die("The base_url was not found in your config. Setup went wrong?");
+	/* And a check... */
+	if (!get_config("base_url"))
+		die("The base_url was not found in your config. Setup went wrong?");
+}
 
 $pages = [
 	"Overview"     => "",
@@ -274,7 +292,14 @@ $pages = [
 	"News" => "news.php",
 ];
 
-panel_start_session();
+if (!panel_start_session())
+{
+	if (!page_requires_no_login())
+	{
+		$current_page = $_SERVER['REQUEST_URI'];
+		header("Location: ".get_config("base_url")."login/?redirect=".urlencode($current_page));
+	}
+}
 if (is_auth_provided())
 {
 	$pages["Settings"]["Accounts"] = "settings";

@@ -1,4 +1,20 @@
 <?php
+/* Log the user out if it was logged in.
+ * This is mostly for devs running the install screen and
+ * fater succeeding the first screen suddenly being logged in
+ * with old credentials/uid weirdness.
+ * Code from example #1 at https://www.php.net/manual/en/function.session-destroy.php
+ */
+session_start();
+$_SESSION = Array();
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
+}
+session_destroy();
 
 require_once "../common.php";
 

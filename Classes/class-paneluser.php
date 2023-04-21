@@ -54,6 +54,8 @@ class PanelUser
 		$user["id"] = $id;
 		$user["object"] = NULL;
 		Hook::run(HOOKTYPE_USER_LOOKUP, $user);
+		if ($user['object'] === null)
+			return; /* no auth module loaded? */
 		foreach ($user['object'] as $key => $value)
 			$this->$key = $value;
 	}

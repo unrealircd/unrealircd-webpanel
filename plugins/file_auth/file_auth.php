@@ -10,7 +10,6 @@ class file_auth
 
 	function __construct()
 	{
-		Hook::func(HOOKTYPE_PRE_HEADER, 'file_auth::session_start');
 		Hook::func(HOOKTYPE_USER_LOOKUP, 'file_auth::get_user');
 		Hook::func(HOOKTYPE_USERMETA_ADD, 'file_auth::add_usermeta');
 		Hook::func(HOOKTYPE_USERMETA_DEL, 'file_auth::del_usermeta');
@@ -46,30 +45,6 @@ class file_auth
 	{
 		if (defined('DEFAULT_USER'))
 			Message::Fail("Warning: DEFAULT_USER is set in config.php. You should remove that item now, as it is only used during installation.");
-	}
-
-	/* pre-Header hook */
-	// duplicate code
-	public static function session_start($n)
-	{
-		$current_page = $_SERVER['REQUEST_URI'];
-		if (!isset($_SESSION['id']) || empty($_SESSION))
-		{
-			header("Location: ".get_config("base_url")."login/?redirect=".urlencode($current_page));
-			die();
-		}
-		else
-		{
-			if (!unreal_get_current_user()) // user no longer exists
-			{
-				session_destroy();
-				header("Location: ".get_config("base_url")."login");
-				die();
-			}
-			// you'll be automatically logged out after one hour of inactivity
-			$_SESSION['last-activity'] = time();
-
-		}
 	}
 
 	public static function get_user_helper($item)
