@@ -189,7 +189,7 @@ class file_auth
 	{
 		GLOBAL $db;
 		/* Refuse to write empty db (or nearly empty) */
-		if (empty($db) || empty($db["users"]) && !$force)
+		if (empty($db) || (empty($db["users"]) && empty($db["settings"])) && !$force)
 			return;
 
 		$db_filename = UPATH.'/data/database.php';
@@ -347,5 +347,26 @@ class file_auth
 		}
 
 		file_auth::write_db(true);
+	}
+}
+
+class DbSettings {
+	public static function get()
+	{
+		GLOBAL $db;
+
+		if (!isset($db) || empty($db))
+			file_auth::read_db();
+
+		return $db["settings"];
+	}
+	public static function set($key, $val) : bool
+	{
+		GLOBAL $db;
+
+		file_auth::read_db();
+		$db["settings"][$key] = $val;
+		file_auth::write_db();
+		return true;
 	}
 }
