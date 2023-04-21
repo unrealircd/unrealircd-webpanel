@@ -140,7 +140,7 @@ class sql_auth
 		$error_messages = "";
 		foreach($tables as $table)
 		{
-			$prefix = get_config("sql::prefix");
+			$prefix = get_config("sql::table_prefix");
 			$sql = "SHOW TABLES LIKE '$prefix%'"; // SQL query to check if table exists
 
 			$result = $conn->query($sql);

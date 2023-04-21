@@ -109,6 +109,7 @@ $writable = (is_writable("../config/")) ? true: false;
 				"database" => $opts->sql_db,
 				"username" => $opts->sql_user,
 				"password" => $opts->sql_password,
+				"table_prefix" => $opts->sql_table_prefix,
 				];
 		}
 
@@ -208,6 +209,11 @@ $writable = (is_writable("../config/")) ? true: false;
 		<div class="form-group">
 			<label for="sql_password">Password</label>
 			<input name="sql_password" type="password" class="revalidation-needed-sql form-control" id="sql_password">
+		</div>
+		<div class="form-group">
+			<label for="sql_table_prefix">Table prefix</label>
+			<input name="sql_table_prefix" type="text" class="revalidation-needed-sql form-control" id="sql_table_prefix" aria-describedby="sql_table_prefix_help" value="unreal_">
+			<small id="sql_table_prefix_help" class="form-text text-muted">The prefix for table names (leave blank for none)</small>
 		</div>
 	</div>
 	<div class="text-center">
