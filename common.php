@@ -53,6 +53,9 @@ function read_config_db()
 {
 	GLOBAL $config;
 
+	if (page_requires_no_config())
+		return;
+
 	$merge = DbSettings::get();
 	/* DB settings overwrite config.php keys: */
 	$config = array_merge($config, $merge);
@@ -142,7 +145,6 @@ function write_config($setting = null)
 
 	foreach($db_settings as $k=>$v)
 	{
-		echo "Writing $k => $v<br>\n";
 		$ret = DbSettings::set($k, $v);
 		if (!$ret)
 			return $ret;
