@@ -189,6 +189,28 @@ function upgrade_check()
 	}
 }
 
+function panel_start_session($user = false)
+{
+	if (!isset($_SESSION))
+	{
+		session_set_cookie_params(86400); // can't set this to session_timeout due to catch-22
+		session_start();
+	}
+
+	if ($user === false)
+	{
+		$user = unreal_get_current_user();
+		if ($user === false)
+			return false;
+	}
+
+	$timeout = (INT)$user->user_meta['session_timeout'] ?? 3600;
+	if (!isset($_SESSION['session_timeout']))
+		$_SESSION['session_timeout'] = $timeout;
+
+	return true;
+}
+
 /* Now read the config, and redirect to install screen if we don't have it */
 $config_transition_unreal_server = false;
 if (!read_config_file())
@@ -252,6 +274,7 @@ $pages = [
 	"News" => "news.php",
 ];
 
+panel_start_session();
 if (is_auth_provided())
 {
 	$pages["Settings"]["Accounts"] = "settings";

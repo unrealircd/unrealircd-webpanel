@@ -39,11 +39,6 @@ class sql_auth
 	public static function session_start($n)
 	{
 		$current_page = $_SERVER['REQUEST_URI'];
-		if (!isset($_SESSION))
-		{
-			session_set_cookie_params(3600);
-			session_start();
-		}
 		if (!isset($_SESSION['id']) || empty($_SESSION))
 		{
 			

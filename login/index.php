@@ -1,4 +1,3 @@
-
 <?php
 require_once "../common.php";
 
@@ -37,10 +36,12 @@ if (!empty($_POST))
 		/* not being too informative with the login error in case of attackers */
 		if (isset($user->id) && $user->password_verify($_POST['password']))
 		{
+			/* SUCCESSFUL LOGIN */
+			panel_start_session($user);
 			$_SESSION['id'] = $user->id;
 			$user->add_meta("last_login", date("Y-m-d H:i:s"));
 			Hook::run(HOOKTYPE_USER_LOGIN, $user);
-			
+
 			/* Middle of install? Override redirect: */
 			if (!isset($config['unrealircd']) || empty($config['unrealircd']['host']))
 				$redirect = get_config("base_url")."settings/install2.php";
@@ -49,6 +50,7 @@ if (!empty($_POST))
 		}
 		else
 		{
+			/* LOGIN FAILED */
 			$fail = [
 				"login" => htmlspecialchars($_POST['username']),
 				"IP" => $_SERVER['REMOTE_ADDR']

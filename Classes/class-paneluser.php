@@ -212,12 +212,7 @@ function create_new_user(array &$user) : bool
  */
 function unreal_get_current_user() : PanelUser|bool
 {
-	if (!isset($_SESSION))
-	{
-		session_set_cookie_params(3600);
-		session_start();
-	}
-	if (isset($_SESSION['id']))
+	if (isset($_SESSION) && isset($_SESSION['id']))
 	{
 		$user = new PanelUser(NULL, $_SESSION['id']);
 		if ($user->id)

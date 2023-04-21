@@ -3,7 +3,7 @@
 include "../cfg/defines.php";
 session_start();
 //timeout after 10 mins of inactivity
-if (isset($_SESSION["id"]) && isset($_SESSION["last-activity"]) && time() - $_SESSION["last-activity"] < INACTIVITY_TIMEOUT)
+if (isset($_SESSION["id"]) && isset($_SESSION["last-activity"]) && time() - $_SESSION["last-activity"] < $_SESSION['session_timeout'])
     die(json_encode(['session' => 'active']));
 else
 {

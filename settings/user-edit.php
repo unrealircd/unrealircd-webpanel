@@ -31,12 +31,15 @@ if ($postbutton && is_array($permissions) && $caneditpermissions
 
 if ($postbutton && $can_edit_profile)
 {
+    // Goes via core:
     $array['update_fname'] = (isset($_POST['first_name']) && strlen($_POST['first_name'])) ? $_POST['first_name'] : false;
     $array['update_lname'] = (isset($_POST['last_name']) && strlen($_POST['last_name'])) ? $_POST['last_name'] : false;
     $array['update_bio'] = (isset($_POST['bio']) && strlen($_POST['bio'])) ? $_POST['bio'] : false;
     $array['update_email'] = (isset($_POST['email']) && strlen($_POST['email'])) ? $_POST['email'] : false;
     $array['update_pass'] = (isset($_POST['password']) && strlen($_POST['password'])) ? $_POST['password'] : false;
     $array['update_pass_conf'] = (isset($_POST['passwordconfirm']) && strlen($_POST['passwordconfirm'])) ? $_POST['passwordconfirm'] : false;
+    // Goes via meta:
+    $session_timeout = (isset($_POST['session_timeout']) && strlen($_POST['session_timeout'])) ? $_POST['session_timeout'] : 3600;
 
     if (!$array['update_pass'])
     {
@@ -55,6 +58,7 @@ if ($postbutton && $can_edit_profile)
         unset($array['update_pass_conf']);
     }
     $edit_user->update_core_info($array);
+    $edit_user->add_meta("session_timeout", $session_timeout);
     $edit_user = new PanelUser($edit_user->username);
 }
 ?>
@@ -76,44 +80,50 @@ if ($postbutton && $can_edit_profile)
 <br><br>
 <div class="input-group mb-3">
     <div class="input-group-prepend">
-        <span class="input-group-text" style="width: 100px;">@</span>
+        <span class="input-group-text" style="width: 175px;">@</span>
     </div><input disabled type="text" class="form-control" name="username" id="username" placeholder="<?php echo $edit_user->username; ?>">
 </div>
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
-        <span class="input-group-text" style="width: 100px;">First Name</span>
+        <span class="input-group-text" style="width: 175px;">First Name</span>
     </div><input <?php echo $can_edit; ?> type="text" class="form-control" name="first_name" id="first_name" placeholder="<?php echo $edit_user->first_name; ?>">
 </div>
 
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
-        <span class="input-group-text" style="width: 100px;">Last Name</span>
+        <span class="input-group-text" style="width: 175px;">Last Name</span>
     </div><input <?php echo $can_edit; ?> type="text" class="form-control" name="last_name" id="last_name" placeholder="<?php echo $edit_user->last_name; ?>">
 </div>
 
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
-        <span class="input-group-text" style="width: 100px;">Bio</span>
+        <span class="input-group-text" style="width: 175px;">Bio</span>
     </div><textarea <?php echo $can_edit; ?> class="form-control" name="bio" id="username"><?php echo $edit_user->bio; ?></textarea>
 </div>
 
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
-        <span class="input-group-text" style="width: 100px;">Email</span>
+        <span class="input-group-text" style="width: 175px;">Email</span>
     </div><input <?php echo $can_edit; ?> type="text" class="form-control" name="email" id="email" autocomplete="off" value="<?php echo $edit_user->email; ?>">
 </div>
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
-        <span class="input-group-text" style="width: 150px;">New Password</span>
+        <span class="input-group-text" style="width: 175px;">Session timeout</span>
+    </div><input <?php echo $can_edit; ?> type="text" class="form-control" name="session_timeout" id="session_timeout" autocomplete="off" value="<?php echo $edit_user->user_meta['session_timeout'] ?? 3600; ?>">
+</div>
+
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text" style="width: 175px;">New Password</span>
     </div><input <?php echo $can_edit; ?> type="password" class="form-control" name="password" id="password" autocomplete="off">
 </div><div class="input-group mb-3">
     <div class="input-group-prepend">
-        <span class="input-group-text" style="width: 150px;">Confirm Password</span>
+        <span class="input-group-text" style="width: 175px;">Confirm Password</span>
     </div><input <?php echo $can_edit; ?> type="password" class="form-control" name="passwordconfirm" id="passwordconfirm" autocomplete="off">
 </div>
 
