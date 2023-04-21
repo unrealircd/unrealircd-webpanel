@@ -38,9 +38,13 @@ if (!empty($_POST))
 		if (isset($user->id) && $user->password_verify($_POST['password']))
 		{
 			$_SESSION['id'] = $user->id;
-			header('Location: ' . $redirect);
 			$user->add_meta("last_login", date("Y-m-d H:i:s"));
 			Hook::run(HOOKTYPE_USER_LOGIN, $user);
+			
+			/* Middle of install? Override redirect: */
+			if (!isset($config['unrealircd']) || empty($config['unrealircd']['host']))
+				$redirect = get_config("base_url")."settings/install2.php";
+			header('Location: ' . $redirect);
 			die();
 		}
 		else

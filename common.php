@@ -38,10 +38,7 @@ function read_config_file()
 {
 	GLOBAL $config;
 
-	/* Load config defaults */
 	$config = Array();
-	require_once UPATH . "/config/config.defaults.php";
-
 	if (!file_exists(UPATH."/config/config.php") && file_exists(UPATH."/config.php"))
 	{
 		require_once UPATH . "/config.php";
@@ -191,7 +188,8 @@ require_once UPATH . "/plugins.php";
 read_config_db();
 
 /* And a check... */
-if (!get_config("base_url")) die("The base_url was not found in your config. Setup went wrong?");
+if (!page_requires_no_config() && !get_config("base_url"))
+	die("The base_url was not found in your config. Setup went wrong?");
 
 $pages = [
 	"Overview"     => "",
