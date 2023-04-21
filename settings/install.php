@@ -130,7 +130,7 @@ $writable = (is_writable("../config/")) ? true: false;
 			}
 
 			/* First, write only the config file */
-			write_file_config();
+			write_config_file();
 
 			if ($auth_method == "sql_auth")
 				if (!sql_auth::create_tables())

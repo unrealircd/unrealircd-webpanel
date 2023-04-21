@@ -34,7 +34,7 @@ function page_requires_no_config()
 	return FALSE;
 }
 
-function read_config()
+function read_config_file()
 {
 	GLOBAL $config;
 
@@ -49,12 +49,22 @@ function read_config()
 	}
 }
 
+function read_config_db()
+{
+	GLOBAL $config;
+
+	$merge = DbSettings::get();
+	/* DB settings overwrite config.php keys: */
+	$config = array_merge($config, $merge);
+}
+
 function config_is_file_item($name)
 {
 	// TODO: move 'unrealircd' and 'plugins' probably ;)
 	if (($name == "unrealircd") ||
 	    ($name == "plugins") ||
-	    ($name == "mysql"))
+	    ($name == "mysql") ||
+	    ($name == "base_url"))
 	{
 		return true;
 	}
@@ -100,6 +110,7 @@ function write_config_file()
 	 * without having the DB settings read. (And it also
 	 * serves no purpose)
 	 */
+	return true;
 }
 
 // XXX: handle unsetting of config items :D - explicit unset function ?
@@ -131,6 +142,7 @@ function write_config($setting = null)
 
 	foreach($db_settings as $k=>$v)
 	{
+		echo "Writing $k => $v<br>\n";
 		$ret = DbSettings::set($k, $v);
 		if (!$ret)
 			return $ret;
@@ -140,7 +152,7 @@ function write_config($setting = null)
 }
 
 /* Now read the config, and redirect to install screen if we don't have it */
-if (!read_config())
+if (!read_config_file())
 {
 	if (page_requires_no_config())
 	{
@@ -156,7 +168,6 @@ if (!read_config())
 	}
 }
 
-if (!get_config("base_url")) die("You need to define the base_url in config/config.php");
 require_once "Classes/class-hook.php";
 if (!is_dir(UPATH . "/vendor"))
 	die("The vendor/ directory is missing. Most likely the admin forgot to run 'composer install'\n");
@@ -173,6 +184,12 @@ require_once UPATH . "/Classes/class-message.php";
 require_once UPATH . "/Classes/class-rpc.php";
 require_once UPATH . "/Classes/class-paneluser.php";
 require_once UPATH . "/plugins.php";
+
+/* Now that plugins are loaded, read config from DB */
+read_config_db();
+
+/* And a check... */
+if (!get_config("base_url")) die("The base_url was not found in your config. Setup went wrong?");
 
 $pages = [
 	"Overview"     => "",

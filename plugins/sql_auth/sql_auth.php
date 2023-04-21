@@ -134,10 +134,6 @@ class sql_auth
 		if (!empty($c))
 			$conn->query("ALTER TABLE `".get_config("mysql::table_prefix")."user_meta` CHANGE `meta_value` `meta_value` VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
 
-
-		new DbSettings();
-		
-
 		/* make sure everything went well */
 		$tables = ["users", "user_meta", "fail2ban", "settings"];
 		$errors = 0; // counter
