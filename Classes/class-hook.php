@@ -137,9 +137,14 @@ define('HOOKTYPE_USER_ROLE_LIST', 118);
 
 define('HOOKTYPE_EDIT_ROLE', 119);
 
-
-
 define('HOOKTYPE_AUTH_MOD', 200);
+
+/** An upgrade has been detected.
+ * @param array	$versioninfo[]
+ * Array contains: "old_version" and "new_version"
+ */
+define('HOOKTYPE_UPGRADE', 201);
+
 /** 
  *  Class for "Hook"
  * This is the main function which gets called whenever you want to use a Hook.

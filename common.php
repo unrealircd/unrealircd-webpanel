@@ -45,8 +45,11 @@ function read_config_file()
 		require_once UPATH . "/config.php";
 		require_once UPATH . "/config/compat.php";
 	}
+	if ((include(UPATH . "/config/config.php")) !== 1)
+		return false;
 	if (isset($config['unrealircd']))
 		$config_transition_unreal_server = true;
+	return true;
 }
 
 function read_config_db()
@@ -123,7 +126,7 @@ function write_config($setting = null)
 	/* Specific request? Easy, write only this setting to the DB (never used for file) */
 	if ($setting !== null)
 	{
-		return DbSettings::set($k, $v);
+		return DbSettings::set($setting, $config[$setting]);
 	}
 
 	/* Otherwise write the whole config.
@@ -151,6 +154,41 @@ function write_config($setting = null)
 	return true;
 }
 
+function get_version()
+{
+	$fd = @fopen(UPATH."/.git/FETCH_HEAD", "r");
+	if ($fd === false)
+		return "unknown";
+	$line = fgets($fd, 512);
+	fclose($fd);
+	$commit = substr($line, 0, 8);
+	return $commit; /* short git commit id */
+}
+
+function upgrade_check()
+{
+	GLOBAL $config_transition_unreal_server;
+
+	/* Moving of a config.php item to DB: */
+	if ($config_transition_unreal_server)
+		write_config();
+
+	$version = get_version();
+	if (!isset($config['webpanel_version']))
+		$config['webpanel_version'] = '';
+	if ($version != $config['webpanel_version'])
+	{
+		$versioninfo = [
+			"old_version" => $config['webpanel_version'],
+			"new_version" => $version
+			];
+		Hook::run(HOOKTYPE_UPGRADE, $versioninfo);
+		/* And set the new version now that the upgrade is "done" */
+		$config['webpanel_version'] = $version;
+		write_config("webpanel_version");
+	}
+}
+
 /* Now read the config, and redirect to install screen if we don't have it */
 $config_transition_unreal_server = false;
 if (!read_config_file())
@@ -163,11 +201,9 @@ if (!read_config_file())
 	{
 		header("Location: settings/install.php");
 		die();
-	} else
-	{
-		require_once UPATH . "/config/config.php";
 	}
 }
+
 require_once "Classes/class-hook.php";
 if (!is_dir(UPATH . "/vendor"))
 	die("The vendor/ directory is missing. Most likely the admin forgot to run 'composer install'\n");
@@ -187,9 +223,9 @@ require_once UPATH . "/plugins.php";
 
 /* Now that plugins are loaded, read config from DB */
 read_config_db();
-/* Transition / update */
-if (isset($config_transition_unreal_server))
-	write_config();
+
+/* Check if anything needs upgrading (eg on panel version change) */
+upgrade_check();
 
 /* And a check... */
 if (!page_requires_no_config() && !get_config("base_url"))

@@ -23,8 +23,8 @@ class sql_auth
 		Hook::func(HOOKTYPE_USER_DELETE, 'sql_auth::user_delete');
 		Hook::func(HOOKTYPE_EDIT_USER, 'sql_auth::edit_core');
 		Hook::func(HOOKTYPE_PRE_OVERVIEW_CARD, 'sql_auth::add_pre_overview_card');
+		Hook::func(HOOKTYPE_UPGRADE, 'sql_auth::create_tables'); // handles upgrades too ;)
 		AuthModLoaded::$status = 1;
-
 	}
 
 	public static function add_pre_overview_card($empty)
@@ -129,12 +129,20 @@ class sql_auth
 			count VARCHAR(255),
 			PRIMARY KEY (id)
 		)");
+
+		/* Upgrades: */
 		$c = [];
 		if (($columns = $conn->query("SHOW COLUMNS FROM ".get_config("mysql::table_prefix")."user_meta")));
 			$c = $columns->fetchAll();
 		if (!empty($c))
 			$conn->query("ALTER TABLE `".get_config("mysql::table_prefix")."user_meta` CHANGE `meta_value` `meta_value` VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
 
+		$c = [];
+		if (($columns = $conn->query("SHOW INDEXES FROM ".get_config("mysql::table_prefix")."settings WHERE Key_name='setting_key'")));
+			$c = $columns->fetchAll();
+		if (empty($c))
+			$conn->query("ALTER TABLE " . get_config("mysql::table_prefix") . "settings ADD CONSTRAINT setting_key UNIQUE(setting_key)"); // ignore failure? eg if exists
+		
 		/* make sure everything went well */
 		$tables = ["users", "user_meta", "fail2ban", "settings"];
 		$errors = 0; // counter
