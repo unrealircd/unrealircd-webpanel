@@ -230,8 +230,6 @@ function unreal_get_current_user() : PanelUser|bool
  */
 function current_user_can($permission) : bool
 {
-	if (!is_auth_provided()) // if there is no auth plugin, assume the user handles logins themselves
-		return true;
 	$user = unreal_get_current_user();
 	if (!$user)
 		return false;

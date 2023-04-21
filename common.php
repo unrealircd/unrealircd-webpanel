@@ -296,13 +296,13 @@ if (!panel_start_session())
 {
 	if (!page_requires_no_login())
 	{
+		if (!is_auth_provided())
+			die("No authentication plugin loaded. You must load either sql_auth, file_auth, or a similar auth plugin!");
 		$current_page = $_SERVER['REQUEST_URI'];
 		header("Location: ".get_config("base_url")."login/?redirect=".urlencode($current_page));
 		die;
 	}
-}
-if (is_auth_provided())
-{
+} else {
 	$pages["Settings"]["Accounts"] = "settings";
 
 	$user = unreal_get_current_user();
@@ -312,6 +312,7 @@ if (is_auth_provided())
 		$pages["Logout"] = "login/?logout=true";
 	}
 }
+
 Hook::run(HOOKTYPE_NAVBAR, $pages);
 
 /* Example to add new menu item:

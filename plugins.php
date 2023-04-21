@@ -119,8 +119,6 @@ function require_plugin($name, $version)
 		die("Missing plugin: $name v$version");
 }
 
-
-
 /* I'm not a fan of globals */
 class AuthModLoaded
 {
