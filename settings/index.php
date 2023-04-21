@@ -60,7 +60,6 @@ if (isset($_POST))
 		}
 	}
 }
-
 $userlist = [];
 Hook::run(HOOKTYPE_GET_USER_LIST, $userlist);
 

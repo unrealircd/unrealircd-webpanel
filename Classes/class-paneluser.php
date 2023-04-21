@@ -328,3 +328,67 @@ function generate_panel_user_permission_table($user)
 		<?php
 	}
 }
+
+function get_panel_user_roles_list()
+{
+	/* Defaults */
+	$list = [
+        "Super Admin" => get_panel_user_permission_list(), // SuperAdmin can do everything
+        "Read Only" => [], // Read Only can do nothing
+	];
+
+	Hook::run(HOOKTYPE_USER_ROLE_LIST, $list);
+	return $list;
+}
+
+function generate_role_list($list)
+{
+	$list2 = get_panel_user_permission_list();
+	?>
+		<h5>Roles List:</h5>
+		<div id="permlist">
+		<div class="container-xxl">
+		<div class="accordion" id="roles_accord">
+
+<?php foreach($list as $role => $slug) {?>
+	<div class="card">
+		<div class="card-header" id="<?php echo to_slug($role); ?>_heading">
+			<div class="btn-header-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapse_<?php echo to_slug($role); ?>" aria-expanded="true" aria-controls="collapse_<?php echo to_slug($role); ?>">
+				<?php echo $role ?>
+			</div>
+		</div>
+
+		<div id="collapse_<?php echo to_slug($role); ?>" class="collapse" aria-labelledby="<?php echo to_slug($role); ?>_heading" data-parent="#roles_accord">
+			<div id="results_rpc" class="card-body">
+				<?php
+					foreach($list2 as $desc => $slug)
+					{
+					$attributes = "";
+					$attributes .= ($role == "Super Admin" || $role == "Read Only") ? "disabled " : "";
+
+						?>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input <?php
+										$attributes .= (in_array($slug, $list[$role])) ? "checked" : "";
+										echo $attributes;
+									?> name="<?php echo to_slug($role); ?>_permissions[]" value="<?php echo $slug; ?>" type="checkbox">
+								</div>
+							</div>
+							<input type="text" readonly class="form-control" value="<?php echo "$desc ($slug)"; ?>">
+						</div>
+				
+						<?php
+					}
+				?>
+			</div>
+		</div>
+	</div>
+<?php }?>
+
+		</div></div><br>
+			<button type="submit" class="btn btn-primary">Save changes</div>
+</div><?php
+
+}

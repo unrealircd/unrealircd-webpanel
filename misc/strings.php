@@ -1,5 +1,10 @@
 <?php
 
+function to_slug($str)
+{
+	return str_replace(['-', ' '], '_', strtolower($str));
+}
+
 /** Splits up a string by a space
  * (chr 32)
  *
