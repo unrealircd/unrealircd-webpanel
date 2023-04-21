@@ -110,30 +110,27 @@ $writable = (is_writable("../config/")) ? true: false;
 			return;
 		}
 		else {
-			$conf = file_get_contents("../config/config.php.sample");
-			$conf = str_replace('$config["base_url"] = \'/unrealircd-webpanel/\'', '$config["base_url"] = \''.BASE_URL.'\'', $conf);
-			$conf = str_replace('$config["unrealircd"]["rpc_user"] = \'adminpanel\'', '$config["unrealircd"]["rpc_user"] = \''.$opts->rpc_user.'\'', $conf);
-			$conf = str_replace('$config["unrealircd"]["rpc_password"] = \'securepassword\'', '$config["unrealircd"]["rpc_password"] = \''.$opts->rpc_password.'\'', $conf);
-			$conf = str_replace('$config["unrealircd"]["host"] = \'127.0.0.1\'', '$config["unrealircd"]["host"] = \''.$opts->rpc_iphost.'\'', $conf);
-			$conf = str_replace('$config["unrealircd"]["port"] = \'8600\'', '$config["unrealircd"]["port"] = \''.$opts->rpc_port.'\'', $conf);
-			if (isset($opts->rpc_ssl))
-			$conf = str_replace('$config["unrealircd"]["tls_verify_cert"] = false', '$config["unrealircd"]["tls_verify_cert"] = true', $conf);
-
-			$conf = str_replace("//\"$auth_method\"", "\"$auth_method\"", $conf); // enable our auth method
-
+			$config["base_url"] = BASE_URL;
+			$config["unrealircd"] = [
+				"rpc_user" => $opts->rpc_user,
+				"rpc_password" => $opts->rpc_password,
+				"host"=>$opts->rpc_iphost,
+				"port"=>$opts->rpc_port,
+				"tls_verify_cert"=>isset($opts->rpc_ssl)?true:false,
+				];
+			$config["plugins"] = Array("$auth_method");
 			if ($auth_method == "sql_auth")
 			{
-				$conf = str_replace('//$config["mysql"]["host"] = "127.0.0.1"', '$config["mysql"]["host"] = "'.$opts->sql_host.'"', $conf);
-				$conf = str_replace('//$config["mysql"]["database"] = "unrealircdwebpanel"', '$config["mysql"]["database"] = "'.$opts->sql_db.'"', $conf);
-				$conf = str_replace('//$config["mysql"]["username"] = "unrealircdwebpanel"', '$config["mysql"]["username"] = "'.$opts->sql_user.'"', $conf);
-				$conf = str_replace('//$config["mysql"]["password"] = "replace_this_with_your_sql_password"', '$config["mysql"]["password"] = "'.$opts->sql_password.'"', $conf);				
+				$config["mysql"] = [
+					"host" => $opts->sql_host,
+					"database" => $opts->sql_db,
+					"username" => $opts->sql_user,
+					"password" => $opts->sql_password,
+					];
 			}
-			$file = fopen("../config/config.php", 'x+'); // only create it if it doesn't already exist even though we checked earlier
-			if ($file)
-			{
-				fwrite($file, $conf);
-			}
-			require_once("../config/config.php");
+
+			/* First, write only the config file */
+			write_file_config();
 
 			if ($auth_method == "sql_auth")
 				if (!sql_auth::create_tables())
@@ -156,7 +153,10 @@ $writable = (is_writable("../config/")) ? true: false;
 				return;
 			}
 			$lkup->add_permission(PERMISSION_MANAGE_USERS);
-			?>			
+
+			/* Now, write all the config (config.php + settings in DB) */
+			write_config();
+			?>
 			<br>
 			Great! Everything has been completely set up for you, and you can now log in.
 			<a class="text-center btn btn-primary" href="<?php echo BASE_URL; ?>">Let's go!</a></div>

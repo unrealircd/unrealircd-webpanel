@@ -34,27 +34,126 @@ function page_requires_no_config()
 	return FALSE;
 }
 
+function read_config()
+{
+	GLOBAL $config;
 
-/* Load config defaults */
-$config = Array();
-require_once UPATH . "/config/config.defaults.php";
+	/* Load config defaults */
+	$config = Array();
+	require_once UPATH . "/config/config.defaults.php";
 
-if (!file_exists(UPATH."/config/config.php") && file_exists(UPATH."/config.php"))
+	if (!file_exists(UPATH."/config/config.php") && file_exists(UPATH."/config.php"))
+	{
+		require_once UPATH . "/config.php";
+		require_once UPATH . "/config/compat.php";
+	}
+}
+
+function config_is_file_item($name)
 {
-	require_once UPATH . "/config.php";
-	require_once UPATH . "/config/compat.php";
-} else
-if (page_requires_no_config())
+	// TODO: move 'unrealircd' and 'plugins' probably ;)
+	if (($name == "unrealircd") ||
+	    ($name == "plugins") ||
+	    ($name == "mysql"))
+	{
+		return true;
+	}
+	return false;
+}
+
+function write_config_file()
 {
-	/* Allow empty conf */
-} else
-if (!file_exists(UPATH."/config/config.php") && !file_exists(UPATH."/config.php"))
+	GLOBAL $config;
+
+	$file_settings = [];
+	foreach($config as $k=>$v)
+	{
+		if (config_is_file_item($k))
+			$file_settings[$k] = $v;
+	}
+
+	$cfg_filename = UPATH.'/config/config.php';
+	$tmpfile = UPATH.'/config/config.tmp.'.bin2hex(random_bytes(8)).'.php';
+	$fd = fopen($tmpfile, "w");
+	if (!$fd)
+		die("Could not write to temporary config file $tmpfile.<br>We need write permissions on the config/ directory!<br>");
+
+	$str = var_export($file_settings, true);
+	if ($str === null)
+		die("Error while running write_config_file() -- weird!");
+	if (!fwrite($fd, "<?php\n".
+		    "/* This config file is written automatically by the UnrealIRCd webpanel.\n".
+		    " * You are not really supposed to edit it manually.\n".
+		    " */\n".
+		    '$config = '.$str.";\n"))
+	{
+		die("Error writing to config file $tmpfile (on fwrite).<br>");
+	}
+	if (!fclose($fd))
+		die("Error writing to config file $tmpfile (on close).<br>");
+	/* Now atomically rename the file */
+	if (!rename($tmpfile, $cfg_filename))
+		die("Could not write (rename) to file ".$cfg_filename."<br>");
+	opcache_invalidate($cfg_filename);
+
+	/* Do not re-read config, as it would reinitialize config
+	 * without having the DB settings read. (And it also
+	 * serves no purpose)
+	 */
+}
+
+// XXX: handle unsetting of config items :D - explicit unset function ?
+
+function write_config($setting = null)
 {
-	header("Location: settings/install.php");
-	die();
-} else
+	GLOBAL $config;
+
+	/* Specific request? Easy, write only this setting to the DB (never used for file) */
+	if ($setting !== null)
+	{
+		return DbSettings::set($k, $v);
+	}
+
+	/* Otherwise write the whole config.
+	 * TODO: avoid writing settings file if unneeded,
+	 *       as it is more noisy than db settings.
+	 */
+	$db_settings = [];
+
+	foreach($config as $k=>$v)
+	{
+		if (!config_is_file_item($k))
+			$db_settings[$k] = $v;
+	}
+
+	if (!write_config_file())
+		return false;
+
+	foreach($db_settings as $k=>$v)
+	{
+		$ret = DbSettings::set($k, $v);
+		if (!$ret)
+			return $ret;
+	}
+
+	return true;
+}
+
+/* Now read the config, and redirect to install screen if we don't have it */
+if (!read_config())
 {
-	require_once UPATH . "/config/config.php";
+	if (page_requires_no_config())
+	{
+		/* Allow empty conf */
+	} else
+	if (!file_exists(UPATH."/config/config.php") && !file_exists(UPATH."/config.php"))
+	{
+		header("Location: settings/install.php");
+		die();
+	} else
+	{
+		require_once UPATH . "/config/config.php";
+	}
 }
 
 if (!get_config("base_url")) die("You need to define the base_url in config/config.php");

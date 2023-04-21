@@ -205,7 +205,7 @@ class file_auth
 		            "/* This database file is written automatically by the UnrealIRCd webpanel.\n".
 		            " * You are not really supposed to edit it manually.\n".
 		            " */\n".
-		            '$db = '.var_export($db, true).";\n"))
+		            '$db = '.$str.";\n"))
 		{
 			die("Error writing to database file $tmpfile (on fwrite).<br>");
 		}

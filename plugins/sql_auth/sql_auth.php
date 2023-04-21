@@ -116,7 +116,7 @@ class sql_auth
 			meta_value VARCHAR(255),
 			PRIMARY KEY (meta_id)
 		)");
-		$conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "auth_settings (
+		$conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "settings (
 			id int AUTO_INCREMENT NOT NULL,
 			setting_key VARCHAR(255) NOT NULL,
 			setting_value VARCHAR(255),
@@ -135,11 +135,11 @@ class sql_auth
 			$conn->query("ALTER TABLE `".get_config("mysql::table_prefix")."user_meta` CHANGE `meta_value` `meta_value` VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
 
 
-		new SQLAuthSettings();
+		new DbSettings();
 		
 
 		/* make sure everything went well */
-		$tables = ["users", "user_meta", "fail2ban", "auth_settings"];
+		$tables = ["users", "user_meta", "fail2ban", "settings"];
 		$errors = 0; // counter
 		$error_messages = "";
 		foreach($tables as $table)
