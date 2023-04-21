@@ -1,5 +1,12 @@
 <?php
 require_once "common.php";
+if (!isset($config['unrealircd']) || empty($config['unrealircd']['host']))
+{
+	$redirect = get_config("base_url")."settings/install2.php";
+	header('Location: ' . $redirect);
+	die;
+}
+
 require_once "header.php";
 require_once "connection.php";
 
