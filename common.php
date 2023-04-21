@@ -178,6 +178,7 @@ function get_version()
 function upgrade_check()
 {
 	GLOBAL $config_transition_unreal_server;
+	GLOBAL $config;
 
 	/* Moving of a config.php item to DB: */
 	if ($config_transition_unreal_server)

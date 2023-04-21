@@ -9,7 +9,7 @@
 
 		<?php
 			$arr = []; Hook::run(HOOKTYPE_PRE_FOOTER, $arr);
-			echo "<small style=\"font-size: 70%\"><code>Admin Panel ".WEBPANEL_VERSION."</code></small>";
+			echo "<small style=\"font-size: 70%\"><code>Admin Panel ".get_config('webpanel_version')."</code></small>";
 		?>
 
 		<section class="mt-1">
