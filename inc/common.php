@@ -310,7 +310,7 @@ if (!is_dir(UPATH . "/vendor"))
 	die("The vendor/ directory is missing. Most likely the admin forgot to run 'composer install'\n");
 require_once UPATH . '/vendor/autoload.php';
 require_once UPATH . "/Classes/class-cmodes.php";
-require_once UPATH . "/cfg/defines.php";
+require_once UPATH . "/inc/defines.php";
 require_once UPATH . "/misc/strings.php";
 require_once UPATH . "/misc/channel-lookup-misc.php";
 require_once UPATH . "/misc/user-lookup-misc.php";
