@@ -7,7 +7,7 @@ if (version_compare(PHP_VERSION, '8.0.0', '<'))
 	    "<code>apt-get remove libapache2-mod-php7.4</code> (or a similar version). ".
 	    "You may also need to choose again the PHP module to load in apache via <code>a2enmod php8.2</code>");
 
-define('UPATH', dirname(dirname(__FILE__)));
+define('UPATH', dirname(__DIR__));
 
 function get_config($setting)
 {
