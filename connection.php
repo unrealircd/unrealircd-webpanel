@@ -14,8 +14,11 @@ function connect_to_ircd()
 	if (str_starts_with($rpc_password, "secret:"))
 		$rpc_password = secret_decrypt($rpc_password);
 
-	if (!$host || !$port || !$rpc_user || !$rpc_password)
+	if (!$host || !$port || !$rpc_user)
 		die("Unable to find RPC credentials in your config.php");
+	if ($rpc_password === null)
+		die("Your RPC password in the DB was encrypted with a different key than config/config.php contains.<br>\n".
+		    "Either restore your previous config/config.php or start with a fresh database.<br>\n");
 
 	$tls_verify = get_config("unrealircd::tls_verify_cert");
 
