@@ -186,7 +186,8 @@ class file_auth
 		/* Now atomically rename the file */
 		if (!rename($tmpfile, $db_filename))
 			die("Could not write (rename) to file ".$db_filename."<br>");
-		opcache_invalidate($db_filename);
+		if (function_exists('opcache_invalidate'))
+			opcache_invalidate($db_filename);
 	}
 
 	public static function user_create(&$u)

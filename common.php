@@ -118,7 +118,8 @@ function write_config_file()
 	/* Now atomically rename the file */
 	if (!rename($tmpfile, $cfg_filename))
 		die("Could not write (rename) to file ".$cfg_filename."<br>");
-	opcache_invalidate($cfg_filename);
+	if (function_exists('opcache_invalidate'))
+		opcache_invalidate($cfg_filename);
 
 	/* Do not re-read config, as it would reinitialize config
 	 * without having the DB settings read. (And it also
