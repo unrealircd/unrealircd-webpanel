@@ -1,5 +1,5 @@
 <?php
-require_once "../common.php";
+require_once "../inc/common.php";
 
 $logout = false;
 
@@ -165,4 +165,4 @@ if (!empty($_POST))
 	});
 </script>
 
-<?php require_once "../footer.php";
+<?php require_once "../inc/footer.php";

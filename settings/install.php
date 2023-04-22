@@ -16,7 +16,7 @@ if (ini_get("session.use_cookies")) {
 }
 session_destroy();
 
-require_once "../common.php";
+require_once "../inc/common.php";
 
 /* Get the base url */
 $uri = $_SERVER['REQUEST_URI'];

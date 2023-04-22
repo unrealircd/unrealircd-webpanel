@@ -1,5 +1,5 @@
 <?php
-include "../common.php";
+include "../inc/common.php";
 
 if(session_status() !== PHP_SESSION_ACTIVE) session_start();
 
@@ -10,7 +10,7 @@ if (!isset($_SESSION['id']))
 session_write_close();
 
 // Only now make the connection (this can take a short while)
-include "../connection.php";
+include "../inc/connection.php";
 
 // Server Side Events
 header('Content-Type: text/event-stream');

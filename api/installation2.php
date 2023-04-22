@@ -1,6 +1,6 @@
 <?php
 
-require_once "../common.php";
+require_once "../inc/common.php";
 
 /* only let this happen  */
 if (isset($config['unrealircd']) && empty($config['unrealircd']['host']))

@@ -1,7 +1,7 @@
 <?php
-require_once "common.php";
-require_once "connection.php";
-require_once "header.php";
+require_once "inc/common.php";
+require_once "inc/connection.php";
+require_once "inc/header.php";
 
 $spamfilter_target_info = Array(
 	"p"=>Array("short_text" => "usermsg", "long_text" => "User message"),
@@ -323,4 +323,4 @@ $spamfilter = $rpc->spamfilter()->getAll();
 </form></div></div>
 
 
-<?php require_once 'footer.php'; ?>
+<?php require_once 'inc/footer.php'; ?>

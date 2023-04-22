@@ -1,7 +1,7 @@
 <?php
-require_once "../common.php";
-require_once "../connection.php";
-require_once "../header.php";
+require_once "../inc/common.php";
+require_once "../inc/connection.php";
+require_once "../inc/header.php";
 require_once "../Classes/class-checkup.php";
 
 $checkup = new CheckUp();

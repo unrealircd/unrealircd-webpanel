@@ -1,8 +1,8 @@
 <?php
 $conn = NULL;
 
-require_once "../common.php";
-require_once "../header.php";
+require_once "../inc/common.php";
+require_once "../inc/header.php";
 do_log($_POST);
 
 
@@ -181,4 +181,4 @@ Click on a username to view more information.
 	</div>
 	</div></form></div></div><br></div>
 <?php
-require_once '../footer.php'; ?>
+require_once '../inc/footer.php'; ?>

@@ -1,5 +1,5 @@
 <?php
-require_once "common.php";
+require_once "inc/common.php";
 if (!isset($config['unrealircd']) || empty($config['unrealircd']['host']))
 {
 	$redirect = get_config("base_url")."settings/install2.php";
@@ -7,8 +7,8 @@ if (!isset($config['unrealircd']) || empty($config['unrealircd']['host']))
 	die;
 }
 
-require_once "header.php";
-require_once "connection.php";
+require_once "inc/header.php";
+require_once "inc/connection.php";
 
 $stats = $rpc->stats()->get();
 ?>
@@ -324,4 +324,4 @@ $num_of_panel_admins = count($userlist);
 
 Hook::run(HOOKTYPE_OVERVIEW_CARD, $stats);
 
-require_once "footer.php";
+require_once "inc/footer.php";

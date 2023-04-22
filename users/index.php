@@ -1,7 +1,7 @@
 <?php
-require_once "../common.php";
-require_once "../connection.php";
-require_once "../header.php";
+require_once "../inc/common.php";
+require_once "../inc/connection.php";
+require_once "../inc/header.php";
 
 if (!empty($_GET))
 {
@@ -476,4 +476,4 @@ Click on a username to view more information.
 });
 </script>
 
-<?php require_once UPATH.'/footer.php'; ?>
+<?php require_once UPATH.'/inc/footer.php'; ?>

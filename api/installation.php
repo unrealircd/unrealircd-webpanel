@@ -2,7 +2,7 @@
 
 /** For handling installation BEFORE any backend and user is configured */
 
-require_once "../common.php";
+require_once "../inc/common.php";
 
 /* only let this happen pre-config */
 if (file_exists("../config/config.php"))

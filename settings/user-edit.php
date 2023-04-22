@@ -1,7 +1,7 @@
 <?php
 
-require_once "../common.php";
-require_once "../header.php";
+require_once "../inc/common.php";
+require_once "../inc/header.php";
 do_log($_POST);
 
 $us = unreal_get_current_user();
@@ -131,4 +131,4 @@ if ($postbutton && $can_edit_profile)
 <button type="submit" name="update_user" class="btn btn-primary">Save Changes</button><br>
 </form>
 <?php
-require_once "../footer.php";
+require_once "../inc/footer.php";

@@ -1,7 +1,7 @@
 <?php
-require_once "../common.php";
-require_once "../connection.php";
-require_once "../header.php";
+require_once "../inc/common.php";
+require_once "../inc/connection.php";
+require_once "../inc/header.php";
 require_once "../misc/ban-exceptions-misc.php";
 if (!empty($_POST))
 {
@@ -231,4 +231,4 @@ Here is where you can make an exception to bans, that is, to make it so that the
 	</div>
 	</div></form></div></div>
 
-<?php require_once '../footer.php'; ?>
+<?php require_once '../inc/footer.php'; ?>

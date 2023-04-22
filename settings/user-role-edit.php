@@ -1,7 +1,7 @@
 <?php
 
-require_once "../common.php";
-require_once "../header.php";
+require_once "../inc/common.php";
+require_once "../inc/header.php";
 
 if (!current_user_can(PERMISSION_MANAGE_USERS))
 {
@@ -165,4 +165,4 @@ elseif (isset($_POST['del_role_name']) && $role_name = $_POST['del_role_name'])
 generate_role_list($list);
 
 
-require_once "../footer.php";
+require_once "../inc/footer.php";
