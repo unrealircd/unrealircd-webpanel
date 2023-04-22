@@ -191,6 +191,33 @@ function generate_secrets()
 		$config['secrets']['key'] = rtrim(base64_encode(sodium_crypto_aead_xchacha20poly1305_ietf_keygen()),'=');
 }
 
+function secret_encrypt(string $text)
+{
+	GLOBAL $config;
+
+	$key = base64_decode($config['secrets']['key']);
+	$nonce = \random_bytes(\SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NPUBBYTES);
+	$encrypted_text = sodium_crypto_aead_xchacha20poly1305_ietf_encrypt($text, '', $nonce, $key);
+	return "secret:".rtrim(base64_encode($nonce),'=').':'.rtrim(base64_encode($encrypted_text),'='); // secret:base64(NONCE):base64(ENCRYPTEDTEXT)
+}
+
+function secret_decrypt(string $crypted)
+{
+	GLOBAL $config;
+
+	$key = base64_decode($config['secrets']['key']);
+	$d = explode(":", $crypted);
+	if (count($d) != 3)
+		return null;
+	$nonce = base64_decode($d[1]);
+	$ciphertext = base64_decode($d[2]);
+
+	$ret = sodium_crypto_aead_xchacha20poly1305_ietf_decrypt($ciphertext, '', $nonce, $key);
+	if ($ret === false)
+		return null;
+	return $ret;
+}
+
 function upgrade_check()
 {
 	GLOBAL $config_transition_unreal_server;
@@ -201,10 +228,23 @@ function upgrade_check()
 		write_config();
 
 	/* Our own stuff may need upgrading.. */
+	/* - generating secrets */
 	if (!isset($config['secrets']))
 	{
 		generate_secrets();
 		write_config_file();
+	}
+	/* - encrypting rpc_password */
+	if (isset($config['unrealircd']) &&
+	    isset($config['unrealircd']['rpc_password']) &&
+	    !str_starts_with($config['unrealircd']['rpc_password'], "secret:"))
+	{
+		$ret = secret_encrypt($config['unrealircd']['rpc_password']);
+		if ($ret !== false)
+		{
+			$config['unrealircd']['rpc_password'] = $ret;
+			write_config('unrealircd');
+		}
 	}
 
 	$version = get_version();

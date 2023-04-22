@@ -11,6 +11,8 @@ function connect_to_ircd()
 	$port = get_config("unrealircd::port");
 	$rpc_user = get_config("unrealircd::rpc_user");
 	$rpc_password = get_config("unrealircd::rpc_password");
+	if (str_starts_with($rpc_password, "secret:"))
+		$rpc_password = secret_decrypt($rpc_password);
 
 	if (!$host || !$port || !$rpc_user || !$rpc_password)
 		die("Unable to find RPC credentials in your config.php");
