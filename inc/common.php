@@ -369,7 +369,8 @@ if (!panel_start_session())
 	}
 } else {
 	$pages["Settings"]["Accounts"] = "settings";
-
+	if (current_user_can(PERMISSION_MANAGE_USERS))
+		$pages["Settings"]["Role Editor"] = "settings/user-role-edit.php";
 	$user = unreal_get_current_user();
 	if ($user)
 	{

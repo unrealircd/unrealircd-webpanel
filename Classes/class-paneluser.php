@@ -377,13 +377,21 @@ function generate_role_list($list)
 		<div class="card-header" id="<?php echo to_slug($role); ?>_heading">
 			<div class="btn-header-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapse_<?php echo to_slug($role); ?>" aria-expanded="true" aria-controls="collapse_<?php echo to_slug($role); ?>">
 				<?php echo $role ?>
-				<i style="padding-top:-30px;padding-bottom: -30px;"class="fa fa-trash fa-1" aria-hidden="true"></i>
+				
 			</div>
 		</div>
 
 		<div id="collapse_<?php echo to_slug($role); ?>" class="collapse" aria-labelledby="<?php echo to_slug($role); ?>_heading" data-parent="#roles_accord">
 			<div id="results_rpc" class="card-body">
-				<?php
+				<form method="post">
+				<?php if ($role !== "Super Admin" && $role !== "Read Only") { ?>
+					<div class="container row mb-2">
+						<button id="update_role" name="update_role" value="<?php echo $role ?>" class="btn btn-primary ml-1 mr-2" >Update</button>
+						<button id="delete_role" name="del_role_name" value="<?php echo $role ?>" class="btn btn-danger"><i class="fa fa-trash fa-1" aria-hidden="true"></i></button>
+					</div>
+					
+				<?php } ?>
+				<div id="<?php echo $role; ?>_input_area"><?php
 					foreach($list2 as $desc => $slug)
 					{
 					$attributes = "";
@@ -396,7 +404,7 @@ function generate_role_list($list)
 									<input <?php
 										$attributes .= (in_array($slug, $list[$role])) ? "checked" : "";
 										echo $attributes;
-									?> name="<?php echo to_slug($role); ?>_permissions[]" value="<?php echo $slug; ?>" type="checkbox">
+									?> name="permissions[]" value="<?php echo $slug; ?>" type="checkbox">
 								</div>
 							</div>
 							<input type="text" readonly class="form-control" value="<?php echo "$desc ($slug)"; ?>">
@@ -404,14 +412,15 @@ function generate_role_list($list)
 				
 						<?php
 					}
-				?>
+				?>	</div>
+				</form>
 			</div>
 		</div>
 	</div>
 <?php }?>
 
 		</div></div><br>
-			<button type="submit" class="btn btn-primary">Save changes</div>
+			
 </div><?php
 
 }

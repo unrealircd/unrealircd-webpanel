@@ -2,7 +2,7 @@
 
 require_once "../inc/common.php";
 require_once "../inc/header.php";
-
+do_log($_POST);
 if (!current_user_can(PERMISSION_MANAGE_USERS))
 {
     echo "<h4>Access denied</h4>";
@@ -38,18 +38,18 @@ if (isset($_POST['add_role_name']) && $role_name = $_POST['add_role_name'])
             $permissions = $list[$dup];
             $msg .= ", a duplicate of \"$dup\"";
         }
-        $settings = DbSettings::get();
         $clean_perms = [];
             foreach($permissions as $k => $v)
                 $clean_perms[] = $v;
 
-        $settings['user_roles'][$role_name] = $clean_perms;
-        DbSettings::set('user_roles', $settings['user_roles']);
+        $config['user_roles'][$role_name] = $clean_perms;
+        write_config('user_roles');
         $success[] = $msg;
         $list = get_panel_user_roles_list(); // refresh
         
     }
 }
+
 
 elseif (isset($_POST['del_role_name']) && $role_name = $_POST['del_role_name'])
 {
@@ -64,9 +64,8 @@ elseif (isset($_POST['del_role_name']) && $role_name = $_POST['del_role_name'])
     }
     if ($found) // so far so good
     {
-        $settings = DbSettings::get();
-        unset($settings['user_roles'][$role_name]);
-        DbSettings::set('user_roles', $settings['user_roles']);
+        unset($config['user_roles'][$role_name]);
+        write_config('user_roles');
         $success[] = "Successfully deleted role \"$role_name\"";
         $list = get_panel_user_roles_list(); // refresh
     }
@@ -154,7 +153,7 @@ elseif (isset($_POST['del_role_name']) && $role_name = $_POST['del_role_name'])
     });
 
     add_role_name.addEventListener('input', e => {
-        if (!add_role_name.value.length)
+        if (!add_role_name.value.trim().length) // disallow names consisting of just spaces... it doesn't break anything, but it's stupid
             role_submit.disabled = true;
         else
             role_submit.disabled = false;
