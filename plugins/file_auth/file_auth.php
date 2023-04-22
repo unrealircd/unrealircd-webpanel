@@ -152,6 +152,8 @@ class file_auth
 		/* Add at least the general arrays: */
 		if (!isset($db["users"]))
 			$db["users"] = [];
+		if (!isset($db["settings"]))
+			$db["settings"] = [];
 		/* Initialize more if we ever add more... */
 	}
 
