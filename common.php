@@ -78,7 +78,8 @@ function config_is_file_item($name)
 {
 	if (($name == "plugins") ||
 	    ($name == "mysql") ||
-	    ($name == "base_url"))
+	    ($name == "base_url") ||
+	    ($name == "secrets"))
 	{
 		return true;
 	}
@@ -176,6 +177,20 @@ function get_version()
 	return $commit; /* short git commit id */
 }
 
+function generate_secrets()
+{
+	GLOBAL $config;
+
+	if (!isset($config['secrets']))
+		$config['secrets'] = Array();
+
+	if (!isset($config['secrets']['pepper']))
+		$config['secrets']['pepper'] = rtrim(base64_encode(random_bytes(16)),'=');
+
+	if (!isset($config['secrets']['key']))
+		$config['secrets']['key'] = rtrim(base64_encode(sodium_crypto_aead_xchacha20poly1305_ietf_keygen()),'=');
+}
+
 function upgrade_check()
 {
 	GLOBAL $config_transition_unreal_server;
@@ -184,6 +199,13 @@ function upgrade_check()
 	/* Moving of a config.php item to DB: */
 	if ($config_transition_unreal_server)
 		write_config();
+
+	/* Our own stuff may need upgrading.. */
+	if (!isset($config['secrets']))
+	{
+		generate_secrets();
+		write_config_file();
+	}
 
 	$version = get_version();
 	if (!isset($config['webpanel_version']))
@@ -194,6 +216,7 @@ function upgrade_check()
 			"old_version" => $config['webpanel_version'],
 			"new_version" => $version
 			];
+		/* And inform the hook (eg the database backends) */
 		Hook::run(HOOKTYPE_UPGRADE, $versioninfo);
 		/* And set the new version now that the upgrade is "done" */
 		$config['webpanel_version'] = $version;

@@ -65,11 +65,38 @@ class PanelUser
 	 * @param string $input
 	 * @return bool
 	 */
-	function password_verify(string $input) : bool
+	function password_verify(string $password, bool &$hash_needs_updating = false) : bool
 	{
-		if (password_verify($input, $this->passhash))
-			return true;
+		GLOBAL $config;
+		$hash_needs_updating = false;
+
+		if (str_starts_with($this->passhash, "peppered:"))
+		{
+			/* Argon2 with pepper */
+			$password = hash_hmac("sha256", $password, $config['secrets']['pepper']);
+			if (password_verify($password, substr($this->passhash,9)))
+				return true;
+		} else {
+			/* Old standard argon2 */
+			if (password_verify($password, $this->passhash))
+			{
+				$hash_needs_updating = true;
+				return true;
+			}
+		}
 		return false;
+	}
+
+	/**
+	 * Generate hash of user's password
+	 * @param string $password
+	 * @return string
+	 */
+	public static function password_hash(string $password) : string
+	{
+		GLOBAL $config;
+		$input = hash_hmac("sha256", $password, $config['secrets']['pepper']);
+		return "peppered:".password_hash($input, PASSWORD_ARGON2ID);
 	}
 
 	/**
@@ -186,7 +213,7 @@ function create_new_user(array &$user) : bool
 		throw new Exception("Attempted to add user without specifying user_name or user_pass");
 
 	$user['user_name'] = htmlspecialchars($user['user_name']);
-	$user['user_pass'] = password_hash($user['user_pass'], PASSWORD_ARGON2ID);
+	$user['user_pass'] = PanelUser::password_hash($user['user_pass']);
 	$user['fname'] = (isset($user['fname'])) ? htmlspecialchars($user['fname']) : NULL;
 	$last['lname'] = (isset($user['lname'])) ? htmlspecialchars($user['lname']) : NULL;
 	$user['user_bio'] = (isset($user['user_bio'])) ? htmlspecialchars($user['user_bio']) : NULL;

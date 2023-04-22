@@ -34,9 +34,19 @@ if (!empty($_POST))
 	{
 		$user = new PanelUser($_POST['username']);
 		/* not being too informative with the login error in case of attackers */
-		if (isset($user->id) && $user->password_verify($_POST['password']))
+		$hash_needs_updating = false;
+		if (isset($user->id) && $user->password_verify($_POST['password'], $hash_needs_updating))
 		{
 			/* SUCCESSFUL LOGIN */
+			if ($hash_needs_updating)
+			{
+				/* Set password again so it is freshly hashed */
+				$hash = PanelUser::password_hash($_POST['password']);
+				$ar = ["update_pass_conf"=>$hash];
+				$user->update_core_info($ar);
+				unset($ar);
+				unset($hash);
+			}
 			panel_start_session($user);
 			$_SESSION['id'] = $user->id;
 			$user->add_meta("last_login", date("Y-m-d H:i:s"));
