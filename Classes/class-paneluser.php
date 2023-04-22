@@ -342,7 +342,7 @@ function generate_role_list($list)
 	?>
 		<h5>Roles List:</h5>
 		<div id="permlist">
-		<div class="container-xxl">
+		<div class="container-xxl" style="max-width: 1430px;">
 		<div class="accordion" id="roles_accord">
 
 <?php foreach($list as $role => $slug) {?>
@@ -350,6 +350,7 @@ function generate_role_list($list)
 		<div class="card-header" id="<?php echo to_slug($role); ?>_heading">
 			<div class="btn-header-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapse_<?php echo to_slug($role); ?>" aria-expanded="true" aria-controls="collapse_<?php echo to_slug($role); ?>">
 				<?php echo $role ?>
+				<i style="padding-top:-30px;padding-bottom: -30px;"class="fa fa-trash fa-1" aria-hidden="true"></i>
 			</div>
 		</div>
 

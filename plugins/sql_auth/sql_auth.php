@@ -23,7 +23,16 @@ class sql_auth
 		Hook::func(HOOKTYPE_EDIT_USER, 'sql_auth::edit_core');
 		Hook::func(HOOKTYPE_PRE_OVERVIEW_CARD, 'sql_auth::add_pre_overview_card');
 		Hook::func(HOOKTYPE_UPGRADE, 'sql_auth::create_tables'); // handles upgrades too ;)
+		Hook::func(HOOKTYPE_USER_ROLE_LIST, 'sql_auth::roles_list');
 		AuthModLoaded::$status = 1;
+	}
+
+	public static function roles_list(&$list)
+	{
+		$settings = DbSettings::get();
+		if (isset($settings['user_roles']))
+			foreach($settings['user_roles'] as $r => $role)
+				$list[$r] = $role;
 	}
 
 	public static function add_pre_overview_card($empty)
@@ -85,7 +94,7 @@ class sql_auth
 		$conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "settings (
 			id int AUTO_INCREMENT NOT NULL,
 			setting_key VARCHAR(255) NOT NULL,
-			setting_value VARCHAR(255),
+			setting_value VARCHAR(5000),
 			PRIMARY KEY (id),
 			UNIQUE(setting_key)
 		)");
@@ -99,21 +108,25 @@ class sql_auth
 		/* Upgrades: */
 		/* - user_meta: set charset and size */
 		$c = [];
-		if (($columns = $conn->query("SHOW COLUMNS FROM ".get_config("mysql::table_prefix")."user_meta")));
+		if (($columns = $conn->query("SHOW COLUMNS FROM ".get_config("mysql::table_prefix")."user_meta")))
 			$c = $columns->fetchAll();
 		if (!empty($c))
-			$conn->query("ALTER TABLE `".get_config("mysql::table_prefix")."user_meta` CHANGE `meta_value` `meta_value` VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
+			$conn->query("ALTER TABLE ".get_config("mysql::table_prefix")."user_meta CHANGE `meta_value` `meta_value` VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
 
 		/* - settings: add UNIQUE(setting_key) */
 		$c = [];
-		if (($columns = $conn->query("SHOW INDEXES FROM ".get_config("mysql::table_prefix")."settings WHERE Key_name='setting_key'")));
+		if (($columns = $conn->query("SHOW INDEXES FROM ".get_config("mysql::table_prefix")."settings WHERE Key_name='setting_key'")))
 			$c = $columns->fetchAll();
 		if (empty($c))
+		{
 			$conn->query("ALTER TABLE " . get_config("mysql::table_prefix") . "settings ADD CONSTRAINT setting_key UNIQUE(setting_key)");
-
+		}
+		else
+			$conn->query("ALTER TABLE ".get_config("mysql::table_prefix")."settings CHANGE setting_value setting_value VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
+		
 		/* - user_meta: add UNIQUE(meta_key,user_id) */
 		$c = [];
-		if (($columns = $conn->query("SHOW INDEXES FROM ".get_config("mysql::table_prefix")."user_meta WHERE Key_name='meta_key_user_id'")));
+		if (($columns = $conn->query("SHOW INDEXES FROM ".get_config("mysql::table_prefix")."user_meta WHERE Key_name='meta_key_user_id'")))
 			$c = $columns->fetchAll();
 		if (empty($c))
 			$conn->query("ALTER TABLE " . get_config("mysql::table_prefix") . "user_meta ADD CONSTRAINT meta_key_user_id UNIQUE(meta_key,user_id)");
