@@ -199,7 +199,7 @@ Click on a username to view more information.
 			echo "\n<tr id=\"$user->id\" value=\"$user->name\" class=\"userselector\">";
 			echo "<th scope=\"row\"><input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\"></th>";
 			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge rounded-pill badge-dark">Bot</span>' : "";
-			echo "<td><a href=\"details.php?nick=".$user->id."\">$user->name$isBot</a></td>";
+			echo "<td><a href=\"details.php?nick=".$user->id."\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"".$user->user->realname."\">$user->name$isBot</a></td>";
 			echo "<td class=\"countrycol\">".(isset($user->geoip->country_code) ? '<img src="https://flagcdn.com/48x36/'.htmlspecialchars(strtolower($user->geoip->country_code)).'.png" width="20" height="15"> '.$user->geoip->country_code : "")."</td>";
 			if ($user->hostname == $user->ip)
 				$hostip = $user->ip;
@@ -474,6 +474,10 @@ Click on a username to view more information.
 		rclickmenu.classList.remove("visible");
 	}
 });
+
+	$(function () {
+			$('[data-toggle="tooltip"]').tooltip()
+	})
 </script>
 
 <?php require_once UPATH.'/inc/footer.php'; ?>
