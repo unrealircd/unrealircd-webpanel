@@ -10,16 +10,19 @@ if (file_exists("../config/config.php"))
 
 if (!isset($_POST) || empty($_POST))
 		die(json_encode(["error" => "Incorrect parameters"]));
-foreach($_POST as $key => $str)
-		${$key} = $str;
 
-if ($method == "sql")
+if ($_POST['method'] == "sql")
 {
-		$conn = mysqli_connect($host, $user, $password, $database);
+		$conn = mysqli_connect($_POST['host'], $_POST['user'], $_POST['password'], $_POST['database']);
 
 		// check connection
 		if (mysqli_connect_errno())
 				die(json_encode(["error" => "Failed to connect to MySQL: " . mysqli_connect_error()]));
+
+		$sql = "SHOW TABLES LIKE '".$conn->real_escape_string($_POST['table_prefix'])."%'"; // SQL query to check if table exists
+		$result = $conn->query($sql);
+		if ($result->num_rows > 0)
+			die(json_encode(["warn" => "Database already has data"]));
 
 		// close connection
 		mysqli_close($conn);

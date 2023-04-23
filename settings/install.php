@@ -277,6 +277,28 @@ $writable = (is_writable("../config/")) ? true: false;
 	</div>
 </div>
 </form>
+<div class="modal fade" id="db_overwrite_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="myModalLabel">Database already contains data</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			The database already contains tables with webpanel data. 
+			If you continue then this existing data will be deleted.
+		</div>
+		<div class="modal-footer">
+				<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+				<button id="ProceedButton" type="button" class="btn btn-danger" onclick="nextstep();">Continue</button>
+			</form>
+		</div>
+		</div>
+	</div>
+</div>
+
 <script>
 	let BASE_URL = '<?php echo BASE_URL; ?>';
 	let chmod_help = document.getElementById('chmod_help');
@@ -350,18 +372,18 @@ $writable = (is_writable("../config/")) ? true: false;
 		            'host='+encodeURIComponent(sql_host.value)+
 		            '&database='+encodeURIComponent(sql_db.value)+
 		            '&user='+encodeURIComponent(sql_user.value)+
-		            '&password='+encodeURIComponent(sql_pass.value)
+		            '&password='+encodeURIComponent(sql_pass.value)+
+		            '&table_prefix='+encodeURIComponent(sql_table_prefix.value)
 		      })
 		.then(response => response.json())
 		.then(data => {
 			if (data.success)
 			{
-				// do something with the JSON data
-				sql_test_conn.innerHTML = "Success!";
-				setTimeout(function() {
-					sql_test_conn.style.display = 'none';
-					page3_next.style.display = '';
-				}, 2000);
+				nextstep();
+			} else
+			if (data.warn)
+			{
+				$('#db_overwrite_modal').modal();
 			}
 			else
 			{
@@ -443,4 +465,11 @@ $writable = (is_writable("../config/")) ? true: false;
 
 		page4.style.display = 'none';
 	});
+
+	function nextstep()
+	{
+		$('#db_overwrite_modal').modal('hide');
+		page3_next.click();
+		window.scrollTo(0,0);
+	}
 </script>
