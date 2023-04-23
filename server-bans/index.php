@@ -1,11 +1,10 @@
 <?php
 require_once "../inc/common.php";
-require_once "../inc/connection.php";
 require_once "../inc/header.php";
+require_once "../inc/connection.php";
 
 if (!empty($_POST))
 {
-
 	if (isset($_POST['tklch']) && !empty($_POST['tklch'])) // User has asked to delete these tkls
 	{
 		if (!current_user_can(PERMISSION_SERVER_BAN_DEL))
@@ -106,6 +105,7 @@ $tkl = $rpc->serverban()->getAll();
 ?>
 <h4>Server Bans Overview</h4>
 Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>
+<!-- Add ban -->
 <p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" <?php echo (current_user_can(PERMISSION_SERVER_BAN_ADD)) ? "" : "disabled"; ?>>
 			Add entry
 	</button></p></table>
@@ -190,9 +190,16 @@ Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>
 	</div>
 	</div>
 
-	<table class="container-xxl table table-sm table-responsive caption-top table-striped">
-	<thead class="table-primary">
+<!-- The banlist table -->
+
+	<!-- only in this file for now for testing -->
+	<link rel="stylesheet" href="<?php echo get_config("base_url"); ?>css/datatables.min.css" />
+	<script src="<?php echo get_config("base_url"); ?>js/datatables.min.js"></script>
+	<script src="<?php echo get_config("base_url"); ?>js/datatables-natural-sort.js"></script>
+
 	<form method="post">
+	<table id="data_list" class="container-xxl table table-sm table-responsive caption-top table-striped">
+	<thead class="table-primary">
 	<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_tkl(this)" /></th>
 	<th scope="col">Mask</th>
 	<th scope="col">Type</th>
@@ -246,5 +253,16 @@ Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>
 		</div>
 	</div>
 	</div></form></div></div>
+
+<script>
+$(document).ready( function () {
+	$('#data_list').DataTable({
+		'columnDefs': [
+			 { targets: '_all', 'type': 'natural' }
+		],
+		'pageLength':100,
+	});
+} );
+</script>
 
 <?php require_once '../inc/footer.php'; ?>
