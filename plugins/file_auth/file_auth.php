@@ -144,17 +144,31 @@ class file_auth
 		return true;
 	}
 
-	public static function read_db()
+	public static function minimal_db()
 	{
 		GLOBAL $db;
-		$db_filename = UPATH.'/data/database.php';
-		@include($db_filename);
 		/* Add at least the general arrays: */
 		if (!isset($db["users"]))
 			$db["users"] = [];
 		if (!isset($db["settings"]))
 			$db["settings"] = [];
 		/* Initialize more if we ever add more... */
+	}
+	public static function read_db()
+	{
+		GLOBAL $db;
+		$db_filename = UPATH.'/data/database.php';
+		@include($db_filename);
+		file_auth::minimal_db();
+	}
+
+	/* Delete the database -- only called during setup AFTER confirmation! */
+	public static function delete_db()
+	{
+		GLOBAL $db;
+		$db = [];
+		file_auth::minimal_db();
+		file_auth::write_db(true);
 	}
 
 	public static function write_db($force = false)

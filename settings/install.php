@@ -139,6 +139,9 @@ $writable = (is_writable("../config/")) ? true: false;
 			sql_auth::delete_tables();
 			if (!sql_auth::create_tables())
 				Message::Fail("Could not create SQL tables");
+		} else if ($auth_method == "file_auth")
+		{
+			file_auth::delete_db();
 		}
 
 		$user = [
