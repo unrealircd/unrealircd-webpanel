@@ -3,27 +3,27 @@
 require_once "SQL/sql.php";
 require_once "SQL/settings.php";
 
-class sql_auth
+class sql_db
 {
-	public $name = "SQLAuth";
+	public $name = "SQLDB";
 	public $author = "Valware";
 	public $version = "1.0";
-	public $description = "Provides a User Auth and Management Panel with an SQL backend";
+	public $description = "SQL database backend";
 	public $email = "v.a.pond@outlook.com";
 
 	function __construct()
 	{
-		Hook::func(HOOKTYPE_USER_LOOKUP, 'sql_auth::get_user');
-		Hook::func(HOOKTYPE_USERMETA_ADD, 'sql_auth::add_usermeta');
-		Hook::func(HOOKTYPE_USERMETA_DEL, 'sql_auth::del_usermeta');
-		Hook::func(HOOKTYPE_USERMETA_GET, 'sql_auth::get_usermeta');
-		Hook::func(HOOKTYPE_USER_CREATE, 'sql_auth::user_create');
-		Hook::func(HOOKTYPE_GET_USER_LIST, 'sql_auth::get_user_list');
-		Hook::func(HOOKTYPE_USER_DELETE, 'sql_auth::user_delete');
-		Hook::func(HOOKTYPE_EDIT_USER, 'sql_auth::edit_core');
-		Hook::func(HOOKTYPE_PRE_OVERVIEW_CARD, 'sql_auth::add_pre_overview_card');
-		Hook::func(HOOKTYPE_UPGRADE, 'sql_auth::create_tables'); // handles upgrades too ;)
-		Hook::func(HOOKTYPE_USER_ROLE_LIST, 'sql_auth::roles_list');
+		Hook::func(HOOKTYPE_USER_LOOKUP, 'sql_db::get_user');
+		Hook::func(HOOKTYPE_USERMETA_ADD, 'sql_db::add_usermeta');
+		Hook::func(HOOKTYPE_USERMETA_DEL, 'sql_db::del_usermeta');
+		Hook::func(HOOKTYPE_USERMETA_GET, 'sql_db::get_usermeta');
+		Hook::func(HOOKTYPE_USER_CREATE, 'sql_db::user_create');
+		Hook::func(HOOKTYPE_GET_USER_LIST, 'sql_db::get_user_list');
+		Hook::func(HOOKTYPE_USER_DELETE, 'sql_db::user_delete');
+		Hook::func(HOOKTYPE_EDIT_USER, 'sql_db::edit_core');
+		Hook::func(HOOKTYPE_PRE_OVERVIEW_CARD, 'sql_db::add_pre_overview_card');
+		Hook::func(HOOKTYPE_UPGRADE, 'sql_db::create_tables'); // handles upgrades too ;)
+		Hook::func(HOOKTYPE_USER_ROLE_LIST, 'sql_db::roles_list');
 		AuthModLoaded::$status = 1;
 	}
 

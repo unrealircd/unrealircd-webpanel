@@ -1,27 +1,27 @@
 <?php
 
-class file_auth
+class file_db
 {
-	public $name = "FileAuth";
-	public $author = "Syzop and Valware";
+	public $name = "FileDB";
+	public $author = "Syzop";
 	public $version = "1.0";
-	public $description = "Provides a User Auth using a simple file backend";
+	public $description = "File-based database backend";
 	public $email = "syzop@vulnscan.org";
 
 	function __construct()
 	{
-		Hook::func(HOOKTYPE_USER_LOOKUP, 'file_auth::get_user');
-		Hook::func(HOOKTYPE_USERMETA_ADD, 'file_auth::add_usermeta');
-		Hook::func(HOOKTYPE_USERMETA_DEL, 'file_auth::del_usermeta');
-		Hook::func(HOOKTYPE_USERMETA_GET, 'file_auth::get_usermeta');
-		Hook::func(HOOKTYPE_USER_CREATE, 'file_auth::user_create');
-		Hook::func(HOOKTYPE_GET_USER_LIST, 'file_auth::get_user_list');
-		Hook::func(HOOKTYPE_USER_DELETE, 'file_auth::user_delete');
-		Hook::func(HOOKTYPE_EDIT_USER, 'file_auth::edit_core');
-		Hook::func(HOOKTYPE_PRE_OVERVIEW_CARD, 'file_auth::add_pre_overview_card');
+		Hook::func(HOOKTYPE_USER_LOOKUP, 'file_db::get_user');
+		Hook::func(HOOKTYPE_USERMETA_ADD, 'file_db::add_usermeta');
+		Hook::func(HOOKTYPE_USERMETA_DEL, 'file_db::del_usermeta');
+		Hook::func(HOOKTYPE_USERMETA_GET, 'file_db::get_usermeta');
+		Hook::func(HOOKTYPE_USER_CREATE, 'file_db::user_create');
+		Hook::func(HOOKTYPE_GET_USER_LIST, 'file_db::get_user_list');
+		Hook::func(HOOKTYPE_USER_DELETE, 'file_db::user_delete');
+		Hook::func(HOOKTYPE_EDIT_USER, 'file_db::edit_core');
+		Hook::func(HOOKTYPE_PRE_OVERVIEW_CARD, 'file_db::add_pre_overview_card');
 		AuthModLoaded::$status = 1;
 
-		file_auth::read_db();
+		file_db::read_db();
 
 		if (defined('DEFAULT_USER')) // we've got a default account
 		{
@@ -84,11 +84,11 @@ class file_auth
 		{
 			foreach($db["users"] as $user=>$details)
 				if ($details["id"] === $id)
-					$obj = file_auth::get_user_helper($details);
+					$obj = file_db::get_user_helper($details);
 		}
 		if (isset($db["users"][$name]))
 		{
-			$obj = file_auth::get_user_helper($db["users"][$name]);
+			$obj = file_db::get_user_helper($db["users"][$name]);
 		}
 		$u['object'] = $obj;
 		return $obj;
@@ -100,7 +100,7 @@ class file_auth
 
 		$uid = $u['id'];
 
-		$username = file_auth::uid_to_username($uid);
+		$username = file_db::uid_to_username($uid);
 		if (!$username)
 			die("User not found: $uid\n"); // return false; /* User does not exist */
 
@@ -116,14 +116,14 @@ class file_auth
 		$key = $meta['key'];
 		$value = $meta['value'];
 
-		file_auth::read_db();
-		$username = file_auth::uid_to_username($uid);
+		file_db::read_db();
+		$username = file_db::uid_to_username($uid);
 		if (!$username)
 			return false; /* User does not exist */
 
 		/* And update */
 		$db["users"][$username]["meta"][$key] = $value;
-		file_auth::write_db();
+		file_db::write_db();
 		return true;
 	}
 
@@ -132,15 +132,15 @@ class file_auth
 		$uid = $meta['id'];
 		$key = $meta['key'];
 
-		file_auth::read_db();
-		$username = file_auth::uid_to_username($uid);
+		file_db::read_db();
+		$username = file_db::uid_to_username($uid);
 		if (!$username)
 			return false; /* User does not exist */
 
 		/* And delete */
 		unset($db["users"][$username]["meta"][$key]);
 
-		file_auth::write_db();
+		file_db::write_db();
 		return true;
 	}
 
@@ -159,7 +159,7 @@ class file_auth
 		GLOBAL $db;
 		$db_filename = UPATH.'/data/database.php';
 		@include($db_filename);
-		file_auth::minimal_db();
+		file_db::minimal_db();
 	}
 
 	/* Delete the database -- only called during setup AFTER confirmation! */
@@ -167,8 +167,8 @@ class file_auth
 	{
 		GLOBAL $db;
 		$db = [];
-		file_auth::minimal_db();
-		file_auth::write_db(true);
+		file_db::minimal_db();
+		file_db::write_db(true);
 	}
 
 	public static function write_db($force = false)
@@ -217,7 +217,7 @@ class file_auth
 		$created = date("Y-m-d H:i:s");
 		$id = random_int(1000000,99999999);
 
-		file_auth::read_db();
+		file_db::read_db();
 
 		if (isset($db["users"][$username]))
 		{
@@ -237,7 +237,7 @@ class file_auth
 			"meta" => [],
 			];
 
-		file_auth::write_db();
+		file_db::write_db();
 		$u['success'] = true;
 	}
 
@@ -259,7 +259,7 @@ class file_auth
 	{
 		GLOBAL $db;
 
-		file_auth::read_db();
+		file_db::read_db();
 		$user = $u['user'];
 		$username = $user->username;
 		$deleted = false;
@@ -268,7 +268,7 @@ class file_auth
 			unset($db["users"][$username]);
 			$deleted = true;
 		}
-		file_auth::write_db(true);
+		file_db::write_db(true);
 
 		if ($deleted)
 		{
@@ -288,7 +288,7 @@ class file_auth
 		$username = $user->username;
 		$info = $arr['info'];
 
-		file_auth::read_db();
+		file_db::read_db();
 
 		foreach($info as $key => $val)
 		{
@@ -333,7 +333,7 @@ class file_auth
 			}
 		}
 
-		file_auth::write_db(true);
+		file_db::write_db(true);
 	}
 }
 
@@ -343,7 +343,7 @@ class DbSettings {
 		GLOBAL $db;
 
 		if (!isset($db) || empty($db))
-			file_auth::read_db();
+			file_db::read_db();
 
 		return $db["settings"];
 	}
@@ -351,9 +351,9 @@ class DbSettings {
 	{
 		GLOBAL $db;
 
-		file_auth::read_db();
+		file_db::read_db();
 		$db["settings"][$key] = $val;
-		file_auth::write_db();
+		file_db::write_db();
 		return true;
 	}
 }

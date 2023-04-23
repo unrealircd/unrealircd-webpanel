@@ -25,7 +25,7 @@ define('HOOKTYPE_NAVBAR', 100);
  * This doesn't receive anything, however you must still specify an
  * parameter for your hook function, because it's referring to memory. Sorry =]
  * 
- * Currently this is only used by the "sql_auth" plugin by Valware in order to
+ * Currently this is only used by the "sql_db" plugin by Valware in order to
  * redirect users immediately to the login page.
  * 
  * Putting HTML in this hook is not a good idea.

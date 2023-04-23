@@ -1,6 +1,6 @@
 <?php
 
-/* This plugin requires SQLAuth minimum version 1.0 */
+/* This plugin requires SQLDB minimum version 1.0 */
 
 /** Define our PERMISSION to manage configuration blocks */
 define('PERMISSION_CONFIG_BLOCKS', 'config_blocks');
@@ -15,7 +15,7 @@ class config_blocks
 
 	function __construct()
 	{
-		require_plugin("SQLAuth", "1.0");
+		require_plugin("SQLDB", "1.0");
 		Hook::func(HOOKTYPE_NAVBAR, 'config_blocks::add_navbar');
 		Hook::func(HOOKTYPE_USER_PERMISSION_LIST, 'config_blocks::permission_list');
 

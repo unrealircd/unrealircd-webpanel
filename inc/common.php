@@ -59,6 +59,24 @@ function read_config_file()
 		return false;
 	if (isset($config['unrealircd']))
 		$config_transition_unreal_server = true;
+	/* Upgrade needed? */
+	$plugins_modified = false;
+	foreach ($config["plugins"] as $k=>$v)
+	{
+		if ($v == "sql_auth")
+		{
+			$config["plugins"][$k] = "sql_db";
+			$plugins_modified = true;
+		} else
+		if ($v == "file_auth")
+		{
+			$config["plugins"][$k] = "file_db";
+			$plugins_modified = true;
+		}
+	}
+	if ($plugins_modified)
+		write_config_file();
+
 	return true;
 }
 
@@ -362,7 +380,7 @@ if (!panel_start_session())
 	if (!page_requires_no_login())
 	{
 		if (!is_auth_provided())
-			die("No authentication plugin loaded. You must load either sql_auth, file_auth, or a similar auth plugin!");
+			die("No authentication plugin loaded. You must load either sql_db, file_db, or a similar auth plugin!");
 		$current_page = $_SERVER['REQUEST_URI'];
 		header("Location: ".get_config("base_url")."login/?redirect=".urlencode($current_page));
 		die;

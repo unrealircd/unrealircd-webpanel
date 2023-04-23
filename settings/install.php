@@ -96,11 +96,11 @@ $writable = (is_writable("../config/")) ? true: false;
 		$auth_method_name = NULL;
 		switch($auth_method)
 		{
-			case "sql_auth":
-				$auth_method_name = "SQLAuth";
+			case "sql_db":
+				$auth_method_name = "SQLDB";
 				break;
-			case "file_auth":
-				$auth_method_name = "FileAuth";
+			case "file_db":
+				$auth_method_name = "FileDB";
 				break;
 		}
 		if ($auth_method)
@@ -118,7 +118,7 @@ $writable = (is_writable("../config/")) ? true: false;
 
 		$config["base_url"] = BASE_URL;
 		$config["plugins"] = Array("$auth_method");
-		if ($auth_method == "sql_auth")
+		if ($auth_method == "sql_db")
 		{
 			$config["mysql"] = [
 				"host" => $opts->sql_host,
@@ -134,14 +134,14 @@ $writable = (is_writable("../config/")) ? true: false;
 		/* First, write only the config file */
 		write_config_file();
 
-		if ($auth_method == "sql_auth")
+		if ($auth_method == "sql_db")
 		{
-			sql_auth::delete_tables();
-			if (!sql_auth::create_tables())
+			sql_db::delete_tables();
+			if (!sql_db::create_tables())
 				Message::Fail("Could not create SQL tables");
-		} else if ($auth_method == "file_auth")
+		} else if ($auth_method == "file_db")
 		{
-			file_auth::delete_db();
+			file_db::delete_db();
 		}
 
 		$user = [
@@ -193,22 +193,22 @@ $writable = (is_writable("../config/")) ? true: false;
 <!-- Form start -->
 <form method="post">
 <div id="page3" class="container">
-	<h5>Authentication Backend</h5>
+	<h5>Database Backend</h5>
 	<br>
-	Which authentication backend would you like to use?
+	Which database backend would you like to use?
 	<br><br>
 	Please choose from the available options:
 	<div class="form-group">
 		<div class="form-check">
-			<input class="form-check-input" type="radio" name="auth_method" id="file_auth_radio" value="file_auth">
-			<label class="form-check-label" for="file_auth_radio">
-				File-based Authentication (Uses local files as a database, no setup needed)
+			<input class="form-check-input" type="radio" name="auth_method" id="file_db_radio" value="file_db">
+			<label class="form-check-label" for="file_db_radio">
+				File-based database (Uses local files as a database, no additional setup needed)
 			</label>
 		</div>
 		<div class="form-check">
-			<input class="form-check-input" type="radio" name="auth_method" id="sql_auth_radio" value="sql_auth">
-			<label class="form-check-label" for="sql_auth_radio">
-				SQL Authentication (Requires an SQL database)
+			<input class="form-check-input" type="radio" name="auth_method" id="sql_db_radio" value="sql_db">
+			<label class="form-check-label" for="sql_db_radio">
+				SQL Database (Requires an SQL database)
 			</label>
 		</div>
 	</div>
@@ -319,8 +319,8 @@ $writable = (is_writable("../config/")) ? true: false;
 	let page3 = document.getElementById('page3');
 	let page4 = document.getElementById('page4');
 
-	let file_auth_radio = document.getElementById('file_auth_radio');
-	let sql_auth_radio = document.getElementById('sql_auth_radio');
+	let file_db_radio = document.getElementById('file_db_radio');
+	let sql_db_radio = document.getElementById('sql_db_radio');
 	let sql_form = document.getElementById('sql_form');
 	let sql_host = document.getElementById('sql_host');
 	let sql_db = document.getElementById('sql_db');
@@ -355,16 +355,16 @@ $writable = (is_writable("../config/")) ? true: false;
 		page4.style.display = '';
 	});
 
-	file_auth_radio.addEventListener('click', e => {
-		if (file_auth_radio.checked){
+	file_db_radio.addEventListener('click', e => {
+		if (file_db_radio.checked){
 			sql_form.style.display = 'none';
 			sql_test_conn.style.display = 'none';
 			page3_next.style.display = '';
 		}
 	});
 
-	sql_auth_radio.addEventListener('click', e => {
-		if (!file_auth_radio.checked){
+	sql_db_radio.addEventListener('click', e => {
+		if (!file_db_radio.checked){
 			sql_form.style.display = '';
 			sql_test_conn.style.display = '';
 			page3_next.style.display = 'none';

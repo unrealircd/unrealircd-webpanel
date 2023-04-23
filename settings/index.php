@@ -27,7 +27,7 @@ if (isset($_POST))
 			if ($us->id == $user->id) // if it's the current user
 			{
 				session_destroy();
-				header("Location: " . get_config("base_url") . "plugins/sql_auth/login.php");
+				header("Location: " . get_config("base_url") . "plugins/sql_db/login.php");
 				die();
 			}
 			$msg = ($deleted = 1) ? "Message::Success" : "Message::Fail";
