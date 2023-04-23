@@ -343,7 +343,7 @@ $writable = (is_writable("../config/")) ? true: false;
 	sql_test_conn.addEventListener('click', e => {
 		sql_test_conn.classList.add('disabled');
 		sql_test_conn.innerHTML = "Checking...";
-		fetch(BASE_URL + 'api/installation.php?method=sql&host='+sql_host.value+'&database='+sql_db.value+'&user='+sql_user.value+'&password='+sql_pass.value)
+		fetch(BASE_URL + 'api/installation.php?method=sql&host='+encodeURIComponent(sql_host.value)+'&database='+encodeURIComponent(sql_db.value)+'&user='+encodeURIComponent(sql_user.value)+'&password='+encodeURIComponent(sql_pass.value))
 		.then(response => response.json())
 		.then(data => {
 			if (data.success)
