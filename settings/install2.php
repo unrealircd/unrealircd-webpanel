@@ -125,12 +125,12 @@ $writable = (is_writable("../config/")) ? true: false;
 	</div>
 	<div class="form-group">
 		<label for="rpc_username">Username</label>
-		<input name="rpc_user" type="text" class="revalidation-needed-rpc form-control" id="rpc_user" aria-describedby="username_help">
+		<input name="rpc_user" type="text" class="revalidation-needed-rpc form-control" id="rpc_user" aria-describedby="username_help" autocomplete="new-password">
 		<small id="username_help" class="form-text text-muted">The name of your <code>rpc-user</code> block as defined in your <code>unrealircd.conf</code></small>
 	</div>
 	<div class="form-group">
 		<label for="rpc_password">Password</label>
-		<input name="rpc_password" type="password" class="revalidation-needed-rpc form-control" id="rpc_password">
+		<input name="rpc_password" type="password" class="revalidation-needed-rpc form-control" id="rpc_password" autocomplete="new-password">
 	</div>
 	<div class="text-center">
 		<button id="page2_next" type="submit" class="btn btn-primary ml-3">Submit</div>

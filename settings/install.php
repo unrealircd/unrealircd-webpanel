@@ -219,12 +219,12 @@ $writable = (is_writable("../config/")) ? true: false;
 		</div>
 		<div class="form-group">
 			<label for="sql_username">Username</label>
-			<input name="sql_user" type="text" class="revalidation-needed-sql form-control" id="sql_user" aria-describedby="username_help">
+			<input name="sql_user" type="text" class="revalidation-needed-sql form-control" id="sql_user" aria-describedby="username_help" autocomplete="new-password">
 			<small id="username_help" class="form-text text-muted">The name of SQL user</small>
 		</div>
 		<div class="form-group">
 			<label for="sql_password">Password</label>
-			<input name="sql_password" type="password" class="revalidation-needed-sql form-control" id="sql_password">
+			<input name="sql_password" type="password" class="revalidation-needed-sql form-control" id="sql_password" autocomplete="new-password">
 		</div>
 		<div class="form-group">
 			<label for="sql_table_prefix">Table prefix</label>
