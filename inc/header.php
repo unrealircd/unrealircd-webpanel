@@ -1,6 +1,32 @@
 <?php
 $nav_shown = true;
 $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
+
+$prefixeTitle = "";
+$base_url = preg_quote(get_config("base_url"), '/');
+$php_self = $_SERVER['PHP_SELF'];
+if (preg_match("/^{$base_url}index.php$/i", $php_self))
+	$prefixeTitle = "Home - ";
+else if (preg_match("/^{$base_url}users/i", $php_self))
+	$prefixeTitle = "Users - ";
+else if (preg_match("/^{$base_url}servers/i", $php_self))
+	$prefixeTitle = "Servers - ";
+else if (preg_match("/^{$base_url}channels/i", $php_self))
+	$prefixeTitle = "Channels - ";
+else if (preg_match("/^{$base_url}server-bans\/index.php/i", $php_self))
+	$prefixeTitle = "Servers bans - ";
+else if (preg_match("/^{$base_url}server-bans\/name-bans.php/i", $php_self))
+	$prefixeTitle = "Name bans - ";
+else if (preg_match("/^{$base_url}server-bans\/ban-exceptions.php/i", $php_self))
+	$prefixeTitle = "Ban exceptions - ";
+else if (preg_match("/^{$base_url}settings\/plugins.php/i", $php_self))
+	$prefixeTitle = "Plugins - ";
+else if (preg_match("/^{$base_url}settings\/index.php/i", $php_self))
+	$prefixeTitle = "Accounts - ";
+else if (preg_match("/^{$base_url}spamfilter.php/i", $php_self))
+	$prefixeTitle = "Spamfilters - ";
+else if (preg_match("/^{$base_url}news.php/i", $php_self))
+	$prefixeTitle = "News - ";
 ?>
 <!DOCTYPE html>
 <head>
@@ -22,7 +48,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-<title>UnrealIRCd Panel</title>
+<title><?=$prefixeTitle?>UnrealIRCd Panel</title>
 <link rel="icon" type="image/x-icon" href="<?php echo get_config("base_url"); ?>img/favicon.ico">
 </head>
 <body role="document">
