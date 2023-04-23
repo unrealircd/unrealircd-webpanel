@@ -289,7 +289,7 @@ $writable = (is_writable("../config/")) ? true: false;
 			</button>
 		</div>
 		<div class="modal-body">
-			The database already contains tables with webpanel data. 
+			The database already exists and contains data.
 			If you continue then this existing data will be deleted.
 		</div>
 		<div class="modal-footer">
@@ -340,6 +340,11 @@ $writable = (is_writable("../config/")) ? true: false;
 	}
 
 	page3_next.addEventListener('click', e => {
+<?php if (file_exists(UPATH.'/data/database.php')) { ?>
+		$('#db_overwrite_modal').modal();
+		e.preventDefault();
+		return false;
+<?php } ?>
 		page3.style.display = 'none';
 		page4.style.display = '';
 	});
@@ -471,7 +476,8 @@ $writable = (is_writable("../config/")) ? true: false;
 	function nextstep()
 	{
 		$('#db_overwrite_modal').modal('hide');
-		page3_next.click();
+		page3.style.display = 'none';
+		page4.style.display = '';
 		window.scrollTo(0,0);
 	}
 </script>
