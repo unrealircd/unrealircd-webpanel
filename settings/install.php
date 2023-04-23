@@ -135,8 +135,11 @@ $writable = (is_writable("../config/")) ? true: false;
 		write_config_file();
 
 		if ($auth_method == "sql_auth")
+		{
+			sql_auth::delete_tables();
 			if (!sql_auth::create_tables())
 				Message::Fail("Could not create SQL tables");
+		}
 
 		$user = [
 			"user_name" => $opts->account_user,

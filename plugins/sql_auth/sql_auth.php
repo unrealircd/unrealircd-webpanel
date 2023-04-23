@@ -44,6 +44,17 @@ class sql_auth
 	}
 
 	/**
+	 * Delete all the tables (of us) in the SQLdb
+	 * @return void
+	 */
+	public static function delete_tables()
+	{
+		$conn = sqlnew();
+		foreach(["users","user_meta", "settings", "fail2ban"] as $table_name)
+			$conn->query("DROP TABLE IF EXISTS " . get_config("mysql::table_prefix") . $table_name);
+	}
+
+	/**
 	 * Create the tables we'll be using in the SQLdb
 	 * @return void
 	 */
