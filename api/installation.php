@@ -8,9 +8,9 @@ require_once "../inc/common.php";
 if (file_exists("../config/config.php"))
 		die(json_encode(["error" => "Configuration file exists."]));
 
-if (!isset($_GET) || empty($_GET))
+if (!isset($_POST) || empty($_POST))
 		die(json_encode(["error" => "Incorrect parameters"]));
-foreach($_GET as $key => $str)
+foreach($_POST as $key => $str)
 		${$key} = $str;
 
 if ($method == "sql")

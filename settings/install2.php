@@ -181,7 +181,16 @@ $writable = (is_writable("../config/")) ? true: false;
 	test_conn.addEventListener('click', e => {
 		test_conn.classList.add('disabled');
 		test_conn.innerHTML = "Checking...";
-		fetch(BASE_URL + 'api/installation2.php?method=rpc&host='+encodeURIComponent(rpc_host.value)+'&port='+encodeURIComponent(rpc_port.value)+'&user='+encodeURIComponent(rpc_user.value)+'&password='+encodeURIComponent(rpc_pass.value)+'&tls_verify='+rpc_tls.checked)
+		fetch(BASE_URL + 'api/installation2.php', {
+		      method:'POST',
+		      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+		      body: 'method=rpc&'+
+		            'host='+encodeURIComponent(rpc_host.value)+
+		            '&port='+encodeURIComponent(rpc_port.value)+
+		            '&user='+encodeURIComponent(rpc_user.value)+
+		            '&password='+encodeURIComponent(rpc_pass.value)+
+		            '&tls_verify='+rpc_tls.checked
+		      })
 		.then(response => response.json())
 		.then(data => {
 			if (data.success)
