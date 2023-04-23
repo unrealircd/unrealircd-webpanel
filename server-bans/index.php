@@ -1,10 +1,10 @@
 <?php
 require_once "../inc/common.php";
 require_once "../inc/header.php";
-require_once "../inc/connection.php";
 
 if (!empty($_POST))
 {
+	require_once "../inc/connection.php";
 	if (isset($_POST['tklch']) && !empty($_POST['tklch'])) // User has asked to delete these tkls
 	{
 		if (!current_user_can(PERMISSION_SERVER_BAN_DEL))
@@ -101,7 +101,6 @@ if (!empty($_POST))
 	}
 }
 
-$tkl = $rpc->serverban()->getAll();
 ?>
 <h4>Server Bans Overview</h4>
 Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>
@@ -209,27 +208,10 @@ Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>
 	<th scope="col">Set On</th>
 	<th scope="col">Expires</th>
 	</thead>
-	<tbody>
-	<?php
-		foreach($tkl as $tkl)
-		{
-			$set_in_config = ((isset($tkl->set_in_config) && $tkl->set_in_config) || ($tkl->set_by == "-config-")) ? true : false;
-			echo "<tr scope='col'>";
-			if ($set_in_config)
-				echo "<td scope=\"col\"></td>";
-			else
-				echo "<td scope=\"col\"><input type=\"checkbox\" value='" . base64_encode($tkl->name).",".base64_encode($tkl->type) . "' name=\"tklch[]\"></td>";
-			echo "<td scope=\"col\">".$tkl->name."</td>";
-			echo "<td scope=\"col\">".$tkl->type_string."</td>";
-			echo "<td scope=\"col\">".$tkl->duration_string."</td>";
-			echo "<td scope=\"col\">".$tkl->reason."</td>";
-			$set_by = $set_in_config ? "<span class=\"badge rounded-pill badge-secondary\">Config</span>" : show_nick_only($tkl->set_by);
-			echo "<td scope=\"col\">".$set_by."</td>";
-			echo "<td scope=\"col\">".$tkl->set_at_string."</td>";
-			echo "<td scope=\"col\">".$tkl->expire_at_string."</td>";
-			echo "</tr>";
-		}
-	?></tbody></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2" <?php echo (current_user_can(PERMISSION_SERVER_BAN_DEL)) ? "" : "disabled"; ?>>
+	</table>
+
+	<!-- Delete button -->
+	<p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2" <?php echo (current_user_can(PERMISSION_SERVER_BAN_DEL)) ? "" : "disabled"; ?>>
 	Delete selected
 	</button></p>
 	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
@@ -257,6 +239,20 @@ Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>
 <script>
 $(document).ready( function () {
 	$('#data_list').DataTable({
+		'ajax': {
+			'url': '<?php echo get_config("base_url"); ?>api/server-bans.php',
+			dataSrc: ''
+		},
+		'columns': [
+			{ 'data': 'Select' },
+			{ 'data': 'Mask' },
+			{ 'data': 'Type' },
+			{ 'data': 'Duration' },
+			{ 'data': 'Reason' },
+			{ 'data': 'Set By' },
+			{ 'data': 'Set On' },
+			{ 'data': 'Expires' },
+		],
 		'columnDefs': [
 			 { targets: '_all', 'type': 'natural' }
 		],

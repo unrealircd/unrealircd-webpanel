@@ -13,7 +13,8 @@ session_write_close();
 include "../inc/connection.php";
 
 // Server Side Events
-header('Content-Type: text/event-stream');
+if (!defined('NO_EVENT_STREAM_HEADER'))
+	header('Content-Type: text/event-stream');
 
 // Explicitly disable caching so Varnish and other upstreams won't cache.
 header("Cache-Control: no-cache, must-revalidate");
