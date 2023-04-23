@@ -129,6 +129,8 @@ $writable = (is_writable("../config/")) ? true: false;
 				];
 		}
 
+		generate_secrets();
+
 		/* First, write only the config file */
 		write_config_file();
 
