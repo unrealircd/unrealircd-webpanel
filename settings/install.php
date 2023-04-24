@@ -285,6 +285,8 @@ $writable = (is_writable("../config/")) ? true: false;
 	</div>
 </div>
 </form>
+
+<!-- Database overwrite prompt -->
 <div class="modal fade" id="db_overwrite_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -301,6 +303,27 @@ $writable = (is_writable("../config/")) ? true: false;
 		<div class="modal-footer">
 				<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 				<button id="ProceedButton" type="button" class="btn btn-danger" onclick="nextstep();">Continue</button>
+			</form>
+		</div>
+		</div>
+	</div>
+</div>
+
+<!-- Database error dialog -->
+<div class="modal fade" id="db_error_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="myModalLabel">Database server error</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body" id="db_error_text">
+			Unable to connect to the database.
+		</div>
+		<div class="modal-footer">
+				<button id="CloseButton" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
 			</form>
 		</div>
 		</div>
@@ -401,6 +424,8 @@ $writable = (is_writable("../config/")) ? true: false;
 			else
 			{
 				sql_test_conn.innerHTML = "Failed!";
+				$('#db_error_text').html(data.error ? data.error : 'An error occured while connecting to the DB server');
+				$('#db_error_modal').modal();
 				setTimeout(function() {
 					sql_test_conn.innerHTML = "Test connection";
 					sql_test_conn.classList.remove('disabled');

@@ -13,19 +13,22 @@ if (!isset($_POST) || empty($_POST))
 
 if ($_POST['method'] == "sql")
 {
+	try {
 		$conn = mysqli_connect($_POST['host'], $_POST['user'], $_POST['password'], $_POST['database']);
+	} catch(Exception $e)
+	{
+	}
+	// check connection
+	if (mysqli_connect_errno())
+			die(json_encode(["error" => "Failed to connect to MySQL: " . mysqli_connect_error()]));
 
-		// check connection
-		if (mysqli_connect_errno())
-				die(json_encode(["error" => "Failed to connect to MySQL: " . mysqli_connect_error()]));
+	$sql = "SHOW TABLES LIKE '".$conn->real_escape_string($_POST['table_prefix'])."%'"; // SQL query to check if table exists
+	$result = $conn->query($sql);
+	if ($result->num_rows > 0)
+		die(json_encode(["warn" => "Database already has data"]));
 
-		$sql = "SHOW TABLES LIKE '".$conn->real_escape_string($_POST['table_prefix'])."%'"; // SQL query to check if table exists
-		$result = $conn->query($sql);
-		if ($result->num_rows > 0)
-			die(json_encode(["warn" => "Database already has data"]));
-
-		// close connection
-		mysqli_close($conn);
-		die(json_encode(["success" => "SQL Connection successful"]));
+	// close connection
+	mysqli_close($conn);
+	die(json_encode(["success" => "SQL Connection successful"]));
 
 }
