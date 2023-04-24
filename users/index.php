@@ -245,26 +245,6 @@ Click on a username to view more information.
 		<div id="rclick_opt2" class="item list-group-item-action">Kill</div>
 		<div id="rclick_opt3" class="item list-group-item-action">Copy
 	</div>
-
-<?php /* ?>
-	<h3>Top country</h3>
-	<div id="top-country">
-		<ul>
-		<?php
-			arsort($registrationOfaAllFlags);
-			foreach($registrationOfaAllFlags as $country_code => $count){
-				echo '<li>
-				<div class="drag"><img src="https://flagcdn.com/108x81/'.htmlspecialchars(strtolower($country_code)).'.png" width="108" height="81"><br />
-				'.$country_code . '
-				</div>
-				<div class="count">' . $count . ' <span>connected</span></div>
-				</li>';
-			}
-		?>
-		</ul>
-	</div>
-<?php */ ?>
-
 </div>
 
 <script>
@@ -368,22 +348,13 @@ Click on a username to view more information.
 });
 
 $(document).ready( function () {
-	$('#data_list').DataTable({
+	args = {
 		'ajax': {
 			'url': '<?php echo get_config("base_url"); ?>api/users.php',
 			dataSrc: ''
 		},
 		'pageLength':100,
 		'order':[[1,'asc']],
-		'dom': 'Pfrtip',
-		'searchPanes': {
-			'initCollapsed': 'true',
-			'columns': [2,8],
-			'dtOpts': {
-				select: { style: 'multi'},
-				order: [[ 1, "desc" ]]
-			}
-		},
 		'columns': [
 			{ 'data': 'Select' },
 			{ 'data': 'Nick' },
@@ -397,7 +368,22 @@ $(document).ready( function () {
 			{ 'data': 'Reputation', 'className':'reputationcol' },
 		],
 		'initComplete': function(settings, json) { resize_check(); },
-	});
+	};
+	/* Hide on mobile */
+	if (window.innerWidth > 800)
+	{
+		args['dom'] = 'Pfrtip';
+		args['searchPanes'] = {
+			'initCollapsed': 'true',
+			'columns': [2,8],
+			'dtOpts': {
+				select: { style: 'multi'},
+				order: [[ 1, "desc" ]]
+			},
+		}
+	}
+
+	$('#data_list').DataTable(args);
 } );
 
 </script>
