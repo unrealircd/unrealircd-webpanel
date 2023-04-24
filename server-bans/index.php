@@ -191,11 +191,6 @@ Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>
 
 <!-- The banlist table -->
 
-	<!-- only in this file for now for testing -->
-	<link rel="stylesheet" href="<?php echo get_config("base_url"); ?>css/datatables.min.css" />
-	<script src="<?php echo get_config("base_url"); ?>js/datatables.min.js"></script>
-	<script src="<?php echo get_config("base_url"); ?>js/datatables-natural-sort.js"></script>
-
 	<form method="post">
 	<table id="data_list" class="container-xxl table table-sm table-responsive caption-top table-striped">
 	<thead class="table-primary">
