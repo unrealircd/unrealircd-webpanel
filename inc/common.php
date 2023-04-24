@@ -211,9 +211,12 @@ function generate_secrets()
 
 function get_active_rpc_server()
 {
+	$servers = get_config("unrealircd");
+	if (empty($servers))
+		return;
 	// TODO: make user able to override this - either in user or in session
 
-	foreach (get_config("unrealircd") as $displayname=>$e)
+	foreach ($servers as $displayname=>$e)
 	{
 		if (isset($e["default"]) && $e["default"])
 			return $displayname;

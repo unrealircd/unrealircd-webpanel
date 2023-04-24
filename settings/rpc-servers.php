@@ -222,7 +222,10 @@ border-radius: 3px;
 	</thead>
 	<tbody>
 	<?php
-		foreach($config['unrealircd'] as $name=>$e)
+		$servers = get_config('unrealircd');
+		if (!$servers)
+			$servers = [];
+		foreach($servers as $name=>$e)
 		{
 			$primary = "";
 			if (isset($e["default"]) && $e["default"])
