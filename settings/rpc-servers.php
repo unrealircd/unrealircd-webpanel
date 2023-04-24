@@ -226,7 +226,7 @@ you can switch to a secondary server in case the primary server goes down.<br>
 	/* The RPC connection tester! */
 	function test_rpc_server()
 	{
-		fetch(<?php echo get_config("base_url"); ?> + 'api/installation2.php', {
+		fetch(<?php echo get_config("base_url"); ?> + 'api/test_rpc_server.php', {
 		      method:'POST',
 		      headers: {'Content-Type':'application/x-www-form-urlencoded'},
 		      body: 'method=rpc&'+

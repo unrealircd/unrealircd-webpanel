@@ -2,7 +2,7 @@
 require_once "inc/common.php";
 if (!isset($config['unrealircd']))
 {
-	$redirect = get_config("base_url")."settings/install2.php";
+	$redirect = get_config("base_url")."settings/rpc-servers.php";
 	header('Location: ' . $redirect);
 	die;
 }
