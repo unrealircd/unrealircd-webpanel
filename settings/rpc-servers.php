@@ -2,6 +2,38 @@
 require_once "../inc/common.php";
 require_once "../inc/header.php";
 
+/* Ensure at least 1 server is default */
+function set_at_least_one_default_server()
+{
+	GLOBAL $config;
+
+	$has_default_server = false;
+	foreach ($config["unrealircd"] as $name=>$e)
+		if ($e["default"])
+			$has_default_server = true;
+	if (!$has_default_server)
+	{
+		/* Make first server in the list the default */
+		foreach ($config["unrealircd"] as $name=>$e)
+		{
+			$config["unrealircd"][$name]["default"] = true;
+			break;
+		}
+	}
+}
+
+if (isset($_POST['do_del_server']))
+{
+	$server = $_POST['edit_existing'] ?? null;
+	if (isset($config["unrealircd"][$server]))
+	{
+		unset($config["unrealircd"][$server]);
+		set_at_least_one_default_server();
+		write_config("unrealircd");
+	} else {
+		Message::Fail("Delete failed: could not find server");
+	}
+} else
 if (isset($_POST['do_add_server']))
 {
 	$opts = (object)$_POST;
@@ -51,24 +83,12 @@ if (isset($_POST['do_add_server']))
 				$config["unrealircd"][$name]["default"] = false;
 	} else {
 		/* Ensure at least 1 server is default */
-		$has_default_server = false;
-		foreach ($config["unrealircd"] as $name=>$e)
-			if ($e["default"])
-				$has_default_server = true;
-		if (!$has_default_server)
-		{
-			/* Make first server in the list the default */
-			foreach ($config["unrealircd"] as $name=>$e)
-			{
-				$config["unrealircd"][$name]["default"] = true;
-				break;
-			}
-		}
+		set_at_least_one_default_server();
 	}
 
 	/* And write the new config */
 	write_config();
-	// TODO: change this message if it's the first server added? tell them to browse around?
+
 	Message::Success("RPC Server successfully ". (empty($opts->edit_existing) ? "added" : "modified").".");
 }
 
@@ -153,6 +173,7 @@ if (empty($config["unrealircd"]))
 				<div class="modal-footer">
 					<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 					<button type="submit" name="do_add_server" id="do_add_server" class="btn btn-primary">Add Server</button>
+					<button type="submit" name="do_del_server" id="do_del_server" class="btn btn-danger">Delete Server</button>
 				</div>
 			</div>
 		</form>
@@ -284,12 +305,14 @@ if (empty($config["unrealircd"]))
 		$('#server_add_title').html("Edit Server");
 		$('#do_add_server').html("Submit");
 		$('#rpc_tls_verify_cert').prop('checked', tls_verify_cert);
+		$('#do_del_server').show();
 		$('#server_add').modal('show');
 	}
 
 	// This is in a function because a canceled edit_rpc_server otherwise causes a prefilled effect
 	function add_rpc_server()
 	{
+		$('#edit_existing').val("");
 		$('#rpc_displayname').val("");
 		$('#rpc_host').val("127.0.0.1");
 		$('#rpc_port').val("8600");
@@ -298,6 +321,7 @@ if (empty($config["unrealircd"]))
 		$('#server_add_title').html("Add Server");
 		$('#do_add_server').html("Add Server");
 		$('#rpc_tls_verify_cert').prop('checked', false);
+		$('#do_del_server').hide();
 		$('#server_add').modal('show');
 	}
 </script>
