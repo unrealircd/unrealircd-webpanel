@@ -24,7 +24,7 @@ function set_at_least_one_default_server()
 
 if (isset($_POST['do_del_server']))
 {
-	$server = $_POST['edit_existing'] ?? null;
+	$server = $_POST['del_server_name'] ?? null;
 	if (isset($config["unrealircd"][$server]))
 	{
 		unset($config["unrealircd"][$server]);
@@ -175,7 +175,6 @@ if (empty($config["unrealircd"]))
 				<div class="modal-footer">
 					<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 					<button type="submit" name="do_add_server" id="do_add_server" class="btn btn-primary">Add Server</button>
-					<button type="submit" name="do_del_server" id="do_del_server" class="btn btn-danger">Delete Server</button>
 				</div>
 			</div>
 		</form>
@@ -203,10 +202,45 @@ if (empty($config["unrealircd"]))
 	</div>
 </div>
 
+<!-- Server delete confirmation modal -->
+<div class="modal" id="server_confirm_del" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<form method="post">
+				<input name="del_server_name" type="hidden" id="del_server_name" value="">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirm deletion</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					Are you sure you want to delete this server?
+				</div>
+				<div class="modal-footer">
+					<button id="CloseButton" type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+					<button type="submit" name="do_del_server" id="do_del_server" class="btn btn-danger">Delete Server</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Todo figure out why it didnt work in css -->
+<style>
+.btn-group-xs > .btn, .btn-xs {
+padding: 1px 5px;
+font-size: 12px;
+line-height: 1.5;
+border-radius: 3px;
+}
+</style>
+
 <!-- Server list -->
 <form method="post">
 <table class="container-xxl table table-sm table-responsive caption-top table-striped">
 	<thead class="table-primary">
+	<th scope="col"></th>
 	<th scope="col">Display name</th>
 	<th scope="col">Hostname</th>
 	<th scope="col">Port</th>
@@ -225,9 +259,10 @@ if (empty($config["unrealircd"]))
                         $port = htmlspecialchars($e["port"]);
                         $rpc_user = htmlspecialchars($e["rpc_user"]);
                         $tls_verify_cert = $e["tls_verify_cert"] ? "true" : "false";
-                        $name = "<a href=\"javascript:edit_rpc_server('$name',$default_server,'$host','$port','$rpc_user',$tls_verify_cert)\">$name</a>";
+                        $html_name = "<a href=\"javascript:edit_rpc_server('$name',$default_server,'$host','$port','$rpc_user',$tls_verify_cert)\">$name</a>";
 			echo "<tr>";
-			echo "<td scope=\"col\">".$name.$primary."</td>";
+			echo "<td scope=\"col\"><button type=\"button\" class=\"btn btn-xs btn-danger\" onclick=\"confirm_delete('".$name."')\"><i class=\"fa fa-trash fa-1\" aria-hidden=\"true\"></i></button></td>";
+			echo "<td scope=\"col\">".$html_name.$primary."</td>";
 			echo "<td scope=\"col\"><code>".$host."</code></td>";
 			echo "<td scope=\"col\"><code>".$port."</code></td>";
 			echo "<td scope=\"col\"><code>".$rpc_user."</code></td>";
@@ -326,6 +361,14 @@ if (empty($config["unrealircd"]))
 		$('#do_del_server').hide();
 		$('#server_add').modal('show');
 	}
+
+	function confirm_delete(name)
+	{
+		$('#del_server_name').val(name);
+		$('#server_confirm_del').modal('show');
+	}
+
+
 </script>
 
 <?php
