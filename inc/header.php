@@ -53,6 +53,22 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 		timeoutCheck();
 		StartStreamNotifs(BASE_URL + "api/notification.php");
 		setInterval(timeoutCheck, 15000);
+
+		function change_active_server(name)
+		{
+			fetch(BASE_URL + 'api/set_rpc_server.php', {
+			      method:'POST',
+			      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+			      body: 'server='+encodeURIComponent(name)
+			      })
+			.then(response => response.json())
+			.then(data => {
+				location.reload();
+			})
+			.catch(error => {
+				// handle error? nah.
+			});
+		}
 </script>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
@@ -157,6 +173,34 @@ function show_page_item_mobile($name, $page, $nestlevel)
 			show_page_item($subname, $subpage, 1);
 	}
 }
+
+function rpc_server_nav()
+{
+	$active_server = get_active_rpc_server();
+	if (!$active_server)
+		return; // eg empty servers
+	$servers = get_config("unrealircd");
+	$cnt = count($servers);
+?>
+		<div class="dropdown" style="color: #d0d0d0">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $active_server ?> <span class="caret"></span></a>
+			<div class="dropdown-menu">
+<?php
+			foreach($servers as $name=>$d)
+			{
+				$link = "";
+				if ($name != $active_server)
+					echo "<a class=\"dropdown-item\" href=\"javascript:change_active_server('".htmlspecialchars($name)."')\">".htmlspecialchars($name)."</a>\n";
+				else
+					echo "<div class=\"dropdown-item\">".htmlspecialchars($name)." <i>(current)</i></div>\n"; // current
+			}
+?>
+			</div>
+		</div>
+<?php
+}
+
+
 foreach($pages as $name=>$page)
 	show_page_item($name, $page, 0);
 ?>
@@ -167,10 +211,14 @@ foreach($pages as $name=>$page)
 	
 	<!-- Fixed navbar -->
 	<nav class="topbar navbar navbar-expand-md navbar-dark bg-dark fixed-top z-index padding-top">
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-	</button>
-	<a class="navbar-brand" href="<?php echo get_config("base_url"); ?>"><img src="<?php echo get_config("base_url"); ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div>
+			<a class="navbar-brand" href="<?php echo get_config("base_url"); ?>">
+			<img src="<?php echo get_config("base_url"); ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
+		</div>
+		<?php rpc_server_nav(); ?>
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
 			<ul id="big-nav-items" class="navbar-nav mr-auto">
 				

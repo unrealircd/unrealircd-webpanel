@@ -3,18 +3,6 @@
 if (!defined('UPATH'))
 		die("Access denied");
 
-function get_active_rpc_server()
-{
-	// TODO: make user able to override this - either in user or in session
-
-	foreach (get_config("unrealircd") as $displayname=>$e)
-	{
-		if (isset($e["default"]) && $e["default"])
-			return $displayname;
-	}
-	return null;
-}
-
 function connect_to_ircd()
 {
 	GLOBAL $rpc;

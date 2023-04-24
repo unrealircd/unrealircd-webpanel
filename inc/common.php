@@ -209,6 +209,50 @@ function generate_secrets()
 		$config['secrets']['key'] = rtrim(base64_encode(sodium_crypto_aead_xchacha20poly1305_ietf_keygen()),'=');
 }
 
+function get_active_rpc_server()
+{
+	// TODO: make user able to override this - either in user or in session
+
+	foreach (get_config("unrealircd") as $displayname=>$e)
+	{
+		if (isset($e["default"]) && $e["default"])
+			return $displayname;
+	}
+	return null;
+}
+
+/* Set a new default RPC server */
+function set_default_rpc_server($name)
+{
+	GLOBAL $config;
+
+	/* Mark all other servers as non-default */
+	foreach ($config["unrealircd"] as $n=>$e)
+		if ($n != $name)
+			$config["unrealircd"][$n]["default"] = false;
+	$config["unrealircd"][$name]["default"] = true;
+}
+
+/* Ensure at least 1 server is default */
+function set_at_least_one_default_rpc_server()
+{
+	GLOBAL $config;
+
+	$has_default_rpc_server = false;
+	foreach ($config["unrealircd"] as $name=>$e)
+		if ($e["default"])
+			$has_default_rpc_server = true;
+	if (!$has_default_rpc_server)
+	{
+		/* Make first server in the list the default */
+		foreach ($config["unrealircd"] as $name=>$e)
+		{
+			$config["unrealircd"][$name]["default"] = true;
+			break;
+		}
+	}
+}
+
 function secret_encrypt(string $text)
 {
 	GLOBAL $config;

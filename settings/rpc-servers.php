@@ -2,33 +2,13 @@
 require_once "../inc/common.php";
 require_once "../inc/header.php";
 
-/* Ensure at least 1 server is default */
-function set_at_least_one_default_server()
-{
-	GLOBAL $config;
-
-	$has_default_server = false;
-	foreach ($config["unrealircd"] as $name=>$e)
-		if ($e["default"])
-			$has_default_server = true;
-	if (!$has_default_server)
-	{
-		/* Make first server in the list the default */
-		foreach ($config["unrealircd"] as $name=>$e)
-		{
-			$config["unrealircd"][$name]["default"] = true;
-			break;
-		}
-	}
-}
-
 if (isset($_POST['do_del_server']))
 {
 	$server = $_POST['del_server_name'] ?? null;
 	if (isset($config["unrealircd"][$server]))
 	{
 		unset($config["unrealircd"][$server]);
-		set_at_least_one_default_server();
+		set_at_least_one_default_rpc_server();
 		write_config("unrealircd");
 	} else {
 		Message::Fail("Delete failed: could not find server");
@@ -78,15 +58,9 @@ if (isset($_POST['do_add_server']))
 	}
 
 	if ($new_properties["default"])
-	{
-		/* Mark all other servers as non-default */
-		foreach ($config["unrealircd"] as $name=>$e)
-			if ($name != $opts->rpc_displayname)
-				$config["unrealircd"][$name]["default"] = false;
-	} else {
-		/* Ensure at least 1 server is default */
-		set_at_least_one_default_server();
-	}
+		set_default_rpc_server($opts->rpc_displayname);
+	else
+		set_at_least_one_default_rpc_server();
 
 	/* And write the new config */
 	write_config();
