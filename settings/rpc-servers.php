@@ -69,7 +69,7 @@ if (isset($_POST['do_add_server']))
 	/* And write the new config */
 	write_config();
 	// TODO: change this message if it's the first server added? tell them to browse around?
-	Message::Success("RPC Server successfully added.");
+	Message::Success("RPC Server successfully ". (empty($opts->edit_existing) ? "added" : "modified").".");
 }
 
 ?>
@@ -79,6 +79,15 @@ You can configure which JSON-RPC server(s) the panel can connect to.<br><br>
 You normally only need one server, but it can be useful to have multiple servers, so
 you can switch to a secondary server in case the primary server goes down.<br>
 <br>
+
+<?php
+if (empty($config["unrealircd"]))
+{
+	Message::Info("Let's get your panel linked to UnrealIRCd. ".
+	              "Read <u><a href=\"https://www.unrealircd.org/docs/UnrealIRCd_webpanel#Configuring_UnrealIRCd\" target=\"_blank\">the UnrealIRCd instructions</a></u> ".
+	              "and then click <i>Add Server</i> below.");
+}
+?>
 
 <!-- Server action buttons (only Add server) -->
 <div id="ServerActions">
