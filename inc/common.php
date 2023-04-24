@@ -264,6 +264,14 @@ function upgrade_check()
 			write_config('unrealircd');
 		}
 	}
+	/* $config["unrealircd"] should be an array now.. */
+	if (isset($config['unrealircd']) && isset($config['unrealircd']['rpc_password']))
+	{
+		$config["unrealircd"]["default"] = true;
+		$config['unrealircd'] = [
+			"Primary" => $config['unrealircd']];
+		write_config("unrealircd");
+	}
 
 	$version = get_version();
 	if (!isset($config['webpanel_version']))
@@ -370,6 +378,7 @@ $pages = [
 	],
 	"Settings" => [
 		"Plugins" => "settings/plugins.php",
+		"RPC Servers" => "settings/rpc-servers.php",
 	],
 	
 	"News" => "news.php",

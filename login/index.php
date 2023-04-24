@@ -53,7 +53,7 @@ if (!empty($_POST))
 			Hook::run(HOOKTYPE_USER_LOGIN, $user);
 
 			/* Middle of install? Override redirect: */
-			if (!isset($config['unrealircd']) || empty($config['unrealircd']['host']))
+			if (!isset($config['unrealircd']))
 				$redirect = get_config("base_url")."settings/install2.php";
 			header('Location: ' . $redirect);
 			die();

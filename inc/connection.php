@@ -3,24 +3,42 @@
 if (!defined('UPATH'))
 		die("Access denied");
 
+function get_active_rpc_server()
+{
+	// TODO: make user able to override this - either in user or in session
+
+	foreach (get_config("unrealircd") as $displayname=>$e)
+	{
+		if (isset($e["default"]) && $e["default"])
+			return $displayname;
+	}
+	return null;
+}
+
 function connect_to_ircd()
 {
 	GLOBAL $rpc;
+	GLOBAL $config;
 
-	$host = get_config("unrealircd::host");
-	$port = get_config("unrealircd::port");
-	$rpc_user = get_config("unrealircd::rpc_user");
-	$rpc_password = get_config("unrealircd::rpc_password");
+	$server = get_active_rpc_server();
+	if (!$server)
+		die("No RPC server configured as primary");
+	$host = $config["unrealircd"][$server]["host"];
+	$port = $config["unrealircd"][$server]["port"];
+	$rpc_user = $config["unrealircd"][$server]["rpc_user"];
+	$rpc_password = $config["unrealircd"][$server]["rpc_password"];
 	if (str_starts_with($rpc_password, "secret:"))
 		$rpc_password = secret_decrypt($rpc_password);
+	$tls_verify = $config["unrealircd"][$server]["tls_verify_cert"];
 
 	if (!$host || !$port || !$rpc_user)
-		die("Unable to find RPC credentials in your config.php");
+		die("RPC Server is missing credentials");
+
 	if ($rpc_password === null)
+	{
 		die("Your RPC password in the DB was encrypted with a different key than config/config.php contains.<br>\n".
 		    "Either restore your previous config/config.php or start with a fresh database.<br>\n");
-
-	$tls_verify = get_config("unrealircd::tls_verify_cert");
+	}
 
 	/* Connect now */
 	try {
