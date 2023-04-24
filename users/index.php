@@ -79,8 +79,6 @@ if (!empty($_POST))
 	}
 }
 
-/* Get the user list */
-$users = $rpc->user()->getAll();
 ?>
 <h4>Users Overview</h4>
 
@@ -107,28 +105,9 @@ Click on a username to view more information.
 
 
 	?>
-	<table class="container-xxl table table-responsive caption-top table-striped">
-	<thead>
-		<form action="" method="post">
-			<tr>	
-				<th scope="col"><h5>Filter:</h5></th>
-				<th scope="col" colspan="2"><input <?php echo (isset($_POST['operonly'])) ? "checked" : ""; ?> name="operonly" type="checkbox" value=""> Opers Only</th>
-				<th scope="col" colspan="2"><input <?php echo (isset($_POST['servicesonly'])) ? "checked" : ""; ?> name="servicesonly" type="checkbox" value=""> Services Only</th>
-			</tr>
-			<tr>			
-				<th scope="col" colspan="2">Nick: <input name="uf_nick" type="text" class="short-form-control">
-				<th scope="col" colspan="2">Host: <input name="uf_host" type="text" class="short-form-control"></th>
-				<th scope="col" colspan="2">IP: <input name="uf_ip" type="text" class="short-form-control"></th>
-				<th scope="col" colspan="2">Country: <input name="uf_country" type="text" class="short-form-control" placeholder="ca, fr or other"></th>
-				<th scope="col" colspan="2">Account: <input name="uf_account" type="text" class="short-form-control"></th>
-				<th scope="col" colspan="2">Server: <input name="uf_server" type="text" class="short-form-control"></th>
-				
-				<th scope="col"> <input class="btn btn-primary" type="submit" value="Search"></th>
-			</tr>
-		</form>
-	</thead></table>
 
-	<table class="container-xxl table table-sm table-responsive caption-top table-striped">
+	<!-- The user list -->
+	<table id="data_list" class="container-xxl table table-sm table-responsive caption-top table-striped">
 	<thead class="table-primary">
 		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_user(this)" /></th>
 		<th scope="col">Nick</th>
@@ -141,99 +120,9 @@ Click on a username to view more information.
 		<th class="uplinkcol" scope="col">Connected to</th>
 		<th class="reputationcol" scope="col"><span id="reputationheader" data-toggle="tooltip" data-placement="bottom" title="The reputation score gets higher when someone with this IP address has been connected in the past weeks. A low reputation score (like <10) is an indication of a new IP." style="border-bottom: 1px dotted #000000">Rep.</span> <a href="https://www.unrealircd.org/docs/Reputation_score" target="_blank">ℹ️</a></th>
 	</thead>
-	
-	<tbody>
-	<form method="post">
-	<?php
-		$currentNumberUsers=0;
-		$currentNumberUsersIdentified=0;
-		$registrationOfaAllFlags = array();
-		foreach($users as $user)
-		{
+	</table>
 
-		
-			/* Some basic filtering for NICK */
-			if (isset($_POST['uf_nick']) && strlen($_POST['uf_nick']) && 
-			strpos(strtolower($user->name), strtolower($_POST['uf_nick'])) !== 0 &&
-			strpos(strtolower($user->name), strtolower($_POST['uf_nick'])) == false)
-				continue;
-
-			/* Some basic filtering for COUNTRY */
-			if (isset($_POST['uf_country']) && strlen($_POST['uf_country']) && 
-			@strtolower($user->geoip->country_code) !== strtolower($_POST['uf_country']))
-				continue;
-
-			/* Some basic filtering for HOST */
-			if (isset($_POST['uf_host']) && strlen($_POST['uf_host']) && 
-			strpos(strtolower($user->hostname), strtolower($_POST['uf_host'])) !== 0 &&
-			strpos(strtolower($user->hostname), strtolower($_POST['uf_host'])) == false)
-				continue;
-
-			/* Some basic filtering for IP */
-			if (isset($_POST['uf_ip']) && strlen($_POST['uf_ip']) && 
-			strpos(strtolower($user->ip), strtolower($_POST['uf_ip'])) !== 0 &&
-			strpos(strtolower($user->ip), strtolower($_POST['uf_ip'])) == false)
-				continue;
-
-			/* Some basic filtering for ACCOUNT */
-			if (isset($_POST['uf_account']) && strlen($_POST['uf_account']) && 
-			strtolower($user->user->account) !== strtolower($_POST['uf_account']))
-				continue;
-
-			/* Some basic filtering for SERVER */
-			if (isset($_POST['uf_server']) && strlen($_POST['uf_server']) && 
-			strpos(strtolower($user->user->servername), strtolower($_POST['uf_server'])) !== 0 &&
-			strpos(strtolower($user->user->servername), strtolower($_POST['uf_server'])) == false)
-				continue;
-
-			/* Some basic filtering for OPER */
-			if (isset($_POST['operonly']) &&
-			(strpos($user->user->modes, "o") == false || strpos($user->user->modes,"S") !== false))
-				continue;
-
-			/* Some basic filtering for SERVICES */
-			if (isset($_POST['servicesonly']) &&
-			(strpos($user->user->modes,"S") == false))
-				continue;
-
-			echo "\n<tr id=\"$user->id\" value=\"$user->name\" class=\"userselector\">";
-			echo "<th scope=\"row\"><input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\"></th>";
-			$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge rounded-pill badge-dark">Bot</span>' : "";
-			echo "<td><a href=\"details.php?nick=".$user->id."\">$user->name$isBot</a></td>";
-			echo "<td class=\"countrycol\">".(isset($user->geoip->country_code) ? '<img src="https://flagcdn.com/48x36/'.htmlspecialchars(strtolower($user->geoip->country_code)).'.png" width="20" height="15"> '.$user->geoip->country_code : "")."</td>";
-			if ($user->hostname == $user->ip)
-				$hostip = $user->ip;
-			else if ($user->ip == null)
-				$hostip = $user->hostname;
-			else
-				$hostip = $user->hostname . " (".$user->ip.")";
-			echo "<td class=\"hostname\">".htmlspecialchars($hostip)."</td>";
-			$account = (isset($user->user->account)) ? "<a href=\"".get_config("base_url")."users/?account=".$user->user->account."\">".htmlspecialchars($user->user->account)."</a>" : '<span class="badge rounded-pill badge-primary">None</span>';
-			echo "<td class=\"accountcol\">".$account."</td>";
-			$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
-			echo "<td class=\"umodescol\">".$modes."</td>";
-			$oper = (isset($user->user->operlogin)) ? $user->user->operlogin." <span class=\"badge rounded-pill badge-secondary\">".$user->user->operclass."</span>" : "";
-			if (!strlen($oper))
-				$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="badge rounded-pill badge-warning">Services Bot</span>' : "";
-			echo "<td class=\"opercol\">".$oper."</td>";
-
-			$secure = (isset($user->tls) || $user->hostname !== "localhost") ? "<span class=\"badge rounded-pill badge-success\">Secure</span>" : "<span class=\"badge rounded-pill badge-danger\">Insecure</span>";
-			if (strpos($user->user->modes, "S") !== false)
-				$secure = "";
-			echo "<td class=\"securecol\">".$secure."</td>";
-			echo "<td class=\"uplinkcol\"><a href=\"".get_config("base_url")."servers/details.php?server=".substr($user->id, 0, 3)."\">".$user->user->servername."</a></td>";
-			echo "<td class=\"reputationcol\">".$user->user->reputation."</td>";
-			echo "</tr>";
-			$currentNumberUsers++;
-			if (isset($user->user->account))
-			$currentNumberUsersIdentified++;
-			if (isset($user->geoip->country_code))
-			array_push($registrationOfaAllFlags, $user->geoip->country_code);
-		}
-		$registrationOfaAllFlags = array_count_values($registrationOfaAllFlags);
-	?>
-	</tbody></table>
-	<div id="currentNumberUsers"><?=$currentNumberUsers?> connected users including <?=$currentNumberUsersIdentified?> identified and <?=($currentNumberUsers-$currentNumberUsersIdentified)?> not identified.</div>
+	<!-- User Actions -->
 	<table class="table table-responsive table-light">
 	<tr>
 	<td colspan="2">
@@ -474,6 +363,39 @@ Click on a username to view more information.
 		rclickmenu.classList.remove("visible");
 	}
 });
+
+$(document).ready( function () {
+	$('#data_list').DataTable({
+		'ajax': {
+			'url': '<?php echo get_config("base_url"); ?>api/users.php',
+			dataSrc: ''
+		},
+		'pageLength':100,
+		'order':[[1,'asc']],
+		'dom': 'Pfrtip',
+		'searchPanes': {
+			'initCollapsed': 'true',
+			'columns': [2,8],
+			'dtOpts': {
+				select: { style: 'multi'},
+				order: [[ 1, "desc" ]]
+			}
+		},
+		'columns': [
+			{ 'data': 'Select' },
+			{ 'data': 'Nick' },
+			{ 'data': 'Country' },
+			{ 'data': 'Host/IP' },
+			{ 'data': 'Account' },
+			{ 'data': 'Usermodes', 'name':'Usermodes', 'searchPanes': { 'name':'Usermodes' } },
+			{ 'data': 'Oper' },
+			{ 'data': 'Secure' },
+			{ 'data': 'Connected to' },
+			{ 'data': 'Reputation' },
+		],
+	});
+} );
+
 </script>
 
 <?php require_once UPATH.'/inc/footer.php'; ?>
