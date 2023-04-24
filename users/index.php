@@ -1,6 +1,5 @@
 <?php
 require_once "../inc/common.php";
-require_once "../inc/connection.php";
 require_once "../inc/header.php";
 
 if (!empty($_GET))
@@ -17,6 +16,7 @@ if (!empty($_GET))
 
 if (!empty($_POST))
 {
+	require_once "../inc/connection.php";
 	do_log($_POST);
 	$bantype = (isset($_POST['bantype'])) ? $_POST['bantype'] : NULL;
 
@@ -184,14 +184,16 @@ Click on a username to view more information.
 	
 	<label for="ban_reason">Reason: </label>
 	<input class="form-control" type="text" name="ban_reason" id="ban_reason" value="No reason">
-	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ban_confirmation">
 			Apply
 	</button></td></table>
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+
+	<!-- Ban confirmation modal -->
+	<div class="modal fade" id="ban_confirmation" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 		<div class="modal-header">
-			<h5 class="modal-title" id="myModalLabel">Apply ban</h5>
+			<h5 class="modal-title" id="ban_confirmation_label">Apply ban</h5>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
 			</button>
@@ -335,6 +337,7 @@ Click on a username to view more information.
 	window.addEventListener('resize', function() {
 		resize_check();
 	});
+
 	var rclickmenu = document.getElementById('rclickmenu');
 	var scopes = document.querySelectorAll('.userselector');
 	document.addEventListener("click", (e) =>
@@ -384,15 +387,16 @@ $(document).ready( function () {
 		'columns': [
 			{ 'data': 'Select' },
 			{ 'data': 'Nick' },
-			{ 'data': 'Country' },
-			{ 'data': 'Host/IP' },
-			{ 'data': 'Account' },
-			{ 'data': 'Usermodes', 'name':'Usermodes', 'searchPanes': { 'name':'Usermodes' } },
-			{ 'data': 'Oper' },
-			{ 'data': 'Secure' },
-			{ 'data': 'Connected to' },
-			{ 'data': 'Reputation' },
+			{ 'data': 'Country', 'className':'countrycol' },
+			{ 'data': 'Host/IP', 'className':'hostname' },
+			{ 'data': 'Account', 'className':'accountcol' },
+			{ 'data': 'Usermodes', 'className':'umodescol' },
+			{ 'data': 'Oper', 'className':'opercol' },
+			{ 'data': 'Secure', 'className':'securecol' },
+			{ 'data': 'Connected to', 'className':'uplinkcol' },
+			{ 'data': 'Reputation', 'className':'reputationcol' },
 		],
+		'initComplete': function(settings, json) { resize_check(); },
 	});
 } );
 

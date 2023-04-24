@@ -39,7 +39,7 @@ foreach($users as $user)
 	$nick = "<a href=\"details.php?nick=".$user->id."\">$nick</a>";
 
 	$out[] = [
-		"Select" => "",
+		"Select" => "<input type=\"checkbox\" label='selectall' onClick=\"toggle_user(this)\" />", /* yeah ridiculous to have here in this file and the feed ;) */
 		"Nick" => $nick,
 		"Country" => $country,
 		"Host/IP" => $hostip,
