@@ -53,7 +53,7 @@ if (isset($_POST['do_add_server']))
 	$new_properties = [
 		"rpc_user" => $opts->rpc_user,
 		"rpc_password" => $opts->rpc_password,
-		"host"=>$opts->rpc_iphost,
+		"host"=>$opts->rpc_host,
 		"port"=>$opts->rpc_port,
 		"tls_verify_cert"=>isset($opts->rpc_tls_verify_cert)?true:false,
 		"default"=>isset($opts->rpc_default)?true:false,
@@ -66,8 +66,10 @@ if (isset($_POST['do_add_server']))
 			die("Editing a server that does not exist!?"); // not very graceful, isn't it?
 		if ($new_properties["rpc_password"] == "****************")
 			$new_properties["rpc_password"] = $config["unrealircd"][$opts->edit_existing]["rpc_password"];
-		// we unset because there could be a rename
-		unset($config["unrealircd"][$opts->edit_existing]);
+		// name change? unset the old one
+		if ($opts->edit_existing != $opts->rpc_displayname)
+			unset($config["unrealircd"][$opts->edit_existing]);
+		// set new properties
 		$config["unrealircd"][$opts->rpc_displayname] = $new_properties;
 	} else {
 		// Add new server
@@ -145,8 +147,8 @@ if (empty($config["unrealircd"]))
 						<small id="rpc_default_help" class="form-text text-muted">Make this the default (primary) server that will be used for connections.</code></small>
 					</div>
 					<div class="form-group">
-						<label for="rpc_iphost">Hostname or IP</label>
-						<input name="rpc_iphost" type="text" class="revalidation-needed-rpc form-control" id="rpc_iphost" aria-describedby="hostname_help" value="127.0.0.1">
+						<label for="rpc_host">Hostname or IP</label>
+						<input name="rpc_host" type="text" class="revalidation-needed-rpc form-control" id="rpc_host" aria-describedby="hostname_help" value="127.0.0.1">
 						<small id="hostname_help" class="form-text text-muted">The hostname or IP address of your UnrealIRCd server. You should use <code>127.0.0.1</code> for the same machine.</small>
 					</div>
 					<div class="form-group">
@@ -238,7 +240,7 @@ if (empty($config["unrealircd"]))
 <script>
 	let do_add_server = document.getElementById('do_add_server');
 
-	let rpc_host = document.getElementById('rpc_iphost');
+	let rpc_host = document.getElementById('rpc_host');
 	let rpc_port = document.getElementById('rpc_port');
 	let rpc_user = document.getElementById('rpc_user');
 	let rpc_pass = document.getElementById('rpc_password');
