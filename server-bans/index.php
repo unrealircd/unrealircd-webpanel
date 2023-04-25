@@ -5,7 +5,8 @@ require_once "../inc/header.php";
 if (!empty($_POST))
 {
 	require_once "../inc/connection.php";
-	if (isset($_POST['tklch']) && !empty($_POST['tklch'])) // User has asked to delete these tkls
+
+	if (!empty($_POST['tklch'])) // User has asked to delete these tkls
 	{
 		if (!current_user_can(PERMISSION_SERVER_BAN_DEL))
 		{
@@ -32,7 +33,7 @@ if (!empty($_POST))
 			}
 		}
 	}
-	elseif (isset($_POST['tkl_add']) && !empty($_POST['tkl_add']))
+	elseif (isset($_POST['do_add_ban']))
 	{
 		if (!current_user_can(PERMISSION_SERVER_BAN_ADD))
 		{
@@ -40,58 +41,49 @@ if (!empty($_POST))
 		}
 		else
 		{
-			if (!($iphost = $_POST['tkl_add']))
-				Message::Fail("No mask was specified");
-			else if (!($bantype = (isset($_POST['bantype'])) ? $_POST['bantype'] : false))
+			if (empty($_POST['ban_host']) || empty($_POST['ban_type']))
 			{
-				Message::Fail("Unable to add Server Ban: No ban type selected");
-			} else /* It did */{
-
-				if (
-					(
-						$bantype == "gline" ||
-						$bantype == "gzline" ||
-						$bantype == "shun" ||
-						$bantype == "eline"
-					) && strpos($iphost, "@") == false
-				) // doesn't have full mask
-					$iphost = "*@" . $iphost;
-
-				$soft = ($_POST['soft']) ? true : false;
-
-				if ($soft)
-					$iphost = "%" . $iphost;
-				/* duplicate code for now [= */
-				$banlen_w = (isset($_POST['banlen_w'])) ? $_POST['banlen_w'] : NULL;
-				$banlen_d = (isset($_POST['banlen_d'])) ? $_POST['banlen_d'] : NULL;
-				$banlen_h = (isset($_POST['banlen_h'])) ? $_POST['banlen_h'] : NULL;
-				$duration = "";
-				if (!$banlen_d && !$banlen_h && !$banlen_w)
-					$duration .= "0";
-				else {
-					if ($banlen_w)
-						$duration .= $banlen_w;
-					if ($banlen_d)
-						$duration .= $banlen_d;
-					if ($banlen_h)
-						$duration .= $banlen_h;
+				Message::Fail("Unable to add Server Ban: No host or ban type selected");
+			} else
+			{
+				$ban_host = $_POST['ban_host'];
+				$ban_type = $_POST['ban_type'];
+				$ban_soft = empty($_POST['soft']) ? false : true;
+				$ban_duration = $_POST['ban_duration'] ?? 0;
+				$ban_reason = $_POST['ban_reason'] ?? '';
+				if (!str_contains($ban_host, "@"))
+					$ban_host = "*@$ban_host"; // prefix ban with *@ if no @ present
+				if ($ban_soft)
+					$ban_host = "%$ban_host"; // prefix ban with % if soft-ban
+				if ($rpc->serverban()->add($ban_host, $ban_type, $ban_duration, $ban_reason))
+				{
+					Message::Success("Ban added on ".htmlspecialchars($ban_host));
+				} else {
+					$success = false;
+					if (($rpc->errno == -1001) && !empty($_POST['edit_existing']))
+					{
+						// existing one = del + add
+						// and yeah we do this after add() fails because then we now
+						// at least the syntax and fields and everything are OK.
+						// This so we don't accidentally remove a ban and the add fails
+						// causing the edit to result in a deletion.
+						$e = explode(":", $_POST['edit_existing'], 2);
+						if (count($e) == 2)
+						{
+							if ($rpc->serverban()->delete($e[1], $e[0]))
+							{
+								/* Good, now try the add operation */
+								if ($rpc->serverban()->add($ban_host, $ban_type, $ban_duration, $ban_reason))
+								{
+									Message::Success("Ban successfully modified: ".htmlspecialchars($ban_host));
+									$success = true;
+								}
+							}
+						}
+					}
+					if (!$success)
+						Message::Fail("The ".htmlspecialchars($ban_type)." on ".htmlspecialchars($ban_host)." could not be added: $rpc->error / $rpc->errno");
 				}
-				$msg_msg = ($duration == "0" || $duration == "0w0d0h") ? "permanently" : "for " . rpc_convert_duration_string($duration);
-				$reason = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : "No reason";
-				if ($bantype == "qline") {
-					if ($rpc->nameban()->add($iphost, $reason, $duration))
-						Message::Success("Name Ban set against \"$iphost\": $reason");
-					else
-						Message::Fail("Name Ban could not be set against \"$iphost\": $rpc->error");
-				} elseif ($bantype == "except") {
-					if ($rpc->serverbanexception()->add($iphost, "", $duration, $reason))
-						Message::Success("Exception set for \"$iphost\": $reason");
-					else
-						Message::Fail("Exception could not be set \"$iphost\": $rpc->error");
-				} else if ($rpc->serverban()->add($iphost, $bantype, $duration, $reason)) {
-					Message::Success("Host / IP: $iphost has been $bantype" . "d $msg_msg: $reason");
-				} else
-					Message::Fail("The $bantype against \"$iphost\" could not be added: $rpc->error");
 			}
 		}
 	}
@@ -104,88 +96,63 @@ if (!empty($_POST))
 ?>
 <h4>Server Bans Overview</h4>
 Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>
-<!-- Add ban -->
-<p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" <?php echo (current_user_can(PERMISSION_SERVER_BAN_ADD)) ? "" : "disabled"; ?>>
-			Add entry
-	</button></p></table>
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+
+<!-- Top add button -->
+<p><div class="btn btn-primary" onclick="add_ban()" <?php echo (current_user_can(PERMISSION_SERVER_BAN_ADD)) ? "" : "disabled"; ?>>
+Add Ban</div></p></table>
+
+<!-- Add/edit ban -->
+	<div class="modal fade" id="ban_add" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
-		<div class="modal-header">
-			<h5 class="modal-title" id="myModalLabel">Add new Server Ban</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<div class="modal-body">
-		
-		<form  method="post">
-			<div class="align_label">IP / Host: </div> <input class="curvy" type="text" id="tkl_add" name="tkl_add"><br>
-			<div class="align_label">Ban Type: </div> <select class="curvy" name="bantype" id="bantype">
-				<option value=""></option>
-				<optgroup label="Bans">
-					<option value="kline">Kill Line (KLine)</option>
-					<option value="gline">Global Kill Line (GLine)</option>
-					<option value="zline">Zap Line (ZLine)</option>
-					<option value="gzline">Global Zap Line (GZLine)</option>
-					
-				</optgroup>
-			</select><br>
-			<div class="align_label"><label for="banlen_w">Duration: </label></div>
-					<select class="curvy" name="banlen_w" id="banlen_w">
-							<?php
-							for ($i = 0; $i <= 56; $i++)
-							{
-								if (!$i)
-									echo "<option value=\"0w\"></option>";
-								else
-								{
-									$w = ($i == 1) ? "week" : "weeks";
-									echo "<option value=\"$i" . "w\">$i $w" . "</option>";
-								}
-							}
-							?>
-					</select>
-					<select class="curvy" name="banlen_d" id="banlen_d">
-							<?php
-							for ($i = 0; $i <= 31; $i++)
-							{
-								if (!$i)
-									echo "<option value=\"0d\"></option>";
-								else
-								{
-									$d = ($i == 1) ? "day" : "days";
-									echo "<option value=\"$i" . "d\">$i $d" . "</option>";
-								}
-							}
-							?>
-					</select>
-					<select class="curvy" name="banlen_h" id="banlen_h">
-							<?php
-							for ($i = 0; $i <= 24; $i++)
-							{
-								if (!$i)
-									echo "<option value=\"0d\"></option>";
-								else
-								{
-									$h = ($i == 1) ? "hour" : "hours";
-									echo "<option value=\"$i" . "h\">$i $h" . "</option>";
-								}
-							}
-							?>
-					</select>
-					<br><div class="align_label"><label for="ban_reason">Reason: </label></div>
-					<input class="curvy input_text" type="text" id="ban_reason" name="ban_reason"><br>
-					<input class="curvy input_text" type="checkbox" id="soft" name="soft">Don't affect logged-in users (soft)
-				
+		<form method="post">
+			<input name="edit_existing" type="hidden" id="edit_existing" value="">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="ban_add_title">Add server ban</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span></button>		
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="ban_host">IP / Host</label>
+						<input name="ban_host" type="text" class="form-control" id="ban_host" aria-describedby="ban_host_help" value="" required>
+						<small id="ban_host_help" class="form-text text-muted">IP or host on which the ban is applied.</small>
+					</div>
+					<div class="form-group">
+						<label for="ban_type">Type</label><br>
+						<select class="curvy" name="ban_type" id="ban_type">
+							<option value=""></option>
+							<optgroup label="Bans">
+							<option value="kline">Local Kill (K-Line)</option>
+							<option value="gline">Global Kill (G-Line)</option>
+							<option value="zline">Local Z-Line</option>
+							<option value="gzline">Global Z-line</option>
+							</optgroup>
+						</select>
+						<small id="ban_type_help" class="form-text text-muted">Usually K-Line or G-Line. Use Z-Lines with care.</small>
+					</div>
+					<div class="form-group">
+						<input class="curvy input_text" type="checkbox" id="ban_soft" name="ban_soft"><label for="ban_soft">Soft-ban</label><br>
+						<small id="ban_soft_help" class="form-text text-muted">Ban does not affect logged in users</small>
+					</div>
+					<div class="form-group">
+						<label for="ban_duration">Duration</label>
+						<input name="ban_duration" type="text" class="form-control" id="ban_duration" aria-describedby="ban_duration_help" value="" placeholder="(empty means permanent ban)">
+						<small id="ban_duration_help" class="form-text text-muted">Duration of the ban in seconds, or in a format like 1d for 1 day. Leave empty for permanent ban</small>
+					</div>
+					<div class="form-group">
+						<label for="ban_reason">Reason</label>
+						<input name="ban_reason" type="text" class="form-control" id="ban_reason" aria-describedby="ban_reason_help" value="">
+						<small id="ban_reason_help" class="form-text text-muted">Reason of the ban (shown to the banned user)</small>
+					</div>
+				</div>
+								
+				<div class="modal-footer">
+					<button id="CloseButton" type="button" id="cancel_add_ban" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="submit" name="do_add_ban" id="do_add_ban" class="btn btn-primary">Add Ban</button>
+				</div>
 			</div>
-			
-		<div class="modal-footer">
-			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-			<button type="submit" action="post" class="btn btn-danger">Add Ban</button>
-			</form>
-		</div>
-		</div>
+		</form>
 	</div>
 	</div>
 
@@ -275,8 +242,53 @@ $(document).ready( function () {
 		}
 	}
 
-	$('#data_list').DataTable(args);
+	var data_list_table = $('#data_list').DataTable(args);
+
+	$('#data_list').on( 'click', 'td', function () {
+		var data = data_list_table.row(this).data();
+		edit_ban(data);
+	} );
 } );
+
+	function edit_ban(data)
+	{
+		$('#ban_host').val(data['Mask']);
+		if (data['Type'] == 'Global Z-Line')
+			$type = 'gzline';
+		else if (data['Type'] == 'Z-Line')
+			$type = 'zline';
+		else if (data['Type'] == 'G-Line')
+			$type = 'gline';
+		else
+			$type = 'kline';
+		$('#ban_type').val($type);
+		if (data['Duration'] == 'permanent')
+			$('#ban_duration').val();
+		else
+			$('#ban_duration').val(data['Duration']);
+		$('#ban_reason').val(data['Reason']);
+		$('#ban_soft').prop('checked', false);
+		$('#do_del_ban').show();
+		$('#ban_add_title').html("Edit server ban");
+		$('#do_add_ban').html("Modify Ban");
+		$('#edit_existing').val($type+':'+data['Mask']);
+		$('#ban_add').modal('show');
+	}
+
+	// This is in a function because a canceled edit_rpc_server otherwise causes a prefilled effect
+	function add_ban()
+	{
+		$('#edit_existing').val("");
+		$('#ban_host').val("");
+		$('#ban_type').val("");
+		$('#ban_duration').val("");
+		$('#ban_reason').val("");
+		$('#ban_soft').prop('checked', false);
+		$('#do_del_ban').hide();
+		$('#ban_add').modal('show');
+	}
+
+
 </script>
 
 <?php require_once '../inc/footer.php'; ?>
