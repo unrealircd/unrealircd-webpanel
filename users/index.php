@@ -118,7 +118,6 @@ Click on a username to view more information.
 		<th class="accountcol" scope="col"><span data-toggle="tooltip" data-placement="bottom" title="The services account name, if the user identified to services." style="border-bottom: 1px dotted #000000">Account</span></th>
 		<th class="umodescol" scope="col">Usermodes <a href="https://www.unrealircd.org/docs/User_modes" target="_blank">ℹ️</a></th>
 		<th class="opercol" scope="col">Oper</th>
-		<th class="securecol" scope="col"><span data-toggle="tooltip" data-placement="bottom" title="This shows [Secure] if the user is using SSL/TLS or is on localhost." style="border-bottom: 1px dotted #000000">Secure</span></th>
 		<th class="uplinkcol" scope="col">Connected to</th>
 		<th class="reputationcol" scope="col"><span id="reputationheader" data-toggle="tooltip" data-placement="bottom" title="The reputation score gets higher when someone with this IP address has been connected in the past weeks. A low reputation score (like <10) is an indication of a new IP." style="border-bottom: 1px dotted #000000">Rep.</span> <a href="https://www.unrealircd.org/docs/Reputation_score" target="_blank">ℹ️</a></th>
 	</thead>
@@ -300,7 +299,6 @@ $(document).ready( function () {
 			{ 'data': 'Account', 'className':'accountcol', 'responsivePriority': 3 },
 			{ 'data': 'Usermodes', 'className':'umodescol', 'responsivePriority': 7 },
 			{ 'data': 'Oper', 'className':'opercol', 'responsivePriority': 8 },
-			{ 'data': 'Secure', 'className':'securecol', 'responsivePriority': 9 },
 			{ 'data': 'Connected to', 'className':'uplinkcol', 'responsivePriority': 6 },
 			{ 'data': 'Reputation', 'className':'reputationcol', 'responsivePriority': 4 },
 		],

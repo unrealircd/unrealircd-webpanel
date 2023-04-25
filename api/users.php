@@ -30,9 +30,6 @@ foreach($users as $user)
 	$oper = (isset($user->user->operlogin)) ? $user->user->operlogin." <span class=\"badge rounded-pill badge-secondary\">".$user->user->operclass."</span>" : "";
 	if (!strlen($oper))
 			$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="badge rounded-pill badge-warning">Services Bot</span>' : "";
-	$secure = (isset($user->tls) || $user->hostname !== "localhost") ? "<span class=\"badge rounded-pill badge-success\">Secure</span>" : "<span class=\"badge rounded-pill badge-danger\">Insecure</span>";
-	if (strpos($user->user->modes, "S") !== false)
-			$secure = "";
 	$servername = $user->user->servername;
 	$reputation = $user->user->reputation;
 
@@ -46,7 +43,6 @@ foreach($users as $user)
 		"Account" => $account,
 		"Usermodes" => $modes,
 		"Oper" => $oper,
-		"Secure" => $secure,
 		"Connected to" => $servername,
 		"Reputation" => $reputation,
 	];
