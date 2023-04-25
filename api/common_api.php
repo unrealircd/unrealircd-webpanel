@@ -29,12 +29,8 @@ set_time_limit(0);
 // Send content immediately
 ob_implicit_flush(1);
 
-// Eh.. yeah...
-ob_end_flush();
-
-// If we use fastcgi, then finish the request now (UNTESTED)
-if (function_exists('fastcgi_finish_request'))
-	fastcgi_finish_request();
+// Flush and stop output buffering (eg fastcgi w/NGINX)
+while (@ob_end_flush());
 
 /* Send server-sent events (SSE) message */
 function send_sse($json)
