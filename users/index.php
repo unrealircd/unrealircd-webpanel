@@ -85,27 +85,6 @@ if (!empty($_POST))
 Click on a username to view more information.
 
 <div class="usertable">
-	
-	<?php
-
-	if (isset($_POST['uf_nick']) && strlen($_POST['uf_nick']))
-		Message::Info("Listing users which match nick: \"" . $_POST['uf_nick'] . "\"");
-
-	if (isset($_POST['uf_ip']) && strlen($_POST['uf_ip']))
-		Message::Info("Listing users which match IP: \"" . $_POST['uf_ip'] . "\"");
-
-	if (isset($_POST['uf_host']) && strlen($_POST['uf_host']))
-		Message::Info("Listing users which match hostmask: \"" . $_POST['uf_host'] . "\"");
-
-	if (isset($_POST['uf_account']) && strlen($_POST['uf_account']))
-		Message::Info("Listing users which match account: \"" . $_POST['uf_account'] . "\"");
-
-	if (isset($_POST['uf_server']) && strlen($_POST['uf_server']))
-		Message::Info("Listing users connected to servers matching: \"" . $_POST['uf_server'] . "\"");
-
-
-	?>
-
 	<form method="post">
 
 	<!-- The user list -->
