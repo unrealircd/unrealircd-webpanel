@@ -106,6 +106,8 @@ Click on a username to view more information.
 
 	?>
 
+	<form method="post">
+
 	<!-- The user list -->
 	<table id="data_list" class="table-striped display responsive nowrap" style="width:100%">
 	<thead>

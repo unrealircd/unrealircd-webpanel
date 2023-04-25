@@ -10,8 +10,6 @@ $users = $rpc->user()->getAll();
 $out = [];
 foreach($users as $user)
 {
-	// base64_encode($user->id)
-
 	$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge rounded-pill badge-dark">Bot</span>' : "";
 	$nick = htmlspecialchars($user->name).$isBot;
 
@@ -35,7 +33,7 @@ foreach($users as $user)
 	$nick = "<a href=\"details.php?nick=".$user->id."\">$nick</a>";
 
 	$out[] = [
-		"Select" => "<input type=\"checkbox\" label='selectall' onClick=\"toggle_user(this)\" />", /* yeah ridiculous to have here in this file and the feed ;) */
+		"Select" => "<input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\">", /* yeah ridiculous to have here in this file and the feed ;) */
 		"Nick" => $nick,
 		"Country" => $country,
 		"Host/IP" => $hostip,
