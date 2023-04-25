@@ -26,7 +26,6 @@ foreach($users as $user)
 	$hostip = htmlspecialchars($hostip);
 	
 	$account = (isset($user->user->account)) ? "<a href=\"".get_config("base_url")."users/?account=".$user->user->account."\">".htmlspecialchars($user->user->account)."</a>" : '<span class="badge rounded-pill badge-primary">None</span>';
-	$modes = (isset($user->user->modes)) ? "+" . $user->user->modes : "<none>";
 	$oper = (isset($user->user->operlogin)) ? $user->user->operlogin." <span class=\"badge rounded-pill badge-secondary\">".$user->user->operclass."</span>" : "";
 	if (!strlen($oper))
 			$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="badge rounded-pill badge-warning">Services Bot</span>' : "";
@@ -41,7 +40,6 @@ foreach($users as $user)
 		"Country" => $country,
 		"Host/IP" => $hostip,
 		"Account" => $account,
-		"Usermodes" => $modes,
 		"Oper" => $oper,
 		"Connected to" => $servername,
 		"Reputation" => $reputation,

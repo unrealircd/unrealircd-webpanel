@@ -116,7 +116,6 @@ Click on a username to view more information.
 		<th class="countrycol" scope="col">Country</th>
 		<th class="hostname" scope="col">Host / IP</th>
 		<th class="accountcol" scope="col"><span data-toggle="tooltip" data-placement="bottom" title="The services account name, if the user identified to services." style="border-bottom: 1px dotted #000000">Account</span></th>
-		<th class="umodescol" scope="col">Usermodes <a href="https://www.unrealircd.org/docs/User_modes" target="_blank">ℹ️</a></th>
 		<th class="opercol" scope="col">Oper</th>
 		<th class="uplinkcol" scope="col">Connected to</th>
 		<th class="reputationcol" scope="col"><span id="reputationheader" data-toggle="tooltip" data-placement="bottom" title="The reputation score gets higher when someone with this IP address has been connected in the past weeks. A low reputation score (like <10) is an indication of a new IP." style="border-bottom: 1px dotted #000000">Rep.</span> <a href="https://www.unrealircd.org/docs/Reputation_score" target="_blank">ℹ️</a></th>
@@ -297,7 +296,6 @@ $(document).ready( function () {
 			{ 'data': 'Country', 'className':'countrycol', 'responsivePriority': 2 },
 			{ 'data': 'Host/IP', 'className':'hostname', 'responsivePriority': 5 },
 			{ 'data': 'Account', 'className':'accountcol', 'responsivePriority': 3 },
-			{ 'data': 'Usermodes', 'className':'umodescol', 'responsivePriority': 7 },
 			{ 'data': 'Oper', 'className':'opercol', 'responsivePriority': 8 },
 			{ 'data': 'Connected to', 'className':'uplinkcol', 'responsivePriority': 6 },
 			{ 'data': 'Reputation', 'className':'reputationcol', 'responsivePriority': 4 },
@@ -309,7 +307,7 @@ $(document).ready( function () {
 		args['dom'] = 'Pfrtip';
 		args['searchPanes'] = {
 			'initCollapsed': 'true',
-			'columns': [2,8],
+			'columns': [2,6],
 			'dtOpts': {
 				select: { style: 'multi'},
 				order: [[ 1, "desc" ]]
