@@ -72,6 +72,30 @@ elseif (isset($_POST['del_role_name']) && $role_name = $_POST['del_role_name'])
     else
         $errors[] = "Could not delete role \"$role_name\": Role does not exist.";
 }
+
+elseif (isset($_POST['update_role']) && $role_name = $_POST['update_role'])
+{
+    $found = 0;
+    foreach ($list as $name => $u) // don't add it if it already exists
+    {
+        if (!strcmp(to_slug($name),to_slug($role_name)))
+        {
+            $found = 1;
+            break;
+        }
+    }
+    if (!$found) // so far so good
+    {
+        $errors[] = "Could not update role \"$role_name\": Role does not exist.";
+    }
+    else
+    {
+        $config['user_roles'][$role_name] = $_POST['permissions'];
+        write_config('user_roles');
+        $success[] = "Successfully updated role \"$role_name\"";
+        $list = get_panel_user_roles_list(); // refresh
+    }
+}
 ?>
 
 

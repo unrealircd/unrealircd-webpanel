@@ -160,7 +160,7 @@ $writable = (is_writable("../config/")) ? true: false;
 			Message::Fail("Could not create user");
 			return;
 		}
-		$lkup->add_permission(PERMISSION_MANAGE_USERS);
+		$lkup->add_meta('role', 'Super-Admin');
 
 		/* Now, write all the config (config.php + settings in DB) */
 		write_config();

@@ -8,25 +8,19 @@ $us = unreal_get_current_user();
 $id = (isset($_GET['id'])) ? $_GET['id'] : $us->id;
 $edit_user = new PanelUser(NULL, $id);
 $can_edit_profile = (user_can($us, PERMISSION_MANAGE_USERS) || $edit_user->id == $us->id) ? true : false;
+$caneditprofile = ($can_edit_profile) ? "" : "disabled";
 $caneditpermissions = (user_can($us, PERMISSION_MANAGE_USERS)) ? true : false;
 $can_edit = ($caneditpermissions) ? "" : "disabled";
 $postbutton = (isset($_POST['update_user'])) ? true : false;
-$permissions = (isset($_POST['permissions'])) ? $_POST['permissions'] : [];
-$edit_perms = (isset($edit_user->user_meta['permissions'])) ? unserialize($edit_user->user_meta['permissions']) : [];
+$roles_list = get_panel_user_roles_list();
 
-/* Check if they can edit their permissions and if the permissions have indeed been changed */
-if ($postbutton && is_array($permissions) && $caneditpermissions
-        && $permissions != $edit_perms)
+if ($postbutton && isset($_POST['user_role']) && $caneditpermissions)
 {
-    foreach ($permissions as $p)
-        if (!in_array($p, $edit_perms))
-            $edit_user->add_permission($p);
-
-    foreach($edit_perms as $p)
-        if (!in_array($p, $permissions))
-            $edit_user->delete_permission($p);
-
-    Message::Success("Permissions for <strong>$edit_user->username</strong> have been updated");
+    if ($_POST['user_role'] != $edit_user->user_meta['role'])
+    {
+        $edit_user->add_meta("role", $_POST['user_role']);
+        Message::Success("Updated the role of $edit_user->username");
+    }
 }
 
 if ($postbutton && $can_edit_profile)
@@ -65,66 +59,70 @@ if ($postbutton && $can_edit_profile)
 <h4>Edit User: "<?php echo $edit_user->username; ?>"</h4>
 <br>
 <form method="post" action="user-edit.php?id=<?php echo $edit_user->id; ?>" autocomplete="off" enctype="multipart/form-data">
-<?php if ($can_edit_profile) { ?>
-<a class="btn btn-<?php echo (user_can($us, PERMISSION_MANAGE_USERS)) ? "danger" : "info"; ?>" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-<?php echo (user_can($us, PERMISSION_MANAGE_USERS)) ? "Edit" : "View"; ?> Permissions
-</a>
-<div class="collapse" id="collapseExample">
-    <br>
-  <div class="card card-body">
-    <h6>Here are all the things <?php echo $edit_user->username; ?> can do</h6>
-    <?php generate_panel_user_permission_table($edit_user); ?>
-  </div>
-</div>
-<?php } ?>
-<br><br>
+
 <div class="input-group mb-3">
     <div class="input-group-prepend">
-        <span class="input-group-text" style="width: 175px;">@</span>
+        <span class="input-group-text" style="width: 175px;">Username</span>
     </div><input disabled type="text" class="form-control" name="username" id="username" placeholder="<?php echo $edit_user->username; ?>">
 </div>
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
+        <span class="input-group-text" style="width: 175px;">Role</span>
+    </div><select name="user_role" <?php echo $can_edit; ?> class="custom-select" id="user_role">
+                <?php
+                    foreach($roles_list as $s => $l)
+                    {
+                        $selected = ($s == $edit_user->user_meta['role']) ? "selected=\"selected\"" : "";
+                        echo "<option value=\"$s\" $selected>$s</option>";
+                    }
+                ?>
+            </select>
+</div>
+
+
+
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
         <span class="input-group-text" style="width: 175px;">First Name</span>
-    </div><input <?php echo $can_edit; ?> type="text" class="form-control" name="first_name" id="first_name" placeholder="<?php echo $edit_user->first_name; ?>">
+    </div><input <?php echo $caneditprofile; ?> type="text" class="form-control" name="first_name" id="first_name" placeholder="<?php echo $edit_user->first_name; ?>">
 </div>
 
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" style="width: 175px;">Last Name</span>
-    </div><input <?php echo $can_edit; ?> type="text" class="form-control" name="last_name" id="last_name" placeholder="<?php echo $edit_user->last_name; ?>">
+    </div><input <?php echo $caneditprofile; ?> type="text" class="form-control" name="last_name" id="last_name" placeholder="<?php echo $edit_user->last_name; ?>">
 </div>
 
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" style="width: 175px;">Bio</span>
-    </div><textarea <?php echo $can_edit; ?> class="form-control" name="bio" id="username"><?php echo $edit_user->bio; ?></textarea>
+    </div><textarea <?php echo $caneditprofile; ?> class="form-control" name="bio" id="username"><?php echo $edit_user->bio; ?></textarea>
 </div>
 
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" style="width: 175px;">Email</span>
-    </div><input <?php echo $can_edit; ?> type="text" class="form-control" name="email" id="email" autocomplete="off" value="<?php echo $edit_user->email; ?>">
+    </div><input <?php echo $caneditprofile; ?> type="text" class="form-control" name="email" id="email" autocomplete="off" value="<?php echo $edit_user->email; ?>">
 </div>
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" style="width: 175px;">Session timeout</span>
-    </div><input <?php echo $can_edit; ?> type="text" class="form-control" name="session_timeout" id="session_timeout" autocomplete="off" value="<?php echo $edit_user->user_meta['session_timeout'] ?? 3600; ?>">
+    </div><input <?php echo $caneditprofile; ?> type="text" class="form-control" name="session_timeout" id="session_timeout" autocomplete="off" value="<?php echo $edit_user->user_meta['session_timeout'] ?? 3600; ?>">
 </div>
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" style="width: 175px;">New Password</span>
-    </div><input <?php echo $can_edit; ?> type="password" class="form-control" name="password" id="password" autocomplete="off">
+    </div><input <?php echo $caneditprofile; ?> type="password" class="form-control" name="password" id="password" autocomplete="off">
 </div><div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" style="width: 175px;">Confirm Password</span>
-    </div><input <?php echo $can_edit; ?> type="password" class="form-control" name="passwordconfirm" id="passwordconfirm" autocomplete="off">
+    </div><input <?php echo $caneditprofile; ?> type="password" class="form-control" name="passwordconfirm" id="passwordconfirm" autocomplete="off">
 </div>
 
 <br>

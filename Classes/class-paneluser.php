@@ -270,9 +270,25 @@ function current_user_can($permission) : bool
  */
 function user_can(PanelUser $user, $permission) : bool
 {
+	global $config;
 	if (!$user)
 		return false;
 
+	if (isset($user->user_meta['role']))
+	{
+		if ($user->user_meta['role'] == "Super-Admin")
+			return true;
+
+		else if ($user->user_meta['role'] == "Read-Only")
+			return false;
+
+		else if (in_array($permission, $config['user_roles'][$user->user_meta['role']]))
+			return true;
+			
+		return false;
+	}
+
+	/* compatibility fallback */
 	if (isset($user->user_meta['permissions']))
 	{
 		$perms = unserialize($user->user_meta['permissions']);
@@ -355,8 +371,8 @@ function get_panel_user_roles_list()
 {
 	/* Defaults */
 	$list = [
-        "Super Admin" => get_panel_user_permission_list(), // SuperAdmin can do everything
-        "Read Only" => [], // Read Only can do nothing
+        "Super-Admin" => get_panel_user_permission_list(), // SuperAdmin can do everything
+        "Read-Only" => [], // Read Only can do nothing
 	];
 
 	Hook::run(HOOKTYPE_USER_ROLE_LIST, $list);
@@ -384,7 +400,7 @@ function generate_role_list($list)
 		<div id="collapse_<?php echo to_slug($role); ?>" class="collapse" aria-labelledby="<?php echo to_slug($role); ?>_heading" data-parent="#roles_accord">
 			<div id="results_rpc" class="card-body">
 				<form method="post">
-				<?php if ($role !== "Super Admin" && $role !== "Read Only") { ?>
+				<?php if ($role !== "Super-Admin" && $role !== "Read-Only") { ?>
 					<div class="container row mb-2">
 						<button id="update_role" name="update_role" value="<?php echo $role ?>" class="btn btn-primary ml-1 mr-2" >Update</button>
 						<button id="delete_role" name="del_role_name" value="<?php echo $role ?>" class="btn btn-danger"><i class="fa fa-trash fa-1" aria-hidden="true"></i></button>
@@ -395,7 +411,7 @@ function generate_role_list($list)
 					foreach($list2 as $desc => $slug)
 					{
 					$attributes = "";
-					$attributes .= ($role == "Super Admin" || $role == "Read Only") ? "disabled " : "";
+					$attributes .= ($role == "Super-Admin" || $role == "Read-Only") ? "disabled " : "";
 
 						?>
 						<div class="input-group">

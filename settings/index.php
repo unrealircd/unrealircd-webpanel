@@ -52,6 +52,7 @@ if (isset($_POST))
 		}
 		else if (($usr_obj = new PanelUser($user['user_name'])) && isset($usr_obj->id))
 		{
+			$usr_obj->add_meta("role", $p['user_role']);
 			Message::Success("Successfully created user \"" . $user['user_name'] . "\"");
 		}
 		else
@@ -96,6 +97,15 @@ Click on a username to view more information.
 					<input style="width: 170%;" name="password" id="password" class="form-control curvy" type="password"></label>
 			</div>
 			<div class="input-group mb-3">
+				<label for="user_role" id="user_add">Role
+				<select name="user_role" class="custom-select form-control" id="user_role" style="width:170%">
+					<?php
+						foreach(get_panel_user_roles_list() as $s => $l)
+							echo "<option value=\"$s\">$s</option>";
+					?>
+				</select>
+			</div>
+			<div class="input-group mb-3">
 				<label for="user_email" id="user_add">Email
 					<input style="width: 170%;" name="user_email" id="user_email" class="form-control curvy" type="text"></label>
 			</div>
@@ -129,6 +139,7 @@ Click on a username to view more information.
 	<form method="post">
 	<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_tkl(this)" /></th>
 	<th scope="col">Username</th>
+	<th scope="col">Role</th>
 	<th scope="col">First Name</th>
 	<th scope="col">Last Name</th>
 	<th scope="col">Email</th>
@@ -144,6 +155,7 @@ Click on a username to view more information.
 			
 			echo "<td scope=\"col\"><input type=\"checkbox\" value='" .$user->id . "' name=\"userch[]\"></td>";
 			echo "<td scope=\"col\"><a href=\"".get_config("base_url")."settings/user-edit.php?id=$user->id\">$user->username</a></td>";
+			echo "<td scope=\"col\"><code>".((isset($user->user_meta['role'])) ? $user->user_meta['role'] : "")."</code></td>";
 			echo "<td scope=\"col\">".$user->first_name."</td>";
 			echo "<td scope=\"col\">".$user->last_name."</td>";
 			echo "<td scope=\"col\"><a href=\"mailto:$user->email\">$user->email</a></td>";
