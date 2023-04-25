@@ -189,19 +189,18 @@ Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>
 	</div>
 	</div>
 
-<!-- The banlist table -->
-
+	<!-- The banlist table -->
 	<form method="post">
-	<table id="data_list" class="container-xxl table table-sm table-responsive caption-top table-striped">
-	<thead class="table-primary">
-	<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_tkl(this)" /></th>
-	<th scope="col">Mask</th>
-	<th scope="col">Type</th>
-	<th scope="col">Duration</th>
-	<th scope="col">Reason</th>
-	<th scope="col">Set By</th>
-	<th scope="col">Set On</th>
-	<th scope="col">Expires</th>
+	<table id="data_list" class="table-striped display responsive nowrap" style="width:100%">
+	<thead>
+		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_tkl(this)" /></th>
+		<th scope="col">Mask</th>
+		<th scope="col">Type</th>
+		<th scope="col">Duration</th>
+		<th scope="col">Reason</th>
+		<th scope="col">Set By</th>
+		<th scope="col">Set On</th>
+		<th scope="col">Expires</th>
 	</thead>
 	</table>
 
@@ -233,26 +232,50 @@ Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>
 
 <script>
 $(document).ready( function () {
-	$('#data_list').DataTable({
+	args = {
+		'responsive': true,
+		'fixedHeader': {
+			header: true,
+			headerOffset: 53
+		},
 		'ajax': {
 			'url': '<?php echo get_config("base_url"); ?>api/server-bans.php',
 			dataSrc: ''
 		},
 		'columns': [
-			{ 'data': 'Select' },
-			{ 'data': 'Mask' },
-			{ 'data': 'Type' },
-			{ 'data': 'Duration' },
-			{ 'data': 'Reason' },
-			{ 'data': 'Set By' },
-			{ 'data': 'Set On' },
-			{ 'data': 'Expires' },
-		],
-		'columnDefs': [
-			 { targets: '_all', 'type': 'natural' }
+			{ 'data': 'Select', 'responsivePriority': 1 },
+			{ 'data': 'Mask', 'responsivePriority': 2 },
+			{ 'data': 'Type', 'responsivePriority': 3 },
+			{ 'data': 'Duration', 'responsivePriority': 4 },
+			{ 'data': 'Reason', 'responsivePriority': 5, 'render': DataTable.render.ellipsis(50, false) },
+			{ 'data': 'Set By', 'responsivePriority': 6 },
+			{ 'data': 'Set On', 'responsivePriority': 7 },
+			{ 'data': 'Expires', 'responsivePriority': 8 },
 		],
 		'pageLength':100,
-	});
+		'order':[[1,'asc']],
+		createdRow: function(row) {
+			var td = jQuery(row).find(".truncate");
+			td.each(function(index, el) {
+				jQuery(this).attr("title", jQuery(this).html());
+				});
+			},
+	};
+	/* Only show filter pane on desktop */
+	if (window.innerWidth > 800)
+	{
+		args['dom'] = 'Pfrtip';
+		args['searchPanes'] = {
+			'initCollapsed': 'true',
+			'columns': [2,3,5],
+			'dtOpts': {
+				select: { style: 'multi'},
+				order: [[ 1, "desc" ]]
+			},
+		}
+	}
+
+	$('#data_list').DataTable(args);
 } );
 </script>
 
