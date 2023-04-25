@@ -107,8 +107,10 @@ Click on a username to view more information.
 	?>
 
 	<!-- The user list -->
-	<table id="data_list" class="container-xxl table table-sm table-responsive caption-top table-striped">
-	<thead class="table-primary">
+	<!-- table id="data_list" class="container-xxl table table-sm table-responsive caption-top table-striped" -->
+	<!-- <table id="data_list" class="table table-striped table-bordered dt-responsive nowrap" style="width:400px"> -->
+	<table id="data_list" class="display responsive nowrap" style="width:100%">
+	<thead>
 		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_user(this)" /></th>
 		<th scope="col">Nick</th>
 		<th class="countrycol" scope="col">Country</th>
@@ -248,76 +250,6 @@ Click on a username to view more information.
 </div>
 
 <script>
-	function resize_check()
-	{
-		var width = window.innerWidth;
-		var show_elements = '';
-		var hide_elements = '';
-		if (width < 500)
-		{
-			show_elements = '';
-			hide_elements = '.hostname, .opercol, .uplinkcol, .securecol, .umodescol, .countrycol';
-		} else
-		if (width < 600)
-		{
-			show_elements = '.countrycol';
-			hide_elements = '.hostname, .opercol, .uplinkcol, .securecol, .umodescol';
-		} else
-		if (width < 700)
-		{
-			show_elements = '.umodescol, .countrycol';
-			hide_elements = '.hostname, .opercol, .uplinkcol, .securecol';
-		} else
-		if (width < 768)
-		{
-			show_elements = '.securecol, .umodescol, .countrycol';
-			hide_elements = '.hostname, .opercol, .uplinkcol';
-		} else
-		if (width < 875)
-		{
-			// left nav kicks in at 768+ so need to drop one column between 768..875
-			show_elements = '.umodescol, .countrycol';
-			hide_elements = '.hostname, .opercol, .uplinkcol, .securecol';
-		} else if (width < 1000)
-		{
-			show_elements = '.securecol, .umodescol, .countrycol';
-			hide_elements = '.hostname, .uplinkcol, .opercol';
-		} else if (width < 1200)
-		{
-			show_elements = '.opercol, .securecol, .umodescol, .countrycol';
-			hide_elements = '.hostname, .uplinkcol';
-		} else if (width < 1550)
-		{
-			show_elements = '.opercol, .uplinkcol, .securecol, .umodescol, .countrycol';
-			hide_elements = '.hostname';
-		} else if (width < 1750)
-		{
-			show_elements = '.hostname, .opercol, .securecol, .umodescol, .countrycol';
-			hide_elements = '.uplinkcol';
-		} else {
-			show_elements = '.hostname, .opercol, .uplinkcol, .securecol, .umodescol, .countrycol';
-			hide_elements = '';
-		}
-
-		if (show_elements != '')
-		{
-			show_elements=document.querySelectorAll(show_elements);
-			for (let i = 0; i < show_elements.length; i++)
-				show_elements[i].style.display = '';
-		}
-
-		if (hide_elements != '')
-		{
-			hide_elements=document.querySelectorAll(hide_elements);
-			for (let i = 0; i < hide_elements.length; i++)
-				hide_elements[i].style.display = 'none';
-		}
-	}
-	resize_check();
-	window.addEventListener('resize', function() {
-		resize_check();
-	});
-
 	var rclickmenu = document.getElementById('rclickmenu');
 	var scopes = document.querySelectorAll('.userselector');
 	document.addEventListener("click", (e) =>
@@ -349,6 +281,11 @@ Click on a username to view more information.
 
 $(document).ready( function () {
 	args = {
+		'responsive': true,
+		'fixedHeader': {
+			header: true,
+			headerOffset: 53
+		},
 		'ajax': {
 			'url': '<?php echo get_config("base_url"); ?>api/users.php',
 			dataSrc: ''
@@ -356,18 +293,17 @@ $(document).ready( function () {
 		'pageLength':100,
 		'order':[[1,'asc']],
 		'columns': [
-			{ 'data': 'Select' },
-			{ 'data': 'Nick' },
-			{ 'data': 'Country', 'className':'countrycol' },
-			{ 'data': 'Host/IP', 'className':'hostname' },
-			{ 'data': 'Account', 'className':'accountcol' },
-			{ 'data': 'Usermodes', 'className':'umodescol' },
-			{ 'data': 'Oper', 'className':'opercol' },
-			{ 'data': 'Secure', 'className':'securecol' },
-			{ 'data': 'Connected to', 'className':'uplinkcol' },
-			{ 'data': 'Reputation', 'className':'reputationcol' },
+			{ 'data': 'Select', 'responsivePriority': 1 },
+			{ 'data': 'Nick', 'responsivePriority': 1 },
+			{ 'data': 'Country', 'className':'countrycol', 'responsivePriority': 2 },
+			{ 'data': 'Host/IP', 'className':'hostname', 'responsivePriority': 5 },
+			{ 'data': 'Account', 'className':'accountcol', 'responsivePriority': 3 },
+			{ 'data': 'Usermodes', 'className':'umodescol', 'responsivePriority': 7 },
+			{ 'data': 'Oper', 'className':'opercol', 'responsivePriority': 8 },
+			{ 'data': 'Secure', 'className':'securecol', 'responsivePriority': 9 },
+			{ 'data': 'Connected to', 'className':'uplinkcol', 'responsivePriority': 6 },
+			{ 'data': 'Reputation', 'className':'reputationcol', 'responsivePriority': 4 },
 		],
-		'initComplete': function(settings, json) { resize_check(); },
 	};
 	/* Hide on mobile */
 	if (window.innerWidth > 800)
