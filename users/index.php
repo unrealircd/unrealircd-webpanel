@@ -107,9 +107,7 @@ Click on a username to view more information.
 	?>
 
 	<!-- The user list -->
-	<!-- table id="data_list" class="container-xxl table table-sm table-responsive caption-top table-striped" -->
-	<!-- <table id="data_list" class="table table-striped table-bordered dt-responsive nowrap" style="width:400px"> -->
-	<table id="data_list" class="display responsive nowrap" style="width:100%">
+	<table id="data_list" class="table-striped display responsive nowrap" style="width:100%">
 	<thead>
 		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_user(this)" /></th>
 		<th scope="col">Nick</th>
