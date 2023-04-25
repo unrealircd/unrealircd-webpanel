@@ -48,7 +48,7 @@ if (!empty($_POST))
 			{
 				$ban_host = $_POST['ban_host'];
 				$ban_type = $_POST['ban_type'];
-				$ban_soft = empty($_POST['soft']) ? false : true;
+				$ban_soft = empty($_POST['ban_soft']) ? false : true;
 				$ban_duration = $_POST['ban_duration'] ?? 0;
 				$ban_reason = $_POST['ban_reason'] ?? '';
 				if (!str_contains($ban_host, "@"))
@@ -252,12 +252,21 @@ $(document).ready( function () {
 
 	function edit_ban(data)
 	{
-		$('#ban_host').val(data['Mask']);
-		if (data['Type'] == 'Global Z-Line')
+		$host = data['Mask'];
+		if ($host.startsWith('%'))
+		{
+			$('#ban_host').val($host.substring(1));
+			$('#ban_soft').prop('checked', true);
+		} else {
+			$('#ban_host').val($host);
+			$('#ban_soft').prop('checked', false);
+		}
+		$type = data['Type'].replace('Soft ','');
+		if ($type == 'Global Z-Line')
 			$type = 'gzline';
-		else if (data['Type'] == 'Z-Line')
+		else if ($type == 'Z-Line')
 			$type = 'zline';
-		else if (data['Type'] == 'G-Line')
+		else if ($type == 'G-Line')
 			$type = 'gline';
 		else
 			$type = 'kline';
@@ -267,7 +276,6 @@ $(document).ready( function () {
 		else
 			$('#ban_duration').val(data['Duration']);
 		$('#ban_reason').val(data['Reason']);
-		$('#ban_soft').prop('checked', false);
 		$('#do_del_ban').show();
 		$('#ban_add_title').html("Edit server ban");
 		$('#do_add_ban').html("Modify Ban");
