@@ -1,8 +1,12 @@
 <?php
-
 define('NO_EVENT_STREAM_HEADER',1);
 require_once('common_api.php');
 header("Content-type: application/json; charset=utf-8");
+
+if (!$rpc)
+    die(json_encode([]));
+
+
 $tkls = $rpc->serverban()->getAll();
 
 $out = [];

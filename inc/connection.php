@@ -8,9 +8,15 @@ function connect_to_ircd()
 	GLOBAL $rpc;
 	GLOBAL $config;
 
+	$is_api_page = str_contains($_SERVER['SCRIPT_FILENAME'], "/api/") ? true : false;
+
+	$rpc = null; /* Initialize, mostly for API page failures */
+
 	$server = get_active_rpc_server();
 	if (!$server)
 	{
+		if ($is_api_page)
+			return;
 		Message::Fail("No RPC server configured. Go to Settings - RPC Servers.");
 		die;
 	}
@@ -23,10 +29,16 @@ function connect_to_ircd()
 	$tls_verify = $config["unrealircd"][$server]["tls_verify_cert"];
 
 	if (!$host || !$port || !$rpc_user)
+	{
+		if ($is_api_page)
+			return;
 		die("RPC Server is missing credentials");
+	}
 
 	if ($rpc_password === null)
 	{
+		if ($is_api_page)
+			return;
 		Message::Fail("Your RPC password in the DB was encrypted with a different key than config/config.php contains.<br>\n".
 		              "Either restore your previous config/config.php or start with a fresh database.<br>\n");
 		die;
@@ -43,10 +55,11 @@ function connect_to_ircd()
 	}
 	catch (Exception $e)
 	{
+		if ($is_api_page)
+			return;
 		Message::Fail("Unable to connect to UnrealIRCd: ".$e->getMessage() . "<br>".
-		              "Verify your connection details in config.php (rpc user, rpc password, host) and ".
-		              "verify your UnrealIRCd configuration (listen block with listen::options::rpc and ".
-		              "an rpc-user block with the correct IP allowed and the correct username and password).");
+		              "Verify that the connection details from Settings - RPC Servers match the ones in UnrealIRCd ".
+		              "and that UnrealIRCd is up and running");
 		throw $e;
 	}
 
