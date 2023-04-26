@@ -198,6 +198,8 @@ Add Ban</div></p></table>
 	</div></form></div></div>
 
 <script>
+let data_list_table = null;
+
 $(document).ready( function () {
 	args = {
 		'responsive': true,
@@ -242,16 +244,20 @@ $(document).ready( function () {
 		}
 	}
 
-	var data_list_table = $('#data_list').DataTable(args);
+	data_list_table = $('#data_list').DataTable(args);
 
 	$('#data_list').on( 'click', 'td', function () {
-		var data = data_list_table.row(this).data();
-		edit_ban(data);
+		edit_ban(this);
 	} );
 } );
 
-	function edit_ban(data)
+	function edit_ban(e)
 	{
+		/* The first column is the 'Select' column */
+		if (data_list_table.cell(e).index().column == 0)
+			return;
+		/* For all the other columns we try to popup and edit screen */
+		var data = data_list_table.row(e).data();
 		$host = data['Mask'];
 		if ($host.startsWith('%'))
 		{
