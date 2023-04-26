@@ -265,3 +265,10 @@ body {
         height: calc(100% - 60px - 50px);
     }
 }
+
+.virtuallink {
+	text-decoration: none;
+}
+.virtuallink:hover {
+	text-decoration: underline;
+}

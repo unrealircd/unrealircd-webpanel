@@ -213,7 +213,7 @@ $(document).ready( function () {
 		},
 		'columns': [
 			{ 'data': 'Select', 'responsivePriority': 1 },
-			{ 'data': 'Mask', 'responsivePriority': 2 },
+			{ 'data': 'Mask', 'responsivePriority': 2, 'className':'virtuallink' },
 			{ 'data': 'Type', 'responsivePriority': 3 },
 			{ 'data': 'Duration', 'responsivePriority': 4 },
 			{ 'data': 'Reason', 'responsivePriority': 5, 'render': DataTable.render.ellipsis(50, false) },
