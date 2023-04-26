@@ -30,7 +30,17 @@ set_time_limit(0);
 ob_implicit_flush(1);
 
 // Flush and stop output buffering (eg fastcgi w/NGINX)
-while (@ob_end_flush());
+while (1)
+{
+	try {
+		$ret = @ob_end_flush();
+		if ($ret === false)
+			break;
+	} catch(Exception $e)
+	{
+		break;
+	}
+};
 
 /* Send server-sent events (SSE) message */
 function send_sse($json)
