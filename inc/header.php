@@ -276,7 +276,8 @@ foreach ($pages as $name => $page)
 <?php
 	if ($current_page &&
 	    !(isset($current_page["no_irc_server_required"]) &&
-	      ($current_page["no_irc_server_required"] == true)))
+	      ($current_page["no_irc_server_required"] == true)) &&
+	    !get_active_rpc_server())
 	{
 		Message::Fail("No RPC server configured. Go to Settings - RPC Servers.");
 		require_once('footer.php');
