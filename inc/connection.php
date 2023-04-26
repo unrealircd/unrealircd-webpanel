@@ -10,7 +10,10 @@ function connect_to_ircd()
 
 	$server = get_active_rpc_server();
 	if (!$server)
-		die("No RPC server configured as primary");
+	{
+		Message::Fail("No RPC server configured. Go to Settings - RPC Servers.");
+		die;
+	}
 	$host = $config["unrealircd"][$server]["host"];
 	$port = $config["unrealircd"][$server]["port"];
 	$rpc_user = $config["unrealircd"][$server]["rpc_user"];
@@ -24,8 +27,9 @@ function connect_to_ircd()
 
 	if ($rpc_password === null)
 	{
-		die("Your RPC password in the DB was encrypted with a different key than config/config.php contains.<br>\n".
-		    "Either restore your previous config/config.php or start with a fresh database.<br>\n");
+		Message::Fail("Your RPC password in the DB was encrypted with a different key than config/config.php contains.<br>\n".
+		              "Either restore your previous config/config.php or start with a fresh database.<br>\n");
+		die;
 	}
 
 	/* Connect now */
@@ -39,10 +43,10 @@ function connect_to_ircd()
 	}
 	catch (Exception $e)
 	{
-		echo "Unable to connect to UnrealIRCd: ".$e->getMessage() . "<br><br>";
-		echo "Verify your connection details in config.php (rpc user, rpc password, host) and ".
-		     "verify your UnrealIRCd configuration (listen block with listen::options::rpc and ".
-		     "an rpc-user block with the correct IP allowed and the correct username and password).";
+		Message::Fail("Unable to connect to UnrealIRCd: ".$e->getMessage() . "<br>".
+		              "Verify your connection details in config.php (rpc user, rpc password, host) and ".
+		              "verify your UnrealIRCd configuration (listen block with listen::options::rpc and ".
+		              "an rpc-user block with the correct IP allowed and the correct username and password).");
 		throw $e;
 	}
 
