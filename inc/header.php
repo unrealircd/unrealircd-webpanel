@@ -274,12 +274,18 @@ foreach ($pages as $name => $page)
 </script>
 
 <?php
-	if ($current_page &&
-	    !(isset($current_page["no_irc_server_required"]) &&
-	      ($current_page["no_irc_server_required"] == true)) &&
-	    !get_active_rpc_server())
+	if ($current_page)
 	{
-		Message::Fail("No RPC server configured. Go to Settings - RPC Servers.");
-		require_once('footer.php');
-		die;
+	    if (!(isset($current_page["no_irc_server_required"]) &&
+	         ($current_page["no_irc_server_required"] == true)) &&
+	        !get_active_rpc_server())
+		{
+			Message::Fail("No RPC server configured. Go to Settings - RPC Servers.");
+			require_once('footer.php');
+			die;
+		}
+		$current_page_title = "UnrealIRCd Panel";
+		if (!empty($current_page_name))
+			$current_page_title = "$current_page_name - $current_page_title";
+		echo "<script>document.title='".htmlspecialchars($current_page_title)."';</script>\n";
 	}

@@ -24,29 +24,37 @@ function get_config($setting)
 	return $item;
 }
 
-function get_current_page_helper($name, $p)
+function get_current_page_helper($name, $p, &$title)
 {
 	if (isset($p["script"]))
 	{
 		if (($p["script"] != '') && str_ends_with($_SERVER['SCRIPT_FILENAME'],$p["script"]))
+		{
+			// MATCH
+			if (isset($p["title"]))
+				$title = $p["title"];
+			else
+				$title = $name;
 			return $p;
+		}
 		return null;
 	}
 	foreach ($p as $k=>$v)
 	{
-		$ret = get_current_page_helper($k, $v);
+		$ret = get_current_page_helper($k, $v, $title);
 		if ($ret !== null)
 			return $ret;
 	}
 	return null;
 }
 
-function get_current_page()
+/** Get current page and title */
+function get_current_page(&$title)
 {
 	GLOBAL $pages;
 	foreach ($pages as $k=>$v)
 	{
-		$ret = get_current_page_helper($k, $v);
+		$ret = get_current_page_helper($k, $v, $title);
 		if ($ret !== null)
 			return $ret;
 	}
@@ -513,4 +521,4 @@ Hook::run(HOOKTYPE_NAVBAR, $pages);
  * }
 */
 
-$current_page = get_current_page();
+$current_page = get_current_page($current_page_name);
