@@ -410,25 +410,25 @@ if (!page_requires_no_config())
 }
 
 $pages = [
-	"Overview"     => "",
-	"Users"        => "users",
-	"Channels"     => "channels",
-	"Servers"      => "servers",
+	"Overview"     => ["url"=>""],
+	"Users"        => ["url"=>"users"],
+	"Channels"     => ["url"=>"channels"],
+	"Servers"      => ["url"=>"servers"],
 	"Server Bans"  => [
-		"Server Bans" => "server-bans",
-		"Name Bans" => "server-bans/name-bans.php",
-		"Ban Exceptions" => "server-bans/ban-exceptions.php"
+		"Server Bans" => ["url" => "server-bans"],
+		"Name Bans" => ["url" => "server-bans/name-bans.php"],
+		"Ban Exceptions" => ["url" => "server-bans/ban-exceptions.php"],
 	],
-	"Spamfilter"   => "spamfilter.php",
+	"Spamfilter"   => ["url" => "spamfilter.php"],
 	"Tools" => [
-		"IP WHOIS" => "tools/ip-whois.php",
+		"IP WHOIS" => ["url" => "tools/ip-whois.php"],
 	],
 	"Settings" => [
-		"Plugins" => "settings/plugins.php",
-		"RPC Servers" => "settings/rpc-servers.php",
+		"Plugins" => ["url" => "settings/plugins.php"],
+		"RPC Servers" => ["url" => "settings/rpc-servers.php"],
 	],
 	
-	"News" => "news.php",
+	"News" => ["url" => "news.php"],
 ];
 
 if (!panel_start_session())
@@ -442,14 +442,14 @@ if (!panel_start_session())
 		die;
 	}
 } else {
-	$pages["Settings"]["Accounts"] = "settings";
+	$pages["Settings"]["Accounts"] = ["url" => "settings"];
 	if (current_user_can(PERMISSION_MANAGE_USERS))
-		$pages["Settings"]["Role Editor"] = "settings/user-role-edit.php";
+		$pages["Settings"]["Role Editor"] = ["url"=>"settings/user-role-edit.php"];
 	$user = unreal_get_current_user();
 	if ($user)
 	{
 		/* Add logout page, if logged in */
-		$pages["Logout"] = "login/?logout=true";
+		$pages["Logout"] = ["url"=>"login/?logout=true"];
 	}
 }
 

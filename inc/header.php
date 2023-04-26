@@ -105,8 +105,10 @@ function show_page_item($name, $page, $nestlevel)
 	$active_page = NULL;
 	$icon = $style = "";
 	$class = "nav-link nav-item";
-	if (is_string($active_page) && $page == $active_page)
-		$class .= " active";
+	//if (is_string($active_page) && $page == $active_page)
+	//	$class .= " active";
+
+	$is_link = isset($page["url"]) ? true : false;
 
 	if ($nestlevel > 0)
 	{
@@ -116,23 +118,23 @@ function show_page_item($name, $page, $nestlevel)
 	} else {
 		echo "<b>";
 	}
-	if (is_array($page))
+	if (!$is_link)
 	{
 		$style = "padding-bottom: 0px;";
 	} else {
-		echo "<a href=\"".get_config("base_url").$page."\" style=\"text-decoration: none\">\n";
+		echo "<a href=\"".get_config("base_url").$page["url"]."\" style=\"text-decoration: none\">\n";
 	}
 	echo "<div class=\"big-page-item d-flex justify-content-between align-items-center $class list-group-item-action\" style=\"$style\">$name
 		<div class=\"text-right padding-top\">
 			<i class=\"fa fa-$icon\"></i>
 		</div></div>\n";
-	if (!is_array($page))
+	if ($is_link)
 		echo "</a>";
 	if ($nestlevel > 0)
 		echo "</small>";
 	else
 		echo "</b>";
-	if (is_array($page))
+	if (!$is_link)
 	{
 		foreach ($page as $subname=>$subpage)
 			show_page_item($subname, $subpage, 1);
