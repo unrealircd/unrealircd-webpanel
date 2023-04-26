@@ -8,9 +8,7 @@ if (!isset($config['unrealircd']))
 }
 
 require_once "inc/header.php";
-require_once "inc/connection.php";
 
-$stats = $rpc->stats()->get();
 ?>
 <div class="row ml-0">
 <h2>Network Overview</h2><div data-toggle="tooltip" data-placement="top" title="The stats on this page are updated in real-time"
@@ -19,7 +17,7 @@ $stats = $rpc->stats()->get();
 <small style="margin-left:-40px;padding-top:3px;margin-right:-45px">⚪</small>LIVE</div>
 </div>
 <?php
-$array_of_stats = (array)$stats;
+$array_of_stats = [];
 
 /* What if someone wants to add their own stats... */
 Hook::run(HOOKTYPE_PRE_OVERVIEW_CARD, $array_of_stats);
@@ -48,11 +46,11 @@ $num_of_panel_admins = count($userlist);
 					<div class="row">
 						<div class="col">
 							<i class="fa fa-users fa-3x"></i><span class="position-absolute badge rounded-pill badge-warning">
-							<?php echo "Record: ".$stats->user->record; ?>
+							<?php echo "Record: "; ?>
 						</span>
 						</div>
 						<div class="col">
-							<h3 id="stats_user_total" class="display-4"><?php echo $stats->user->total; ?></h3>
+							<h3 id="stats_user_total" class="display-4"></h3>
 						</div>
 					</div>
 				</div>
@@ -76,7 +74,7 @@ $num_of_panel_admins = count($userlist);
 							<i class="fa fa-hashtag fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 id="stats_channel_total" class="display-4"><?php echo $stats->channel->total; ?></h3>
+							<h3 id="stats_channel_total" class="display-4"></h3>
 						</div>
 					</div>
 				</div>
@@ -98,7 +96,7 @@ $num_of_panel_admins = count($userlist);
 							<i class="fa fa-shield-halved fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 id="stats_oper_total" class="display-4"><?php echo $stats->user->oper; ?></h3>
+							<h3 id="stats_oper_total" class="display-4"></h3>
 						</div>
 					</div>
 				</div>
@@ -121,7 +119,7 @@ $num_of_panel_admins = count($userlist);
 							<i class="fa fa-network-wired fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 id="stats_server_total" class="display-4"><?php echo $stats->server->total; ?></h3>
+							<h3 id="stats_server_total" class="display-4"></h3>
 						</div>
 					</div>
 				</div>
@@ -148,7 +146,7 @@ $num_of_panel_admins = count($userlist);
 							<i class="fa fa-ban fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 id="num_server_bans" class="display-4"><?php echo $stats->server_ban->server_ban; ?></h3>
+							<h3 id="num_server_bans" class="display-4"></h3>
 						</div>
 					</div>
 				</div>
@@ -170,7 +168,7 @@ $num_of_panel_admins = count($userlist);
 							<i class="fa fa-filter fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 id="num_spamfilter_entries" class="display-4"><?php echo $stats->server_ban->spamfilter; ?></h3>
+							<h3 id="num_spamfilter_entries" class="display-4"></h3>
 						</div>
 					</div>
 				</div>
@@ -192,7 +190,7 @@ $num_of_panel_admins = count($userlist);
 							<i class="fa fa-door-open fa-3x"></i>
 						</div>
 						<div class="col">
-							<h3 id="num_ban_exceptions" class="display-4"><?php echo $stats->server_ban->server_ban_exception; ?></h3>
+							<h3 id="num_ban_exceptions" class="display-4"></h3>
 						</div>
 					</div>
 				</div>
@@ -208,12 +206,7 @@ $num_of_panel_admins = count($userlist);
 			</div>
 		</div>
 		<?php
-		if ($stats->server->ulined) {
-			$bg = "bg-success";
-			$tooltip = "Users / Servers";
-		}
-		else
-			$bg = "bg-warning";
+		$bg = "bg-success"; // FIXME: this isn't dynamic
 		?> 
 		<div class="col-sm mb-3">
 			<div class="card text-center">
@@ -223,8 +216,8 @@ $num_of_panel_admins = count($userlist);
 							<i class="fa fa-database fa-3x"> </i>
 						</div>
 						<div class="col">
-						<span data-toggle="tooltip" title="<?php echo $tooltip; ?>" style="border-bottom: 1px dotted #000000">
-						<h3 id="stats_uline_total" class="display-4"><?php echo $stats->user->ulined; ?>/<?php echo $stats->server->ulined; ?></h3>
+						<span data-toggle="tooltip" title="" style="border-bottom: 1px dotted #000000">
+						<h3 id="stats_uline_total" class="display-4"></h3>
 						</div>
 					</div>
 				</div>
