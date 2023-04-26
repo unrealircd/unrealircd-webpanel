@@ -19,6 +19,7 @@ if ($postbutton && isset($_POST['user_role']) && $caneditpermissions)
     if ($_POST['user_role'] != $edit_user->user_meta['role'])
     {
         $edit_user->add_meta("role", $_POST['user_role']);
+        $edit_user->delete_meta("permissions");
         Message::Success("Updated the role of $edit_user->username");
     }
 }
