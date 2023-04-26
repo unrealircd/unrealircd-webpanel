@@ -193,3 +193,18 @@ function rparv($string)
 		return $string;
 	return false;
 }
+
+/* Taken from https://www.aviran.org/stripremove-irc-client-control-characters/
+ * We may want to re-base it off our UnrealIRCd's one though.
+ */
+function StripControlCharacters($text)
+{
+    $controlCodes = array(
+        '/(\x03(?:\d{1,2}(?:,\d{1,2})?)?)/',    // Color code
+        '/\x02/',                               // Bold
+        '/\x0F/',                               // Escaped
+        '/\x16/',                               // Italic
+        '/\x1F/'                                // Underline
+    );
+    return preg_replace($controlCodes,'',$text);
+}

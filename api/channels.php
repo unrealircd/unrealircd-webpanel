@@ -19,7 +19,7 @@ foreach($channels as $channel)
 	$modes = (isset($channel->modes)) ? "+" . explode(" ",$channel->modes)[0] : "<none>";
 	$topic = '';
 	if (isset($channel->topic))
-		$topic = htmlentities($channel->topic, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 | ENT_DISALLOWED);
+		$topic = htmlentities(StripControlCharacters($channel->topic), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 | ENT_DISALLOWED);
 	$date = explode("T", $channel->creation_time)[0];
 	$out[] = [
 		"Name" => htmlspecialchars($channel->name),
