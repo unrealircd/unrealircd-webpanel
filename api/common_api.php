@@ -79,6 +79,11 @@ function api_timer_loop(int $every_msec, string $method, array|null $params = nu
 {
 	GLOBAL $rpc;
 
+	/* First, execute it immediately */
+	$res = $rpc->query($method, $params);
+	if (!$res)
+		die;
+	send_sse($res);
 	$rpc->rpc()->add_timer("timer", $every_msec, $method, $params);
 	if ($rpc->error)
 	{
@@ -94,6 +99,12 @@ function api_timer_loop(int $every_msec, string $method, array|null $params = nu
 	}
 
 	/* New style: use server-side timers */
+	/* - First, execute it immediately */
+	$res = $rpc->query($method, $params);
+	if (!$res)
+		die;
+	send_sse($res);
+	/* - Then add the timer */
 	for(;;)
 	{
 		$res = $rpc->eventloop();
