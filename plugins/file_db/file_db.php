@@ -127,8 +127,11 @@ class file_db
 		return true;
 	}
 
-	public static function del_usermeta(&$u)
+	public static function del_usermeta(&$meta)
 	{
+		GLOBAL $db;
+
+		$meta = $meta['meta'];
 		$uid = $meta['id'];
 		$key = $meta['key'];
 

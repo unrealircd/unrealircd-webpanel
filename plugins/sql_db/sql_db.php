@@ -265,12 +265,12 @@ class sql_db
 			return false;
 		}
 	}
-	public static function del_usermeta(&$u)
+	public static function del_usermeta(&$meta)
 	{
 		$conn = sqlnew();
 		$query = "DELETE FROM " . get_config("mysql::table_prefix") . "user_meta WHERE user_id = :id AND meta_key = :key";
 		$stmt = $conn->prepare($query);
-		$stmt->execute($u['meta']);
+		$stmt->execute($meta['meta']);
 		if ($stmt->rowCount())
 			return true;
 		return false;

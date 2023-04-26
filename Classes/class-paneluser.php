@@ -135,7 +135,9 @@ class PanelUser
 			"id" => $this->id,
 			"key" => $key,
 		];
-		Hook::run(HOOKTYPE_USERMETA_DEL, $meta);
+		$array['meta'] = $meta;
+		$array['user'] = $this;
+		Hook::run(HOOKTYPE_USERMETA_DEL, $array);
 
 	}
 
