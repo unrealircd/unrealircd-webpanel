@@ -11,10 +11,12 @@ require_once "inc/header.php";
 
 ?>
 <div class="row ml-0">
-<h2>Network Overview</h2><div data-toggle="tooltip" data-placement="top" title="The stats on this page are updated in real-time"
-							class="card text-center row font-weight-bold"
-							style="margin-left:5%;height:26px;width:60px;background-color:red;color:white">
-<small style="margin-left:-40px;padding-top:3px;margin-right:-45px">⚪</small>LIVE</div>
+	<h2>Network Overview</h2>
+	<div id="live_stats" data-toggle="tooltip" data-placement="top" title="The stats on this page are updated in real-time"
+	     class="card text-center row font-weight-bold"
+	     style="margin-left:5%;height:26px;width:60px;background-color:red;color:white;visibility:hidden">
+	     <small style="margin-left:-40px;padding-top:3px;margin-right:-45px">⚪</small>LIVE
+	</div>
 </div>
 <?php
 $array_of_stats = [];
@@ -237,6 +239,9 @@ $num_of_panel_admins = count($userlist);
 
 
 <script>
+	/* Last time stats were updated */
+	let stats_tick = 0;
+
 	function updateStats(e)
 	{
 		var data;
@@ -245,6 +250,8 @@ $num_of_panel_admins = count($userlist);
 		} catch(e) {
 			return;
 		}
+		stats_tick = Date.now()
+		document.getElementById("live_stats").style.visibility = '';
 		document.getElementById("stats_user_total").innerHTML = data.user.total;
 		document.getElementById("stats_channel_total").innerHTML = data.channel.total;
 		document.getElementById("stats_oper_total").innerHTML = data.user.oper;
@@ -254,6 +261,14 @@ $num_of_panel_admins = count($userlist);
 		document.getElementById("num_ban_exceptions").innerHTML = data.server_ban.server_ban_exception;
 		document.getElementById("stats_uline_total").innerHTML = data.user.ulined + "/" + data.server.ulined;
 	}
+	function checkStatsOutdated()
+	{
+		setTimeout(checkStatsOutdated, 2000);
+		if (Date.now() - stats_tick > 10000)
+			document.getElementById("live_stats").style.visibility = 'hidden';
+	}
+	setTimeout(checkStatsOutdated, 2000);
+
 	function initStats()
 	{
 		if (!!window.EventSource) {
