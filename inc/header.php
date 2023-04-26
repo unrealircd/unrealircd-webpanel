@@ -108,7 +108,7 @@ function show_page_item($name, $page, $nestlevel)
 	//if (is_string($active_page) && $page == $active_page)
 	//	$class .= " active";
 
-	$is_link = isset($page["url"]) ? true : false;
+	$is_link = isset($page["script"]) ? true : false;
 
 	if ($nestlevel > 0)
 	{
@@ -122,7 +122,10 @@ function show_page_item($name, $page, $nestlevel)
 	{
 		$style = "padding-bottom: 0px;";
 	} else {
-		echo "<a href=\"".get_config("base_url").$page["url"]."\" style=\"text-decoration: none\">\n";
+		$url = $page["script"];
+		if (str_ends_with($url, "/index.php"))
+			$url = str_replace('/index.php', '', $url);
+		echo "<a href=\"".get_config("base_url").$url."\" style=\"text-decoration: none\">\n";
 	}
 	echo "<div class=\"big-page-item d-flex justify-content-between align-items-center $class list-group-item-action\" style=\"$style\">$name
 		<div class=\"text-right padding-top\">
@@ -269,3 +272,13 @@ foreach ($pages as $name => $page)
 		nav_resize_check();
 	});
 </script>
+
+<?php
+	if ($current_page &&
+	    !(isset($current_page["no_irc_server_required"]) &&
+	      ($current_page["no_irc_server_required"] == true)))
+	{
+		Message::Fail("No RPC server configured. Go to Settings - RPC Servers.");
+		require_once('footer.php');
+		die;
+	}

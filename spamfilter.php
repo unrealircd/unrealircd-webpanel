@@ -1,7 +1,7 @@
 <?php
 require_once "inc/common.php";
-require_once "inc/connection.php";
 require_once "inc/header.php";
+require_once "inc/connection.php";
 
 $spamfilter_target_info = Array(
 	"p"=>Array("short_text" => "usermsg", "long_text" => "User message"),

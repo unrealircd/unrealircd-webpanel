@@ -24,6 +24,34 @@ function get_config($setting)
 	return $item;
 }
 
+function get_current_page_helper($name, $p)
+{
+	if (isset($p["script"]))
+	{
+		if (($p["script"] != '') && str_ends_with($_SERVER['SCRIPT_FILENAME'],$p["script"]))
+			return $p;
+		return null;
+	}
+	foreach ($p as $k=>$v)
+	{
+		$ret = get_current_page_helper($k, $v);
+		if ($ret !== null)
+			return $ret;
+	}
+	return null;
+}
+
+function get_current_page()
+{
+	GLOBAL $pages;
+	foreach ($pages as $k=>$v)
+	{
+		$ret = get_current_page_helper($k, $v);
+		if ($ret !== null)
+			return $ret;
+	}
+}
+
 function page_requires_no_config()
 {
 	if (str_ends_with($_SERVER['SCRIPT_FILENAME'],"install.php") ||
@@ -410,25 +438,25 @@ if (!page_requires_no_config())
 }
 
 $pages = [
-	"Overview"     => ["url"=>""],
-	"Users"        => ["url"=>"users"],
-	"Channels"     => ["url"=>"channels"],
-	"Servers"      => ["url"=>"servers"],
+	"Overview"     => ["script"=>""],
+	"Users"        => ["script"=>"users/index.php"],
+	"Channels"     => ["script"=>"channels/index.php"],
+	"Servers"      => ["script"=>"servers/index.php"],
 	"Server Bans"  => [
-		"Server Bans" => ["url" => "server-bans"],
-		"Name Bans" => ["url" => "server-bans/name-bans.php"],
-		"Ban Exceptions" => ["url" => "server-bans/ban-exceptions.php"],
+		"Server Bans" => ["script" => "server-bans/index.php"],
+		"Name Bans" => ["script" => "server-bans/name-bans.php"],
+		"Ban Exceptions" => ["script" => "server-bans/ban-exceptions.php"],
 	],
-	"Spamfilter"   => ["url" => "spamfilter.php"],
+	"Spamfilter"   => ["script" => "spamfilter.php"],
 	"Tools" => [
-		"IP WHOIS" => ["url" => "tools/ip-whois.php"],
+		"IP WHOIS" => ["script" => "tools/ip-whois.php","no_irc_server_required"=>true],
 	],
 	"Settings" => [
-		"Plugins" => ["url" => "settings/plugins.php"],
-		"RPC Servers" => ["url" => "settings/rpc-servers.php"],
+		"Plugins" => ["script" => "settings/plugins.php","no_irc_server_required"=>true],
+		"RPC Servers" => ["script" => "settings/rpc-servers.php","no_irc_server_required"=>true],
 	],
 	
-	"News" => ["url" => "news.php"],
+	"News" => ["script" => "news.php","no_irc_server_required"=>true],
 ];
 
 if (!panel_start_session())
@@ -442,14 +470,25 @@ if (!panel_start_session())
 		die;
 	}
 } else {
-	$pages["Settings"]["Accounts"] = ["url" => "settings"];
+	$pages["Settings"]["Accounts"] = [
+		"script" => "settings/index.php",
+		"no_irc_server_required"=>true
+	];
 	if (current_user_can(PERMISSION_MANAGE_USERS))
-		$pages["Settings"]["Role Editor"] = ["url"=>"settings/user-role-edit.php"];
+	{
+		$pages["Settings"]["Role Editor"] = [
+			"script"=>"settings/user-role-edit.php",
+			"no_irc_server_required"=>true
+		];
+	}
 	$user = unreal_get_current_user();
 	if ($user)
 	{
 		/* Add logout page, if logged in */
-		$pages["Logout"] = ["url"=>"login/?logout=true"];
+		$pages["Logout"] = [
+			"script"=>"login/?logout=true",
+			"no_irc_server_required"=>true
+		];
 	}
 }
 
@@ -473,3 +512,5 @@ Hook::run(HOOKTYPE_NAVBAR, $pages);
  *	  }
  * }
 */
+
+$current_page = get_current_page();
