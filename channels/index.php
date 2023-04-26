@@ -1,7 +1,6 @@
 <?php
 require_once "../inc/common.php";
 require_once "../inc/header.php";
-require_once "../inc/connection.php";
 
 if (!empty($_POST))
 {
@@ -11,83 +10,81 @@ if (!empty($_POST))
 
 }
 
-$channels = $rpc->channel()->getAll();
-
 ?>
 <h4>Channels Overview</h4><br>
-<table class="container-xxl table table-sm table-responsive caption-top table-striped">
-	<thead class="table-primary">
-	<th>Name</th>
-	<th>Users</th>
-	<th class="modescol">Modes</th>
-	<th class="topiccol">Topic</th>
-	<th class="createdcol">Created</th>
+
+<!-- The channel list -->
+<table id="data_list" class="table-striped display responsive nowrap" style="width:100%">
+<thead>
+	<th scope="col">Name</th>
+	<th scope="col">Users</th>
+	<th scope="col">Modes</th>
+	<th scope="col">Topic</th>
+	<th scope="col">Created</th>
 </thead>
-<tbody>
-	<?php
-		$columns = array_column($channels, 'num_users');
-		array_multisort($columns, SORT_DESC, $channels);
-
-		foreach($channels as $channel)
-		{
-			echo "<tr>";
-			echo "<td><a href=\"details.php?chan=".urlencode(htmlspecialchars($channel->name))."\">".htmlspecialchars($channel->name)."</a></td>";
-			$s = ($channel->num_users) ? "success" : "danger";
-			echo "<td><span class=\"badge rounded-pill badge-$s\">".$channel->num_users."</span></td>";
-			$modes = (isset($channel->modes)) ? "+" . explode(" ",$channel->modes)[0] : "<none>";
-			echo "<td class=\"modescol\">".
-			     "<span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"+".htmlspecialchars($channel->modes)."\">".
-			     htmlspecialchars($modes)."</span></td>";
-			$topic = (isset($channel->topic)) ? htmlspecialchars($channel->topic) : "";
-			echo "<td class=\"topiccol\" style=\"overflow:hidden;\">".$topic."</td>";
-			$date = explode("T", $channel->creation_time)[0];
-			echo "<td class=\"createdcol\" style=\"white-space:nowrap\">".
-			     "<span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"".$channel->creation_time."\">".
-			     "$date</span></td>";
-			echo "</tr>";
-		}
-
-	require_once("../inc/footer.php");
-	?>
-</tbody>
 </table>
+
 <script>
-	function resize_check()
+let data_list_table = null;
+
+$(document).ready( function () {
+	args = {
+		'responsive': true,
+		'fixedHeader': {
+			header: true,
+			headerOffset: 53
+		},
+		'ajax': {
+			'url': '<?php echo get_config("base_url"); ?>api/channels.php',
+			dataSrc: ''
+		},
+		'pageLength':100,
+		'order':[[1,'desc']],
+		'columns': [
+			{ 'data': 'Name', 'responsivePriority': 1, 'className':'virtuallink' },
+			{ 'data': 'Users', 'responsivePriority': 2 },
+			{ 'data': 'Modes', 'responsivePriority': 3 },
+			{ 'data': 'Topic', 'responsivePriority': 5, 'className':'tdwrap' },
+			{ 'data': 'Created', 'responsivePriority': 4 },
+		],
+	};
+	/* Hide on mobile */
+	if (window.innerWidth > 8000)
 	{
-		var width = window.innerWidth;
-		var show_elements = '';
-		var hide_elements = '';
-		if (width < 500)
-		{
-			show_elements = '.createdcol';
-			hide_elements = '.modescol, .topiccol';
-		} else
-		if (width < 800)
-		{
-			show_elements = '.createdcol, .topiccol';
-			hide_elements = '.modescol';
-		} else
-		{
-			show_elements = '.createdcol, .modescol, .topiccol';
-			hide_elements = '';
-		}
-
-		if (show_elements != '')
-		{
-			show_elements=document.querySelectorAll(show_elements);
-			for (let i = 0; i < show_elements.length; i++)
-				show_elements[i].style.display = '';
-		}
-
-		if (hide_elements != '')
-		{
-			hide_elements=document.querySelectorAll(hide_elements);
-			for (let i = 0; i < hide_elements.length; i++)
-				hide_elements[i].style.display = 'none';
+		args['dom'] = 'Pfrtip';
+		args['searchPanes'] = {
+			'initCollapsed': 'true',
+			'columns': [1,3],
+			'dtOpts': {
+				select: { style: 'multi'},
+				order: [[ 1, "desc" ]]
+			},
 		}
 	}
-	resize_check();
-	window.addEventListener('resize', function() {
-		resize_check();
-	});
+
+	data_list_table = $('#data_list').DataTable(args);
+
+	$('#data_list').on( 'click', 'td', function () {
+		show_channel(this);
+	} );
+} );
+
+function show_channel(e)
+{
+	/* The first column is the 'Select' column */
+	// not on this page, or not yet ;)
+	//if (data_list_table.cell(e).index().column == 0)
+	//	return;
+
+	/* For all the other columns we show the view screen */
+	var data = data_list_table.row(e).data();
+	channel = data['Name'];
+	window.location = '<?php echo get_config('base_url'); ?>/channels/details.php?chan=' +
+	                  encodeURIComponent(channel);
+	// not working: still expands on mobile: e.stopImmediatePropagation();
+	return true;
+}
+
 </script>
+
+<?php require_once UPATH.'/inc/footer.php'; ?>

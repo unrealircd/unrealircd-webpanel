@@ -266,9 +266,16 @@ body {
     }
 }
 
+/* Virtual link - hover effect (eg on Server Bans) */
 .virtuallink {
 	text-decoration: none;
 }
 .virtuallink:hover {
 	text-decoration: underline;
+	cursor: pointer;
+}
+
+/* TD that may wrap - eg for Reason / Topic */
+.tdwrap {
+  white-space: normal !important;
 }
