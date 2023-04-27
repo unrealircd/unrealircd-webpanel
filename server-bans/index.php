@@ -96,7 +96,7 @@ if (!empty($_POST))
 ?>
 <h4>Server Bans Overview</h4>
 Here are all your network bans, from K-Lines to G-Lines, it's all here.<br><br>
-
+Click on an entry to edit it.
 <!-- Top add button -->
 <p><div class="btn btn-primary" onclick="add_ban()" <?php echo (current_user_can(PERMISSION_SERVER_BAN_ADD)) ? "" : "disabled"; ?>>
 Add Ban</div></p></table>
@@ -299,6 +299,8 @@ $(document).ready( function () {
 		$('#ban_reason').val("");
 		$('#ban_soft').prop('checked', false);
 		$('#do_del_ban').hide();
+		$('#ban_add_title').html("Add server ban");
+		$('#do_add_ban').html("Add Ban");
 		$('#ban_add').modal('show');
 	}
 
