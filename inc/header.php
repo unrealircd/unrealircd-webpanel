@@ -39,6 +39,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 <script src="<?php echo get_config("base_url"); ?>js/datatables.min.js"></script>
 <script src="<?php echo get_config("base_url"); ?>js/datatables-natural-sort.js"></script>
 <script src="<?php echo get_config("base_url"); ?>js/datatables-ellipsis.js"></script>
+<script src="<?php echo get_config("base_url"); ?>js/moment-with-locales.min.js"></script>
 <script>
 		var BASE_URL = "<?php echo get_config("base_url"); ?>";
 		function timeoutCheck() {

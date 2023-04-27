@@ -63,6 +63,8 @@ function toggle_checkbox(source) {
     }
 }
 
+/* Popup notifications */
+
 function generate_notif(title, body)
 {
     /* generate a random number between 1000 and 90000 to use as an id */
@@ -128,10 +130,37 @@ function StreamNotifs(e)
     msg = data.msg;
     generate_notif(title, msg);
 }
+
 function StartStreamNotifs(url)
 {
     if (!!window.EventSource) {
         var source = new EventSource(url);
         source.addEventListener('message', StreamNotifs, false);
     }
+}
+
+/* Log streamer */
+function NewLogEntry(e)
+{
+    var data;
+    try {
+        data = JSON.parse(e.data);
+    } catch(e) {
+        return;
+    }
+    //$('#data_list_table').DataTable()
+    data_list_table.row.add({
+        'Time':data.timestamp,
+        'Level':data.level,
+        'Subsystem':data.subsystem,
+        'Event':data.event_id,
+        'Message':data.msg}).draw(true);
+    data_list_table.rows().invalidate();
+    data_list_table.searchPanes.rebuildPane();
+}
+
+function StartLogStream(url)
+{
+    var source = new EventSource(url);
+    source.addEventListener('message', NewLogEntry, false);
 }

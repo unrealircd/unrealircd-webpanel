@@ -456,6 +456,7 @@ $pages = [
 		"Ban Exceptions" => ["script" => "server-bans/ban-exceptions.php"],
 	],
 	"Spamfilter"   => ["script" => "spamfilter.php"],
+	"Logs"   => ["script" => "logs/index.php"],
 	"Tools" => [
 		"IP WHOIS" => ["script" => "tools/ip-whois.php","no_irc_server_required"=>true],
 	],
