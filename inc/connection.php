@@ -10,6 +10,8 @@ function connect_to_ircd()
 
 	$is_api_page = str_contains($_SERVER['SCRIPT_FILENAME'], "/api/") ? true : false;
 
+	$options = []; /* options that we pass to new UnrealIRCd\Connection */
+
 	$rpc = null; /* Initialize, mostly for API page failures */
 
 	$server = get_active_rpc_server();
@@ -26,7 +28,8 @@ function connect_to_ircd()
 	$rpc_password = $config["unrealircd"][$server]["rpc_password"];
 	if (str_starts_with($rpc_password, "secret:"))
 		$rpc_password = secret_decrypt($rpc_password);
-	$tls_verify = $config["unrealircd"][$server]["tls_verify_cert"];
+	if (isset($config["unrealircd"][$server]["tls_verify_cert"]))
+		$options["tls_verify"] = $config["unrealircd"][$server]["tls_verify_cert"];
 
 	if (!$host || !$port || !$rpc_user)
 	{
@@ -44,13 +47,20 @@ function connect_to_ircd()
 		die;
 	}
 
+	$user = unreal_get_current_user();
+	if ($user)
+	{
+		/* Set issuer for all the RPC commands */
+		$options['issuer'] = $user->username;
+	}
+
 	/* Connect now */
 	try {
 			$rpc = new UnrealIRCd\Connection
 			(
 				"wss://$host:$port",
 				"$rpc_user:$rpc_password",
-				["tls_verify" => $tls_verify]
+				$options
 			);
 	}
 	catch (Exception $e)
@@ -61,13 +71,6 @@ function connect_to_ircd()
 		              "Verify that the connection details from Settings - RPC Servers match the ones in UnrealIRCd ".
 		              "and that UnrealIRCd is up and running");
 		throw $e;
-	}
-
-	$user = unreal_get_current_user();
-	if ($user)
-	{
-		/* Set issuer for all the RPC commands */
-		$rpc->rpc()->set_issuer($user->username);
 	}
 }
 
