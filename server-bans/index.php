@@ -159,7 +159,7 @@ Add Ban</div></p></table>
 	<!-- The banlist table -->
 	<form method="post">
 	<table id="data_list" class="table-striped display responsive nowrap" style="width:100%">
-	<thead>
+	<thead class="table-primary">
 		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_tkl(this)" /></th>
 		<th scope="col">Mask</th>
 		<th scope="col">Type</th>

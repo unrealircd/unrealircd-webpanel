@@ -97,7 +97,7 @@ Click on a server name to view more information.
 	
 	
 	<table class="container-xxl table table-sm table-responsive caption-top table-striped">
-	<thead>
+	<thead class="table-primary">
 		<th scope="col"><h5>Filter:</h5></th>
 		<form action="" method="post">
 		<th scope="col" colspan="2">Name: <input name="sf_name" type="text" class="short-form-control">

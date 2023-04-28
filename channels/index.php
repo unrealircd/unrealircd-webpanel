@@ -15,7 +15,7 @@ if (!empty($_POST))
 
 <!-- The channel list -->
 <table id="data_list" class="table-striped display responsive nowrap" style="width:100%">
-<thead>
+<thead class="table-primary">
 	<th scope="col">Name</th>
 	<th scope="col">Users</th>
 	<th scope="col">Modes</th>
@@ -79,7 +79,7 @@ function show_channel(e)
 	/* For all the other columns we show the view screen */
 	var data = data_list_table.row(e).data();
 	channel = data['Name'];
-	window.location = '<?php echo get_config('base_url'); ?>channels/details.php?chan=' +
+	window.location = '<?php echo get_config('base_url'); ?>/channels/details.php?chan=' +
 	                  encodeURIComponent(channel);
 	// not working: still expands on mobile: e.stopImmediatePropagation();
 	return true;

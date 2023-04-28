@@ -7,7 +7,7 @@ require_once "../inc/header.php";
 	<!-- The log table -->
 	<form method="post">
 	<table id="data_list" class="table-striped display nowrap" style="width:100%">
-	<thead>
+	<thead class="table-primary">
 		<th scope="col">Time</th>
 		<th scope="col">Level</th>
 		<th scope="col">Subsystem</th>
