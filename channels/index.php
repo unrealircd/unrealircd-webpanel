@@ -79,7 +79,7 @@ function show_channel(e)
 	/* For all the other columns we show the view screen */
 	var data = data_list_table.row(e).data();
 	channel = data['Name'];
-	window.location = '<?php echo get_config('base_url'); ?>/channels/details.php?chan=' +
+	window.location = '<?php echo get_config('base_url'); ?>channels/details.php?chan=' +
 	                  encodeURIComponent(channel);
 	// not working: still expands on mobile: e.stopImmediatePropagation();
 	return true;
