@@ -11,6 +11,11 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 	<meta name="HandheldFriendly" content="true">
 
 <link href="<?php echo get_config("base_url"); ?>css/unrealircd-admin.css" rel="stylesheet">
+<style>
+.big-page-item:hover, .big-page-item:active, .nav-link {
+	color: black;
+}
+</style>
 
 <link rel="stylesheet" href="<?php echo get_config("base_url"); ?>css/datatables.min.css" />
 
@@ -95,17 +100,22 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 	.list-group-item-action {
 		color: #e0e0e0;
 	}
+	.list-group-item-action:visited{
+		color: black;
+	}
 </style>
 <nav id="sidebarlol" style="left: 0" class="w3-sidebar navbar-expand-md bg-dark padding-top me-5 ma-5">
 <div class="list-group">
 	<div class="badge badge-secondary rounded-pill">Main Menu</div>
 	<?php 
 
-function show_page_item($name, $page, $nestlevel)
+function show_page_item($name, $page, $nestlevel, $small = false)
 {
 	$active_page = NULL;
 	$icon = $style = "";
 	$class = "nav-link nav-item";
+	if ($small)
+		$class .= " list-group-item-action";
 	//if (is_string($active_page) && $page == $active_page)
 	//	$class .= " active";
 
@@ -128,7 +138,7 @@ function show_page_item($name, $page, $nestlevel)
 			$url = str_replace('/index.php', '', $url);
 		echo "<a href=\"".get_config("base_url").$url."\" style=\"text-decoration: none\">\n";
 	}
-	echo "<div class=\"big-page-item d-flex justify-content-between align-items-center $class list-group-item-action\" style=\"$style\">$name
+	echo "<div class=\"big-page-item d-flex justify-content-between align-items-center $class\" style=\"$style\">$name
 		<div class=\"text-right padding-top\">
 			<i class=\"fa fa-$icon\"></i>
 		</div></div>\n";
@@ -141,7 +151,7 @@ function show_page_item($name, $page, $nestlevel)
 	if (!$is_link)
 	{
 		foreach ($page as $subname=>$subpage)
-			show_page_item($subname, $subpage, 1);
+			show_page_item($subname, $subpage, 1, $small);
 	}
 }
 
@@ -192,8 +202,9 @@ function rpc_server_nav()
 	$servers = get_config("unrealircd");
 	$cnt = count($servers);
 ?>
-		<div class="dropdown" style="color: #d0d0d0">
-			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $active_server ?> <span class="caret"></span></a>
+
+		<div class="dropdown navbar-expand-md navbar-nav">
+			<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $active_server ?></a>
 			<div class="dropdown-menu">
 <?php
 			foreach($servers as $name=>$d)
@@ -212,7 +223,7 @@ function rpc_server_nav()
 
 
 foreach($pages as $name=>$page)
-	show_page_item($name, $page, 0);
+	show_page_item($name, $page, 0, true);
 ?>
 </div>
 </nav>
