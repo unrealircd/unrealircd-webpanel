@@ -182,7 +182,7 @@ $(document).ready( function () {
 	};
 
 	/* Only show filter pane on desktop */
-	if (window.innerWidth > 8000)
+	if (window.innerWidth > 800)
 	{
 		args['dom'] = 'Pfrtip';
 		args['searchPanes'] = {
