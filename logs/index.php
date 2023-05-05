@@ -17,6 +17,50 @@ require_once "../inc/header.php";
 	</table>
 	</form>
 
+<!-- View log entry -->
+	<div class="modal" id="view_log_entry" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-xl" role="document">
+		<form method="post">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="view_log_entry_title">View log entry</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span></button>		
+				</div>
+				<div class="modal-body">
+					<ul class="nav nav-tabs" role="tablist">
+						<li class="nav-item" role="presentation"><a class="nav-link active" href="#event_pane" aria-controls="event_pane" role="tab" data-toggle="tab">Log entry</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#json_pane" aria-controls="json_pane" role="tab" data-toggle="tab">JSON</a></li>
+					</ul>
+					
+					<div class="tab-content">
+						<div class="tab-pane show active" id="event_pane">
+							<table class="table-sm table-responsive caption-top table-hover">
+								<tbody>
+									<tr><td>Time</td><td id="view_log_entry_time"></td></tr>
+									<tr><td>Level</td><td id="view_log_entry_level"></td></tr>
+									<tr><td>Subsystem</td><td id="view_log_entry_subsystem"></td></tr>
+									<tr><td>Event</td><td id="view_log_entry_event"></td></tr>
+									<tr><td>Message</td><td id="view_log_entry_message" class="tdwrap"></td></tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="tab-pane" id="json_pane">
+							<p class="card-text tdwrap" id="view_log_entry_json"></p>
+						</div>
+					</div>
+				</div>
+								
+				<div class="modal-footer">
+				<!-- do we want a button at all? -->
+				</div>
+			</div>
+		</form>
+	</div>
+	</div>
+
+
+<script src="../js/json-formatter.umd.js"></script>
 <script>
 let data_list_table = null;
 
@@ -125,12 +169,13 @@ $(document).ready( function () {
 			headerOffset: 53
 		},
 		'columns': [
-			{ 'data': 'Time', 'responsivePriority': 1, 'render': log_timestamp },
-			{ 'data': 'Level', 'responsivePriority': 3, 'className':'virtuallink', 'render': log_colorizer },
+			{ 'data': 'Time', 'responsivePriority': 1, 'render': log_timestamp, 'className':'virtuallink' },
+			{ 'data': 'Level', 'responsivePriority': 3, 'render': log_colorizer },
 			{ 'data': 'Subsystem', 'responsivePriority': 4, 'render': log_colorizer },
 			{ 'data': 'Event', 'responsivePriority': 5, 'render': log_colorizer },
 			//{ 'data': 'Message', 'responsivePriority': 2, 'render': DataTable.render.ellipsis(100, false) },
 			{ 'data': 'Message', 'responsivePriority': 2, 'render': log_text },
+			{ 'data': 'Raw', 'visible': false, 'searchable': false },
 		],
 		'pageLength':100,
 		'order':[[0,'desc']],
@@ -156,7 +201,24 @@ $(document).ready( function () {
 	window.addEventListener('resize', resize_check);
 
 	StartLogStream('<?php echo get_config('base_url'); ?>api/log.php');
+
+	$('#data_list').on( 'click', 'td', function () {
+		view_log_entry(this);
+	} );
 } );
+
+function view_log_entry(e)
+{
+	var data = data_list_table.row(e).data();
+	$('#view_log_entry_time').html('<code>' + data['Time'] + '</code>')
+	$('#view_log_entry_level').html('<code>' + data['Level'] + '</code>')
+	$('#view_log_entry_subsystem').html('<code>' + data['Subsystem'] + '</code>')
+	$('#view_log_entry_event').html('<code>' + data['Event'] + '</code>')
+	$('#view_log_entry_message').html('<pre class="tdwrap">' + data['Message'] + '</pre>')
+	j = new JSONFormatter(data['Raw'], 99);
+	$('#view_log_entry_json').html(j.render());
+	$('#view_log_entry').modal('show');
+}
 </script>
 
 <?php require_once '../inc/footer.php'; ?>
