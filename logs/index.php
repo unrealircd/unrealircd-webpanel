@@ -179,6 +179,9 @@ $(document).ready( function () {
 		],
 		'pageLength':100,
 		'order':[[0,'desc']],
+		'language':{
+			searchPlaceholder: "Nick, IP, anything...",
+		}
 	};
 
 	/* Only show filter pane on desktop */
