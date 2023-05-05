@@ -151,16 +151,18 @@ function NewLogEntry(e)
 
     if (data.sync_option != "sync_now")
     {
-        raw = data;
-        delete raw.sync_option;
+        var sync = (data.sync_option == "no_sync") ? false : true;
+        delete data.sync_option;
+
         data_list_table.row.add({
             'Time':data.timestamp,
             'Level':data.level,
             'Subsystem':data.subsystem,
             'Event':data.event_id,
             'Message':data.msg,
-            'Raw':raw});
-        if (data.sync_option == "no_sync")
+            'Raw':data});
+
+        if (!sync)
             return;
     }
     data_list_table.draw(true);
