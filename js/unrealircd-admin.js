@@ -148,13 +148,19 @@ function NewLogEntry(e)
     } catch(e) {
         return;
     }
-    //$('#data_list_table').DataTable()
-    data_list_table.row.add({
-        'Time':data.timestamp,
-        'Level':data.level,
-        'Subsystem':data.subsystem,
-        'Event':data.event_id,
-        'Message':data.msg}).draw(true);
+
+    if (data.sync_option != "sync_now")
+    {
+        data_list_table.row.add({
+            'Time':data.timestamp,
+            'Level':data.level,
+            'Subsystem':data.subsystem,
+            'Event':data.event_id,
+            'Message':data.msg});
+        if (data.sync_option == "no_sync")
+            return;
+    }
+    data_list_table.draw(true);
     data_list_table.rows().invalidate();
     data_list_table.searchPanes.rebuildPane();
 }
