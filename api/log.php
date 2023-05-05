@@ -22,7 +22,7 @@ array_push($log_list,
     "!kick.REMOTE_CLIENT_KICK",
 );
 
-$response = $rpc->log()->getAll();
+$response = $rpc->log()->getAll($log_list);
 if ($response !== false)
 {
     /* Only supported in later UnrealIRCd versions */
