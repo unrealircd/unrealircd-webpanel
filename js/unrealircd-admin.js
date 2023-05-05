@@ -160,7 +160,7 @@ function NewLogEntry(e)
             'Subsystem':data.subsystem,
             'Event':data.event_id,
             'Message':data.msg,
-            'Raw':data});
+            'Raw':JSON.stringify(data)});
 
         if (!sync)
             return;

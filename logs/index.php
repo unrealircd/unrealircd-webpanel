@@ -175,7 +175,7 @@ $(document).ready( function () {
 			{ 'data': 'Event', 'responsivePriority': 5, 'render': log_colorizer },
 			//{ 'data': 'Message', 'responsivePriority': 2, 'render': DataTable.render.ellipsis(100, false) },
 			{ 'data': 'Message', 'responsivePriority': 2, 'render': log_text },
-			{ 'data': 'Raw', 'visible': false, 'searchable': false },
+			{ 'data': 'Raw', 'visible': false, 'searchable': true },
 		],
 		'pageLength':100,
 		'order':[[0,'desc']],
@@ -215,7 +215,8 @@ function view_log_entry(e)
 	$('#view_log_entry_subsystem').html('<code>' + data['Subsystem'] + '</code>')
 	$('#view_log_entry_event').html('<code>' + data['Event'] + '</code>')
 	$('#view_log_entry_message').html('<pre class="tdwrap">' + data['Message'] + '</pre>')
-	j = new JSONFormatter(data['Raw'], 99);
+	j = JSON.parse(data['Raw']);
+	j = new JSONFormatter(j, 99);
 	$('#view_log_entry_json').html(j.render());
 	$('#view_log_entry').modal('show');
 }
