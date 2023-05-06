@@ -9,6 +9,17 @@ if (!isset($_SESSION['id']))
 // Close the session now, otherwise other pages block
 session_write_close();
 
+// Apache w/FPM is shit because it doesn't have flushpackets=on
+// or not by default anyway, so we will fill up 4k buffers.
+// Yeah, really silly... I know.
+$fpm_workaround_needed = false;
+if (str_contains($_SERVER['SERVER_SOFTWARE'], 'Apache') &&
+    function_exists('fpm_get_status') &&
+    is_array(fpm_get_status()))
+{
+    $fpm_workaround_needed = true;
+}
+
 // Only now make the connection (this can take a short while)
 include "../inc/connection.php";
 
@@ -30,27 +41,37 @@ set_time_limit(0);
 ob_implicit_flush(1);
 
 // Flush and stop output buffering (eg fastcgi w/NGINX)
-while (1)
+function flush_completely()
 {
-	try {
-		$ret = @ob_end_flush();
-		if ($ret === false)
-			break;
-	} catch(Exception $e)
+	while (1)
 	{
-		break;
+		try {
+			$ret = @ob_end_flush();
+			if ($ret === false)
+				break;
+		} catch(Exception $e)
+		{
+			break;
+		}
 	}
-};
+}
+
+flush_completely();
 
 /* Send server-sent events (SSE) message */
 function send_sse($json)
 {
-	echo "data: ".json_encode($json)."\n\n";
+	GLOBAL $fpm_workaround_needed;
+	$str = "data: ".json_encode($json)."\n\n";
+	if ($fpm_workaround_needed)
+		$str .= str_repeat(" ", 4096 - ((strlen($str)+1) % 4096))."\n";
+	echo $str;
 }
 
 function api_log_loop($sources)
 {
 	GLOBAL $rpc;
+	GLOBAL $fpm_workaround_needed;
 
 	$rpc->log()->subscribe($sources);
 	if ($rpc->error)
@@ -68,7 +89,10 @@ function api_log_loop($sources)
 			 * otherwise PHP may not
 			 * notice when the webclient is gone.
 			 */
-			echo "\n";
+			if ($fpm_workaround_needed)
+				echo str_repeat(" ", 4095)."\n";
+			else
+				echo "\n";
 			continue;
 		}
 		send_sse($res);
@@ -114,7 +138,10 @@ function api_timer_loop(int $every_msec, string $method, array|null $params = nu
 			 * otherwise PHP may not
 			 * notice when the webclient is gone.
 			 */
-			echo "\n";
+			if ($fpm_workaround_needed)
+				echo str_repeat(" ", 4095)."\n";
+			else
+				echo "\n";
 			continue;
 		}
 		send_sse($res);
