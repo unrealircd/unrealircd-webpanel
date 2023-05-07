@@ -23,16 +23,7 @@ class sql_db
 		Hook::func(HOOKTYPE_EDIT_USER, 'sql_db::edit_core');
 		Hook::func(HOOKTYPE_PRE_OVERVIEW_CARD, 'sql_db::add_pre_overview_card');
 		Hook::func(HOOKTYPE_UPGRADE, 'sql_db::create_tables'); // handles upgrades too ;)
-		Hook::func(HOOKTYPE_USER_ROLE_LIST, 'sql_db::roles_list');
 		AuthModLoaded::$status = 1;
-	}
-
-	public static function roles_list(&$list)
-	{
-		$settings = DbSettings::get();
-		if (isset($settings['user_roles']))
-			foreach($settings['user_roles'] as $r => $role)
-				$list[$r] = $role;
 	}
 
 	public static function add_pre_overview_card($empty)

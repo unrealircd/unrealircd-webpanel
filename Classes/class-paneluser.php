@@ -371,13 +371,18 @@ function generate_panel_user_permission_table($user)
 
 function get_panel_user_roles_list()
 {
+	GLOBAL $config;
+
 	/* Defaults */
 	$list = [
-        "Super-Admin" => get_panel_user_permission_list(), // SuperAdmin can do everything
-        "Read-Only" => [], // Read Only can do nothing
+	        "Super-Admin" => get_panel_user_permission_list(), // SuperAdmin can do everything
+	        "Read-Only" => [], // Read Only can do nothing
 	];
 
-	Hook::run(HOOKTYPE_USER_ROLE_LIST, $list);
+	if (isset($config["user_roles"]))
+		foreach($config['user_roles'] as $r => $role)
+			$list[$r] = $role;
+
 	return $list;
 }
 

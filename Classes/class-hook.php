@@ -133,14 +133,6 @@ define('HOOKTYPE_USER_PERMISSION_LIST', 116);
 
 define('HOOKTYPE_EDIT_USER', 117);
 
-define('HOOKTYPE_USER_ROLE_LIST', 118);
-
-define('HOOKTYPE_EDIT_ROLE', 119);
-
-define('HOOKTYPE_ADD_ROLE', 120);
-
-define('HOOKTYPE_DEL_ROLE', 121);
-
 define('HOOKTYPE_AUTH_MOD', 200);
 
 /** An upgrade has been detected.
