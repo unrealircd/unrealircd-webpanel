@@ -32,7 +32,7 @@ foreach($channels as $channel)
 
 function custom_sort($a,$b)
 {
-	return ($b["Users"] > $a["Users"]) ? true : false;
+	return $b["Users"] <=> $a["Users"];
 }
 
 usort($out, "custom_sort");
