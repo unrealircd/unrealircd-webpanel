@@ -1,22 +1,41 @@
 <?php
-if (version_compare(PHP_VERSION, '8.0.0', '<'))
+function check_requirements()
 {
-	die("This webserver is using PHP version ".PHP_VERSION." but we require at least PHP 8.0.0.<br>".
-	    "If you already installed PHP8 but are still seeing this error, then it means ".
-	    "apache/nginx/.. is loading an older PHP version. Eg. on Debian/Ubuntu you need ".
-	    "<code>apt-get install libapache2-mod-php8.2</code> (or a similar version) and ".
-	    "<code>apt-get remove libapache2-mod-php7.4</code> (or a similar version). ".
-	    "You may also need to choose again the PHP module to load in apache via <code>a2enmod php8.2</code>");
+	if (version_compare(PHP_VERSION, '8.0.0', '<'))
+	{
+		die("This webserver is using PHP version ".PHP_VERSION." but we require at least PHP 8.0.0.<br>".
+		    "If you already installed PHP8 but are still seeing this error, then it means ".
+		    "apache/nginx/.. is loading an older PHP version. Eg. on Debian/Ubuntu you need ".
+		    "<code>apt-get install libapache2-mod-php8.2</code> (or a similar version) and ".
+		    "<code>apt-get remove libapache2-mod-php7.4</code> (or a similar version). ".
+		    "You may also need to choose again the PHP module to load in apache via <code>a2enmod php8.2</code>");
+	}
+
+	$loaded_extensions = get_loaded_extensions();
+	$required_extensions = ["mbstring", "sodium"];
+	$missing_extensions = [];
+	foreach ($required_extensions as $mod)
+		if (!in_array($mod, $loaded_extensions))
+			$missing_extensions[] = $mod;
+
+	if (count($missing_extensions) > 0)
+	{
+		$text = "<html>The following PHP module(s) need to be loaded:<br>\n<ul>\n";
+		$cmd = 'apt-get install';
+		foreach($missing_extensions as $mod)
+		{
+			$text .= "<li>$mod</li>\n";
+			$cmd .= " php-$mod";
+		}
+		$text .= "</ul>\n";
+		$text .= "You need to install/enable these PHP packages and restart the webserver.<br>".
+		         "If you are on Debian/Ubuntu then run <code>$cmd</code> ".
+		         "and restart your webserver (eg: <code>systemctl restart apache2</code> for apache).";
+		die($text);
+	}
 }
 
-$loaded_extensions = get_loaded_extensions();
-if (!in_array("mbstring", $loaded_extensions))
-{
-	die("The PHP module 'mbstrings' need to be loaded. ".
-	    "You need to install the php-mbstring package and restart the webserver.<br>".
-	    "If you are on Debian/Ubuntu then run <code>apt-get install php-mbstring</code> ".
-	    "and restart your webserver (apache2/nginx/..).");
-}
+check_requirements(); /* very early !! */
 
 define('UPATH', dirname(__DIR__));
 
