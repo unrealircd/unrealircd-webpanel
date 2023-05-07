@@ -3,7 +3,7 @@ require_once "../inc/common.php";
 require_once "../inc/header.php";
 ?>
 <h4>Log viewer</h4>
-
+<p>This fetches up to 1000 historical log entries from UnrealIRCd (requires 6.1.1-git+) and then follows the logs 'live'.</p>
 	<!-- The log table -->
 	<form method="post">
 	<table id="data_list" class="table-striped display nowrap" style="width:100%">
