@@ -226,7 +226,7 @@ if (!empty($rehash_success)) {
 			</div>
 		</div>
 	</div>
-	
+<?php if (property_exists($srv->server->features, "chanmodes")) { ?>
 	<div class="col">
 		<div class="card mb-4">
 			<div class="card-body">
@@ -235,6 +235,9 @@ if (!empty($rehash_success)) {
 			</div>
 		</div>
 	</div>
+<?php }
+      if (property_exists($srv->server->features, "usermodes")) {
+?>
 	<div class="col">
 		<div class="card mb-4">
 			<div class="card-body">
@@ -243,5 +246,6 @@ if (!empty($rehash_success)) {
 			</div>
 		</div>
 	</div>
+<?php } ?>
 </div>
 <?php require_once UPATH.'/inc/footer.php'; ?>

@@ -349,9 +349,10 @@ function generate_html_extserverinfo($server)
             </tr><tr>
                 <th>Protocol</th>
                 <td colspan="2"><a href="https://www.unrealircd.org/docs/Server_protocol:Protocol_version"><code><?php echo htmlspecialchars($server->server->features->protocol); ?></code></a></td>
-            </tr><tr>
+            </tr>
+<?php if (property_exists($server, "tls")) { ?>
+            <tr>
                 <th>TLS</th>
-
                 <td colspan="2">
                     <table>
                         <tr>
@@ -365,6 +366,7 @@ function generate_html_extserverinfo($server)
                     </table>
                 </td>
             </tr>
+<?php } ?>
         </tbody>
     </table>
     <?php
