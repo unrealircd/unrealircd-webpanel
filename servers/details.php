@@ -118,6 +118,13 @@ if (!empty($rehash_success)) {
 	return;
 ?>
 <br>
+<div class="row">
+	<div class="col-sm-3">
+		<div class="btn btn-sm btn-warning" data-toggle="modal" data-target="#rehash_modal">Rehash</div>
+		<div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#disconnect_modal">Disconnect</div>
+	</div>
+</div>
+<br>
 <div class="modal fade" id="disconnect_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -165,87 +172,60 @@ if (!empty($rehash_success)) {
 	</div>
 </div>
 
-<div class="modal fade" id="module_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
-	<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered container-fluid" role="document">
-		<div class="modal-content">
-		<div class="modal-header">
-			<h5 class="modal-title" id="myModalLabel">Server Modules</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<div class="modal-body">
-			<?php generate_html_modlist($srv); ?>
-		</div>
-		<div class="modal-footer">
-				<button id="CloseButton" action="post" type="submit" class="btn btn-secondary" data-dismiss="modal">Close</button>
-		</div>
-		</div>
+<div class="container-xxl">
+  <div class="row">
+    
+    <div class="col-sm-8">
+      <div class="card">
+        <div class="card-body">
+        	<h6 class="card-title">Server Settings</h6>
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="nav-item" role="presentation"><a class="nav-link" href="#servermodes" aria-controls="servermodes" role="tab" data-toggle="tab">Settings / Modes</a></li>
+				<li class="nav-item" role="presentation"><a class="nav-link" href="#serverinv" aria-controls="serverinv" role="tab" data-toggle="tab">Channel Modes</a></li>
+				<li class="nav-item" role="presentation"><a class="nav-link" href="#serverex" aria-controls="serverex" role="tab" data-toggle="tab">User Modes</a></li>
+				<li class="nav-item" role="presentation"><a class="nav-link" href="#serverbans" aria-controls="serverbans" role="tab" data-toggle="tab">Modules</a></li>
+			</ul>
+		
+<div class="tab-content">
+	<br>
+	<div class="tab-pane fade in" id="servermodes">
+		
+		<p class="card-text row">
+			<h4>Server information</h4>
+			<?php generate_html_serverinfo($srv); ?>
+			<h4>Extra information</h4>
+			<?php generate_html_extserverinfo($srv); ?>
+		</p>
+	</div><form id="editservermodes" method="post" name="editservermodes">
+	<div class="tab-pane" style="display: none" id="servermodes_edit">
+		
+			<div class="btn btn-sm btn-secondary" id="editchmodesbk">Go back</div>
+			<button type="submit" class="btn btn-sm btn-primary">Save Settings</button>
+			<p class="card-text"><div></div></p>
+		</form>
 	</div>
+	
+	<div class="tab-pane fade in" id="serverbans">
+		<p class="card-text"><?php generate_html_modlist($srv); ?></p>
+	</div>
+	<div class="tab-pane fade in" id="serverinv">
+		<p class="card-text"><?php generate_html_servermodes($srv); ?></p>
+	</div>
+	<div class="tab-pane fade in" id="serverex">
+		<p class="card-text"><?php generate_html_usermodes($srv); ?></p>
+	</div>
+	<div class="tab-pane fade in" id="servermodes_edit">
+		<p class="card-text"><?php /* insert hacks here */ ?></p>
+	</div>
+
+</div>
+</div>
 </div>
 
-<div class="modal fade" id="module_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
-	<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered container-fluid" role="document">
-		<div class="modal-content">
-		<div class="modal-header">
-			<h5 class="modal-title" id="myModalLabel">Rehash Server"</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<div class="modal-body">
-			<?php generate_html_modlist($srv); ?>
-		</div>
-		<div class="modal-footer">
-				<button id="CloseButton" action="post" type="submit" class="btn btn-secondary" data-dismiss="modal">Close</button>
-		</div>
-		</div>
 	</div>
-</div>
-
-<div class="row">
-	<div class="col-sm-3">
-		<div class="btn btn-sm btn-info" data-toggle="modal" data-target="#module_modal">Modules</div>	
-		<div class="btn btn-sm btn-warning" data-toggle="modal" data-target="#rehash_modal">Rehash</div>
-		<div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#disconnect_modal">Disconnect</div>
-	</div>
-</div>
-<br>
-<div class="row">
-	<div class="col-sm-3">
-		<div class="card mb-4">
-			<div class="card-body">
-				<h5 class="card-title">Basic Information</h5>
-				<p class="card-text"><?php generate_html_serverinfo($srv); ?></p>
-			</div>
-		</div>
-		<div class="card mb-4">
-			<div class="card-body">
-				<h5 class="card-title">Extra Information</h5>
-				<p class="card-text"><?php generate_html_extserverinfo($srv); ?></p>
-			</div>
-		</div>
-	</div>
-<?php if (property_exists($srv->server->features, "chanmodes")) { ?>
-	<div class="col">
-		<div class="card mb-4">
-			<div class="card-body">
-				<h5 class="card-title">Channel Modes</h5>
-				<p class="card-text"><?php generate_html_servermodes($srv); ?></p>
-			</div>
-		</div>
-	</div>
-<?php }
-      if (property_exists($srv->server->features, "usermodes")) {
-?>
-	<div class="col">
-		<div class="card mb-4">
-			<div class="card-body">
-				<h5 class="card-title">User Modes</h5>
-				<p class="card-text"><?php generate_html_usermodes($srv); ?></p>
-			</div>
-		</div>
-	</div>
-<?php } ?>
 </div>
 <?php require_once UPATH.'/inc/footer.php'; ?>
+<script>
+    // show dat first tab
+$('.nav-tabs a[href="#servermodes"]').tab('show')
+</script>
