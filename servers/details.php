@@ -180,7 +180,7 @@ if (!empty($rehash_success)) {
         <div class="card-body">
         	<h6 class="card-title">Server Settings</h6>
 			<ul class="nav nav-tabs" role="tablist">
-				<li class="nav-item" role="presentation"><a class="nav-link" href="#servermodes" aria-controls="servermodes" role="tab" data-toggle="tab">Settings / Modes</a></li>
+				<li class="nav-item" role="presentation"><a class="nav-link" href="#servermodes" aria-controls="servermodes" role="tab" data-toggle="tab">Info</a></li>
 				<li class="nav-item" role="presentation"><a class="nav-link" href="#serverinv" aria-controls="serverinv" role="tab" data-toggle="tab">Channel Modes</a></li>
 				<li class="nav-item" role="presentation"><a class="nav-link" href="#serverex" aria-controls="serverex" role="tab" data-toggle="tab">User Modes</a></li>
 				<li class="nav-item" role="presentation"><a class="nav-link" href="#serverbans" aria-controls="serverbans" role="tab" data-toggle="tab">Modules</a></li>
