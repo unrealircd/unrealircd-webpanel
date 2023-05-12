@@ -101,24 +101,35 @@ class PanelUser
 
 	/**
 	 * Add user meta data
-	 * @param string $key
-	 * @param string $value
+	 * You may use arrays or strings but both parameter types must match
+	 * @param array|string $key
+	 * @param array|string $value
 	 */
-	function add_meta(string $key, string $value)
+	function add_meta(array|string $key, array|string $value)
 	{
 		
 		if (!$key || !$value)
 			return false;
 
-		$meta = [
-			"id" => $this->id,
-			"key" => $key,
-			"value" => $value
-		];
+		if (is_string($key) && is_string($value))
+			$arr[$key] = $value;
 
-		$array['meta'] = $meta;
-		$array['user'] = $this;
-		Hook::run(HOOKTYPE_USERMETA_ADD, $array);
+		else
+			foreach ($key as $i => $k)
+				$arr[$k] = $value[$i];
+		
+		foreach($arr as $k => $v)
+		{
+			$meta = [
+				"id" => $this->id,
+				"key" => $k,
+				"value" => $v
+			];
+
+			$array['meta'] = $meta;
+			$array['user'] = $this;
+			Hook::run(HOOKTYPE_USERMETA_ADD, $array);
+		}
 		
 	}
 
