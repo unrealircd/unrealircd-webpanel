@@ -103,21 +103,22 @@ class PanelUser
 	 * Add user meta data
 	 * You may use arrays or strings but both parameter types must match
 	 * @param array|string $key
-	 * @param array|string $value
+	 * @param array|string|int|bool|null $value
 	 */
-	function add_meta(array|string $key, array|string $value)
+	function add_meta(array|string $key, array|string|int|bool|null $value)
 	{
 		
-		if (!$key || !$value)
+		if (!$key)
 			return false;
 
-		if (is_string($key) && is_string($value))
-			$arr[$key] = $value;
-
-		else
+		if (is_array($key))
+		{
 			foreach ($key as $i => $k)
 				$arr[$k] = $value[$i];
-		
+		} else {
+			$arr[$key] = $value;
+		}
+
 		foreach($arr as $k => $v)
 		{
 			$meta = [
