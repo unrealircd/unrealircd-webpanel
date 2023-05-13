@@ -101,7 +101,8 @@ class PanelUser
 
 	/**
 	 * Add user meta data
-	 * You may use arrays or strings but both parameter types must match
+	 * If using an array for the first param then you
+	 * must also use an array for the second param
 	 * @param array|string $key
 	 * @param array|string|int|bool|null $value
 	 */
