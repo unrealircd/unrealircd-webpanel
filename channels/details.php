@@ -219,7 +219,11 @@ if (!empty($_POST))
 	</div>
 </form>
 <?php if (!$channelObj)
-		return; ?>
+{
+	require_once("../inc/footer.php");
+	return;
+}
+?>
 
 <!-- Modal for Add Ban -->
 <div class="modal fade" id="ban" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">

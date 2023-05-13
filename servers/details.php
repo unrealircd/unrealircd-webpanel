@@ -115,7 +115,10 @@ if (!empty($rehash_success)) {
 </form>
 
 <?php if (!$srv)
+{
+	require_once UPATH.'/inc/footer.php';
 	return;
+}
 ?>
 <br>
 <div class="row">
@@ -191,10 +194,12 @@ if (!empty($rehash_success)) {
 	<div class="tab-pane fade in" id="servermodes">
 		
 		<p class="card-text row">
-			<h4>Server information</h4>
-			<?php generate_html_serverinfo($srv); ?>
-			<h4>Extra information</h4>
-			<?php generate_html_extserverinfo($srv); ?>
+			<div class="row" style="margin-left:5px">
+				<h4>Server information</h4>
+				<?php generate_html_serverinfo($srv); ?>
+				<h4>Extra information</h4>
+				<?php generate_html_extserverinfo($srv); ?>
+			</div>
 		</p>
 	</div><form id="editservermodes" method="post" name="editservermodes">
 	<div class="tab-pane" style="display: none" id="servermodes_edit">
