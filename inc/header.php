@@ -1,6 +1,7 @@
 <?php
 $nav_shown = true;
 $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
+
 ?>
 <!DOCTYPE html>
 <head>
@@ -11,6 +12,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 	<meta name="HandheldFriendly" content="true">
 
 <link href="<?php echo get_config("base_url"); ?>css/unrealircd-admin.css" rel="stylesheet">
+<link href="<?php echo get_config("base_url"); ?>css/right-click.css" rel="stylesheet">
 <style>
 .big-page-item:hover, .big-page-item:active, .nav-link {
 	color: black;
@@ -41,6 +43,9 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
 <script src="<?php echo get_config("base_url"); ?>js/unrealircd-admin.js"></script>
+<!-- <script defer src="<?php echo get_config("base_url"); ?>js/right-click-menus.js"></script> -- We're not doing this yet XD -->
+<script src="<?php echo get_config("base_url"); ?>js/bs-modal.js"></script>
+<script src="<?php echo get_config("base_url"); ?>js/bs-toast.js"></script>
 <script src="<?php echo get_config("base_url"); ?>js/datatables.min.js"></script>
 <script src="<?php echo get_config("base_url"); ?>js/datatables-natural-sort.js"></script>
 <script src="<?php echo get_config("base_url"); ?>js/datatables-ellipsis.js"></script>
@@ -104,7 +109,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 		color: black;
 	}
 </style>
-<nav id="sidebarlol" style="left: 0" class="w3-sidebar navbar-expand-md bg-dark padding-top me-5 ma-5">
+<nav id="sidebarlol" style="left:0;overflow:auto" class="w3-sidebar navbar-expand-md bg-dark padding-top me-5 ma-5">
 <div class="list-group">
 	<div class="badge badge-secondary rounded-pill">Main Menu</div>
 	<?php 

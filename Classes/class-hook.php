@@ -121,6 +121,9 @@ define('HOOKTYPE_USERMETA_GET', 110);
  */
 define('HOOKTYPE_USER_CREATE', 111);
 
+/** HOOKTYPE_GET_USER_LIST
+ * @param array $userlist []
+ */
 define('HOOKTYPE_GET_USER_LIST', 112);
 
 define('HOOKTYPE_USER_DELETE', 113);
@@ -132,6 +135,8 @@ define('HOOKTYPE_USER_LOGIN_FAIL', 115);
 define('HOOKTYPE_USER_PERMISSION_LIST', 116);
 
 define('HOOKTYPE_EDIT_USER', 117);
+
+define('HOOKTYPE_RIGHTCLICK_MENU', 118);
 
 define('HOOKTYPE_AUTH_MOD', 200);
 

@@ -6,13 +6,14 @@
  * @param {string} footer - HTML for the footer
  * 
  * Optional:
- * @param {string} size - the bootstrap size category for modals (sm, lg, xl)
- * @param {boolean} static - whether or not to make the backdrop static, forcing the user to respond to the dialog
- * @param {boolean} show - whether or not to automatically show the modal
+ * @param {string|null} size - the bootstrap size category for modals (sm, lg, xl). Default is null.
+ * @param {boolean} static - whether or not to make the backdrop static, forcing the user to respond to the dialog. Default is false
+ * @param {boolean} show - whether or not to automatically show the modal. Default is false.
+ * @param {boolean} closebutton - display and allow the close button. Default is true.
  * @returns {string} returns the ID
  */
 
-function bsModal(title, body, footer, size = null, static = false, show = false)
+function bsModal(title, body, footer, size = null, static = false, show = false, closebutton = true)
 {
     /* generate a random number between 1000 and 90000 to use as an id */
     const min = 1000;
@@ -46,9 +47,11 @@ function bsModal(title, body, footer, size = null, static = false, show = false)
 
     mHeader.classList.add("modal-header");
     mHeader.id = id + "-header";
-    mHeader.innerHTML =`<h5 class="modal-title" id="` + id + `"-title">` + title + `</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>`;
+    mHeader.innerHTML =`<h5 class="modal-title" id="` + id + `"-title">` + title + `</h5>`;
+
+    if (closebutton)
+        mHeader.innerHTML +=   `<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>`;
     
     mBody.classList.add("modal-body");
     mBody.id = id + "-body";
@@ -71,4 +74,6 @@ function bsModal(title, body, footer, size = null, static = false, show = false)
 
     if (show)
         $('#' + m1.id).modal('show');
+
+    return m1.id;
 }

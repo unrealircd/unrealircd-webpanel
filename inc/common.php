@@ -4,11 +4,11 @@ function check_requirements()
 	if (version_compare(PHP_VERSION, '8.0.0', '<'))
 	{
 		die("This webserver is using PHP version ".PHP_VERSION." but we require at least PHP 8.0.0.<br>".
-		    "If you already installed PHP8 but are still seeing this error, then it means ".
-		    "apache/nginx/.. is loading an older PHP version. Eg. on Debian/Ubuntu you need ".
-		    "<code>apt-get install libapache2-mod-php8.2</code> (or a similar version) and ".
-		    "<code>apt-get remove libapache2-mod-php7.4</code> (or a similar version). ".
-		    "You may also need to choose again the PHP module to load in apache via <code>a2enmod php8.2</code>");
+			"If you already installed PHP8 but are still seeing this error, then it means ".
+			"apache/nginx/.. is loading an older PHP version. Eg. on Debian/Ubuntu you need ".
+			"<code>apt-get install libapache2-mod-php8.2</code> (or a similar version) and ".
+			"<code>apt-get remove libapache2-mod-php7.4</code> (or a similar version). ".
+			"You may also need to choose again the PHP module to load in apache via <code>a2enmod php8.2</code>");
 	}
 
 	$loaded_extensions = get_loaded_extensions();
@@ -29,8 +29,8 @@ function check_requirements()
 		}
 		$text .= "</ul>\n";
 		$text .= "You need to install/enable these PHP packages and restart the webserver.<br>".
-		         "If you are on Debian/Ubuntu then run <code>$cmd</code> ".
-		         "and restart your webserver (eg: <code>systemctl restart apache2</code> for apache).";
+				 "If you are on Debian/Ubuntu then run <code>$cmd</code> ".
+				 "and restart your webserver (eg: <code>systemctl restart apache2</code> for apache).";
 		die($text);
 	}
 }
@@ -93,7 +93,7 @@ function get_current_page(&$title)
 function page_requires_no_config()
 {
 	if (str_ends_with($_SERVER['SCRIPT_FILENAME'],"install.php") ||
-	    str_ends_with($_SERVER['SCRIPT_FILENAME'],"installation.php"))
+		str_ends_with($_SERVER['SCRIPT_FILENAME'],"installation.php"))
 	{
 		return TRUE;
 	}
@@ -103,7 +103,7 @@ function page_requires_no_config()
 function page_requires_no_login()
 {
 	if (str_ends_with($_SERVER['SCRIPT_FILENAME'],"login/index.php") ||
-	    page_requires_no_config())
+		page_requires_no_config())
 	{
 		return TRUE;
 	}
@@ -161,9 +161,9 @@ function read_config_db()
 function config_is_file_item($name)
 {
 	if (($name == "plugins") ||
-	    ($name == "mysql") ||
-	    ($name == "base_url") ||
-	    ($name == "secrets"))
+		($name == "mysql") ||
+		($name == "base_url") ||
+		($name == "secrets"))
 	{
 		return true;
 	}
@@ -191,10 +191,10 @@ function write_config_file()
 	if ($str === null)
 		die("Error while running write_config_file() -- weird!");
 	if (!fwrite($fd, "<?php\n".
-		    "/* This config file is written automatically by the UnrealIRCd webpanel.\n".
-		    " * You are not really supposed to edit it manually.\n".
-		    " */\n".
-		    '$config = '.$str.";\n"))
+			"/* This config file is written automatically by the UnrealIRCd webpanel.\n".
+			" * You are not really supposed to edit it manually.\n".
+			" */\n".
+			'$config = '.$str.";\n"))
 	{
 		die("Error writing to config file $tmpfile (on fwrite).<br>");
 	}
@@ -227,7 +227,7 @@ function write_config($setting = null)
 
 	/* Otherwise write the whole config.
 	 * TODO: avoid writing settings file if unneeded,
-	 *       as it is more noisy than db settings.
+	 *	   as it is more noisy than db settings.
 	 */
 	$db_settings = [];
 
@@ -367,8 +367,8 @@ function upgrade_check()
 	}
 	/* - encrypting rpc_password */
 	if (isset($config['unrealircd']) &&
-	    isset($config['unrealircd']['rpc_password']) &&
-	    !str_starts_with($config['unrealircd']['rpc_password'], "secret:"))
+		isset($config['unrealircd']['rpc_password']) &&
+		!str_starts_with($config['unrealircd']['rpc_password'], "secret:"))
 	{
 		$ret = secret_encrypt($config['unrealircd']['rpc_password']);
 		if ($ret !== false)
@@ -476,10 +476,10 @@ if (!page_requires_no_config())
 }
 
 $pages = [
-	"Overview"     => ["script"=>""],
-	"Users"        => ["script"=>"users/index.php"],
-	"Channels"     => ["script"=>"channels/index.php"],
-	"Servers"      => ["script"=>"servers/index.php"],
+	"Overview"	 => ["script"=>""],
+	"Users"		=> ["script"=>"users/index.php"],
+	"Channels"	 => ["script"=>"channels/index.php"],
+	"Servers"	  => ["script"=>"servers/index.php"],
 	"Server Bans"  => [
 		"Server Bans" => ["script" => "server-bans/index.php"],
 		"Name Bans" => ["script" => "server-bans/name-bans.php"],
@@ -553,3 +553,21 @@ Hook::run(HOOKTYPE_NAVBAR, $pages);
 */
 
 $current_page = get_current_page($current_page_name);
+
+
+global $rightClickMenu;
+$rightClickMenu = [
+	[
+		"text" => "Copy",
+		"onclick" => "copy_to_clipboard(window.getSelection().toString())",
+		"icon" => "fa-clipboard"
+	],
+	[
+		"text" => "Paste",
+		"onclick" => "paste_from_clipboard()",
+		"icon" => "fa-paint-brush",
+	],
+];
+
+// register our menu
+Hook::run(HOOKTYPE_RIGHTCLICK_MENU, $rightClickMenu);

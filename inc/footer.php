@@ -50,13 +50,73 @@
 		
 </div>
 </div><!-- Second div is because there is a container div in the header-->
-
 </footer>
 </body>
 </html>
+<!--
 <script>
 	var bugreport = document.getElementById('bugreport');
 	bugreport.addEventListener('click', (e) => {
 		window.open("https://github.com/unrealircd/unrealircd-webpanel/issues/new?labels=bug&template=bug_report.md", '_blank');
 	});
-</script>
+
+	// Function to check if the feedback prompt should be shown
+	function showFeedbackPrompt()
+	{
+		var showPrompt = localStorage.getItem('showFeedbackPrompt');
+
+		// Check if the prompt has never been shown or the user opted to see it again
+		if (showPrompt === null || showPrompt === 'true' || showPrompt == 'false')
+		{
+			const id = bsModal(
+
+				// Modal header (1st param)
+				"Help Us Improve Your Experience!",
+
+				// Modal content (2nd param)
+				`We value your opinion and would greatly appreciate your feedback. Your input will help us enhance the features, usability,
+				and overall performance of the panel, making it even better for managing your UnrealIRCd server/network.<br><br>
+				Please take a moment to share your thoughts, suggestions, or any issues you've encountered.
+				We welcome feedback on the user interface, functionality, ease of use, or any other aspect you deem important.
+				Your feedback is valuable to us in shaping the future of the web panel.<br><br>
+				Thank you for your time and support in making UnrealIRCd web panel the best it can be!`,
+				
+				// Modal footer (3rd param) buttons
+				`<div class="btn btn-sm btn-danger" onclick="remindFeedback()">Remind me later!</div>
+				<div class="btn btn-sm btn-primary" onclick="submitFeedback()">Feedback</div>`,
+
+				// Optional bootstrap size param (e.g. sm, lg, xl, etc) or null
+				null,
+
+				// Optional "static" bool
+				true,
+
+				// Optional "show" option
+				false,
+
+				// Optional "closebutton" display
+				false
+			);
+		}
+		$('#' + id).modal('show');
+
+	}
+	
+	// Function to handle user feedback submission and store preferences
+	function submitFeedback()
+	{
+		$('#'+id).modal('hide');
+		// Handle feedback submission
+		// ...
+
+		// Store user preference not to show the prompt again
+		localStorage.setItem('showFeedbackPrompt', 'false');
+	}
+	
+	// don't show it yet lol
+	// showFeedbackPrompt();
+</script> -->
+<?php
+
+// don't let people use this yet, still work in progress.
+// require_once UPATH . "/misc/right-click.php";
