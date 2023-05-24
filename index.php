@@ -107,7 +107,7 @@ $num_of_panel_admins = count($userlist);
 						<div class="col">
 							<h6>Opers</h6>
 						</div>
-						<div class="col"><a class="btn btn-primary" href="<?php echo get_config("base_url")."users/?operonly"; ?>">View</a></div>
+						<!-- <div class="col"><a class="btn btn-primary" href="<?php echo get_config("base_url")."users/?operonly"; ?>">View</a></div> -->
 					</div>
 				</div>
 			</div>
@@ -228,7 +228,7 @@ $num_of_panel_admins = count($userlist);
 						<div class="col">
 							<h6>Services Online</h6>
 						</div>
-						<div class="col"> <a class="btn btn-primary" href="<?php echo get_config("base_url")."users/?servicesonly"; ?>">View</a></div>
+						<!-- <div class="col"> <a class="btn btn-primary" href="<?php echo get_config("base_url")."users/?servicesonly"; ?>">View</a></div> -->
 					</div>
 				</div>
 				
