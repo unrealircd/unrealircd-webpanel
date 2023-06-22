@@ -45,7 +45,7 @@ class Plugins
 	static function plugin_exists($name, $version = NULL)
 	{
 		foreach(self::$list as $p)
-			if (!strcasecmp($p->name,$name) && (!$version || ($version >= $p->version)))
+			if (!strcmp($p->name,$name) && (!$version || ($version >= $p->version)))
 				return true;
 
 		return false;

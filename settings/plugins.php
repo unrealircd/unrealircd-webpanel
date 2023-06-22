@@ -6,9 +6,9 @@ require_once "../inc/header.php";
 
 ?>
 
-<h2>Active Plugins</h2>
+<h2>Active Plugins <a class="btn btn-sm btn-primary" href="add-plugin.php">Add New</a></h2>
 <br>
-To load and unload plugins, see the plugins section of your <code>config.php</code><br>
+Your available plugins. 
 <br>
 <table class="container-xxl table table-sm table-responsive caption-top table-striped">
 	<thead class="table-primary">
