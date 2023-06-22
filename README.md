@@ -1,6 +1,6 @@
  ## UnrealIRCd Administration WebPanel
  
-[![Version](https://img.shields.io/badge/UnrealIRCd-6.0.6_or_later-darkgreen.svg)]()
+[![Version](https://img.shields.io/badge/UnrealIRCd-6.1.0_or_later-darkgreen.svg)]()
 [![Version](https://img.shields.io/badge/Version-Beta-blue.svg)]()
 [![Maintained](https://img.shields.io/badge/Maintained-yes-darkgreen.svg)]()
 [![Unreal](https://img.shields.io/badge/PHP-8.0_or_later-darkgreen.svg)](https://unrealircd.org)
