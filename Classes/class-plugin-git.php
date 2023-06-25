@@ -67,7 +67,7 @@ class PluginRepo
 <?php   }
         else
         {   ?>
-            <div style="margin-left:40px;" class="badge rounded-pill badge-danger">Inompatible</div>
+            <div style="margin-left:40px;" class="badge rounded-pill badge-danger">Incompatible</div>
 <?php   }
     }
 
