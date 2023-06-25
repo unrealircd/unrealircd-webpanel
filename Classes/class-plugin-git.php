@@ -92,7 +92,7 @@
                         <div class="media-body">
                             <div style="position:relative;float:inline-end"><?php echo $this->ifInstalledLabel($p->name); ?></div>
                             <h4 class="mb-0 mt-0"><?php echo $p->title ?></h4>
-                            <small>By <a href="<?php echo "mailto:$p->email" ?>" target="_blank"><?php echo $p->author ?></a></small>
+                            <small>By <a href="<?php echo "mailto:$p->contact" ?>" target="_blank"><?php echo $p->author ?></a></small>
                         </div>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                 <!-- Card body -->
                 <div class="card-body">
                     <h6 class="card-title"><?php echo $p->title ?> <small><code>v<?php echo $p->version ?></code></small></h6>
-                    <p class="card-text"><?php echo $p->description ?> </p>
+                    <p class="card-text"><?php echo $p->description ?><br><br>  </p>
                 </div>
 
                 <!-- Card footer -->

@@ -87,11 +87,7 @@ $p = new PluginRepo();
                     {
                         install_button.innerHTML = (inst == "uninstall") ? "Install" : "Uninstall";
                         install_button.classList.replace('btn-secondary', (inst == "uninstall") ? 'btn-primary' : 'btn-outline-danger');
-                        let icomplete = bsModal(((inst == "uninstall") ? "Uninstall" : "Install") + " Plugin", response.success,"<div id=\""+name+"closebtn\" class=\"btn btn-danger\">Close</div>", null, true, true, false);
-                        let closebtn = document.getElementById(name+"closebtn");
-                        closebtn.addEventListener('click', e => {
-                            location.reload();
-                        });
+                        setTimeout(() => { location.reload() }, 500);
                     }
                 }
                 else
@@ -100,11 +96,7 @@ $p = new PluginRepo();
                     {
                         install_button.innerHTML = (inst == "uninstall") ? "Uninstall" : "Install";
                         install_button.classList.replace('btn-secondary', (inst == "uninstall") ? 'btn-outline-danger' : 'btn-primary');
-                        let icomplete = bsModal(((inst == "uninstall") ? "Uninstall" : "Install") + " Plugin", response.error,"", null, false, true);
-                        let closebtn = document.getElementById(name+"closebtn");
-                        closebtn.addEventListener('click', e => {
-                            location.reload();
-                        });
+                        setTimeout(() => { location.reload() }, 500);
                     }
                 }
             }
@@ -127,15 +119,50 @@ $p = new PluginRepo();
                     const modal = bsModal(
                         "<i>Information about " + data.list[i].title + "</i>", // title
                         "<div class=\"" + data.list[i].name + "_screenshots\"><i class=\"fa fa-spinner\" aria-hidden=\"true\"></i></div><div class=\"" + data.list[i].name + "_description\"><i class=\"fa fa-spinner\" aria-hidden=\"true\"></i></div>",
-                        "<div id=\""+modname+"closebtn\" class=\"btn btn-danger\">Close</div>", null, true, true, false
+                        "<div id=\""+modname+"closebtn\" class=\"btn btn-danger\">Close</div>", "lg", true, true, true
                     );
                     let modalclose = document.getElementById(modal);
                     modalclose.addEventListener('click', (e) => {
                         $("#"+modal).modal('hide');
                     });
-                    console.log(modal + '-body');
                     boobs = document.getElementById(modal + '-body');
-                    boobs.innerHTML = data.list[i].description;
+                    boobs.innerHTML = "";
+                    if (data.list[i].screenshot.length)
+                    {
+                        boobs.innerHTML += ` <div style="padding-left: 0px;  padding-right: 0px;">
+                                            <img src="` + (data.list[i].screenshot[0] ?? "") + `" class="screenshot img-fluid" alt="` + data.list[i].screenshot[1] + ` style="max-width: 100%; height:auto">
+                                        </div>`;
+                    }
+                    boobs.innerHTML += "<p class=\"alert alert-primary mt-2\"><i><b>Description:</i></b><br>" + atob(data.list[i].readme.replace(["\n",""],["<br>","<br>"])) + "</p>";
+                    boobs.innerHTML +=  `<div class="alert alert-dark">
+                                        <table class="table">
+                                            <tr>
+                                                    <th scope="row">Title</th>
+                                                    <td>`+data.list[i].title+`</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Description</th>
+                                                    <td>`+data.list[i].description+`</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Version</th>
+                                                    <td>`+data.list[i].version+`</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Author</th>
+                                                    <td>`+data.list[i].author+`</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Min Version Required</th>
+                                                    <td>`+data.list[i].minver+`</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Max Version</th>
+                                                    <td>`+data.list[i].maxver+`</td>
+                                                </tr>
+                                                
+                                            </table></small>
+                                        </div>`;
                 }
             }
         })
