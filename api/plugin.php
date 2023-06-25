@@ -4,7 +4,6 @@ session_start();
 if (!isset($_SESSION['id']))
     die("Access denied");
 require_once('common_api.php');
-
 header("Content-type: application/json; charset=utf-8");
 
 if (!current_user_can(PERMISSION_MANAGE_PLUGINS))
@@ -95,7 +94,8 @@ function install_plugin($name)
 function get_plugin_install_path_from_name($name)
 {
     global $config;
-    foreach($config['third-party-plugins']['data'] as $p)
+    $list = $config['third-party-plugins']['data']->list;
+    foreach($list as $p)
     {
         if (!strcmp($p->name,$name))
             return $p->download_link;

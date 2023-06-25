@@ -72,7 +72,7 @@
         $counter = 0;
 
 
-        foreach($this->data as $p)
+        foreach($this->data->list as $p)
         {
             $installed = in_array($p->name, $config['plugins']) ? true : false;
 

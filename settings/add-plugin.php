@@ -34,7 +34,6 @@ $p = new PluginRepo();
     const ibtns = document.querySelectorAll(".btn-install-plugin");
     ibtns.forEach((ib) => {
         ib.addEventListener('click', (e) => {
-            console.log("Button clicked! " +ib.innerHTML);
             if (ib.innerHTML !== "Install" && ib.innerHTML !== "Uninstall") // some point between, don't do anything
             {}
             else if (ib.innerHTML == "Install") // install button pressed!
@@ -121,13 +120,13 @@ $p = new PluginRepo();
         fetch(BASE_URL + 'api/plugin.php')
         .then(response => response.json()) // Parse the response as JSON
         .then(data => {
-            for (let i = 0; data[i]; i++)
+            for (let i = 0; data.list[i]; i++)
             {
-                if (data[i].name == modname)
+                if (data.list[i].name == modname)
                 {
                     const modal = bsModal(
-                        "<i>Information about " + data[i].title + "</i>", // title
-                        "<div class=\"" + data[i].name + "_screenshots\"><i class=\"fa fa-spinner\" aria-hidden=\"true\"></i></div><div class=\"" + data[i].name + "_description\"><i class=\"fa fa-spinner\" aria-hidden=\"true\"></i></div>",
+                        "<i>Information about " + data.list[i].title + "</i>", // title
+                        "<div class=\"" + data.list[i].name + "_screenshots\"><i class=\"fa fa-spinner\" aria-hidden=\"true\"></i></div><div class=\"" + data.list[i].name + "_description\"><i class=\"fa fa-spinner\" aria-hidden=\"true\"></i></div>",
                         "<div id=\""+modname+"closebtn\" class=\"btn btn-danger\">Close</div>", null, true, true, false
                     );
                     let modalclose = document.getElementById(modal);
@@ -136,7 +135,7 @@ $p = new PluginRepo();
                     });
                     console.log(modal + '-body');
                     boobs = document.getElementById(modal + '-body');
-                    boobs.innerHTML = data[i].description;
+                    boobs.innerHTML = data.list[i].description;
                 }
             }
         })
