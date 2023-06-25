@@ -119,7 +119,7 @@ $p = new PluginRepo();
                     const modal = bsModal(
                         "<i>Information about " + data.list[i].title + "</i>", // title
                         "<div class=\"" + data.list[i].name + "_screenshots\"><i class=\"fa fa-spinner\" aria-hidden=\"true\"></i></div><div class=\"" + data.list[i].name + "_description\"><i class=\"fa fa-spinner\" aria-hidden=\"true\"></i></div>",
-                        "<div id=\""+modname+"closebtn\" class=\"btn btn-danger\">Close</div>", "lg", true, true, true
+                        "<div id=\""+modname+"closebtn\" class=\"btn btn-danger\">Close</div>", null, true, true, true
                     );
                     let modalclose = document.getElementById(modal);
                     modalclose.addEventListener('click', (e) => {
