@@ -1,62 +1,75 @@
 <?php
 	define('DEFAULT_PLUGINS_DIR', 'https://api.dalek.services/plugins.list');
 	
-	class PluginRepo
-	{
-	    public $plugins ;
-	    public $data;
-	    public $err;
-	    function __construct($url = DEFAULT_PLUGINS_DIR)
-	    {
-            global $config;
-            if (!isset($config['third-party-plugins']))
-            {
-                $config['third-party-plugins']['data'] = NULL;
-                $config['third-party-plugins']['timestamp'] = 0;
-            }
-            if (time() - $config['third-party-plugins']['timestamp'] > 200) // Cache for 3.333 minutes lol
-            {
-                // come simba it is taem
-                $curl = curl_init($url);
-	
-                // Set the options
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);  // Return the response instead of printing it
-                curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);  // Set the content type to JSON
-                curl_setopt($curl, CURLOPT_USERAGENT, "UnrealIRCd Admin Panel"); // This is Secret Agent UnrealIRCd Admin Panel reporting for doody
-                // Execute the request
-                $response = curl_exec($curl);
-        
-                // Check for errors
-                if ($response === false)
-                    $this->err = curl_error($curl);
-                else
-                {
-                    $this->data = json_decode($response, false);
-                    $config['third-party-plugins']['data'] = $this->data;
-                    $config['third-party-plugins']['timestamp'] = time();
-                    write_config('third-party-plugins');
-                }
-            }
-            else
-                $this->data = $config['third-party-plugins']['data'];
-	        
-	    }
-
-
-
-        public function ifInstalledLabel($name, $installed = false)
+class PluginRepo
+{
+    public $plugins ;
+    public $data;
+    public $err;
+    function __construct($url = DEFAULT_PLUGINS_DIR)
+    {
+        global $config;
+        if (!isset($config['third-party-plugins']))
         {
-            if ($installed)
-            {   ?>
-                <div style="margin-left:40px;" class="badge rounded-pill badge-success">✔ Installed</div>
-    <?php   }
-            else if (Plugins::plugin_exists($name))
+            $config['third-party-plugins']['data'] = NULL;
+            $config['third-party-plugins']['timestamp'] = 0;
+        }
+        if (time() - $config['third-party-plugins']['timestamp'] > 200) // Cache for 3.333 minutes lol
+        {
+            // come simba it is taem
+            $curl = curl_init($url);
+
+            // Set the options
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);  // Return the response instead of printing it
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);  // Set the content type to JSON
+            curl_setopt($curl, CURLOPT_USERAGENT, "UnrealIRCd Admin Panel"); // This is Secret Agent UnrealIRCd Admin Panel reporting for doody
+            // Execute the request
+            $response = curl_exec($curl);
+    
+            // Check for errors
+            if ($response === false)
+                $this->err = curl_error($curl);
+            else
             {
-                ?>
-                    <div style="margin-left:40px;" class="badge rounded-pill badge-success">✔ Installed</div>
-                <?php
+                $this->data = json_decode($response, false);
+                $config['third-party-plugins']['data'] = $this->data;
+                $config['third-party-plugins']['timestamp'] = time();
+                write_config('third-party-plugins');
             }
         }
+        else
+            $this->data = $config['third-party-plugins']['data'];
+        
+    }
+
+
+
+    public function ifInstalledLabel($name, $installed = false)
+    {
+        if ($installed)
+        {   ?>
+            <div style="margin-left:40px;" class="badge rounded-pill badge-success">✔ Installed</div>
+<?php   }
+        else if (Plugins::plugin_exists($name))
+        {
+            ?>
+                <div style="margin-left:40px;" class="badge rounded-pill badge-success">✔ Installed</div>
+            <?php
+        }
+    }
+    public function ifCompatible($plugin)
+    {
+        $tok = split(WEBPANEL_VERSION,"-");
+        $wpversion = $tok[0];
+        if ($plugin->minver <= $wpversion)
+        {   ?>
+            <div style="margin-left:40px;" class="badge rounded-pill badge-info">Compatible</div>
+<?php   }
+        else
+        {   ?>
+            <div style="margin-left:40px;" class="badge rounded-pill badge-danger">Inompatible</div>
+<?php   }
+    }
 
 
 
@@ -65,6 +78,7 @@
         global $config;
         if ($this->err)
             die("Could not fetch list.\n");
+
         global $config;
             ?>
                <div class="row">
@@ -75,7 +89,6 @@
         foreach($this->data->list as $p)
         {
             $installed = in_array($p->name, $config['plugins']) ? true : false;
-
             if (is_string($p))
                 continue;
             
@@ -90,7 +103,7 @@
                     <div class="media">
                         <img class="align-self-start mr-3" src="<?php echo $p->icon ?>" height="50" width="55">
                         <div class="media-body">
-                            <div style="position:relative;float:inline-end"><?php echo $this->ifInstalledLabel($p->name); ?></div>
+                            <div style="position:relative;float:inline-end"><?php echo $this->ifInstalledLabel($p->name); $this->ifCompatible($p) ?></div>
                             <h4 class="mb-0 mt-0"><?php echo $p->title ?></h4>
                             <small>By <a href="<?php echo "mailto:$p->contact" ?>" target="_blank"><?php echo $p->author ?></a></small>
                         </div>
