@@ -118,7 +118,7 @@ $p = new PluginRepo();
 
     function create_info_modal(modname)
     {
-        fetch('https://api.dalek.services/plugins.list')
+        fetch(BASE_URL + 'api/plugin.php')
         .then(response => response.json()) // Parse the response as JSON
         .then(data => {
             for (let i = 0; data[i]; i++)
