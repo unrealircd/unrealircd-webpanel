@@ -27,6 +27,8 @@ define('PERMISSION_SPAMFILTER_ADD', 'sf_add');
 define('PERMISSION_SPAMFILTER_DEL', 'sf_del'); 
 /** Can rehash servers */
 define('PERMISSION_REHASH', 'rhs');
+/** Can install and uninstall plugins */
+define('PERMISSION_MANAGE_PLUGINS', 'mng_plg');
 /**
  * PanelUser
  * This is the User class for the SQL_Auth plugin
@@ -340,6 +342,7 @@ function get_panel_user_permission_list()
 {
 	$list = [
 		"Can add/delete/edit Admin Panel users" => PERMISSION_MANAGE_USERS,
+		"Can add/delete/manage plugins" => PERMISSION_MANAGE_PLUGINS,
 		"Can ban/kill IRC users" => PERMISSION_BAN_USERS,
 		"Can change properties of a user, i.e. vhost, modes and more" => PERMISSION_EDIT_USER,
 		"Can change properties of a channel, i.e. topic, modes and more" => PERMISSION_EDIT_CHANNEL,
@@ -352,6 +355,7 @@ function get_panel_user_permission_list()
 		"Can remove server ban exceptions" => PERMISSION_BAN_EXCEPTION_DEL,
 		"Can add Spamfilter entries" => PERMISSION_SPAMFILTER_ADD,
 		"Can remove Spamfilter entries" => PERMISSION_SPAMFILTER_DEL
+
 	];
 	Hook::run(HOOKTYPE_USER_PERMISSION_LIST, $list); // so plugin writers can add their own permissions
 	return $list;
