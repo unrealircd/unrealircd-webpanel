@@ -104,10 +104,8 @@
                 </div>
 
                 <!-- Card footer -->
-                <div class="card-footer d-flex justify-content-between align-items-center">
-                    <ul class="list-unstyled">
-                        <li class="list-item"><i><a href="<?php echo "mailto:".$p->contact ?? "#" ?>">By <?php echo $p->author ?></i></a></li>
-                    </ul>
+                <div class="card-footer d-flex justify-content-between">
+                    <div id="justALonelyEmptyDivCryEmoji"></div>
                     <div>
                         <div id="<?php echo $p->name ?>" class="more-info btn btn-info">More Info</div>
                         <div id="<?php echo $p->name ?>install" class="btn-install-plugin btn btn-primary">Install</div>
