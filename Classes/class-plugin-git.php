@@ -67,7 +67,7 @@ class PluginRepo
 <?php   }
         else
         {   ?>
-            <div style="margin-left:40px;" class="badge rounded-pill badge-danger">Inompatible</div>
+            <div style="margin-left:40px;" class="badge rounded-pill badge-danger">Incompatible</div>
 <?php   }
     }
 
@@ -79,7 +79,6 @@ class PluginRepo
         if ($this->err)
             die("Could not fetch list.\n");
 
-        global $config;
             ?>
                <div class="row">
             <?php     
@@ -88,6 +87,11 @@ class PluginRepo
 
         foreach($this->data->list as $p)
         {
+            $tok = split(WEBPANEL_VERSION,"-");
+            $upgradeRequired = false;
+            $wpversion = $tok[0];
+            if ($p->minver > $wpversion)
+                $upgradeRequired = true;
             $installed = in_array($p->name, $config['plugins']) ? true : false;
             if (is_string($p))
                 continue;
@@ -121,7 +125,13 @@ class PluginRepo
                     <div id="justALonelyEmptyDivCryEmoji"></div>
                     <div>
                         <div id="<?php echo $p->name ?>" class="more-info btn btn-info">More Info</div>
-                        <div id="<?php echo $p->name ?>install" class="btn-install-plugin btn btn-primary">Install</div>
+                        <?php if ($upgradeRequired){
+                            ?>
+                                <div id="<?php echo $p->name ?>coming-soon" class="btn-coming-soon btn btn-dark disabled">Panel Upgrade Required</div>
+                            <?php
+                        }
+                        ?>
+                        <div id="<?php echo $p->name ?>install" <?php if ($upgradeRequired) echo 'style="display:none" '; ?> class="btn-install-plugin btn btn-primary">Install</div>
                     </div>
                 </div>
             </div>
