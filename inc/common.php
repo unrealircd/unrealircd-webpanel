@@ -491,7 +491,6 @@ $pages = [
 		"IP WHOIS" => ["script" => "tools/ip-whois.php","no_irc_server_required"=>true],
 	],
 	"Settings" => [
-		"Plugins" => ["script" => "settings/plugins.php","no_irc_server_required"=>true],
 		"RPC Servers" => ["script" => "settings/rpc-servers.php","no_irc_server_required"=>true],
 	],
 	
@@ -519,6 +518,10 @@ if (!panel_start_session())
 			"script"=>"settings/user-role-edit.php",
 			"no_irc_server_required"=>true
 		];
+	}
+	if (current_user_can(PERMISSION_MANAGE_PLUGINS))
+	{
+		$pages["Settings"]["Plugins"] = ["script" => "settings/plugins.php"];
 	}
 	$user = unreal_get_current_user();
 	if ($user)
