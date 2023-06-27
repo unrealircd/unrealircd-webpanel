@@ -47,7 +47,7 @@ $num_of_panel_admins = count($userlist);
 				<div class="card-header bg-success text-white">
 					<div class="row">
 						<div class="col">
-							<i class="fa fa-users fa-3x"></i><span class="position-absolute badge rounded-pill badge-warning">
+							<i aria-hidden="true" class="fa fa-users fa-3x"></i><span class="position-absolute badge rounded-pill badge-warning">
 							<?php echo "Record: "; ?>
 						</span>
 						</div>
@@ -73,7 +73,7 @@ $num_of_panel_admins = count($userlist);
 				<div class="card-header bg-primary text-white">
 					<div class="row">
 						<div class="col">
-							<i class="fa fa-hashtag fa-3x"></i>
+							<i aria-hidden="true" class="fa fa-hashtag fa-3x"></i>
 						</div>
 						<div class="col">
 							<h3 id="stats_channel_total" class="display-4"></h3>
@@ -95,7 +95,7 @@ $num_of_panel_admins = count($userlist);
 				<div class="card-header bg-warning">
 					<div class="row">
 						<div class="col">
-							<i class="fa fa-shield-halved fa-3x"></i>
+							<i aria-hidden="true" class="fa fa-shield-halved fa-3x"></i>
 						</div>
 						<div class="col">
 							<h3 id="stats_oper_total" class="display-4"></h3>
@@ -118,7 +118,7 @@ $num_of_panel_admins = count($userlist);
 				<div class="card-header bg-secondary text-white">
 					<div class="row">
 						<div class="col">
-							<i class="fa fa-network-wired fa-3x"></i>
+							<i aria-hidden="true" class="fa fa-network-wired fa-3x"></i>
 						</div>
 						<div class="col">
 							<h3 id="stats_server_total" class="display-4"></h3>
@@ -145,7 +145,7 @@ $num_of_panel_admins = count($userlist);
 				<div class="card-header bg-danger text-white">
 					<div class="row">
 						<div class="col">
-							<i class="fa fa-ban fa-3x"></i>
+							<i aria-hidden="true" class="fa fa-ban fa-3x"></i>
 						</div>
 						<div class="col">
 							<h3 id="num_server_bans" class="display-4"></h3>
@@ -167,7 +167,7 @@ $num_of_panel_admins = count($userlist);
 				<div class="card-header bg-secondary text-white">
 					<div class="row">
 						<div class="col">
-							<i class="fa fa-filter fa-3x"></i>
+							<i aria-hidden="true" class="fa fa-filter fa-3x"></i>
 						</div>
 						<div class="col">
 							<h3 id="num_spamfilter_entries" class="display-4"></h3>
@@ -189,7 +189,7 @@ $num_of_panel_admins = count($userlist);
 				<div class="card-header bg-primary text-white">
 					<div class="row">
 						<div class="col">
-							<i class="fa fa-door-open fa-3x"></i>
+							<i aria-hidden="true" class="fa fa-door-open fa-3x"></i>
 						</div>
 						<div class="col">
 							<h3 id="num_ban_exceptions" class="display-4"></h3>
@@ -215,7 +215,7 @@ $num_of_panel_admins = count($userlist);
 				<div class="card-header <?php echo $bg; ?> text-white">
 					<div class="row">
 						<div class="col">
-							<i class="fa fa-database fa-3x"> </i>
+							<i aria-hidden="true" class="fa fa-database fa-3x"> </i>
 						</div>
 						<div class="col">
 						<span data-toggle="tooltip" title="" style="border-bottom: 1px dotted #000000">
@@ -304,12 +304,12 @@ $num_of_panel_admins = count($userlist);
 <div class="container card-container card-container" style="margin-left:40px;margin-top:10px">
 
 			<div class="row">
-				<div class="col-sm-3">
+			<div class="col-sm-3">
 					<div class="card text-center">
 						<div class="card-header bg-success text-white">
 							<div class="row">
 								<div class="col">
-									<i class="fa fa-lock-open fa-3x"></i>
+									<i aria-hidden="true" class="fa fa-lock-open fa-3x"></i>
 								</div>
 								<div class="col">
 									<h3 class="display-4"><?php echo $num_of_panel_admins; ?></h3>
@@ -322,6 +322,28 @@ $num_of_panel_admins = count($userlist);
 									<h6>Panel Accounts</h6>
 								</div>
 								<div class="col"> <a class="btn btn-primary" href="<?php echo get_config("base_url"); ?>settings">View</a></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="card text-center">
+						<div class="card-header bg-light">
+							<div class="row">
+								<div class="col">
+									<i aria-hidden="true" class="fa fa-plug fa-3x"></i>
+								</div>
+								<div class="col">
+									<h3 class="display-4"><?php echo count(Plugins::$list); ?></h3>
+								</div>
+							</div>
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="col">
+									<h6>Plugins</h6>
+								</div>
+								<div class="col"> <a class="btn btn-primary" href="<?php echo get_config("base_url"); ?>settings/plugins.php">View</a></div>
 							</div>
 						</div>
 					</div>
