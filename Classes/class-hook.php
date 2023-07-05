@@ -25,12 +25,15 @@ define('HOOKTYPE_NAVBAR', 100);
  * This doesn't receive anything, however you must still specify an
  * parameter for your hook function, because it's referring to memory. Sorry =]
  * 
- * Currently this is only used by the "sql_db" plugin by Valware in order to
- * redirect users immediately to the login page.
- * 
  * Putting HTML in this hook is not a good idea.
  */
 define('HOOKTYPE_PRE_HEADER', 101);
+
+/** HOOKTYPE_HEADER
+ * 
+ * This is run after/during the header is sent. You can call your global scripts, global css or whatnot from here.
+ */
+define('HOOKTYPE_HEADER', 119);
 
 /** HOOKTYPE_PRE_OVERVIEW_CARD
  * 
@@ -138,6 +141,9 @@ define('HOOKTYPE_EDIT_USER', 117);
 
 define('HOOKTYPE_RIGHTCLICK_MENU', 118);
 
+/* 119 = HOOKTYPE_HEADER (See under HOOKTYPE_PRE_HEADER) */
+
+/** Send out a request to ask if there are any plugins which provide authentication */
 define('HOOKTYPE_AUTH_MOD', 200);
 
 /** An upgrade has been detected.

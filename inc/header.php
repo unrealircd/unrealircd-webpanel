@@ -109,6 +109,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 		color: black;
 	}
 </style>
+<?php $a = []; Hook::run(HOOKTYPE_HEADER, $a); ?>
 <nav id="sidebarlol" style="left:0;overflow:auto" class="w3-sidebar navbar-expand-md bg-dark padding-top me-5 ma-5">
 <div class="list-group">
 	<div class="badge badge-secondary rounded-pill">Main Menu</div>
