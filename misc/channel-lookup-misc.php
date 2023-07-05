@@ -397,16 +397,30 @@ function _do_chan_item_delete($chan, string $type, array $list, array &$errors) 
 
 	foreach($list as $l)
 	{
+		// check if the string needs therapy
+		if ((strlen($n) + 1) + (strlen($str) + strlen($l)) > 150)
+		{
+			// send what we've got already and prepare for the next lot
+			if (!$rpc->channel()->set_mode($chan->name, htmlspecialchars("-$n"), htmlspecialchars($str)))
+				$errors[] = $rpc->error . " ($rpc->errno)";
+
+			// prepare for the next set
+			$n = "";
+			$str = "";
+		} 
 		$n .= $char;
 		$str .= " ".$l;
 	}
+	// if multiple, this will be the last one so we return here
 	if ($rpc->channel()->set_mode($chan->name, htmlspecialchars("-$n"), htmlspecialchars($str)))
 	{
+		if (!empty($errors))
+			Message::Fail("One or more errors occurred:", $errors);
 		Message::Success("Deleted successfully");
 		return true;
 	}
 	$errors[] = $rpc->error . " ($rpc->errno)";
-		Message::Fail("An error occurred: $rpc->error");
+		Message::Fail("An error occurred:", $errors);
 	return false;
 }
 
