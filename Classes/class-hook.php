@@ -143,6 +143,8 @@ define('HOOKTYPE_RIGHTCLICK_MENU', 118);
 
 /* 119 = HOOKTYPE_HEADER (See under HOOKTYPE_PRE_HEADER) */
 
+define('HOOKTYPE_GENERAL_SETTINGS', 120);
+
 /** Send out a request to ask if there are any plugins which provide authentication */
 define('HOOKTYPE_AUTH_MOD', 200);
 

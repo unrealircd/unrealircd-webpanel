@@ -491,11 +491,13 @@ $pages = [
 		"IP WHOIS" => ["script" => "tools/ip-whois.php","no_irc_server_required"=>true],
 	],
 	"Settings" => [
+		"General Settings" => ["script" => "settings/general.php"],
 		"RPC Servers" => ["script" => "settings/rpc-servers.php","no_irc_server_required"=>true],
 	],
 	
 	"News" => ["script" => "news.php","no_irc_server_required"=>true],
 ];
+
 
 if (!panel_start_session())
 {
