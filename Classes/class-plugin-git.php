@@ -1,5 +1,5 @@
 <?php
-	define('DEFAULT_PLUGINS_DIR', 'https://api.dalek.services/plugins.list');
+	define('DEFAULT_PLUGINS_DIR', 'https://api.valware.uk/plugins.list');
 	
 class PluginRepo
 {
