@@ -71,111 +71,12 @@ $p = new PluginRepo();
         btn.innerHTML = "Uninstall";
     });
 
-    function requestInstall(name, uninstall = false)
-    {
-        let inst = (uninstall) ? "uninstall" : "install";
-        var xhr = new XMLHttpRequest();
 
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                var response = JSON.parse(xhr.responseText);
-                console.log(response.success);
-                let install_button = document.getElementById(name+'install');
-                if (response.success !== undefined)
-                {
-                    if (install_button)
-                    {
-                        install_button.innerHTML = (inst == "uninstall") ? "Install" : "Uninstall";
-                        install_button.classList.replace('btn-secondary', (inst == "uninstall") ? 'btn-primary' : 'btn-outline-danger');
-                        setTimeout(() => { location.reload() }, 500);
-                    }
-                }
-                else
-                {
-                    if (install_button)
-                    {
-                        install_button.innerHTML = (inst == "uninstall") ? "Uninstall" : "Install";
-                        install_button.classList.replace('btn-secondary', (inst == "uninstall") ? 'btn-outline-danger' : 'btn-primary');
-                        setTimeout(() => { location.reload() }, 500);
-                    }
-                }
-            }
-        };
-
-        xhr.open('GET', BASE_URL + 'api/plugin.php?'+inst+'=' + name, true);
-        xhr.send();
-        return true;
-    }
-
-    function create_info_modal(modname)
-    {
-        fetch(BASE_URL + 'api/plugin.php')
-        .then(response => response.json()) // Parse the response as JSON
-        .then(data => {
-            for (let i = 0; data.list[i]; i++)
-            {
-                if (data.list[i].name == modname)
-                {
-                    const modal = bsModal(
-                        "<i>Information about " + data.list[i].title + "</i>", // title
-                        "<div class=\"" + data.list[i].name + "_screenshots\"><i class=\"fa fa-spinner\" aria-hidden=\"true\"></i></div><div class=\"" + data.list[i].name + "_description\"><i class=\"fa fa-spinner\" aria-hidden=\"true\"></i></div>",
-                        "<div id=\""+modname+"closebtn\" class=\"btn btn-danger\">Close</div>", null, true, true, true
-                    );
-                    let modalclose = document.getElementById(modal);
-                    modalclose.addEventListener('click', (e) => {
-                        $("#"+modal).modal('hide');
-                    });
-                    boobs = document.getElementById(modal + '-body');
-                    boobs.innerHTML = "";
-                    if (data.list[i].screenshot.length)
-                    {
-                        boobs.innerHTML += ` <div style="padding-left: 0px;  padding-right: 0px;">
-                                            <img src="` + (data.list[i].screenshot[0] ?? "") + `" class="screenshot img-fluid" alt="` + data.list[i].screenshot[1] + ` style="max-width: 100%; height:auto">
-                                        </div>`;
-                    }
-                    boobs.innerHTML += "<p class=\"alert alert-primary mt-2\"><i><b>Description:</i></b><br>" + atob(data.list[i].readme.replace(["\n",""],["<br>","<br>"])) + "</p>";
-                    boobs.innerHTML +=  `<div class="alert alert-dark">
-                                        <table class="table">
-                                            <tr>
-                                                    <th scope="row">Title</th>
-                                                    <td>`+data.list[i].title+`</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Description</th>
-                                                    <td>`+data.list[i].description+`</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Version</th>
-                                                    <td>`+data.list[i].version+`</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Author</th>
-                                                    <td>`+data.list[i].author+`</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Min Version Required</th>
-                                                    <td>`+data.list[i].minver+`</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Max Version</th>
-                                                    <td>`+data.list[i].maxver+`</td>
-                                                </tr>
-                                                
-                                            </table></small>
-                                        </div>`;
-                }
-            }
-        })
-        .catch(error => {
-            // Handle any errors that occur during the request
-            console.error('Error:', error);
-        });
-    }
 
     const infoButtons = document.querySelectorAll('.more-info');
     infoButtons.forEach((el) => {
         el.addEventListener('click', (event) => {
-            create_info_modal(el.id);
+            create_plugin_info_modal(el.id);
             
         });
     });
