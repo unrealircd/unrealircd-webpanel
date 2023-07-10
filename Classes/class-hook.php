@@ -145,6 +145,11 @@ define('HOOKTYPE_RIGHTCLICK_MENU', 118);
 
 define('HOOKTYPE_GENERAL_SETTINGS', 120);
 
+/* Array passed is $_POST[] */
+define('HOOKTYPE_GENERAL_SETTINGS_POST', 121);
+
+
+
 /** Send out a request to ask if there are any plugins which provide authentication */
 define('HOOKTYPE_AUTH_MOD', 200);
 
