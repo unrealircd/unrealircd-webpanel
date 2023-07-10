@@ -28,7 +28,6 @@ Hook::run(HOOKTYPE_PRE_OVERVIEW_CARD, $array_of_stats);
  * by reference can add/update the stats for display here.
 */
 $stats = (object) $array_of_stats;
-
 $userlist = [];
 Hook::run(HOOKTYPE_GET_USER_LIST, $userlist);
 $num_of_panel_admins = count($userlist);
@@ -47,7 +46,7 @@ $num_of_panel_admins = count($userlist);
 				<div class="card-header bg-success text-white">
 					<div class="row">
 						<div class="col">
-							<i aria-hidden="true" class="fa fa-users fa-3x"></i><span class="position-absolute badge rounded-pill badge-warning">
+							<i aria-hidden="true" class="fa fa-users fa-3x"></i><span id="userRecord" class="position-absolute badge rounded-pill badge-warning">
 							<?php echo "Record: "; ?>
 						</span>
 						</div>
@@ -251,6 +250,8 @@ $num_of_panel_admins = count($userlist);
 			return;
 		}
 		stats_tick = Date.now()
+		console.log(data);
+		document.getElementById("userRecord").innerHTML = "Record: "+data.user.record;
 		document.getElementById("live_stats").style.visibility = '';
 		document.getElementById("stats_user_total").innerHTML = data.user.total;
 		document.getElementById("stats_channel_total").innerHTML = data.channel.total;
