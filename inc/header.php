@@ -142,6 +142,8 @@ function show_page_item($name, $page, $nestlevel, $small = false)
 		$url = $page["script"];
 		if (str_ends_with($url, "/index.php"))
 			$url = str_replace('/index.php', '', $url);
+                if (!str_ends_with($url, ".php") && !empty($url))
+                        $url = $url.'/';
 		echo "<a href=\"".get_config("base_url").$url."\" style=\"text-decoration: none\">\n";
 	}
 	echo "<div class=\"big-page-item d-flex justify-content-between align-items-center $class\" style=\"$style\">$name
