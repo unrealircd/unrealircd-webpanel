@@ -17,4 +17,4 @@ define('DEFAULT_CHAN_DETAIL_QUICK_BAN_REASON', "You have been removed from this 
 /**
  * The version of our webpanel
  */
-define('WEBPANEL_VERSION', "0.9-git");
+define('WEBPANEL_VERSION', "0.9");
