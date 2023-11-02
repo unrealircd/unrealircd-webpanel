@@ -104,7 +104,7 @@ Add Ban</div></p></table>
 <!-- Add/edit ban -->
 	<div class="modal fade" id="ban_add" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
-		<form method="post">
+		<form id="ban_add_form" method="post">
 			<input name="edit_existing" type="hidden" id="edit_existing" value="">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -114,7 +114,7 @@ Add Ban</div></p></table>
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label for="ban_host">IP / Host</label>
+						<label for="ban_host" id="iphost_label">IP / Host</label>
 						<input name="ban_host" type="text" class="form-control" id="ban_host" aria-describedby="ban_host_help" value="" required>
 						<small id="ban_host_help" class="form-text text-muted">IP or host on which the ban is applied.</small>
 					</div>
@@ -198,6 +198,18 @@ Add Ban</div></p></table>
 	</div></form></div></div>
 
 <script>
+let form = document.getElementById("ban_add_form");
+let submitban =document.getElementById("do_add_ban");
+form.addEventListener("submit", (e) => {
+	let bantype = document.getElementById("ban_type");
+	let banhost = document.getElementById("ban_host");
+	if ((bantype.value === "zline" || bantype.value === "gzline") && banhost.value.includes("@"))
+	{
+		e.preventDefault();
+		document.getElementById("iphost_label").innerHTML = `IP / Host <span class="card alert-danger" style="color:red">Value for G/Z-Lines MUST be a host or IP.</span>`;
+	}
+});
+
 let data_list_table = null;
 
 $(document).ready( function () {
@@ -304,7 +316,7 @@ $(document).ready( function () {
 		$('#ban_add').modal('show');
 	}
 
-
+	
 </script>
 
 <?php require_once '../inc/footer.php'; ?>
