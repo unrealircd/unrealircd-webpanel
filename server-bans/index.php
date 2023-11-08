@@ -206,7 +206,7 @@ form.addEventListener("submit", (e) => {
 	if ((bantype.value === "zline" || bantype.value === "gzline") && banhost.value.includes("@"))
 	{
 		e.preventDefault();
-		document.getElementById("iphost_label").innerHTML = `IP / Host <span class="card alert-danger" style="color:red">Value for G/Z-Lines MUST be a host or IP.</span>`;
+		document.getElementById("iphost_label").innerHTML = `IP / Host <span class="card alert-danger" style="color:red">Value for (G)Z-Lines MUST be a host or IP.</span>`;
 	}
 });
 
