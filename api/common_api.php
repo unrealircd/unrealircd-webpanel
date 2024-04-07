@@ -57,7 +57,8 @@ function flush_completely()
 	}
 }
 
-flush_completely();
+if (!defined('NO_EVENT_STREAM_HEADER'))
+	flush_completely();
 
 /* Send server-sent events (SSE) message */
 function send_sse($json)
