@@ -23,6 +23,7 @@ if (str_contains($_SERVER['SERVER_SOFTWARE'], 'Apache') &&
 // Only now make the connection (this can take a short while)
 include "../inc/connection.php";
 
+header("Content-type: application/json; charset=utf-8");
 // Server Side Events
 if (!defined('NO_EVENT_STREAM_HEADER'))
 	header('Content-Type: text/event-stream');

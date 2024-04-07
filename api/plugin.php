@@ -4,7 +4,6 @@ session_start();
 if (!isset($_SESSION['id']))
     die("Access denied");
 require_once('common_api.php');
-header("Content-type: application/json; charset=utf-8");
 
 if (!current_user_can(PERMISSION_MANAGE_PLUGINS))
     die(json_encode(['error' => "Access denied"]));
