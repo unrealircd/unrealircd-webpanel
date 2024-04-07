@@ -56,7 +56,7 @@ function flush_completely()
 	}
 }
 
-flush_completely();
+//flush_completely();
 
 /* Send server-sent events (SSE) message */
 function send_sse($json)
