@@ -90,11 +90,11 @@ Click on a username to view more information.
 		<div class="modal-body">
 			<div class="input-group mb-3">
 				<label for="name_add"  name="user_add" id="user_add">Username
-					<input style="width: 170%;" name="user_add" id="user_add" class="form-control curvy" type="text"></label>
+					<input name="user_add" id="user_add" class="form-control curvy" type="text"></label>
 			</div>
 			<div class="input-group mb-3">
 				<label for="password" id="user_add">Password
-					<input style="width: 170%;" name="password" id="password" class="form-control curvy" type="password"></label>
+					<input name="password" id="password" class="form-control curvy" type="password"></label>
 			</div>
 			<div class="input-group mb-3">
 				<label for="user_role" id="user_add">Role
@@ -107,19 +107,19 @@ Click on a username to view more information.
 			</div>
 			<div class="input-group mb-3">
 				<label for="user_email" id="user_add">Email
-					<input style="width: 170%;" name="user_email" id="user_email" class="form-control curvy" type="text"></label>
+					<input name="user_email" id="user_email" class="form-control curvy" type="text"></label>
 			</div>
 			<div class="input-group mb-3">
 				<label for="add_first_name" id="user_add">First Name
-					<input style="width: 170%;" name="add_first_name" id="add_first_name" class="form-control curvy" type="text"></label>
+					<input name="add_first_name" id="add_first_name" class="form-control curvy" type="text"></label>
 			</div>
 			<div class="input-group mb-3">
 				<label for="password" id="user_add">Last Name
-					<input style="width: 170%;" name="add_last_name" id="add_last_name" class="form-control curvy" type="text"></label>
+					<input name="add_last_name" id="add_last_name" class="form-control curvy" type="text"></label>
 			</div>
 			<div class="input-group mb-3">
 				<label for="password" id="user_add">Info /Bio
-					<textarea style="width: 170%;" name="user_bio" class="form-control curvy" aria-label="With textarea"></textarea></label>
+					<textarea name="user_bio" class="form-control curvy" aria-label="With textarea"></textarea></label>
 			</div>
 		</div>
 						
