@@ -166,7 +166,7 @@ $num_of_panel_admins = count($userlist);
 
 	<div class="row">
 		<div class="col-sm mb-3">
-			<a class="card frosted-glass-danger text-center" href="<?php echo get_config("base_url"); ?>server_bans/">
+			<a class="card frosted-glass-danger text-center" href="<?php echo get_config("base_url"); ?>server-bans/">
 				<div class="card-body text-white">
 					<div class="row text-center">
 						<div class="col">
