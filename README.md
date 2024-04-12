@@ -11,13 +11,13 @@ You can easily add and remove server bans, spamfilters and do other administrati
 all from the convenience of your web browser.
 
 ## Example Overview from Desktop
- <img src="https://i.ibb.co/7SdFZnk/Screenshot-from-2023-01-14-07-26-21.png">
+ <img src="https://i.ibb.co/5cNT3C2/Screenshot-from-2024-04-11-14-26-08.png">
  <img src="https://i.ibb.co/6vQ6wg7/spamfilter.png">
 
 ## Example Overview from Mobile
 <div class="row">
-<img src="https://i.ibb.co/KGLdB43/Screenshot-20230123-233804-Chrome.jpg" height="30%" width="30%">
-<img src="https://i.ibb.co/tB980kd/Screenshot-20230124-000204-Chrome.jpg" height="30%" width="30%">
+<img src="https://i.ibb.co/MZrLCMv/Screenshot-from-2024-04-12-00-51-49.png" height="30%" width="30%">
+<img src="https://i.ibb.co/JtM9rY9/Screenshot-from-2024-04-12-00-52-09.png" height="30%" width="30%">
 </div>
 
 ## Installation ##
