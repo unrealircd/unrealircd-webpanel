@@ -1,5 +1,5 @@
 <?php
-require_once "../inc/connection.php";
+require_once "inc/connection.php";
 
 /**
  * Does a complete checkup of the network.

@@ -1,6 +1,5 @@
 <?php
 require_once "../inc/common.php";
-require_once "../inc/connection.php";
 require_once "../inc/header.php";
 require_once "../Classes/class-checkup.php";
 
