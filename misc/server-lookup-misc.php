@@ -342,7 +342,7 @@ function generate_html_extserverinfo($server)
                 <td colspan="2"><code><?php echo htmlspecialchars($server->ip); ?></code></td>
             </tr><tr>
                 <th>Boot time</th>
-                <td colspan="2"><code><?php echo htmlspecialchars($server->server->boot_time); ?></code></td>
+                <td colspan="2"><code><?php echo (($server->server->boot_time) ? htmlspecialchars($server->server->boot_time) : "Not available"); ?></code></td>
             </tr><tr>
                 <th>U-Lined</th>
                 <td colspan="2"><?php echo ($server->server->ulined) ? "<span class=\"badge rounded-pill badge-success\">Yes</span>" : "<span class=\"badge rounded-pill badge-danger\">No</span>"; ?></td>
