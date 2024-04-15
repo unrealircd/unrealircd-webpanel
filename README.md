@@ -11,7 +11,7 @@ You can easily add and remove server bans, spamfilters and do other administrati
 all from the convenience of your web browser.
 
 ## Example Overview from Desktop
- <img src="https://i.ibb.co/5cNT3C2/Screenshot-from-2024-04-11-14-26-08.png">
+ <img src="https://i.ibb.co/z64L9Fh/Screenshot-2024-04-14-at-20-58-07-Unreal-IRCd-Panel.png">
  <img src="https://i.ibb.co/6vQ6wg7/spamfilter.png">
 
 ## Example Overview from Mobile
