@@ -351,7 +351,7 @@ function generate_html_extserverinfo($server)
                 <td colspan="2"><code><?php echo (($server->server->boot_time) ? htmlspecialchars($server->server->boot_time) : "Not available"); ?></code></td>
             </tr><tr>
                 <th>U-Lined</th>
-                <td colspan="2"><?php echo ($server->server->ulined) ? "<span class=\"badge rounded-pill badge-success\">Yes</span>" : "<span class=\"badge rounded-pill badge-danger\">No</span>"; ?></td>
+                <td colspan="2"><?php echo (isset($server->server->ulined) && $server->server->ulined) ? "<span class=\"badge rounded-pill badge-success\">Yes</span>" : "<span class=\"badge rounded-pill badge-danger\">No</span>"; ?></td>
             </tr><tr>
                 <th>Protocol</th>
                 <td colspan="2"><a href="https://www.unrealircd.org/docs/Server_protocol:Protocol_version"><code><?php echo htmlspecialchars($server->server->features->protocol); ?></code></a></td>
