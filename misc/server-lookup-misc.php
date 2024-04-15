@@ -12,33 +12,35 @@ function generate_html_servermodes($server)
         <th>Requires</th>
     </thead>
        <?php
-       foreach ($server->server->features->chanmodes as $set)
-       {
-           if (!$set)
-               break;
-            for ($i = 0; isset($set[$i]); $i++)
+        if (isset($server->server->features->chanmodes))
+        {
+            foreach ($server->server->features->chanmodes as $set)
             {
-                $mode = $set[$i];
-                if (isset(IRCList::$cmodes[$mode])) {
-                   ?>
-                <tr>
-                    <th><?php echo IRCList::$cmodes[$mode]['name']; ?></th>
-                    <th><code><?php echo $mode; ?></code></th>
-                    <td><?php echo IRCList::$cmodes[$mode]['description']; ?></td>
-                    <td><div class="badge rounded-pill badge-dark"><?php echo IRCList::$cmodes[$mode]['requires']; ?></div></td>
-                </tr><?php
-                }
-                else {
+                if (!$set)
+                    break;
+                for ($i = 0; isset($set[$i]); $i++)
+                {
+                    $mode = $set[$i];
+                    if (isset(IRCList::$cmodes[$mode])) {
                     ?>
                     <tr>
-                    <th>Unknown</th>
-                    <td>Mode "<?php echo $mode; ?>"</td>
-                    <td></td>
-                </tr><?php
+                        <th><?php echo IRCList::$cmodes[$mode]['name']; ?></th>
+                        <th><code><?php echo $mode; ?></code></th>
+                        <td><?php echo IRCList::$cmodes[$mode]['description']; ?></td>
+                        <td><div class="badge rounded-pill badge-dark"><?php echo IRCList::$cmodes[$mode]['requires']; ?></div></td>
+                    </tr><?php
+                    }
+                    else {
+                        ?>
+                        <tr>
+                        <th>Unknown</th>
+                        <td>Mode "<?php echo $mode; ?>"</td>
+                        <td></td>
+                    </tr><?php
+                    }   
                 }
-                
             }
-       }
+        }
        ?>
        </table><?php
 }
@@ -102,8 +104,8 @@ function generate_html_serverinfo($server)
                 <td colspan="2"><code><?php echo htmlspecialchars($server->server->info); ?></code></td>
             </tr><tr>
                 <th>Uplink</th>
-                <?php $serverlkup = (isset($server->server->uplink)) ? $rpc->server()->get($server->server->uplink) : "<span class=\"badge rounded-pill badge-info\">None</span>"; ?>
-                <td colspan="2"><code><?php echo "<a href=\"".get_config("base_url")."servers/details.php?server=".htmlspecialchars($serverlkup->id)."\">".htmlspecialchars($server->server->uplink)."</a>"; ?></code></td>
+                <?php $serverlkup = (isset($server->server->uplink)) ? $rpc->server()->get($server->server->uplink) : NULL; ?>
+                <td colspan="2"><code><?php echo ($serverlkup) ? "<a href=\"".get_config("base_url")."servers/details.php?server=".htmlspecialchars($serverlkup->id)."\">".htmlspecialchars($server->server->uplink)."</a>" : "No uplink"; ?></code></td>
             </tr><tr>
                 <th>User count</th>
                 <td colspan="2"><code><?php echo htmlspecialchars($server->server->num_users); ?></code></td>
@@ -119,214 +121,218 @@ function generate_html_serverinfo($server)
 
 function generate_html_usermodes($server)
 {
-    $modes = $server->server->features->usermodes;
+    $modes = $server->server->features->usermodes ?? NULL;
     echo "<table class=\"table-sm table-responsive caption-top table-hover\">";
-    for ($i=0; ($mode = (isset($modes[$i])) ? $modes[$i] : NULL); $i++)
-    {
-    
-        if ($mode == "o")
+    if (!$modes)
+        echo "<tr><td>There are no usermodes for this server</td></tr>";
+    else {
+        for ($i=0; ($mode = (isset($modes[$i])) ? $modes[$i] : NULL); $i++)
         {
-            ?>
-                <tr>
-                    <th>Oper</th>
-                    <td>
-                        User is an IRC Operator.
-                    </td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "S")
-        {
-            ?>
-                <tr>
-                    <th>Service Bot</th>
-                    <td>
-                    User is a Services Bot.
-                    </td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "d")
-        {
-            ?>
-                <tr>
-                    <th>Deaf</th>
-                    <td>User is ignoring channel messages.</td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "i")
-        {
-            ?>
-                <tr>
-                    <th>Invisible</th>
-                    <td>Not shown in /WHO searches.</td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "p")
-        {
-            ?>
-                <tr>
-                    <th>Private channels</th>
-                    <td>Channels hidden in /WHOIS outputs.</td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "r")
-        {
-            ?>
-                <tr>
-                    <th>Registered Nick</th>
-                    <td>User is using a registered nick.</td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "s")
-        {
-            ?>
-                <tr>
-                    <th>Server Notices</th>
-                    <td>User is receiving server notices.</td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "t")
-        {
-            ?>
-                <tr>
-                    <th>Virtual Host</th>
-                    <td>Using a custom hostmask.</td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "w")
-        {
-            ?>
-                <tr>
-                    <th>Wallops</th>
-                    <td>Listening to <code>/WALLOPS</code> notices from IRC Operators.</td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "x")
-        {
-            ?>
-                <tr>
-                    <th>Hostmask</th>
-                    <td>Using a hostmask (hiding their IP from non-IRCops).</td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "z")
-        {
-            ?>
-                <tr>
-                    <th>Secure</th>
-                    <td>
-                    User is using a secure connection.
-                    </td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "B")
-        {
-            ?>
-                <tr>
-                    <th>Bot</th>
-                    <td colspan="2">
-                    User is marked as a Bot.
-                    </td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "D")
-        {
-            ?>
-                <tr>
-                    <th>PrivDeaf</th>
-                    <td colspan="2">
-                    User is rejecting incoming private messages.
-                    </td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "G")
-        {
-            ?>
-                <tr>
-                    <th>Filter</th>
-                    <td colspan="2">
-                    User is filtering Bad Words.
-                    </td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "H")
-        {
-            ?>
-                <tr>
-                    <th>Hide IRCop</th>
-                    <td colspan="2">
-                    User is hiding their IRCop status.
-                    </td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "I")
-        {
-            ?>
-                <tr>
-                    <th>Hide Idle</th>
-                    <td colspan="2">
-                    User is hiding their idle time.
-                    </td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "R")
-        {
-            ?>
-                <tr>
-                    <th>RegOnly Messages</th>
-                    <td colspan="2">
-                    User is only accepting private messages from registered users.
-                    </td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "T")
-        {
-            ?>
-                <tr>
-                    <th>Deny CTCPs</th>
-                    <td colspan="2">
-                    Denying CTCP requests.
-                    </td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "W")
-        {
-            ?>
-                <tr>
-                    <th>View /WHOIS</th>
-                    <td colspan="2">
-                    User is receiving notifications when someone does a <code>/WHOIS</code> on them.
-                    </td>
-                </tr>
-            <?php
-        }
-        elseif ($mode == "Z")
-        {
-            ?>
-                <tr>
-                    <th>Deny Insecure Messages</th>
-                    <td colspan="2">
-                    User is only accepting messages from users using a secure connection.
-                    </td>
-                </tr>
-            <?php
+        
+            if ($mode == "o")
+            {
+                ?>
+                    <tr>
+                        <th>Oper</th>
+                        <td>
+                            User is an IRC Operator.
+                        </td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "S")
+            {
+                ?>
+                    <tr>
+                        <th>Service Bot</th>
+                        <td>
+                        User is a Services Bot.
+                        </td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "d")
+            {
+                ?>
+                    <tr>
+                        <th>Deaf</th>
+                        <td>User is ignoring channel messages.</td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "i")
+            {
+                ?>
+                    <tr>
+                        <th>Invisible</th>
+                        <td>Not shown in /WHO searches.</td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "p")
+            {
+                ?>
+                    <tr>
+                        <th>Private channels</th>
+                        <td>Channels hidden in /WHOIS outputs.</td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "r")
+            {
+                ?>
+                    <tr>
+                        <th>Registered Nick</th>
+                        <td>User is using a registered nick.</td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "s")
+            {
+                ?>
+                    <tr>
+                        <th>Server Notices</th>
+                        <td>User is receiving server notices.</td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "t")
+            {
+                ?>
+                    <tr>
+                        <th>Virtual Host</th>
+                        <td>Using a custom hostmask.</td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "w")
+            {
+                ?>
+                    <tr>
+                        <th>Wallops</th>
+                        <td>Listening to <code>/WALLOPS</code> notices from IRC Operators.</td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "x")
+            {
+                ?>
+                    <tr>
+                        <th>Hostmask</th>
+                        <td>Using a hostmask (hiding their IP from non-IRCops).</td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "z")
+            {
+                ?>
+                    <tr>
+                        <th>Secure</th>
+                        <td>
+                        User is using a secure connection.
+                        </td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "B")
+            {
+                ?>
+                    <tr>
+                        <th>Bot</th>
+                        <td colspan="2">
+                        User is marked as a Bot.
+                        </td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "D")
+            {
+                ?>
+                    <tr>
+                        <th>PrivDeaf</th>
+                        <td colspan="2">
+                        User is rejecting incoming private messages.
+                        </td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "G")
+            {
+                ?>
+                    <tr>
+                        <th>Filter</th>
+                        <td colspan="2">
+                        User is filtering Bad Words.
+                        </td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "H")
+            {
+                ?>
+                    <tr>
+                        <th>Hide IRCop</th>
+                        <td colspan="2">
+                        User is hiding their IRCop status.
+                        </td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "I")
+            {
+                ?>
+                    <tr>
+                        <th>Hide Idle</th>
+                        <td colspan="2">
+                        User is hiding their idle time.
+                        </td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "R")
+            {
+                ?>
+                    <tr>
+                        <th>RegOnly Messages</th>
+                        <td colspan="2">
+                        User is only accepting private messages from registered users.
+                        </td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "T")
+            {
+                ?>
+                    <tr>
+                        <th>Deny CTCPs</th>
+                        <td colspan="2">
+                        Denying CTCP requests.
+                        </td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "W")
+            {
+                ?>
+                    <tr>
+                        <th>View /WHOIS</th>
+                        <td colspan="2">
+                        User is receiving notifications when someone does a <code>/WHOIS</code> on them.
+                        </td>
+                    </tr>
+                <?php
+            }
+            elseif ($mode == "Z")
+            {
+                ?>
+                    <tr>
+                        <th>Deny Insecure Messages</th>
+                        <td colspan="2">
+                        User is only accepting messages from users using a secure connection.
+                        </td>
+                    </tr>
+                <?php
+            }
         }
     }
     echo "</table>";
@@ -339,7 +345,7 @@ function generate_html_extserverinfo($server)
         <tbody>
             <tr>
                 <th>IP</th>
-                <td colspan="2"><code><?php echo htmlspecialchars($server->ip); ?></code></td>
+                <td colspan="2"><code><?php echo (($server->ip) ? htmlspecialchars($server->ip) : "Unable to detect IP"); ?></code></td>
             </tr><tr>
                 <th>Boot time</th>
                 <td colspan="2"><code><?php echo (($server->server->boot_time) ? htmlspecialchars($server->server->boot_time) : "Not available"); ?></code></td>
