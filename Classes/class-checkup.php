@@ -89,7 +89,7 @@ class CheckUp
 		foreach($this->serverlist as $s) // cycle through each server
 		{
 			/* hmm if it's not unreal, skip it too */
-			if (!strstr($s->server->features->software,"UnrealIRCd"))
+			if (!isset($s->server->features->software) || !strstr($s->server->features->software,"UnrealIRCd"))
 				continue;
 			/* make a single string from the array of groups */
 			$ourchmodes = "";
@@ -105,7 +105,7 @@ class CheckUp
 					continue;
 				
 				/* hmm if it's not unreal, skip it too */
-				if (!strstr($serv->server->features->software,"UnrealIRCd"))
+				if (!isset($serv->server->features->software) || !strstr($serv->server->features->software,"UnrealIRCd"))
 					continue;
 				
 				/* make a single string from the array of groups but for them this time */
@@ -137,7 +137,7 @@ class CheckUp
 		foreach($this->serverlist as $s)
 		{
 			/* hmm if it's not unreal, skip it too */
-			if (!strstr($s->server->features->software,"UnrealIRCd"))
+			if (!isset($s->server->features->software) || !strstr($s->server->features->software,"UnrealIRCd"))
 				continue;
 			/* make a single string from the array of groups */
 			$ourumodes = $s->server->features->usermodes;
@@ -150,7 +150,7 @@ class CheckUp
 					continue;
 				
 				/* hmm if it's not unreal, skip it too */
-				if (!strstr($serv->server->features->software,"UnrealIRCd"))
+				if (!isset($serv->server->features->software) || !strstr($serv->server->features->software,"UnrealIRCd"))
 					continue;
 				
 				$theirumodes = $serv->server->features->usermodes;
@@ -179,7 +179,7 @@ class CheckUp
 		foreach ($this->serverlist as $s)
 		{
 			/* hmm if it's not unreal, skip it too */
-			if (!strstr($s->server->features->software,"UnrealIRCd"))
+			if (!isset($s->server->features->software) || !strstr($s->server->features->software,"UnrealIRCd"))
 				continue;
 			$ourmods = sort_mods(json_decode(json_encode(@$rpc->server()->module_list($s->id)->list), true));
 			
@@ -194,7 +194,7 @@ class CheckUp
 					continue;
 				
 				/* hmm if it's not unreal, skip it too */
-				if (!strstr($serv->server->features->software,"UnrealIRCd"))
+				if (!isset($serv->server->features->software) || !strstr($serv->server->features->software,"UnrealIRCd"))
 					continue;
 
 				$theirmods = sort_mods(json_decode(json_encode(@$rpc->server()->module_list($serv->id)->list), true));
@@ -226,13 +226,13 @@ class CheckUp
 		foreach ($this->serverlist as $s)
 		{
 			/* hmm if it's not unreal, skip it too */
-			if (!strstr($s->server->features->software,"UnrealIRCd"))
+			if (!isset($s->server->features->software) || !strstr($s->server->features->software,"UnrealIRCd"))
 					continue;
 			// protocol checking
 			$ours = (int)$s->server->features->protocol;
 			foreach ($this->serverlist as $serv)
 			{
-				if (!strstr($serv->server->features->software,"UnrealIRCd"))
+				if (!isset($serv->server->features->software) || !strstr($serv->server->features->software,"UnrealIRCd"))
 					continue;
 
 				$theirs = (int)$serv->server->features->protocol;
