@@ -35,6 +35,7 @@ $num_of_panel_admins = count($userlist);
 		margin-left:20px;
 		width:fit-content;
 	}
+	a.card:hover { opacity: 0.8; transition: opacity 0.2s ease-in-out; }
 	.card {
 		min-height: 80%;
 		border-radius: 16px;
