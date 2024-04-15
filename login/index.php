@@ -98,7 +98,7 @@ if (!empty($_POST))
 </head>
 <section class="vh-100">
   <div class="container py-5 h-10">
-	<div class="row d-flex justify-content-center align-items-center h-100">
+	<div class="row d-flex justify-content-center align-items-center">
 	  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
 		<div class="card shadow-2-strong" style="border-radius: 1rem;">
 		  <div class="card-body p-5 text-center">
@@ -138,7 +138,13 @@ if (!empty($_POST))
 	</div>
 </div>
 </div></section>
+<style>
 
+body {
+		background-image: url('https://cdn.wallpapersafari.com/34/98/yznZmQ.jpg');
+		background-size: cover;
+	}
+</style>
 <script>
 	var form = document.getElementById('login');
 	var pinp = document.getElementById('passinp');

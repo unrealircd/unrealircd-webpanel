@@ -494,8 +494,6 @@ $pages = [
 		"General Settings" => ["script" => "settings/general.php"],
 		"RPC Servers" => ["script" => "settings/rpc-servers.php","no_irc_server_required"=>true],
 	],
-	
-	"News" => ["script" => "news.php","no_irc_server_required"=>true],
 ];
 
 

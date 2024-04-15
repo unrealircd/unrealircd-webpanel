@@ -15,13 +15,13 @@ $checkup = new CheckUp();
 	}
 	#accordion > .card {
 		margin-bottom: 5px;
-		min-width: 400px;
-		width:fit-content;
+		width:100%;
+		border-radius: 16x;
 	}
 
 </style>
 <?php echo $checkup ?>
-<div id="accordion">
+<div id="accordion" class="container-xxl">
 	<div class="card">
 		<div class="card-header" id="headingOne" aria-describedby="test1">
 			<h5 class="mb-0">

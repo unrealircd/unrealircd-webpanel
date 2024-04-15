@@ -13,6 +13,12 @@
 		?>
 
 		<section class="mt-1">
+			<a href="https://www.youtube.com/@unrealircdtutorials/"
+				role="button"
+				data-mdb-ripple-color="dark"
+				target="_blank">
+				<img src="https://static-00.iconduck.com/assets.00/youtube-icon-2048x2048-wiwalbpx.png" width="16" height="16"></a>
+
 			<!-- Twitter -->
 			<a
 				class="btn btn-link btn-floating btn-md text-white"
@@ -37,10 +43,8 @@
 				role="button"
 				data-mdb-ripple-color="dark"
 				target="_blank">
-				<img src="<?php echo get_config("base_url"); ?>img/unreal.jpg" width="16" height="16" style="margin-left: -7px; margin-right: 24px"></a>
+				<img src="<?php echo get_config("base_url"); ?>img/unreal.jpg" width="16" height="16" style="margin-left: -7px; margin-right: 17px"></a>
 
-			<i id="bugreport" style="margin-left: -18px; margin-right: 10px;" height="10px" class="fa fa-bug" data-toggle="tooltip" data-placement="top" title="Report a bug (Opens in new tab)"></i>
-		
 		<?php
 
 		$arr = []; Hook::run(HOOKTYPE_FOOTER, $arr);
@@ -55,11 +59,6 @@
 </html>
 <!--
 <script>
-	var bugreport = document.getElementById('bugreport');
-	bugreport.addEventListener('click', (e) => {
-		window.open("https://github.com/unrealircd/unrealircd-webpanel/issues/new?labels=bug&template=bug_report.md", '_blank');
-	});
-
 	// Function to check if the feedback prompt should be shown
 	function showFeedbackPrompt()
 	{

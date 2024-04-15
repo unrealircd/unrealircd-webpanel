@@ -68,6 +68,7 @@ footer {
 body {
 	padding-top: 45px;
 	background-image: url("../img/background.jpg");
+	background-attachment: fixed;
 	display: flex;
 	flex-direction: column;
 }
