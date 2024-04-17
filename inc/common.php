@@ -1,4 +1,11 @@
 <?php
+if (ini_get('output_buffering') == true) {
+	ini_set('output_buffering', 'off');
+}
+if (ini_get('zlib.output_compression') == true) {
+	ini_set('zlib.output_compression', 'off');
+}
+
 function check_requirements()
 {
 	if (version_compare(PHP_VERSION, '8.0.0', '<'))
