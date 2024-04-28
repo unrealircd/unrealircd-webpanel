@@ -55,7 +55,6 @@ function generate_html_whois($user)
 						height:100%;
 						border-radius:5px;
 						background-color: blanchedalmond\"><tr>";
-						$i = 1;
 						foreach($user->user->{"security-groups"} as $sg)
 						{
 							echo "<th><div class=\"badge badge-secondary rounded-pill\">$sg</th></tr><tr>";
@@ -63,7 +62,7 @@ function generate_html_whois($user)
 						echo "</tr></table>"; ?>
 						</td>
 					</code>
-				</td>;
+				</td>
 			</tr>
 
 		</tbody>
