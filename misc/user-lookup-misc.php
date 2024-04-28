@@ -6,6 +6,15 @@ function generate_html_whois($user)
 	?>
 
 	<table class="table-sm table-responsive caption-top table-hover">
+		<span class="badge rounded-pill"
+			style="position: absolute;
+			top:25px;
+			right: 25px;
+			background-color:lightgrey;
+			font-size:small;
+			"
+		>Reputation <span class="badge badge-danger" style="font-size:small;"><?php echo $user->user->reputation; ?></span>
+		</span>
 		<tbody>
 			<tr>
 				<th>Nick</th>
