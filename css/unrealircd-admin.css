@@ -271,3 +271,10 @@ body {
 .tdwrap {
   white-space: normal !important;
 }
+
+.boytext {
+	color: #054df9;
+}
+.girltext {
+	color: #ff00ef;
+}

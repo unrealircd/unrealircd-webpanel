@@ -14,6 +14,16 @@ foreach($users as $user)
 {
 	$isBot = (strpos($user->user->modes, "B") !== false) ? ' <span class="badge rounded-pill badge-dark">Bot</span>' : "";
 	$nick = htmlspecialchars($user->name).$isBot;
+	$realname = htmlspecialchars($user->user->realname);
+
+	// Format "18 F ..." or "18/F/..."
+	if (preg_match('/(?:^|\/|\s)H(?:\/|\s|$)/', $realname)) {
+		$classlist = "boytext";
+	} elseif (preg_match('/(?:^|\/|\s)F(?:\/|\s|$)/', $realname)) {
+		$classlist = "girltext";
+	} else {
+		$classlist = "";
+	}
 
 	$country = isset($user->geoip->country_code) ? '<img src="https://flagcdn.com/48x36/'.htmlspecialchars(strtolower($user->geoip->country_code)).'.png" width="20" height="15"> '.htmlspecialchars($user->geoip->country_code) : "";
 
@@ -32,7 +42,7 @@ foreach($users as $user)
 	$servername = $user->user->servername;
 	$reputation = $user->user->reputation;
 
-	$nick = "<a href=\"details.php?nick=".$user->id."\">$nick</a>";
+	$nick = "<a href=\"details.php?nick=".$user->id."\" class=\"$classlist\" title=\"$realname\">$nick</a>";
 
 	$out[] = [
 		"Select" => "<input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\">", /* yeah ridiculous to have here in this file and the feed ;) */
