@@ -260,13 +260,209 @@ foreach ($pages as $name => $page)
 ?>
 	
 		</ul>
-
+		<style>
+			.search-container {
+				position: fixed;
+				right: 20px;
+			}
+			.search-container input,button {
+				border-radius: 7px;
+			}
+			#search-results {
+				max-height: 70vh;
+				overflow-y: auto;
+			}
+			
+		</style>
+		<div class="search-container">
+			<input type="text" placeholder="Search.." id="search_box" name="search">
+		</div>
 	</nav><br>
 </div>
-
+	<div style="font-size: 13px; position: absolute; top:40px; right: 20px; width: 520px; z-index:1040; height: auto;">
+		<ol><div id="search-results" class="card" hidden>
+			
+		</div></ol>
+	</div>
 <div id="main_contain" class="container-fluid" style="padding-left: 180px" role="main">
 
 <script>
+
+	const searchBox = document.getElementById('search_box');
+	const searchResults =document.getElementById('search-results');
+	// Add event listener for keyup event
+	searchBox.addEventListener('input', function(event) {
+	// Get the value from the input box
+		const query = event.target.value.trim();
+
+		// Make sure query is not empty
+		if (query !== '') {
+			searchResults.removeAttribute('hidden');
+			// Make a request to the JSON endpoint with the query
+			fetch(BASE_URL+`api/search.php?search=`+encodeURIComponent(searchBox.value))
+			.then(response => {
+				// Check if the response is successful
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				// Parse the JSON data
+				return response.json();
+			})
+			.then(data => {
+				searchResults.innerHTML = null;
+				// Work with the JSON data
+				console.log(data);
+
+				// Update UI with search results
+
+				//users
+				var search_label =document.createElement('div');
+				search_label.classList.add('card', 'bg-light', 'badge','p-2', 'm-1');
+				search_label.innerText = "Users";
+				searchResults.appendChild(search_label);
+				for (let key in data.users)
+				{
+					console.log(key+": "+data.users[key].name);
+					var user_result =document.createElement('div');
+					user_result.classList.add('card','p-3', 'm-1');
+					user_result.onclick = function(){
+						window.location.href = BASE_URL+"users/details.php?nick="+encodeURIComponent(data.users[key].name);
+					};
+					user_result.innerHTML = "<span class='p-0'>"+data.users[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.users[key].label+"</div></span><i>"+data.users[key].data+"</i>";
+					searchResults.appendChild(user_result);
+				}
+
+				//channels
+				var search_label =document.createElement('div');
+				search_label.classList.add('card', 'badge', 'bg-light','p-2', 'm-1');
+				search_label.innerText = "Channels";
+				searchResults.appendChild(search_label);
+				for (let key in data.channels)
+				{
+					console.log(key+": "+data.channels[key].name);
+					var channel_result =document.createElement('div');
+					channel_result.classList.add('card','p-3', 'm-1');
+					channel_result.onclick = function(){
+						window.location.href = BASE_URL+"channels/details.php?chan="+encodeURIComponent(data.channels[key].name);
+					};
+					channel_result.innerHTML = "<span class='p-0'>"+data.channels[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.channels[key].label+"</div></span><i>"+(data.channels[key].topic?data.channels[key].topic:"")+"</i>";
+					searchResults.appendChild(channel_result);
+				}
+				
+				//Servers
+				var search_label =document.createElement('div');
+				search_label.classList.add('card', 'badge', 'bg-light','p-2', 'm-1');
+				search_label.innerText = "Servers";
+				searchResults.appendChild(search_label);
+				for (let key in data.servers)
+				{
+					console.log(key+": "+data.servers[key].name);
+					var serv_result =document.createElement('div');
+					serv_result.classList.add('card','p-3', 'm-1');
+					serv_result.onclick = function(){
+						window.location.href = BASE_URL+"servers/details.php?server="+encodeURIComponent(data.servers[key].name);
+					};
+					serv_result.innerHTML = data.servers[key].name;
+					searchResults.appendChild(serv_result);
+				}
+
+				//Server Bans
+				var search_label =document.createElement('div');
+				search_label.classList.add('card', 'badge', 'bg-light','p-2', 'm-1');
+				search_label.innerText = "Server Bans";
+				searchResults.appendChild(search_label);
+				for (let key in data.server_bans)
+				{
+					console.log(key+": "+data.server_bans[key].name);
+					var serv_result =document.createElement('div');
+					serv_result.classList.add('card','p-3', 'm-1');
+					serv_result.onclick = function(){
+						window.location.href = BASE_URL+"server-bans";
+					};
+					serv_result.innerHTML = "<span class='p-0'>"+data.server_bans[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.server_bans[key].label+"</div></span><i>"+(data.server_bans[key].data?data.server_bans[key].data:"")+"</i>";
+					searchResults.appendChild(serv_result);
+				}
+
+				//Server Excepts
+				var search_label =document.createElement('div');
+				search_label.classList.add('card', 'badge', 'bg-light','p-2', 'm-1');
+				search_label.innerText = "Server Exceptions";
+				searchResults.appendChild(search_label);
+				for (let key in data.excepts)
+				{
+					console.log(key+": "+data.excepts[key].name);
+					var serv_result =document.createElement('div');
+					serv_result.classList.add('card','p-3', 'm-1');
+					serv_result.onclick = function(){
+						window.location.href = BASE_URL+"server-bans/ban-exceptions";
+					};
+					serv_result.innerHTML = "<span class='p-0'>"+data.excepts[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.excepts[key].label+"</div></span><i>"+(data.excepts[key].data?data.excepts[key].data:"")+"</i>";
+					searchResults.appendChild(serv_result);
+				}
+
+				//Name Bans
+				var search_label =document.createElement('div');
+				search_label.classList.add('card', 'badge', 'bg-light','p-2', 'm-1');
+				search_label.innerText = "Name Bans";
+				searchResults.appendChild(search_label);
+				for (let key in data.name_bans)
+				{
+					console.log(key+": "+data.name_bans[key].name);
+					var serv_result =document.createElement('div');
+					serv_result.classList.add('card','p-3', 'm-1');
+					serv_result.onclick = function(){
+						window.location.href = BASE_URL+"server-bans/name-bans";
+					};
+					serv_result.innerHTML = "<span class='p-0'>"+data.name_bans[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.name_bans[key].label+"</div></span><i>"+(data.name_bans[key].data?data.name_bans[key].data:"")+"</i>";
+					searchResults.appendChild(serv_result);
+				}
+				//Spamfilter
+				var search_label =document.createElement('div');
+				search_label.classList.add('card', 'badge', 'bg-light','p-2', 'm-1');
+				search_label.innerText = "Spamfilter";
+				searchResults.appendChild(search_label);
+				for (let key in data.spamfilter)
+				{
+					console.log(key+": "+data.spamfilter[key].name);
+					var serv_result =document.createElement('div');
+					serv_result.classList.add('card','p-3', 'm-1');
+					serv_result.onclick = function(){
+						window.location.href = BASE_URL+"spamfilter.php";
+					};
+					serv_result.innerHTML = "<span class='p-0'>"+data.spamfilter[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.spamfilter[key].label+"</div></span><i>"+(data.spamfilter[key].data?data.spamfilter[key].data:"")+"</i>";
+					searchResults.appendChild(serv_result);
+				}
+
+				//Logs
+				var search_label =document.createElement('div');
+				search_label.classList.add('card', 'badge', 'bg-light','p-2', 'm-1');
+				search_label.innerText = "Logs";
+				searchResults.appendChild(search_label);
+				for (let key in data.logs)
+				{
+					console.log(key+": "+data.logs[key].msg);
+					var log_result =document.createElement('div');
+					log_result.classList.add('card','p-3', 'm-1');
+					log_result.onclick = function(){
+						window.location.href = BASE_URL+"logs";
+					};
+					log_result.innerHTML = data.logs[key].msg;
+					searchResults.appendChild(log_result);
+				}
+				
+			})
+			.catch(error => {
+				// Handle any errors
+				console.error('There was a problem with the fetch operation:', error);
+				// Display error message to the user
+			});
+		}
+		else
+		{
+			searchResults.hidden = 'true';
+			searchResults.innerHTML = null;
+		} 
+	});
 	function nav_resize_check()
 	{
 		var width = window.innerWidth;
@@ -291,6 +487,7 @@ foreach ($pages as $name => $page)
 	window.addEventListener('resize', function() {
 		nav_resize_check();
 	});
+	
 </script>
 
 <?php
