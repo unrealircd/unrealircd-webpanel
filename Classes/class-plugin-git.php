@@ -81,10 +81,7 @@ class PluginRepo
 
             ?>
                <div class="row">
-            <?php     
-        $counter = 0;
-
-
+            <?php
         foreach($this->data->list as $p)
         {
             $tok = split(WEBPANEL_VERSION,"-");
@@ -136,18 +133,6 @@ class PluginRepo
                 </div>
             </div>
             <?php
-                /** only do three per row.
-                 *  WARNING: untested due to not having more than 2 plugins atm...
-                */
-                if ($counter >= 3)
-                {
-                    ?><!-- New row please mr html -->
-                        </div>
-                        <div class="row"> 
-                    <?php
-                    $counter = 0;
-                }
-                $counter++;
 
 
             }
