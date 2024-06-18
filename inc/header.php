@@ -272,6 +272,9 @@ foreach ($pages as $name => $page)
 				max-height: 70vh;
 				overflow-y: auto;
 			}
+			#search-results .card.p-3:hover {
+				cursor: pointer;
+			}
 			
 		</style>
 		<div class="search-container">
