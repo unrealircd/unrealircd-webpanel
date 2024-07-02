@@ -33,10 +33,11 @@ $num_of_panel_admins = count($userlist);
 <style>
 	#health_banner {
 		margin-left:20px;
+		border-radius: 16px;
 		width:fit-content;
 	}
-	a.card:hover { opacity: 0.8; transition: opacity 0.2s ease-in-out; }
-	.card {
+	.card-container a.card:hover { opacity: 0.8; transition: opacity 0.2s ease-in-out; }
+	.card-container .card {
 		min-height: 80%;
 		border-radius: 16px;
 	}
@@ -44,12 +45,12 @@ $num_of_panel_admins = count($userlist);
 		background-image: url('https://cdn.wallpapersafari.com/34/98/yznZmQ.jpg');
 		background-size: cover;
 	}
-	.card-body i {
+	.card-container .card-body i {
 		position: fixed;
 		top: 10px;
 		right: 10px;
 	}
-	.card:hover {
+	.card-container .card:hover {
 		text-decoration: none;
 	}
 
@@ -100,158 +101,157 @@ $num_of_panel_admins = count($userlist);
 	}
 
 	</style>
-<div class="container card-container ml-1">
+	<div class="container card-container ml-1">
 
-<div class="row mt-3">
-	<div class="col-sm mb-3">
-			<a class="card frosted-glass-success text-center" href="<?php echo get_config("base_url"); ?>users/">
-				<div class="card-body text-white">
-					<div class="row text-center">
-						<span id="userRecord" class="position-absolute badge rounded-pill badge-warning" hidden>
-							<?php echo "Record: "; ?>
-						</span>
-						<div class="col">
-							<div class="col">
-								<i aria-hidden="true" class="fa fa-users fa-2x"></i>
-							</div>
-							<div class="col">
-								<h5 id="stats_user_total" class="display-4 numberDisplay"></h5>
-								<h5 class="display-5">Users Online</h5>
-							</div>
-						</div>
-					</div>
-				</div>
-			</a>
-		</div>
-		<div class="col-sm mb-3">
-			<a class="card frosted-glass-info text-center" href="<?php echo get_config("base_url"); ?>channels/">
-				<div class="card-body text-white">
-					<div class="row text-center">
-						<div class="col">
-							<div class="col">
-								<i aria-hidden="true" class="fa fa-hashtag fa-2x"></i>
-							</div>
-							<div class="col">
-								<h5 id="stats_channel_total" class="display-4 numberDisplay"></h5>
-								<h5 class="display-5">Channels</h5>
+		<div class="row mt-3">
+			<div class="col-sm mb-3">
+					<a class="card frosted-glass-success text-center" href="<?php echo get_config("base_url"); ?>users/">
+						<div class="card-body text-white">
+							<div class="row text-center">
+								<span id="userRecord" class="position-absolute badge rounded-pill badge-warning" hidden>
+									<?php echo "Record: "; ?>
+								</span>
+								<div class="col">
+									<div class="col">
+										<i aria-hidden="true" class="fa fa-users fa-2x"></i>
+									</div>
+									<div class="col">
+										<h5 id="stats_user_total" class="display-4 numberDisplay"></h5>
+										<h5 class="display-5">Users Online</h5>
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
+					</a>
 				</div>
-			</a>
-		</div>
-		<div class="col-sm mb-3">
-			<a class="card frosted-glass-warning text-center" href="<?php echo get_config("base_url"); ?>users/">
-				<div class="card-body text-dark">
-					<div class="row text-center">
-						<div class="col">
-							<div class="col">
-								<i aria-hidden="true" class="fa fa-shield-halved fa-2x"></i>
-							</div>
-							<div class="col">
-								<h5 id="stats_oper_total" class="display-4 numberDisplay"></h5>
-								<h5 class="display-5" style="margin-top: -3px">Operators</h5>
-								<h5 style="font-size: 10px; margin-top:-12px">View in Users ></h5>
+				<div class="col-sm mb-3">
+					<a class="card frosted-glass-info text-center" href="<?php echo get_config("base_url"); ?>channels/">
+						<div class="card-body text-white">
+							<div class="row text-center">
+								<div class="col">
+									<div class="col">
+										<i aria-hidden="true" class="fa fa-hashtag fa-2x"></i>
+									</div>
+									<div class="col">
+										<h5 id="stats_channel_total" class="display-4 numberDisplay"></h5>
+										<h5 class="display-5">Channels</h5>
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
+					</a>
 				</div>
-			</a>
-		</div>
-		<div class="col-sm mb-3">
-			<a class="card frosted-glass-secondary text-center" href="<?php echo get_config("base_url"); ?>servers/">
-				<div class="card-body text-white">
-					<div class="row text-center">
-						<div class="col">
-							<div class="col">
-								<i aria-hidden="true" class="fa fa-network-wired fa-2x"></i>
-							</div>
-							<div class="col">
-								<h5 id="stats_server_total" class="display-4 numberDisplay"></h5>
-								<h5 class="display-5">Servers</h5>
+				<div class="col-sm mb-3">
+					<a class="card frosted-glass-warning text-center" href="<?php echo get_config("base_url"); ?>users/">
+						<div class="card-body text-dark">
+							<div class="row text-center">
+								<div class="col">
+									<div class="col">
+										<i aria-hidden="true" class="fa fa-shield-halved fa-2x"></i>
+									</div>
+									<div class="col">
+										<h5 id="stats_oper_total" class="display-4 numberDisplay"></h5>
+										<h5 class="display-5" style="margin-top: -3px">Operators</h5>
+										<h5 style="font-size: 10px; margin-top:-12px">View in Users ></h5>
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
+					</a>
 				</div>
-			</a>
+				<div class="col-sm mb-3">
+					<a class="card frosted-glass-secondary text-center" href="<?php echo get_config("base_url"); ?>servers/">
+						<div class="card-body text-white">
+							<div class="row text-center">
+								<div class="col">
+									<div class="col">
+										<i aria-hidden="true" class="fa fa-network-wired fa-2x"></i>
+									</div>
+									<div class="col">
+										<h5 id="stats_server_total" class="display-4 numberDisplay"></h5>
+										<h5 class="display-5">Servers</h5>
+									</div>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
 		</div>
-	</div>
-</div>
-<div class="container card-container ml-1">
+		<div class="container card-container ml-1">
 
-	<div class="row">
-		<div class="col-sm mb-3">
-			<a class="card frosted-glass-danger text-center" href="<?php echo get_config("base_url"); ?>server-bans/">
-				<div class="card-body text-white">
-					<div class="row text-center">
-						<div class="col">
-							<div class="col">
-								<i aria-hidden="true" class="fa fa-ban fa-2x"></i>
-							</div>
-							<div class="col">
-								<h5 id="num_server_bans" class="display-4 numberDisplay"></h5>
-								<h5 class="display-5">Server Bans</h5>
-							</div>
-						</div>
-					</div>
-				</div>
-			</a>
-		</div>
-		<div class="col-sm mb-3">
-			<a class="card frosted-glass-secondary text-center" href="<?php echo get_config("base_url"); ?>spamfilter.php/">
-				<div class="card-body text-white">
-					<div class="row text-center">
-						<div class="col">
-							<div class="col">
-								<i aria-hidden="true" class="fa fa-filter fa-2x"></i>
-							</div>
-							<div class="col">
-								<h5 id="num_spamfilter_entries" class="display-4 numberDisplay"></h5>
-								<h5 class="display-5">Spamfilter</h5>
+			<div class="row">
+				<div class="col-sm mb-3">
+					<a class="card frosted-glass-danger text-center" href="<?php echo get_config("base_url"); ?>server-bans/">
+						<div class="card-body text-white">
+							<div class="row text-center">
+								<div class="col">
+									<div class="col">
+										<i aria-hidden="true" class="fa fa-ban fa-2x"></i>
+									</div>
+									<div class="col">
+										<h5 id="num_server_bans" class="display-4 numberDisplay"></h5>
+										<h5 class="display-5">Server Bans</h5>
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
+					</a>
 				</div>
-			</a>
-		</div>
-		<div class="col-sm mb-3">
-			<a class="card frosted-glass-info text-center" href="<?php echo get_config("base_url"); ?>server-bans/ban-exceptions.php">
-				<div class="card-body text-white">
-					<div class="row text-center">
-						<div class="col">
-							<div class="col">
-								<i aria-hidden="true" class="fa fa-door-open fa-2x"></i>
-							</div>
-							<div class="col">
-								<h5 id="num_ban_exceptions" class="display-4 numberDisplay"></h5>
-								<h5 class="display-5">Server Ban Exceptions</h5>
+				<div class="col-sm mb-3">
+					<a class="card frosted-glass-secondary text-center" href="<?php echo get_config("base_url"); ?>spamfilter.php/">
+						<div class="card-body text-white">
+							<div class="row text-center">
+								<div class="col">
+									<div class="col">
+										<i aria-hidden="true" class="fa fa-filter fa-2x"></i>
+									</div>
+									<div class="col">
+										<h5 id="num_spamfilter_entries" class="display-4 numberDisplay"></h5>
+										<h5 class="display-5">Spamfilter</h5>
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
+					</a>
 				</div>
-			</a>
-		</div>
-		<div class="col-sm mb-3">
-			<a class="card frosted-glass-success text-center" href="<?php echo get_config("base_url"); ?>servers">
-				<div class="card-body text-white">
-					<div class="row text-center">
-						<div class="col">
-							<div class="col">
-								<i aria-hidden="true" class="fa fa-database fa-2x"></i>
-							</div>
-							<div class="col">
-								<h5 id="stats_uline_total" class="display-4 numberDisplay"></h5>
-								<h5 class="display-5" style="margin-top: -3px">Services Online</h5>
-								<h5 style="font-size: 10px; margin-top:-12px">View in Servers ></h5>
+				<div class="col-sm mb-3">
+					<a class="card frosted-glass-info text-center" href="<?php echo get_config("base_url"); ?>server-bans/ban-exceptions.php">
+						<div class="card-body text-white">
+							<div class="row text-center">
+								<div class="col">
+									<div class="col">
+										<i aria-hidden="true" class="fa fa-door-open fa-2x"></i>
+									</div>
+									<div class="col">
+										<h5 id="num_ban_exceptions" class="display-4 numberDisplay"></h5>
+										<h5 class="display-5">Server Ban Exceptions</h5>
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
+					</a>
 				</div>
-			</a>
+				<div class="col-sm mb-3">
+					<a class="card frosted-glass-success text-center" href="<?php echo get_config("base_url"); ?>servers">
+						<div class="card-body text-white">
+							<div class="row text-center">
+								<div class="col">
+									<div class="col">
+										<i aria-hidden="true" class="fa fa-database fa-2x"></i>
+									</div>
+									<div class="col">
+										<h5 id="stats_uline_total" class="display-4 numberDisplay"></h5>
+										<h5 class="display-5" style="margin-top: -3px">Services Online</h5>
+										<h5 style="font-size: 10px; margin-top:-12px">View in Servers ></h5>
+									</div>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
 		</div>
-	</div>
-</div>
-
 
 <script>
 	/* Last time stats were updated */
