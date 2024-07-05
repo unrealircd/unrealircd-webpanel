@@ -44,6 +44,8 @@ if ($postbutton && $can_edit_profile)
     elseif ($array['update_pass'] == $array['update_pass_conf'])
     {
         $array['update_pass_conf'] = PanelUser::password_hash($array['update_pass_conf']);
+        $edit_user->delete_meta("hibp");
+        $edit_user->HIBP(sha1($array['update_pass']));
         unset($array['update_pass']);
     }
     else

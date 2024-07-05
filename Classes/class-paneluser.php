@@ -71,17 +71,23 @@ class PanelUser
 	{
 		GLOBAL $config;
 		$hash_needs_updating = false;
-
+		$p2 = $password;
 		if (str_starts_with($this->passhash, "peppered:"))
 		{
 			/* Argon2 with pepper */
 			$password = hash_hmac("sha256", $password, $config['secrets']['pepper']);
 			if (password_verify($password, substr($this->passhash,9)))
+			{
+				$this->HIBP(sha1($p2));
 				return true;
-		} else {
+			}
+		}
+		else
+		{
 			/* Old standard argon2 */
 			if (password_verify($password, $this->passhash))
 			{
+				$this->HIBP(sha1($p2));
 				$hash_needs_updating = true;
 				return true;
 			}
@@ -186,6 +192,44 @@ class PanelUser
 	{
 		$arr = ['info' => $array, 'user' => $this];
 		Hook::run(HOOKTYPE_EDIT_USER, $arr);
+	}
+
+	/** Have I Been Pwned
+	 * Check password against HIBP to let them know about their
+	 * leaked password.
+	 * @param string $password_hash This should be a pre-hashed sha1 password
+	 */
+	function HIBP($password_hash)
+	{
+		$url = "https://api.pwnedpasswords.com/range/".substr($password_hash,0,5);
+		$end = substr($password_hash,5);
+		$ch = curl_init($url);
+
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		$response = curl_exec($ch);
+
+		if (curl_errno($ch))
+		{
+			error_log("[error] Could not check against Have I Been Pwned API");
+			return;
+		}
+		$data = explode("\r\n",$response);
+		curl_close($ch);
+		$count = count($data);
+		$i = 1;
+		foreach($data as $dat)
+		{
+			$result = explode(":",$dat);
+			error_log("Checking $i of $count: ".substr($result[0],0,5)." => ".substr(strtoupper($end), 0,5));
+			if ($result[0] == strtoupper($end))
+			{
+				error_log("FOUND");
+				$this->add_meta("hibp", $result[1]);
+				return;
+			}
+			$i++;
+		}
 	}
 }
 

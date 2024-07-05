@@ -28,9 +28,20 @@ $stats = (object) $array_of_stats;
 $userlist = [];
 Hook::run(HOOKTYPE_GET_USER_LIST, $userlist);
 $num_of_panel_admins = count($userlist);
-
+$current_user = unreal_get_current_user();
+if (isset($current_user->user_meta['hibp']))
+{
+	$num = $current_user->user_meta['hibp'];
+	Message::Fail("<h6><strong>Urgent</strong></h6>","Your password was found in a data breach $num time(s).",
+		"Please <strong><a href=\"".get_config("base_url")."settings/user-edit.php\">update your password</a></strong> immediately");
+}
 ?>
 <style>
+	.alert {
+		margin-left: 20px;
+		width:94%;
+		max-width: 500px;
+	}
 	#health_banner {
 		margin-left:20px;
 		border-radius: 16px;
