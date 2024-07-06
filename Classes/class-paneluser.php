@@ -201,6 +201,8 @@ class PanelUser
 	 */
 	function HIBP($password_hash)
 	{
+		if (get_config("hibp") == false)
+			return;
 		$url = "https://api.pwnedpasswords.com/range/".substr($password_hash,0,5);
 		$end = substr($password_hash,5);
 		$ch = curl_init($url);

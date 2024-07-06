@@ -162,6 +162,9 @@ $writable = (is_writable("../config/")) ? true: false;
 		}
 		$lkup->add_meta('role', 'Super-Admin');
 
+		/* Enable lookups on HIBP by default */
+		$config['hibp'] = true;
+
 		/* Now, write all the config (config.php + settings in DB) */
 		write_config();
 		?>
