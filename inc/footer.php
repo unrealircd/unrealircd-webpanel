@@ -1,14 +1,13 @@
 <?php
 	if (!isset($nav_shown))
 		return;
+		$arr = []; Hook::run(HOOKTYPE_PRE_FOOTER, $arr);
 ?>
 <footer class="text-center bg-dark text-white fixed-bottom" style="background-color: #f1f1f1;">
 	<!-- Grid container -->
 	<div class="container">
 		<!-- Section: Social media -->
-
 		<?php
-			$arr = []; Hook::run(HOOKTYPE_PRE_FOOTER, $arr);
 			echo "<small style=\"font-size: 70%\"><code>Admin Panel ".get_config('webpanel_version')."</code></small>";
 		?>
 
