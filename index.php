@@ -53,7 +53,7 @@ if (isset($current_user->user_meta['hibp']))
 		border-radius: 16px;
 	}
 	body {
-		background-image: url('https://cdn.wallpapersafari.com/34/98/yznZmQ.jpg');
+		background-image: url('img/wallpaper.jpg');
 		background-size: cover;
 	}
 	.card-container .card-body i {
