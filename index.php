@@ -210,7 +210,7 @@ if (isset($current_user->user_meta['hibp']))
 					</a>
 				</div>
 				<div class="col-sm mb-3">
-					<a class="card frosted-glass-secondary text-center" href="<?php echo get_config("base_url"); ?>spamfilter.php/">
+					<a class="card frosted-glass-secondary text-center" href="<?php echo get_config("base_url"); ?>server-bans/spamfilter.php">
 						<div class="card-body text-white">
 							<div class="row text-center">
 								<div class="col">

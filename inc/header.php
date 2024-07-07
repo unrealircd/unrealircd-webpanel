@@ -430,7 +430,7 @@ foreach ($pages as $name => $page)
 					var serv_result =document.createElement('div');
 					serv_result.classList.add('card','p-3', 'm-1');
 					serv_result.onclick = function(){
-						window.location.href = BASE_URL+"spamfilter.php";
+						window.location.href = BASE_URL+"server-bans/spamfilter.php";
 					};
 					serv_result.innerHTML = "<span class='p-0'>"+data.spamfilter[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.spamfilter[key].label+"</div></span><i>"+(data.spamfilter[key].data?data.spamfilter[key].data:"")+"</i>";
 					searchResults.appendChild(serv_result);
