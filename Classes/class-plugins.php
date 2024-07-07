@@ -1,6 +1,5 @@
 <?php
-require_once "inc/common.php";
-require_once "Classes/class-message.php";
+require_once "class-message.php";
 
 
 /** Check for plugins and load them.
