@@ -466,6 +466,7 @@ require_once UPATH . "/Classes/class-log.php";
 require_once UPATH . "/Classes/class-message.php";
 require_once UPATH . "/Classes/class-rpc.php";
 require_once UPATH . "/Classes/class-paneluser.php";
+require_once UPATH . "/Classes/class-notes.php";
 require_once UPATH . "/Classes/class-plugins.php";
 
 /* Do various checks and reading, except during setup step 1. */

@@ -64,6 +64,34 @@ if (isset($_POST['submit']) && $canEdit)
 do_log("\$_POST", $_POST);
 do_log("\$_FILES", $_FILES);
 ?>
+<style>
+.color-circle.selected {
+    border: 2px solid #fff; /* Optional: Add a border to highlight selected option */
+}
+
+.color-option input[type="radio"]:checked + .color-circle {
+    border: 2px solid #fff; /* Optional: Add a border to highlight selected option */
+}
+
+.color-option .color-circle {
+    width: 30px; /* Adjust size as needed */
+    height: 30px; /* Adjust size as needed */
+    border-radius: 50%; /* Ensure it's circular */
+}
+
+@media (max-width: 600px) {
+    .color-option {
+        flex-basis: 50%; /* Two items per row on smaller screens */
+    }
+}
+
+@media (max-width: 400px) {
+    .color-option {
+        flex-basis: 100%; /* One item per row on very small screens */
+    }
+}
+</style>
+
 <h4>General Settings</h4>
 <br>
 <form method="post" enctype="multipart/form-data">
@@ -83,6 +111,133 @@ do_log("\$_FILES", $_FILES);
     </div>
     <i>Enabling this will likely make your webpanel more difficult to use</i>
 </div>
+<div class="card m-1" style="padding-left:20px;padding-right:20px;padding-top:5px;padding-bottom:10px;max-width:fit-content">
+    <h6>Themes</h6>
+    <div class="d-flex" id="color-options">
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient1" class="color-input" checked>
+            <div class="color-circle selected" style="background: linear-gradient(to bottom, #4a0000, #6b0000);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient2" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to top right, #3c4858, #1f2833);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient3" class="color-input">
+            <div class="color-circle" style="background: radial-gradient(circle, #3f0f3f, #1a0643);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient4" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to right, #443d6e, #191b3f);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient5" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom, #1a1a1a, #333333);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient6" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(135deg, #4d194d, #1a0643);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient7" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #1a1a1a, #333333);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient8" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #331a33, #191b3f);"></div>
+        </label>
+        <!-- Extend with additional gradients -->
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient9" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom, #400000, #800000);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient10" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to top right, #363636, #1f1f1f);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient11" class="color-input">
+            <div class="color-circle" style="background: radial-gradient(circle, #730073, #400040);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient12" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to right, #4c4c99, #1a1a66);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient13" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom, #2e2e2e, #4d4d4d);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient14" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(135deg, #732673, #400040);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient15" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #2e2e2e, #4d4d4d);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient16" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #662266, #330033);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient17" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #993399, #660066);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient18" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #4c4c4c, #666666);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient19" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #660066, #330033);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient20" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #993399, #660066);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient21" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #4c4c4c, #666666);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient22" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #4c4c99, #191966);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient23" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #4c4c99, #191966);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient24" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #330000, #191966);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient25" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #4c4c99, #191966);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient26" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #330000, #191966);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient27" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #ffccff, #ff66ff);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient28" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #ff66ff, #ff99ff);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient29" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #ff66ff, #ffccff);"></div>
+        </label>
+        <label class="color-option">
+            <input type="radio" name="color" value="gradient30" class="color-input">
+            <div class="color-circle" style="background: linear-gradient(to bottom right, #ffccff, #ff66ff);"></div>
+        </label>
+    </div>
+</div>
+    
 <script>
     const iframe =document.getElementById('frame');
     iframe.contentWindow.location.reload(true);
