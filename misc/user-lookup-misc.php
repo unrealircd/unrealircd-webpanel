@@ -3,6 +3,14 @@
 function generate_html_whois($user)
 {
 	global $rpc;
+	
+	$notes = Notes::find(["nick" => $user->name, "ip" => $user->ip, "account" => $user->account ?? NULL]);
+	$numnotes = [
+		"ip" => isset($notes['ip']['notes']) ? count($notes["ip"]['notes']) : [],
+		"nick" => isset($notes['ip']['notes']) ? count($notes["nick"]['notes'] ?? []) : [],
+		"account" => isset($notes['ip']['notes']) ? count($notes['account']['notes'] ?? []) : [],
+	];
+	
 	?>
 
 	<table class="table-sm table-responsive caption-top table-hover">
@@ -11,14 +19,14 @@ function generate_html_whois($user)
 			top:25px;
 			right: 25px;
 			background-color:lightgrey;
-			font-size:small;
-			"
+			font-size:small;"
 		>Reputation <span class="badge badge-danger" style="font-size:small;"><?php echo $user->user->reputation; ?></span>
 		</span>
 		<tbody>
 			<tr>
 				<th>Nick</th>
 				<td colspan="2"><code><?php echo htmlspecialchars($user->name); ?></code></td>
+				<td colspan="2"><button id="nicknotes" class="btn btn-sm btn-secondary fa-solid fa-sticky-note text-nowrap"> <?php echo $numnotes['nick']?></div></button></td>
 			</tr><tr>
 				<th>User ID (UID)</th>
 				<td colspan="2"><code><?php echo htmlspecialchars($user->id); ?></code></td>
@@ -37,6 +45,7 @@ function generate_html_whois($user)
 					<?php } ?>
 					<a href="<?php echo htmlspecialchars(get_config("base_url")."tools/ip-whois.php?ip=$user->ip"); ?>"><button class="btn-sm btn-primary">WHOIS IP</button></a>
 				</td>
+				<td><button id="ipnotes" class="btn btn-sm btn-secondary fa-solid fa-sticky-note text-nowrap"> <?php echo $numnotes['ip']?></button></td>
 			</tr><tr>
 				<th>Ident</th>
 				<td colspan="2"><code><?php echo htmlspecialchars($user->user->username); ?></code></td>
@@ -56,6 +65,7 @@ function generate_html_whois($user)
 			<tr>
 				<th>Logged in as</th>
 				<td colspan="2"><code><?php echo (isset($user->user->account)) ? "<a href=\"".get_config("base_url")."users/?account=".htmlspecialchars($user->user->account)."\">".htmlspecialchars($user->user->account)."</a>" : ""; ?></code></td>
+				<td><button id="account_notes" class="btn btn-sm btn-secondary fa-solid fa-sticky-note text-nowrap"> <?php echo $numnotes['account']?></button></td>
 			</tr>
 			<tr>
 				<th style="background-color: blanchedalmond;border-radius:5px";>Security Groups</th>

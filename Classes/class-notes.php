@@ -6,32 +6,33 @@ class Notes { // OKAY CLASS GET YOUR NOTEPAD OUT
 	/**
 	 * Find function for Notes
 	 * @param array $query The query to search for -- ["ip" => "127.0.0.1", "nick" => "bob", "account" => "bob", "id" => "lol] 
-	 * @return array|NULL Returns an array of objects (notes)
+	 * @return array Returns an array of objects (notes)
 	 */
-	public static function find(array $query) : array|NULL
+	public static function find(array $query) : array
 	{
 		global $config;
 		read_config_db();
 		if (!isset($config['notes']))
-			return NULL;
+			return [];
 
 		$notes = [];
 		foreach ($query as $key => $value)
-		{	
-			foreach (get_config("notes") as $nkey => $nvalue)
+		{
+			foreach ($config['notes'] as $nkey => $nvalue) // $nkey = "ip" "nick" "account", $nvalue = array
 			{
-				if ($value != $nvalue)
-					continue;
-					
-				$note = (object)[];
-				$note->id = $nkey;
-				$note->type = $key;
-				$note->data - $value;
-				$note->note = $nvalue;
-				$notes[] = $note;
+				foreach ($nvalue as $k => $n) // $k = "127.0.0.1", "bob", "bobsaccount", $n = array of notes [id => note]
+				{
+					if ($value != $k)
+						continue;
+					$note = [];
+					$note["type"] = $nkey;
+					$note["data"] = $k;
+					$note["notes"] = $n;
+					$notes[$key] = $note;
+				}
 			}
 		}
-		return !empty($notes) ? $notes : NULL;
+		return !empty($notes) ? $notes : [];
 	}
 	
 	/**

@@ -31,10 +31,13 @@ if (isset($_GET['nick']))
   </div>
 </form>
 
-<?php if (!$nick){
-	require_once("../inc/footer.php");
+<?php if (!$nick)
+{
+	require_once "../inc/footer.php";
 	return;
-} ?>
+}
+
+?>
 <br>
 <div class="container-xxl">
   <div class="row">
