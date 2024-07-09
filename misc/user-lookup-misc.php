@@ -6,9 +6,9 @@ function generate_html_whois($user)
 	
 	$notes = Notes::find(["nick" => $user->name, "ip" => $user->ip, "account" => $user->account ?? NULL]);
 	$numnotes = [
-		"ip" => isset($notes['ip']['notes']) ? count($notes["ip"]['notes']) : [],
-		"nick" => isset($notes['ip']['notes']) ? count($notes["nick"]['notes'] ?? []) : [],
-		"account" => isset($notes['ip']['notes']) ? count($notes['account']['notes'] ?? []) : [],
+		"ip" => isset($notes['ip']['notes']) ? count($notes["ip"]['notes']) : 0,
+		"nick" => isset($notes['ip']['notes']) ? count($notes["nick"]['notes'] ?? []) : 0,
+		"account" => isset($notes['ip']['notes']) ? count($notes['account']['notes'] ?? 0) : 0,
 	];
 	
 	?>
