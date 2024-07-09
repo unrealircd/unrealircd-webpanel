@@ -3,7 +3,7 @@
 class Upgrade
 {
     public $web_dir;
-    public $download_dir;
+    private $temp_dir;
     public static $upgrade_available;
     public static $last_check;
     public $error;
@@ -21,19 +21,20 @@ class Upgrade
         $tok = split(__DIR__, '/');
         unset($tok[count($tok) - 1]);
         $this->web_dir = implode('/',$tok).'/';
-        $this->download_dir = $this->web_dir.'downloads';
         
+        /** prepare the temp directory */
+        $temp_dir = "~/panel_upgrade";
+        $temp_dir .= ($temp_dir[strlen($temp_dir) - 1] != '/') ? "/uawp" : "uawp";
+        array_map('unlink', array_filter((array) glob("$temp_dir/*.*")));
+        array_map('rmdir', array_filter((array) glob("$temp_dir/*")));
+        rmdir($temp_dir);
+        $mkdir = mkdir($temp_dir, 0755, true);
+
+        $this->temp_dir = $mkdir ? $temp_dir : NULL;
+        $this->error = $mkdir ? NULL : "Could not create directory: $temp_dir";
         Upgrade::$upgrade_available = false;
-        $this->checkForNew();
         if ($this->error)
             error_log($this->error);
-        else
-        {    
-            if (Upgrade::$upgrade_available)
-                error_log("Upgrade available! Version ".Upgrade::$latest_version);
-            else
-                error_log("No upgrade available");
-        }
     }
     
     /** Checks for a new upgrade */
@@ -42,8 +43,8 @@ class Upgrade
         global $config;
         read_config_db();
         if (time() - $config['upgrade']['last_check'] < 300) // only check every 15 mins
-            return $config['upgrade']['latest_version'] > WEBPANEL_VERSION ? true : false;
-            
+            return false;
+        error_log(time()." - ".$config['upgrade']['last_check']." = ".time()-$config['upgrade']['last_check']);
         // Define the API URL to check for updates
         $apiUrl = "https://api.github.com/repos/unrealircd/unrealircd-webpanel/releases"; // Replace with your API URL
         $response = file_get_contents($apiUrl, false, stream_context_create(["http" => ["method" => "GET", "header" => "User-agent: UnrealIRCd Webpanel"]]));
@@ -64,7 +65,7 @@ class Upgrade
     function downloadUpgradeZip()
     {
         $ch = curl_init(get_config('upgrade::download_link'));
-        $fp = fopen($this->download_dir."/unrealircd-webpanel-upgrade.zip", 'w+');
+        $fp = fopen("$this->temp_dir/unrealircd-webpanel-upgrade.zip", 'w+');
     
         curl_setopt($ch, CURLOPT_FILE, $fp);
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
@@ -73,80 +74,72 @@ class Upgrade
             'User-Agent: UnrealIRCd Webpanel',
         ]);
         $success = curl_exec($ch);
-    
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        
+        if ($code == "403" || $code == "404" || $code == "200")
+        {
+            $this->error ="Unable to download";
+        }
         curl_close($ch);
         fclose($fp);
     
         return $success;
     }
-}
-
- // Define the URL to download the update
-$downloadUrl = "https://example.com/api/download_update"; // Replace with your download URL
-        
-// Define the URL to download the update
-$downloadUrl = "https://example.com/api/download_update"; // Replace with your download URL
-
-// Define the directory where the update will be extracted
-$webDir = __DIR__; // Current directory
-
-// Function to check for updates
-function checkForUpdate($url) {
-    $response = file_get_contents($url);
-    if ($response === FALSE) {
-        die("Error checking for updates.");
-    }
-    $data = json_decode($response, true);
-    return $data['update_available'] ?? false;
-}
-
-// Function to download the update
-function downloadUpdate($url, $savePath) {
-    $ch = curl_init($url);
-    $fp = fopen($savePath, 'w+');
-
-    curl_setopt($ch, CURLOPT_FILE, $fp);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-
-    $success = curl_exec($ch);
-
-    curl_close($ch);
-    fclose($fp);
-
-    return $success;
-}
-
-// Function to extract the zip file
-function extractZip($zipPath, $extractTo) {
-    $zip = new ZipArchive;
-    if ($zip->open($zipPath) === TRUE) {
-        $zip->extractTo($extractTo);
-        $zip->close();
-        return true;
-    } else {
-        return false;
-    }
-}
-/**
-// Check for updates
-if (checkForUpdate($apiUrl)) {
-    $tempZipFile = $webDir . '/update.zip';
-
-    // Download the update
-    if (downloadUpdate($downloadUrl, $tempZipFile)) {
-        // Extract the update
-        if (extractZip($tempZipFile, $webDir)) {
-            echo "Update applied successfully.";
+    function extractZip() {
+        $zip = new ZipArchive;
+        if ($zip->open("$this->temp_dir/unrealircd-webpanel-upgrade.zip") === true)
+        {
+            $zip->extractTo("$this->temp_dir/");
+            $zip->close();
+            return true;
         } else {
-            echo "Failed to extract the update.";
+            return false;
         }
-        // Clean up the temporary zip file
-        unlink($tempZipFile);
-    } else {
-        echo "Failed to download the update.";
     }
-} else {
-    echo "No update available.";
+    function cleanupOldFiles()
+    {
+        $currentFiles = $this->listFiles($this->web_dir);
+        $updateFiles = $this->listFiles($this->temp_dir);
+    
+        $filesToDelete = array_diff($currentFiles, $updateFiles);
+    
+        foreach ($filesToDelete as $file)
+        {
+            error_log($file);
+            //unlink("$b$file");
+        }
+
+    }
+    
+    function extractToWebdir()
+    {
+        $zip = new ZipArchive;
+        if ($zip->open("$this->temp_dir/unrealircd-webpanel-upgrade.zip") === true)
+        {
+            $extracted = $zip->extractTo(str_replace('//','/',get_config('base_url')));
+            $zip->close();
+            if (!$extracted)
+            {
+                error_log("Cannot extract to web directory. Permission denied.");
+                return false;
+            }
+            array_map('unlink', array_filter((array) glob("$this->temp_dir/*.*")));
+            array_map('rmdir', array_filter((array) glob("$this->temp_dir/*.*")));
+            return true;
+        } else {
+            return false;
+        }
+    }
+    function listFiles($dir) {
+        $files = [];
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
+        foreach ($iterator as $file)
+        {
+            if ($file->isFile())
+            {
+                $files[] = str_replace($dir . DIRECTORY_SEPARATOR, '', $file->getPathname());
+            }
+        }
+        return $files;
+    }
 }
-*/
