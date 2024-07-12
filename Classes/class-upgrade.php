@@ -110,7 +110,10 @@ class Upgrade
     function cleanupOldFiles()
     {
         foreach ($this->compareAndGetFilesToDelete() as $file)
-            unlink($file);
+        {
+            unlink("$this->web_dir$file");
+            error_log("Deleting: $file");   
+        }
     }    
     function compareAndGetFilesToDelete() : array
     {
@@ -138,7 +141,7 @@ class Upgrade
         $zip = new ZipArchive;
         if ($zip->open($this->temp_dir."unrealircd-webpanel-upgrade.zip") === true)
         {
-            $extracted = $zip->extractTo(str_replace("//","/",get_config('base_url')));
+            $extracted = $zip->extractTo($this->web_dir);
             $zip->close();
             if (!$extracted)
             {

@@ -3,9 +3,9 @@ require_once('common_api.php');
 
 if (!$rpc)
     die();
-error_log("Stuff");
+    
 $upgrade = new Upgrade();
-error_log("...");
+
 if ($upgrade->error)
 {
     error_log("Couldn't create dir.");
@@ -16,14 +16,18 @@ $upgrade->checkForNew();
 if (Upgrade::$upgrade_available)
 {
     error_log("Upgrade available, downloading and installing");
-    if (!$upgrade->downloadUpgradeZip()
-        || !$upgrade->extractZip()
-        || !$upgrade->extractToWebdir()
-        )
-        return error_log($upgrade->error);
+    if (!$upgrade->downloadUpgradeZip())
+        error_log($upgrade->error);
+    else if (!$upgrade->extractZip())
+        error_log($upgrade->error);
+        
     $upgrade->cleanupOldFiles();
+    
+    if(!$upgrade->extractToWebdir())
+        return error_log($upgrade->error);
+        
     $upgrade->cleanupDownloadFiles();
     error_log("Upgrade was successful!");
 }
 else 
-    error_log("no upgrade");
+    error_log("No upgrade available");
