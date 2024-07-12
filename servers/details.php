@@ -6,14 +6,14 @@ require_once "../inc/header.php";
 $title = "Server Lookup";
 $servername = "";
 $srv = NULL;
-
+$can_rehash = current_user_can(PERMISSION_REHASH);
 $rehash_errors = [];
 $rehash_warnings = [];
 $rehash_success = [];
 
 if (isset($_POST))
 {
-	if (isset($_POST['rehash']))
+	if (isset($_POST['rehash']) && $can_rehash)
 	{
 		$servID = $_POST['rehash'];
 		if ($response = $rpc->server()->rehash($servID)) 
@@ -40,7 +40,7 @@ if (isset($_POST))
 				}		 
 			}
 	}	
-	if (isset($_POST['disconnect']))
+	if (isset($_POST['disconnect']) && $can_rehash)
 	{
 		if ($rpc->server()->disconnect($_POST['disconnect'], $_POST['reason']))
 			Message::Success("Server \"".$_POST['disconnect']."\" has been successfully disconnected from the network.");
@@ -123,8 +123,8 @@ if (!empty($rehash_success)) {
 <br>
 <div class="row">
 	<div class="col-sm-3">
-		<div class="btn btn-sm btn-warning" data-toggle="modal" data-target="#rehash_modal">Rehash</div>
-		<div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#disconnect_modal">Disconnect</div>
+		<div class="btn btn-sm btn-warning <?php echo $can_rehash ? "" : "disabled" ?>" data-toggle="modal" data-target="#rehash_modal" <?php echo $can_rehash ? "" : "aria-disabled='true'" ?>>Rehash</div>
+		<div class="btn btn-sm btn-danger <?php echo $can_rehash ? "" : "disabled" ?>" data-toggle="modal" data-target="#disconnect_modal"<?php echo $can_rehash ? "" : "aria-disabled='true'" ?>>Disconnect</div>
 	</div>
 </div>
 <br>

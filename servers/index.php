@@ -3,6 +3,7 @@ require_once "../inc/common.php";
 require_once "../inc/header.php";
 require_once "../inc/connection.php";
 
+$can_rehash = current_user_can(PERMISSION_REHASH);
 $rehash_errors = [];
 $rehash_warnings = [];
 $rehash_success = [];
@@ -10,7 +11,7 @@ $rehash_success = [];
 if (!empty($_POST))
 {
 	do_log($_POST);
-	if (isset($_POST['rehash']))
+	if (isset($_POST['rehash']) && $can_rehash)
 		foreach ($_POST['serverch'] as $servID)
 			if ($response = $rpc->server()->rehash($servID)) 
 			{
@@ -104,7 +105,7 @@ Click on a server name to view more information.
 		<th scope="col"> <input class="btn btn-primary btn-sm" type="submit" value="Search"></th></form>
 	</thead></table>
 	<form action="index.php" method="post">
-		<div class="btn btn-sm btn-warning" data-toggle="modal" data-target="#rehash_modal"><i class="fa-solid fa-arrows-rotate"></i> Rehash Selected</div>
+		<div class="btn btn-sm btn-warning <?php echo $can_rehash ? "" : "disabled" ?>" data-toggle="modal" data-target="#rehash_modal"><i class="fa-solid fa-arrows-rotate"></i> Rehash Selected</div>
 		<button name="checkforupdates" type="submit" class="btn btn-sm btn-info"><i class="fa-solid fa-cloud-arrow-down"></i> Check for upgrades</div><br>
 
 		<div class="modal fade" id="rehash_modal" tabindex="-1" role="dialog" aria-labelledby="confirmModalCenterTitle" aria-hidden="true">
