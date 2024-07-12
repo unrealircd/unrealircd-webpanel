@@ -99,7 +99,6 @@ class Upgrade
         {
             $zip->extractTo("$this->temp_dir");
             $zip->close();
-            unlink($this->temp_dir."unrealircd-webpanel-upgrade.zip");
             self::$temp_extracted_dir = findOnlyDirectory($this->temp_dir);
             error_log(self::$temp_extracted_dir);
             return true;
@@ -150,6 +149,7 @@ class Upgrade
             }
             return true;
         } else {
+            error_log("Cannot open zip at $this->temp_dir");
             return false;
         }
     }
@@ -174,10 +174,6 @@ class Upgrade
             {
                 $f = substr($file->getPathname(), strlen($dir));
                 if ($f[0] == "/") $f = substr($f,1);
-                error_log("$dir => $f");
-                
-                
-                
                 
                 $files[] = $f;
             }
