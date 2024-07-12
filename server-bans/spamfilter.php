@@ -287,7 +287,7 @@ $spamfilter = $rpc->spamfilter()->getAll();
 			echo "<tr>";
 			echo "<td><input type=\"checkbox\" value='" . base64_encode($sf->name).",".base64_encode($sf->match_type).",".base64_encode($sf->spamfilter_targets).",".base64_encode($sf->ban_action) . "' name=\"sf[]\"></td>";
 			echo "<td>".$sf->match_type."</td>";
-			echo "<td>".$sf->name."</td>";
+			echo "<td data-toggle='tooltip' data-placement='bottom' title='$sf->name'>".(strlen($sf->name) > 50 ? substr($sf->name, 0, 50)."..." : $sf->name)."</td>";
 			echo "<td>".spamfilter_targets_to_string_with_info($sf->spamfilter_targets)."</td>";
 			echo "<td><span class=\"badge rounded-pill badge-info\">".$sf->ban_action."</span></td>";
 			echo "<td>".$sf->ban_duration_string."</td>";
