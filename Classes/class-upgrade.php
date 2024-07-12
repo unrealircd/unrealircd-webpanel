@@ -4,7 +4,7 @@ class Upgrade
 {
     public $web_dir;
     private $temp_dir;
-    private $temp_extracted_dir;
+    private static $temp_extracted_dir;
     public static $upgrade_available;
     public static $last_check;
     public $error;
@@ -26,9 +26,10 @@ class Upgrade
         /** prepare the temp directory */
         $temp_dir = $this->web_dir."panel_upgrade";
         $temp_dir .= ($temp_dir[strlen($temp_dir) - 1] != '/') ? "/" : "";
-        array_map('unlink', array_filter((array) glob("$temp_dir/*.*")));
-        array_map('rmdir', array_filter((array) glob("$temp_dir/*")));
-        if (file_exists($temp_dir)) rmdir($temp_dir);
+        if (file_exists($temp_dir)) {
+            deleteDirectoryContents($temp_dir);
+            rmdir($temp_dir);
+        }
         $mkdir = mkdir($temp_dir, 0755, true);
 
         $this->temp_dir = $mkdir ? $temp_dir : NULL;
@@ -99,8 +100,8 @@ class Upgrade
             $zip->extractTo("$this->temp_dir");
             $zip->close();
             unlink($this->temp_dir."unrealircd-webpanel-upgrade.zip");
-            $this->temp_extracted_dir = findOnlyDirectory($this->temp_dir);
-            error_log($this->temp_extracted_dir);
+            self::$temp_extracted_dir = findOnlyDirectory($this->temp_dir);
+            error_log(self::$temp_extracted_dir);
             return true;
         } else {
             return false;
@@ -108,17 +109,28 @@ class Upgrade
     }
     function cleanupOldFiles()
     {
+        foreach ($this->compareAndGetFilesToDelete() as $file)
+            unlink($file);
+    }    
+    function compareAndGetFilesToDelete() : array
+    {
         $currentFiles = $this->listFiles($this->web_dir);
-        $updateFiles = $this->listFiles($this->temp_extracted_dir);
-    
+        $updateFiles = $this->listFiles(self::$temp_extracted_dir);
         $filesToDelete = array_diff($currentFiles, $updateFiles);
+        $filesToActuallyDelete = [];
         error_log("Comparing... Files to delete:");
         foreach ($filesToDelete as $file)
         {
-            error_log($file);
-            //unlink("$file");
+            // skip the relevant directories
+            if (str_starts_with($file, "panel_upgrade/")
+             || str_starts_with($file, "vendor/")
+             || str_starts_with($file, "config/")
+             || str_starts_with($file, "data/")
+             || str_starts_with($file, "plugins/"))
+                continue;
+            $filesToActuallyDelete[] = $file;
         }
-
+        return $filesToActuallyDelete;
     }
     
     function extractToWebdir()
@@ -145,8 +157,9 @@ class Upgrade
      */
     function cleanupDownloadFiles()
     {
-        array_map('unlink', array_filter((array) glob("$this->temp_dir/*.*")));
-        array_map('rmdir', array_filter((array) glob("$this->temp_dir/*")));
+        $ex_dir = self::$temp_extracted_dir ?? findOnlyDirectory($this->temp_dir);
+        deleteDirectoryContents($ex_dir);
+        rmdir($ex_dir);
     }
     
     function listFiles($dir) {
@@ -205,4 +218,45 @@ function findOnlyDirectory($topDir) {
     } else {
         return "Multiple directories found. Previous cleanup was unsuccessful for some reason, maybe a permissions error? Aborting upgrade.";
     }
+}
+
+
+function deleteDirectoryContents($dir) {
+    error_log("Deleting directory contents at $dir");
+    if (!is_dir($dir)) {
+        echo "The provided path is not a directory.";
+        return false;
+    }
+
+    // Open the directory
+    $handle = opendir($dir);
+    if ($handle === false) {
+        echo "Failed to open the directory.";
+        return false;
+    }
+
+    // Loop through the directory contents
+    while (($item = readdir($handle)) !== false) {
+        // Skip the special entries "." and ".."
+        if ($item == "." || $item == "..") {
+            continue;
+        }
+
+        $itemPath = $dir."/".$item;
+
+        // If the item is a directory, recursively delete its contents
+        if (is_dir($itemPath)) {
+            deleteDirectoryContents($itemPath);
+            // Remove the empty directory
+            rmdir($itemPath);
+        } else {
+            // If the item is a file, delete it
+            unlink($itemPath);
+        }
+    }
+
+    // Close the directory handle
+    closedir($handle);
+
+    return true;
 }
