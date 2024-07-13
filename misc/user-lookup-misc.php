@@ -8,8 +8,13 @@ function generate_html_whois($user)
 	$numnotes = [
 		"ip" => isset($notes['ip']['notes']) ? count($notes["ip"]['notes']) : 0,
 		"nick" => isset($notes['ip']['notes']) ? count($notes["nick"]['notes'] ?? []) : 0,
-		"account" => isset($notes['ip']['notes']) ? count($notes['account']['notes'] ?? 0) : 0,
+		"account" => isset($notes['ip']['notes']) ? count($notes['account']['notes'] ?? []) : 0,
 	];
+	$cc = (isset($user->geoip->country_code)) ? strtolower($user->geoip->country_code) : "";
+	
+	$asn = $user->geoip->asn ?? "none";
+	$asname = $user->geoip->asname ?? "none";
+	Message::Fail(var_export($user->geoip, true));
 	
 	?>
 
@@ -35,9 +40,10 @@ function generate_html_whois($user)
 				<td colspan="2"><code><?php echo htmlspecialchars($user->hostname); ?></code></td>
 			</tr><tr>
 				<th>IP</th>
-				<td colspan="2"><code><?php echo htmlspecialchars($user->ip); ?></code>
+				<td colspan="2">
+					<code><?php echo htmlspecialchars($user->ip); ?></code>
 				<?php
-				if ($cc = (isset($user->geoip->country_code)) ? strtolower($user->geoip->country_code) : "")
+				if (strlen($cc))
 				{
 				   ?>  <img src="https://flagcdn.com/48x36/<?php echo htmlspecialchars($cc); ?>.png"
 							width="20"
@@ -46,6 +52,9 @@ function generate_html_whois($user)
 					<a href="<?php echo htmlspecialchars(get_config("base_url")."tools/ip-whois.php?ip=$user->ip"); ?>"><button class="btn-sm btn-primary">WHOIS IP</button></a>
 				</td>
 				<td><button id="ipnotes" class="btn btn-sm btn-secondary fa-solid fa-sticky-note text-nowrap"> <?php echo $numnotes['ip']?></button></td>
+			</tr><tr>
+				<th>ASN</th>
+				<td colspan="2"><code><?php echo "$asname ($asn)"; ?></code></td>
 			</tr><tr>
 				<th>Ident</th>
 				<td colspan="2"><code><?php echo htmlspecialchars($user->user->username); ?></code></td>
