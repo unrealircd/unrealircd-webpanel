@@ -14,7 +14,6 @@ function generate_html_whois($user)
 	
 	$asn = $user->geoip->asn ?? "none";
 	$asname = $user->geoip->asname ?? "none";
-	Message::Fail(var_export($user->geoip, true));
 	
 	?>
 
