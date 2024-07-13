@@ -137,7 +137,7 @@ class Upgrade
     
     function extractToWebdir()
     {
-        recurse_copy($this->temp_extracted_dir, $this->web_dir);
+        recurse_copy(self::$temp_extracted_dir, $this->web_dir);
     }
     
     /**
