@@ -137,21 +137,7 @@ class Upgrade
     
     function extractToWebdir()
     {
-        $zip = new ZipArchive;
-        if ($zip->open($this->temp_dir."unrealircd-webpanel-upgrade.zip") === true)
-        {
-            $extracted = $zip->extractTo($this->web_dir);
-            $zip->close();
-            if (!$extracted)
-            {
-                error_log("Cannot extract to web directory. Permission denied.");
-                return false;
-            }
-            return true;
-        } else {
-            error_log("Cannot open zip at $this->temp_dir");
-            return false;
-        }
+        recurse_copy($this->temp_extracted_dir, $this->web_dir);
     }
     
     /**
@@ -258,4 +244,21 @@ function deleteDirectoryContents($dir) {
     closedir($handle);
 
     return true;
+}
+
+function recurse_copy($src, $dst) {
+    $dir = opendir($src);
+    @mkdir($dst);
+    while(false !== ( $file = readdir($dir)) )
+        if (( $file != '.' ) && ( $file != '..' ))
+        {
+            if ( is_dir($src . '/' . $file) )
+                recurse_copy($src . '/' . $file, $dst . '/' . $file);
+
+            else
+                copy($src . '/' . $file, $dst . '/' . $file);
+        }
+        
+
+    closedir($dir);
 }
