@@ -14,7 +14,7 @@ if (!empty($_GET))
 		$_POST['servicesonly'] = $_GET['servicesonly'];
 }
 
-if (!empty($_POST))
+if (!empty($_POST) && current_user_can(PERMISSION_BAN_USERS))
 {
 	require_once "../inc/connection.php";
 	do_log($_POST);
