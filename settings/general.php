@@ -19,7 +19,7 @@ if (isset($_POST['submit']) && $canEdit)
         Message::Info("Debug Mode is now ".(($config['debug']) ? "enabled" : "disabled"));
 
 
-    if (!empty($_FILES['customFile']))
+    if (!empty($_FILES['customFile']['tmp_name']))
     {
         $cwd = getcwd();
         $a = split($cwd,'/');
