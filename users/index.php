@@ -13,8 +13,8 @@ if (!empty($_GET))
 	if (isset($_GET['servicesonly']) && !isset($_POST['servicesonly']))
 		$_POST['servicesonly'] = $_GET['servicesonly'];
 }
-
-if (!empty($_POST) && current_user_can(PERMISSION_BAN_USERS))
+$can_ban = current_user_can(PERMISSION_BAN_USERS);
+if (!empty($_POST) && $can_ban)
 {
 	require_once "../inc/connection.php";
 	do_log($_POST);
@@ -104,66 +104,68 @@ Click on a username to view more information.
 	<!-- User Actions -->
 	<table class="table table-responsive table-light">
 	<tr>
-	<td colspan="2">
-	<label for="bantype">Apply action: </label>
-	<select name="bantype" id="bantype">
-			<option value=""></option>
-		<optgroup label="Bans">
-			<option value="gline">GLine</option>
-			<option value="gzline">GZLine</option>
-			<option value="kill">Kill</option>
-		</optgroup>
-	</select></td><td colspan="2">
-	<label for="banlen_w">Duration: </label>
-	<select name="banlen_w" id="banlen_w">
-			<?php
-			for ($i = 0; $i <= 56; $i++)
-			{
-				if (!$i)
-					echo "<option value=\"0w\"></option>";
-				else
+	<td colspan="2" class="<?php echo $can_ban ? "" : "disabled"?>">
+		<label for="bantype">Apply action: </label>
+		<select name="bantype" id="bantype">
+				<option value=""></option>
+			<optgroup label="Bans">
+				<option value="gline">GLine</option>
+				<option value="gzline">GZLine</option>
+				<option value="kill">Kill</option>
+			</optgroup>
+		</select></td><td colspan="2">
+		<label for="banlen_w">Duration: </label>
+		<select name="banlen_w" id="banlen_w">
+				<?php
+				for ($i = 0; $i <= 56; $i++)
 				{
-					$w = ($i == 1) ? "week" : "weeks";
-					echo "<option value=\"$i" . "w\">$i $w" . "</option>";
+					if (!$i)
+						echo "<option value=\"0w\"></option>";
+					else
+					{
+						$w = ($i == 1) ? "week" : "weeks";
+						echo "<option value=\"$i" . "w\">$i $w" . "</option>";
+					}
 				}
-			}
-			?>
-	</select>
-	<select name="banlen_d" id="banlen_d">
-			<?php
-			for ($i = 0; $i <= 31; $i++)
-			{
-				if (!$i)
-					echo "<option value=\"0d\"></option>";
-				else
+				?>
+		</select>
+		<select name="banlen_d" id="banlen_d">
+				<?php
+				for ($i = 0; $i <= 31; $i++)
 				{
-					$d = ($i == 1) ? "day" : "days";
-					echo "<option value=\"$i" . "d\">$i $d" . "</option>";
+					if (!$i)
+						echo "<option value=\"0d\"></option>";
+					else
+					{
+						$d = ($i == 1) ? "day" : "days";
+						echo "<option value=\"$i" . "d\">$i $d" . "</option>";
+					}
 				}
-			}
-			?>
-	</select>
-	<select name="banlen_h" id="banlen_h">
-			<?php
-			for ($i = 0; $i <= 24; $i++)
-			{
-				if (!$i)
-					echo "<option value=\"0d\"></option>";
-				else
+				?>
+		</select>
+		<select name="banlen_h" id="banlen_h">
+				<?php
+				for ($i = 0; $i <= 24; $i++)
 				{
-					$h = ($i == 1) ? "hour" : "hours";
-					echo "<option value=\"$i" . "h\">$i $h" . "</option>";
+					if (!$i)
+						echo "<option value=\"0d\"></option>";
+					else
+					{
+						$h = ($i == 1) ? "hour" : "hours";
+						echo "<option value=\"$i" . "h\">$i $h" . "</option>";
+					}
 				}
-			}
-			
-			?>
-	</select>
-	
-	<br></td><tr><td colspan="3">
+				
+				?>
+		</select>
+		
+		<br>
+	</td>
+	<tr><td colspan="3">
 	
 	<label for="ban_reason">Reason: </label>
-	<input class="form-control" type="text" name="ban_reason" id="ban_reason" value="No reason">
-	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ban_confirmation">
+	<input class="form-control <?php echo $can_ban ? "" : "disabled"?>" type="text" name="ban_reason" id="ban_reason" value="No reason">
+	<button type="button" class="btn btn-primary <?php echo $can_ban ? "" : "disabled"?>" data-toggle="modal" data-target="#ban_confirmation">
 			Apply
 	</button></td></table>
 
