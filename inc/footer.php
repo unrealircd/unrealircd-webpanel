@@ -15,7 +15,7 @@
 				role="button"
 				data-mdb-ripple-color="dark"
 				target="_blank">
-				<img src="<?php echo get_config('base_url')?>/img/patreon.png" style="margin-right: 4px;" width="16" height="16"></a>
+				<img src="<?php echo get_config('base_url')?>img/patreon.png" style="margin-right: 4px;" width="16" height="16"></a>
 
 			<a href="https://www.youtube.com/@unrealircdtutorials/"
 				role="button"
