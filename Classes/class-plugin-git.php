@@ -11,6 +11,10 @@ class PluginRepo
         global $config;
         if (!isset($config['third-party-plugins']))
         {
+            $config['third-party-plugins'] = [];
+        }
+        if (empty($config['third-party-plugins']))
+        {
             $config['third-party-plugins']['data'] = NULL;
             $config['third-party-plugins']['timestamp'] = 0;
         }
