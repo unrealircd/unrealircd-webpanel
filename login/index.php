@@ -170,5 +170,3 @@ body {
 			form.submit();
 	});
 </script>
-
-<?php require_once "../inc/footer.php";
