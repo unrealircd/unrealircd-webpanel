@@ -223,10 +223,8 @@ class PanelUser
 		foreach($data as $dat)
 		{
 			$result = explode(":",$dat);
-			error_log("Checking $i of $count: ".substr($result[0],0,5)." => ".substr(strtoupper($end), 0,5));
 			if ($result[0] == strtoupper($end))
 			{
-				error_log("FOUND");
 				$this->add_meta("hibp", $result[1]);
 				return;
 			}
