@@ -96,7 +96,7 @@ class sql_db
 		$conn->query("CREATE TABLE IF NOT EXISTS " . get_config("mysql::table_prefix") . "settings (
 			id int AUTO_INCREMENT NOT NULL,
 			setting_key VARCHAR(255) NOT NULL,
-			setting_value VARCHAR(5000),
+			setting_value LONGTEXT,
 			PRIMARY KEY (id),
 			UNIQUE(setting_key)
 		)");
@@ -113,7 +113,7 @@ class sql_db
 		if (($columns = $conn->query("SHOW COLUMNS FROM ".get_config("mysql::table_prefix")."user_meta")))
 			$c = $columns->fetchAll();
 		if (!empty($c))
-			$conn->query("ALTER TABLE ".get_config("mysql::table_prefix")."user_meta CHANGE `meta_value` `meta_value` VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
+			$conn->query("ALTER TABLE ".get_config("mysql::table_prefix")."user_meta CHANGE `meta_value` `meta_value` LONGTEXT CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
 
 		/* - settings: add UNIQUE(setting_key) */
 		$c = [];
@@ -124,7 +124,7 @@ class sql_db
 			$conn->query("ALTER TABLE " . get_config("mysql::table_prefix") . "settings ADD CONSTRAINT setting_key UNIQUE(setting_key)");
 		}
 		else
-			$conn->query("ALTER TABLE ".get_config("mysql::table_prefix")."settings CHANGE setting_value setting_value VARCHAR(5000) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
+			$conn->query("ALTER TABLE ".get_config("mysql::table_prefix")."settings CHANGE setting_value setting_value LONGTEXT CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL");
 		
 		/* - user_meta: add UNIQUE(meta_key,user_id) */
 		$c = [];
