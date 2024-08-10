@@ -2,70 +2,75 @@
 require_once "../inc/common.php";
 require_once "../inc/header.php";
 
-if (isset($_POST['do_del_server']))
+$can_edit = current_user_can(PERMISSION_MANAGE_USERS);
+
+if ($can_edit)
 {
-	$server = $_POST['del_server_name'] ?? null;
-	if (isset($config["unrealircd"][$server]))
+	if (isset($_POST['do_del_server']))
 	{
-		unset($config["unrealircd"][$server]);
-		set_at_least_one_default_rpc_server();
-		write_config("unrealircd");
-	} else {
-		Message::Fail("Delete failed: could not find server");
-	}
-} else
-if (isset($_POST['do_add_server']))
-{
-	$opts = (object)$_POST;
-
-	/* TODO: Server-side validation */
-
-	// TODO: syntax of each item
-
-	// TODO: check server already exists with that (new) displayname
-
-	if (isset($config["unrealircd"][$opts->rpc_displayname]) &&
-	    !($opts->rpc_displayname == $opts->edit_existing))
+		$server = $_POST['del_server_name'] ?? null;
+		if (isset($config["unrealircd"][$server]))
+		{
+			unset($config["unrealircd"][$server]);
+			set_at_least_one_default_rpc_server();
+			write_config("unrealircd");
+		} else {
+			Message::Fail("Delete failed: could not find server");
+		}
+	} else
+	if (isset($_POST['do_add_server']))
 	{
-		die("Server with that name already exists"); // TODO: pretier :D
+		$opts = (object)$_POST;
+
+		/* TODO: Server-side validation */
+
+		// TODO: syntax of each item
+
+		// TODO: check server already exists with that (new) displayname
+
+		if (isset($config["unrealircd"][$opts->rpc_displayname]) &&
+			!($opts->rpc_displayname == $opts->edit_existing))
+		{
+			die("Server with that name already exists"); // TODO: pretier :D
+		}
+
+		$new_properties = [
+			"rpc_user" => $opts->rpc_user,
+			"rpc_password" => $opts->rpc_password,
+			"host"=>$opts->rpc_host,
+			"port"=>$opts->rpc_port,
+			"tls_verify_cert"=>isset($opts->rpc_tls_verify_cert)?true:false,
+			"default"=>isset($opts->rpc_default)?true:false,
+		];
+
+		if (!empty($opts->edit_existing))
+		{
+			// Change existing server
+			if (!isset($config["unrealircd"][$opts->edit_existing]))
+				die("Editing a server that does not exist!?"); // not very graceful, isn't it?
+			if ($new_properties["rpc_password"] == "****************")
+				$new_properties["rpc_password"] = $config["unrealircd"][$opts->edit_existing]["rpc_password"];
+			// name change? unset the old one
+			if ($opts->edit_existing != $opts->rpc_displayname)
+				unset($config["unrealircd"][$opts->edit_existing]);
+			// set new properties
+			$config["unrealircd"][$opts->rpc_displayname] = $new_properties;
+		} else {
+			// Add new server
+			$config["unrealircd"][$opts->rpc_displayname] = $new_properties;
+			// TODO: encrypt pwd ;)
+		}
+
+		if ($new_properties["default"])
+			set_default_rpc_server($opts->rpc_displayname);
+		else
+			set_at_least_one_default_rpc_server();
+
+		/* And write the new config */
+		write_config();
+
+		Message::Success("RPC Server successfully ". (empty($opts->edit_existing) ? "added" : "modified").".");
 	}
-
-	$new_properties = [
-		"rpc_user" => $opts->rpc_user,
-		"rpc_password" => $opts->rpc_password,
-		"host"=>$opts->rpc_host,
-		"port"=>$opts->rpc_port,
-		"tls_verify_cert"=>isset($opts->rpc_tls_verify_cert)?true:false,
-		"default"=>isset($opts->rpc_default)?true:false,
-	];
-
-	if (!empty($opts->edit_existing))
-	{
-		// Change existing server
-		if (!isset($config["unrealircd"][$opts->edit_existing]))
-			die("Editing a server that does not exist!?"); // not very graceful, isn't it?
-		if ($new_properties["rpc_password"] == "****************")
-			$new_properties["rpc_password"] = $config["unrealircd"][$opts->edit_existing]["rpc_password"];
-		// name change? unset the old one
-		if ($opts->edit_existing != $opts->rpc_displayname)
-			unset($config["unrealircd"][$opts->edit_existing]);
-		// set new properties
-		$config["unrealircd"][$opts->rpc_displayname] = $new_properties;
-	} else {
-		// Add new server
-		$config["unrealircd"][$opts->rpc_displayname] = $new_properties;
-		// TODO: encrypt pwd ;)
-	}
-
-	if ($new_properties["default"])
-		set_default_rpc_server($opts->rpc_displayname);
-	else
-		set_at_least_one_default_rpc_server();
-
-	/* And write the new config */
-	write_config();
-
-	Message::Success("RPC Server successfully ". (empty($opts->edit_existing) ? "added" : "modified").".");
 }
 
 ?>
@@ -91,7 +96,7 @@ if (empty($config["unrealircd"]))
 		<?php if (1) /* current_user_can(PERMISSION_MANAGE_RPC_SERVERS)) */ { ?>
 		<div class="col-sm-3">
 			<form method="post">
-			<div class="btn btn-primary" onclick="add_rpc_server()">Add Server</div>
+			<div class="btn btn-primary" <?php echo ($can_edit) ? 'onclick="add_rpc_server()"' : 'hidden'?>>Add Server</div>
 			</form>
 		</div>
 		<?php } ?>
@@ -214,7 +219,7 @@ border-radius: 3px;
 <form method="post">
 <table class="container-xxl table table-sm table-responsive caption-top table-striped">
 	<thead class="table-primary">
-	<th scope="col"></th>
+	<?php if ($can_edit){ ?><th scope="col"></th><?php }?>
 	<th scope="col">Display name</th>
 	<th scope="col">Hostname</th>
 	<th scope="col">Port</th>
@@ -238,7 +243,8 @@ border-radius: 3px;
                         $tls_verify_cert = $e["tls_verify_cert"] ? "true" : "false";
                         $html_name = "<a href=\"javascript:edit_rpc_server('$name',$default_server,'$host','$port','$rpc_user',$tls_verify_cert)\">$name</a>";
 			echo "<tr>";
-			echo "<td scope=\"col\"><button type=\"button\" class=\"btn btn-xs btn-danger\" onclick=\"confirm_delete('".$name."')\"><i class=\"fa fa-trash fa-1\" aria-hidden=\"true\"></i></button></td>";
+			if ($can_edit)
+				echo "<td scope=\"col\"><button type=\"button\" class=\"btn btn-xs btn-danger\" onclick=\"confirm_delete('".$name."')\"><i class=\"fa fa-trash fa-1\" aria-hidden=\"true\"></i></button></td>";
 			echo "<td scope=\"col\">".$html_name.$primary."</td>";
 			echo "<td scope=\"col\"><code>".$host."</code></td>";
 			echo "<td scope=\"col\"><code>".$port."</code></td>";
