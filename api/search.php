@@ -69,7 +69,7 @@ foreach ($users as $u)
     {
         $o = (object)[];
         $o->name = $u->name;
-        $o->data = $u->name;
+        $o->data = $u->account;
         $o->label = "account";
         $search_results['users'][] = $o;
     }
@@ -80,7 +80,7 @@ foreach ($users as $u)
         {
             $o = (object)[];
             $o->name = $u->name;
-            $o->data = $u->name;
+            $o->data = $u->geoip->asn;
             $o->label = "ASN";
             $search_results['users'][] = $o;
         }
@@ -88,7 +88,7 @@ foreach ($users as $u)
         {
             $o = (object)[];
             $o->name = $u->name;
-            $o->data = $u->name;
+            $o->data = $u->geoip->asname;
             $o->label = "ASN Name";
             $search_results['users'][] = $o;
         }
@@ -96,7 +96,7 @@ foreach ($users as $u)
         {
             $o = (object)[];
             $o->name = $u->name;
-            $o->data = $u->name;
+            $o->data = $u->geoip->country_code;
             $o->label = "Country Code";
             $search_results['users'][] = $o;
         }
