@@ -6,7 +6,10 @@ if (!$rpc)
     die();
 
 if (!$_GET || !isset($_GET['search']))
-    die_json(["error" => "No search query"]);
+{
+    echo json_encode(["error" => "No search query"]);
+    die;
+}
 $search_term = $_GET['search'];
 $users = $rpc->user()->getAll();
 $chans = $rpc->channel()->getAll(2);
@@ -62,13 +65,44 @@ foreach ($users as $u)
         $o->label = "GECOS";
         $search_results['users'][] = $o;
     }
-    if (strcasestr($u->user->account,$search_term))
+    if (@strcasestr($u->user->account,$search_term))
     {
         $o = (object)[];
         $o->name = $u->name;
         $o->data = $u->name;
         $o->label = "account";
         $search_results['users'][] = $o;
+    }
+    if (isset($u->geoip))
+    {
+        error_log("It's set");
+        if (@strcasestr($u->geoip->asn,$search_term))
+        {
+            $o = (object)[];
+            $o->name = $u->name;
+            $o->data = $u->name;
+            $o->label = "ASN";
+            $search_results['users'][] = $o;
+        }
+        if (@strcasestr($u->geoip->asname,$search_term))
+        {
+            $o = (object)[];
+            $o->name = $u->name;
+            $o->data = $u->name;
+            $o->label = "ASN Name";
+            $search_results['users'][] = $o;
+        }
+        if (@strcasestr($u->geoip->country_code,$search_term))
+        {
+            $o = (object)[];
+            $o->name = $u->name;
+            $o->data = $u->name;
+            $o->label = "Country Code";
+            $search_results['users'][] = $o;
+        }
+    }
+    else{
+        error_log(json_encode($u));
     }
 }
 foreach ($chans as $c)
