@@ -35,9 +35,13 @@ $search_results = [
 
 function strcasestr($haystack, $needle) : bool
 {
-    if (strstr(strtolower($haystack), strtolower($needle)))
-        return true;
-    return false;
+    $needle = strtolower($needle);
+    $haystack = strtolower($haystack);
+    $needle = preg_quote($needle, '/');
+    $needle = str_replace('\*', '.*', $needle);
+    $pattern = '/.*' . $needle . '.*' . '/';
+
+    return preg_match($pattern, $haystack) === 1;
 }
 foreach ($users as $u)
 {
