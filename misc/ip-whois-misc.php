@@ -30,7 +30,7 @@ function get_ip_whois_from_server($server , $ip)
 	}
 		
 	// Set the timeout limit for read
-	if (!stream_set_timeout($f , 3))
+	if (!stream_set_timeout($f , 10))
 	{
         return Message::Fail("Lookup failed: Connection timed out");
 	}
