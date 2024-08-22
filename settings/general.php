@@ -106,7 +106,7 @@ do_log("\$_FILES", $_FILES);
 <div class="card m-1" style="padding-left:20px;padding-right:20px;padding-top:5px;padding-bottom:10px;max-width:fit-content">
     <h6>Debug Mode</h6>
     <div class="custom-control custom-switch">
-        <input name="debug_mode" type="checkbox" class="custom-control-input" id="debug_mode" <?php _ce($canEdit); echo ($config['debug'] == true) ? " checked" : ""; ?>>
+        <input name="debug_mode" type="checkbox" class="custom-control-input" id="debug_mode" <?php _ce($canEdit); echo (get_config('debug') == true) ? " checked" : ""; ?>>
         <label class="custom-control-label" for="debug_mode">Enable Debug Mode (Developers Only)</label>
     </div>
     <i>Enabling this will likely make your webpanel more difficult to use</i>

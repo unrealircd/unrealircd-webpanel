@@ -363,7 +363,7 @@ function generate_html_extserverinfo($server)
                     <table>
                         <tr>
                             <th>Cert Fingerprint</th>
-                            <td><?php echo "<span class=\"badge rounded-pill badge-info\">".htmlspecialchars($server->tls->certfp)."</span>"; ?></td>
+                            <td><?php echo (isset($server->tls->certfp) ? "<span class=\"badge rounded-pill badge-info\">".htmlspecialchars($server->tls->certfp). "</span>" : "none"); ?></td>
                         </tr><tr>
                             <th>TLS Cipher</th>
                             <td><?php echo "<span class=\"badge rounded-pill badge-info\">".htmlspecialchars($server->tls->cipher)."</span>"; ?></td>

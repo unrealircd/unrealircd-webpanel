@@ -40,7 +40,7 @@ function generate_html_whois($user)
 			</tr><tr>
 				<th>IP</th>
 				<td colspan="2">
-					<code><?php echo htmlspecialchars($user->ip); ?></code>
+					<code><?php echo (isset($user->ip) ? htmlspecialchars($user->ip) : "255.255.255.255"); ?></code>
 				<?php
 				if (strlen($cc))
 				{
