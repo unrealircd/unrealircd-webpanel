@@ -1,5 +1,5 @@
 <?php
-	define('DEFAULT_PLUGINS_DIR', 'https://api.valware.uk/plugins.list');
+	define('DEFAULT_PLUGINS_DIR', 'https://webpanel-plugins.unrealircd.org/plugins.list');
 	
 class PluginRepo
 {
