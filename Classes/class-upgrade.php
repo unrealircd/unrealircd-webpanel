@@ -44,8 +44,8 @@ class Upgrade
     {
         global $config;
         read_config_db();
-        $last_check = &$config['upgrade']['last_check'];
-        if (isset($last_check) && time() - $last_check < 300) // only check every 15 mins
+        $last_check = &$config['upgrade']['last_check'] ?? 0;
+        if (isset($last_check) && time() - $last_check < 6) // only check every 15 mins
         {
             error_log("Skipping upgrade check, checked ".time() - $last_check." seconds ago");
             return false;
@@ -62,12 +62,13 @@ class Upgrade
             return false;
         }
         $data = json_decode($response, true);
-        $latest = $data[count($data) - 1];
+        $latest = $data[0];
         $config['upgrade']['latest_version'] = $latest['tag_name'];
         $last_check = time();
         $config['upgrade']['download_link'] = $latest['zipball_url'];
         write_config('upgrade');
-        Upgrade::$upgrade_available = (float)$latest['tag_name'] > WEBPANEL_VERSION ? true : false;
+        error_log($latest['tag_name'] ." ". WEBPANEL_VERSION);
+        Upgrade::$upgrade_available = version_compare($latest['tag_name'], WEBPANEL_VERSION, ">") ? true : false;
     }
     
     function downloadUpgradeZip()
