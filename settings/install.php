@@ -17,6 +17,7 @@ if (ini_get("session.use_cookies")) {
 session_destroy();
 
 require_once "../inc/common.php";
+require_once "../misc/wpa-manifest.php";
 
 /* Get the base url */
 $uri = $_SERVER['REQUEST_URI'];
@@ -63,7 +64,7 @@ $writable = (is_writable("../config/")) ? true: false;
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 <script src="../js/unrealircd-admin.js"></script>
 <title>UnrealIRCd Panel</title>
-<link rel="icon" type="image/x-icon" href="<?php echo get_config("base_url"); ?>img/favicon.ico">
+<link rel="icon" type="image/png" href="<?php echo get_config("base_url"); ?>img/unreal.png">
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <!-- Popper.JS -->
@@ -164,6 +165,8 @@ $writable = (is_writable("../config/")) ? true: false;
 
 		/* Enable lookups on HIBP by default */
 		$config['hibp'] = true;
+
+		create_wpa_manifest();
 
 		/* Now, write all the config (config.php + settings in DB) */
 		write_config();

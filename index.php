@@ -276,8 +276,7 @@ if (isset($current_user->user_meta['hibp']))
 		} catch(e) {
 			return;
 		}
-		stats_tick = Date.now()
-		console.log(data);
+		stats_tick = Date.now();
 		document.getElementById("userRecord").innerHTML = "Record: "+data.user.record;
 		document.getElementById("stats_user_total").innerHTML = data.user.total;
 		document.getElementById("stats_user_total").classList.remove('numberDisplay');

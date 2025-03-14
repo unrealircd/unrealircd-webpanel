@@ -21,8 +21,8 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 
 <link rel="stylesheet" href="<?php echo get_config("base_url"); ?>css/datatables.min.css" />
 
- <!-- Latest compiled and minified CSS -->
- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
 <!-- Font Awesome JS -->
 <script defer src="https://use.fontawesome.com/releases/v6.2.1/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
@@ -31,7 +31,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 <title>UnrealIRCd Panel</title>
-<link rel="icon" type="image/x-icon" href="<?php echo get_config("base_url"); ?>img/favicon.ico">
+<link rel="icon" type="image/png" href="<?php echo get_config("base_url"); ?>img/unreal.png">
 </head>
 <body role="document">
 <div aria-live="polite" aria-atomic="true">
@@ -39,6 +39,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 	<!-- insert your javascript bread in here to make toast -->
   </div>
 </div>
+<script> const BASE_URL = "<?php echo get_config("base_url"); ?>"; </script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
@@ -49,9 +50,20 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 <script src="<?php echo get_config("base_url"); ?>js/datatables.min.js"></script>
 <script src="<?php echo get_config("base_url"); ?>js/datatables-natural-sort.js"></script>
 <script src="<?php echo get_config("base_url"); ?>js/datatables-ellipsis.js"></script>
-<script src="<?php echo get_config("base_url"); ?>js/moment-with-locales.min.js"></script>
+<script src="<?php echo get_config("base_url"); ?>js/moment-with-locales.min.js"></script> 
+<link rel="manifest" href="<?php echo get_config("base_url"); ?>manifest.json">	
 <script>
-		var BASE_URL = "<?php echo get_config("base_url"); ?>";
+		console.log("Attempting to add service worker...");
+		if ("serviceWorker" in navigator) {
+			navigator.serviceWorker.register(BASE_URL+"js/service-worker.js")
+			.then((registration) => {
+			console.log("Service Worker registered:", registration);
+			})
+		.catch((error) => {
+			console.log("Service Worker registration failed:", error);
+			});
+		}
+
 		function timeoutCheck() {
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
@@ -245,7 +257,7 @@ foreach($pages as $name=>$page)
 		</button>
 		<div>
 			<a class="navbar-brand" href="<?php echo get_config("base_url"); ?>">
-			<img src="<?php echo get_config("base_url"); ?>img/favicon.ico" height="25" width="25"> UnrealIRCd Admin Panel</a>
+			<img src="<?php echo get_config("base_url"); ?>img/unreal.png" height="25" width="25"> UnrealIRCd Admin Panel</a>
 		</div>
 		<?php rpc_server_nav(); ?>
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">

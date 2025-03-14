@@ -76,8 +76,12 @@ if (!empty($_POST))
 
 ?><!DOCTYPE html>
 <head>
+<link rel="manifest" href="<?php echo get_config("base_url"); ?>manifest.json">	
 <link href="<?php echo get_config("base_url"); ?>css/unrealircd-admin.css" rel="stylesheet">
 <script src="<?php echo get_config("base_url"); ?>js/unrealircd-admin.js"></script>
+
+<script> const BASE_URL = "<?php echo get_config("base_url"); ?>"; </script>
+
  <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
@@ -93,17 +97,73 @@ if (!empty($_POST))
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 
-<link rel="icon" type="image/x-icon" href="<?php echo get_config("base_url"); ?>img/favicon.ico">
+<link rel="icon" type="image/png" href="<?php echo get_config("base_url"); ?>img/unreal.png">
+
+<link rel="manifest" href="<?php echo get_config("base_url"); ?>manifest.json">	
+
+<script>
+		console.log("Attempting to add service worker...");
+		if ("serviceWorker" in navigator) {
+			navigator.serviceWorker.register(BASE_URL+"js/service-worker.js")
+			.then((registration) => {
+			console.log("Service Worker registered:", registration);
+			})
+		.catch((error) => {
+			console.log("Service Worker registration failed:", error);
+			});
+		}
+</script>
+
 <title>UnrealIRCd Panel</title>
 </head>
+<style>
+	
+	.login-h3 {
+		font-size: default;
+	}
+	.login-img {
+		height: 64px;
+	}
+	.login-input {
+		font-size: default;
+	}
+	.login-btn {
+		font-size: default;
+	}
+	.login-icon {
+		font-size: default;
+	}
+	.login-favicon {
+		width: 32px;
+		height: 32px;
+	}
+
+	@media (orientation: portrait) {
+		.login-h3 {
+			font-size: 50px;
+		}
+		.login-input {
+			font-size: 30px;
+		}
+		.login-btn {
+			font-size: 30px;
+		}
+		.login-icon {
+			font-size: 30px;
+		}
+	}
+
+
+
+</style>
 <section class="vh-100">
-  <div class="container py-5 h-10">
+  <div id="ctr" class="container-xxl py-5 h-10">
 	<div class="row d-flex justify-content-center align-items-center">
 	  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
 		<div class="card shadow-2-strong" style="border-radius: 1rem;">
 		  <div class="card-body p-5 text-center">
 			<form id="login" method="post" action="index.php?redirect=<?php echo $redirect; ?>">
-				<h3><img src="<?php echo get_config("base_url"); ?>img/favicon.ico">	Log in to use Admin Panel</h3>
+				<h3 class="login-h3"><img class="login-img mb-4" src="<?php echo get_config("base_url"); ?>img/unreal.jpg">	Log in to use Admin Panel</h3>
 				
 					<?php 
 					if (isset($failmsg)) Message::Fail($failmsg);
@@ -113,25 +173,25 @@ if (!empty($_POST))
 					<div class="input-group">
 					<div id="username" class="input-group mb-3">
 						<div class="input-group-prepend">
-							<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-						</div><input type="text" id="userinp" class="form-control" name="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-						<div id="user_inv" class="invalid-feedback">
+							<span class="input-group-text" id="basic-addon1"><i class="p-1 fa-solid fa-user login-icon"></i></span>
+						</div><input type="text" id="userinp" class="form-control login-input" name="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+						<div style="font-size:20px" id="user_inv" class="invalid-feedback">
 							Username cannot be empty.
 						</div>
 
 					</div>
 					<div id="password" class="input-group mb-3">
 						<div class="input-group-prepend">
-							<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
-						</div><input type="password" id="passinp" class="form-control" name="password" placeholder="Password">
-						<div id="pass_inv" class="invalid-feedback">
+							<span class="input-group-text" id="basic-addon1"><i class="p-1 fa-solid fa-key login-icon"></i></span>
+						</div><input type="password" id="passinp" class="form-control login-input" name="password" placeholder="Password">
+						<div style="font-size:20px" id="pass_inv" class="invalid-feedback">
 						Password cannot be empty.
 						</div>
 
 					</div>
 
 				</div>
-				<button type="submit" class="btn btn-primary btn-block">Log-In</button>
+				<button type="submit" class="btn btn-primary btn-block login-btn">Log-In</button>
 			</form>
 			</div>
 		</div>
@@ -149,6 +209,8 @@ body {
 	var form = document.getElementById('login');
 	var pinp = document.getElementById('passinp');
 	var uinp = document.getElementById('userinp');
+
+	window.onload = () => uinp.focus();
 	
 	form.addEventListener('submit', (event) =>
 	{

@@ -1,6 +1,5 @@
 
 
-
 /* TKL (un)select all checkbox */
 function toggle_tkl(source) {
     checkboxes = document.getElementsByName("tklch[]");
@@ -175,3 +174,5 @@ function StartLogStream(url)
     var source = new EventSource(url);
     source.addEventListener('message', NewLogEntry, false);
 }
+
+  
