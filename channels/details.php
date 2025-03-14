@@ -37,169 +37,174 @@ $checkboxes = [];
 $chanban_errors = [];
 if (!empty($_POST))
 {
-	if (isset($_POST['update_topic']) && isset($_POST['set_topic']))
+	if ($can_edit)
 	{
-		if (isset($channelObj))
+		if (isset($_POST['update_topic']) && isset($_POST['set_topic']))
 		{
-			if (!isset($channelObj->topic) || strcmp($channelObj->topic,$_POST['set_topic'])) // if the set topic is different
+			if (isset($channelObj))
 			{
-				$user = (function_exists('unreal_get_current_user') && $u = unreal_get_current_user()) ? $u->username : NULL;
-				$topicset = $rpc->channel()->set_topic($channelObj->name, $_POST['set_topic'], $user);
-				$channelObj->topic = $_POST['set_topic'];
+				if (!isset($channelObj->topic) || strcmp($channelObj->topic,$_POST['set_topic'])) // if the set topic is different
+				{
+					$user = (function_exists('unreal_get_current_user') && $u = unreal_get_current_user()) ? $u->username : NULL;
+					$topicset = $rpc->channel()->set_topic($channelObj->name, $_POST['set_topic'], $user);
+					$channelObj->topic = $_POST['set_topic'];
+				}
 			}
 		}
-	}
-	$checkboxes = (isset($_POST['ban_checkboxes'])) ? $_POST['ban_checkboxes'] : [];
-	if (isset($_POST['delete_sel_ex']))
-	{
-		foreach($_POST['ce_checkboxes'] as $c)
-			$checkboxes[] = $c;
-		do_delete_chanex($channelObj, $checkboxes);
-	}
-	if (isset($_POST['delete_sel_inv']))
-	{
-		foreach($_POST['ci_checkboxes'] as $c)
-			$checkboxes[] = $c;
-		do_delete_invite($channelObj, $checkboxes);
-	}
-	else if (isset($_POST['delete_sel_ban']))
-	{
-		foreach($_POST['cb_checkboxes'] as $c)
-			$checkboxes[] = $c;
-		do_delete_chanban($channelObj, $checkboxes);
-	}
-	if (isset($_POST['add_chban']) || isset($_POST['add_chinv']) || isset($_POST['add_chex']))
-	{
-
-		if (isset($_POST['add_chban']))
-			$mode = $_POST['add_chban'];
-		else
-			$mode = (isset($_POST['add_chinv'])) ? $_POST['add_chinv'] : $_POST['add_chex'];
-		
-		$nick = (strlen($_POST['ban_nick'])) ? $_POST['ban_nick'] : false;
-		$action_string = (isset($_POST['bantype_sel_action']) && strlen($_POST['bantype_sel_action'])) ? $_POST['bantype_sel_action'] : false;
-		$action = "";
-		$type_string = (strlen($_POST['bantype_sel_type'])) ? $_POST['bantype_sel_type'] : false;
-		$type = "";
-		$expiry = (strlen($_POST['bantype_sel_ex'])) ? $_POST['bantype_sel_ex'] : false;
-		$time = "";
-		
-		if (!$nick)
-			$chanban_errors[] = "You did not specify a nick/mask";
-
-		if ($action_string)
+		$checkboxes = (isset($_POST['ban_checkboxes'])) ? $_POST['ban_checkboxes'] : [];
+		if (isset($_POST['delete_sel_ex']))
 		{
-			if (strstr($action_string,"Quiet"))
-				$action = "~quiet:";
-			elseif (strstr($action_string,"Nick-change"))
-				$action = "~nickchange:";
-			elseif (strstr($action_string,"Join"))
-				$action = "~join:";
+			foreach($_POST['ce_checkboxes'] as $c)
+				$checkboxes[] = $c;
+			do_delete_chanex($channelObj, $checkboxes);
 		}
-		if ($type_string)
+		if (isset($_POST['delete_sel_inv']))
 		{
-			if (strstr($type_string,"Account"))
-				$type = "~account:";
-			elseif (strstr($type_string,"Channel"))
-				$type = "~channel:";
-			elseif (strstr($type_string,"Country"))
-				$type = "~country:";
-			elseif (strstr($type_string,"OperClass"))
-				$type = "~operclass:";
-			elseif (strstr($type_string,"GECOS"))
-				$type = "~realname:";
-			elseif (strstr($type_string,"Security"))
-				$type = "~security-group:";
-			elseif (strstr($type_string,"Certificate"))
-				$type = "~certfp:";
+			foreach($_POST['ci_checkboxes'] as $c)
+				$checkboxes[] = $c;
+			do_delete_invite($channelObj, $checkboxes);
 		}
-		if ($expiry)
+		else if (isset($_POST['delete_sel_ban']))
 		{
-			$future = strtotime($expiry);
-			$now = strtotime(date("Y-m-d h:i:s"));
-			$ts = ($future - $now) / 60;
-			$ts = (int)$ts;
-			$time = "~time:$ts:";
-			if ($ts > 9999 || $ts < 1)
-				$chanban_errors[] = "Cannot set expiry more than ".(9999 / 60)." hours (".(9999 / 1440)." days) in the future, or in the past";
+			foreach($_POST['cb_checkboxes'] as $c)
+				$checkboxes[] = $c;
+			do_delete_chanban($channelObj, $checkboxes);
 		}
-		if (empty($chanban_errors))
-			if ($rpc->channel()->set_mode($channel, "$mode", "$time$action$type$nick"))
-				Message::Success("The mode was set successfully: $mode $time$action$type$nick");
-
-		else
-			foreach($chanban_errors as $err)
-				Message::Fail($err);
-	}
-	if ((isset($_POST['kickban']) || isset($_POST['muteban'])) && current_user_can(PERMISSION_EDIT_CHANNEL_USER))
-	{
-		$mute = (isset($_POST['muteban'])) ? true : false;
-		$mutestr = ($mute) ? "~quiet:" : "";
-		$user = (!$mute) ? $_POST['kickban'] : $_POST['muteban'];
-
-		$kbuser = $rpc->user()->get($user);
-
-		if (!$kbuser)
-			Message::Fail("Could not kickban user: User does not exist");
-		else
+		if (isset($_POST['add_chban']) || isset($_POST['add_chinv']) || isset($_POST['add_chex']))
 		{
-			$rpc->channel()->set_mode($channelObj->name, "+b", "~time:".DEFAULT_CHAN_DETAIL_QUICK_ACTION_TIME.":".$mutestr."*!*@".$kbuser->user->cloakedhost);
-			if (!$mute)
-				$rpc->channel()->kick($channelObj->name, $kbuser->name, DEFAULT_CHAN_DETAIL_QUICK_BAN_REASON);
 
-			$msgbox_str = ($mute)
-			?
-				"User \"$kbuser->name\" has been muted for ".DEFAULT_CHAN_DETAIL_QUICK_ACTION_TIME." minutes."
-			:
-				"User \"$kbuser->name\" has been banned for ".DEFAULT_CHAN_DETAIL_QUICK_ACTION_TIME." minutes."
-			;
-			Message::Success($msgbox_str);
-		}
-	}
-
-	if (isset($_POST['newmodes']) && isset($_POST['paramed_modes']) && $can_edit)
-	{
-		$m = $_POST['newmodes'];
-		$p = $_POST['paramed_modes'];
-
-		do_log($p,$m);
-		$addmodestring = "+";
-		$addparamstring = "";
-		$delmodestring = "-";
-		$delparamstring = "";
-		foreach ($m as $mode)
-		{
-			strcat($addmodestring, $mode);
-			if (isset($p[$mode]) && strlen($p[$mode]))
-				strcat($addparamstring, $p[$mode]." ");
-		}
-
-		$fmodes = $channelObj->modes;
-		$tok = split($fmodes);
-		$modes = $tok[0];
-		$params = rparv($fmodes);
-		$paramed_modes = sort_paramed_modes($modes, $params);
-		for ($i = 0; isset($modes[$i]) && $mode = $modes[$i]; $i++)
-		{
-			if (!strstr($addmodestring, $mode))
-			{
-				$req = IRCList::lookup($mode)['requires'];
-				if ($req == "Server")
-					continue;
-				strcat($delmodestring, $mode);
-				$grp = get_chmode_group($mode);
-				if ($grp == 2)
-					strcat($delparamstring, $paramed_modes[$mode]." ");
-			}
+			if (isset($_POST['add_chban']))
+				$mode = $_POST['add_chban'];
+			else
+				$mode = (isset($_POST['add_chinv'])) ? $_POST['add_chinv'] : $_POST['add_chex'];
 			
+			$nick = (strlen($_POST['ban_nick'])) ? $_POST['ban_nick'] : false;
+			$action_string = (isset($_POST['bantype_sel_action']) && strlen($_POST['bantype_sel_action'])) ? $_POST['bantype_sel_action'] : false;
+			$action = "";
+			$type_string = (strlen($_POST['bantype_sel_type'])) ? $_POST['bantype_sel_type'] : false;
+			$type = "";
+			$expiry = (strlen($_POST['bantype_sel_ex'])) ? $_POST['bantype_sel_ex'] : false;
+			$time = "";
+			
+			if (!$nick)
+				$chanban_errors[] = "You did not specify a nick/mask";
+
+			if ($action_string)
+			{
+				if (strstr($action_string,"Quiet"))
+					$action = "~quiet:";
+				elseif (strstr($action_string,"Nick-change"))
+					$action = "~nickchange:";
+				elseif (strstr($action_string,"Join"))
+					$action = "~join:";
+			}
+			if ($type_string)
+			{
+				if (strstr($type_string,"Account"))
+					$type = "~account:";
+				elseif (strstr($type_string,"Channel"))
+					$type = "~channel:";
+				elseif (strstr($type_string,"Country"))
+					$type = "~country:";
+				elseif (strstr($type_string,"OperClass"))
+					$type = "~operclass:";
+				elseif (strstr($type_string,"GECOS"))
+					$type = "~realname:";
+				elseif (strstr($type_string,"Security"))
+					$type = "~security-group:";
+				elseif (strstr($type_string,"Certificate"))
+					$type = "~certfp:";
+			}
+			if ($expiry)
+			{
+				$future = strtotime($expiry);
+				$now = strtotime(date("Y-m-d h:i:s"));
+				$ts = ($future - $now) / 60;
+				$ts = (int)$ts;
+				$time = "~time:$ts:";
+				if ($ts > 9999 || $ts < 1)
+					$chanban_errors[] = "Cannot set expiry more than ".(9999 / 60)." hours (".(9999 / 1440)." days) in the future, or in the past";
+			}
+			if (empty($chanban_errors))
+				if ($rpc->channel()->set_mode($channel, "$mode", "$time$action$type$nick"))
+					Message::Success("The mode was set successfully: $mode $time$action$type$nick");
+
+			else
+				foreach($chanban_errors as $err)
+					Message::Fail($err);
+		}
+		if ((isset($_POST['kickban']) || isset($_POST['muteban'])) && current_user_can(PERMISSION_EDIT_CHANNEL_USER))
+		{
+			$mute = (isset($_POST['muteban'])) ? true : false;
+			$mutestr = ($mute) ? "~quiet:" : "";
+			$user = (!$mute) ? $_POST['kickban'] : $_POST['muteban'];
+
+			$kbuser = $rpc->user()->get($user);
+
+			if (!$kbuser)
+				Message::Fail("Could not kickban user: User does not exist");
+			else
+			{
+				$rpc->channel()->set_mode($channelObj->name, "+b", "~time:".DEFAULT_CHAN_DETAIL_QUICK_ACTION_TIME.":".$mutestr."*!*@".$kbuser->user->cloakedhost);
+				if (!$mute)
+					$rpc->channel()->kick($channelObj->name, $kbuser->name, DEFAULT_CHAN_DETAIL_QUICK_BAN_REASON);
+
+				$msgbox_str = ($mute)
+				?
+					"User \"$kbuser->name\" has been muted for ".DEFAULT_CHAN_DETAIL_QUICK_ACTION_TIME." minutes."
+				:
+					"User \"$kbuser->name\" has been banned for ".DEFAULT_CHAN_DETAIL_QUICK_ACTION_TIME." minutes."
+				;
+				Message::Success($msgbox_str);
+			}
 		}
 
+		if (isset($_POST['newmodes']) && isset($_POST['paramed_modes']) && $can_edit)
+		{
+			$m = $_POST['newmodes'];
+			$p = $_POST['paramed_modes'];
 
-		if ($rpc->channel()->set_mode($channel, $delmodestring.$addmodestring, $delparamstring." ".$addparamstring))
-			Message::Success("Channel settings have been successfully updated");
-		else
-			Message::Fail("Could not change channel settings: $rpc->error");
+			do_log($p,$m);
+			$addmodestring = "+";
+			$addparamstring = "";
+			$delmodestring = "-";
+			$delparamstring = "";
+			foreach ($m as $mode)
+			{
+				strcat($addmodestring, $mode);
+				if (isset($p[$mode]) && strlen($p[$mode]))
+					strcat($addparamstring, $p[$mode]." ");
+			}
+
+			$fmodes = $channelObj->modes;
+			$tok = split($fmodes);
+			$modes = $tok[0];
+			$params = rparv($fmodes);
+			$paramed_modes = sort_paramed_modes($modes, $params);
+			for ($i = 0; isset($modes[$i]) && $mode = $modes[$i]; $i++)
+			{
+				if (!strstr($addmodestring, $mode))
+				{
+					$req = IRCList::lookup($mode)['requires'];
+					if ($req == "Server")
+						continue;
+					strcat($delmodestring, $mode);
+					$grp = get_chmode_group($mode);
+					if ($grp == 2)
+						strcat($delparamstring, $paramed_modes[$mode]." ");
+				}
+				
+			}
+
+
+			if ($rpc->channel()->set_mode($channel, $delmodestring.$addmodestring, $delparamstring." ".$addparamstring))
+				Message::Success("Channel settings have been successfully updated");
+			else
+				Message::Fail("Could not change channel settings: $rpc->error");
+		}
 	}
+	else
+		Message::Fail("You do not have permission to manage channels.");
 
 	/* Re-grab the channel because of updates */
 	$channelObj = $rpc->channel()->get($channel, 4);
