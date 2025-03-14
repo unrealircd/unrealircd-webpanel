@@ -52,6 +52,10 @@ if (!empty($_POST))
 			$user->add_meta("last_login", date("Y-m-d H:i:s"));
 			Hook::run(HOOKTYPE_USER_LOGIN, $user);
 
+			// ensure we have a manifest file for installing a PWA
+			if (!file_exists("../manifest.json"))
+				create_wpa_manifest(); // yes I misspelled it, but it's too late to change now
+
 			/* Middle of install? Override redirect: */
 			if (!isset($config['unrealircd']))
 				$redirect = get_config("base_url")."settings/rpc-servers.php";
