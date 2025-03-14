@@ -17,7 +17,7 @@ if (ini_get("session.use_cookies")) {
 session_destroy();
 
 require_once "../inc/common.php";
-require_once "../misc/wpa-manifest.php";
+require_once "../misc/pwa-manifest.php";
 
 /* Get the base url */
 $uri = $_SERVER['REQUEST_URI'];
@@ -166,7 +166,7 @@ $writable = (is_writable("../config/")) ? true: false;
 		/* Enable lookups on HIBP by default */
 		$config['hibp'] = true;
 
-		create_wpa_manifest();
+		create_pwa_manifest();
 
 		/* Now, write all the config (config.php + settings in DB) */
 		write_config();

@@ -1,6 +1,6 @@
 <?php
 
-function create_wpa_manifest()
+function create_pwa_manifest()
 {
     $manifest = [];
     $manifest['name'] = "UnrealIRCd Admin WebPanel";

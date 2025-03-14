@@ -54,7 +54,7 @@ if (!empty($_POST))
 
 			// ensure we have a manifest file for installing a PWA
 			if (!file_exists("../manifest.json"))
-				create_wpa_manifest(); // yes I misspelled it, but it's too late to change now
+				create_pwa_manifest();
 
 			/* Middle of install? Override redirect: */
 			if (!isset($config['unrealircd']))
