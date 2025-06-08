@@ -119,6 +119,44 @@ return [
 	'unrealircd_network_services_view' => 'Sunucuları görüntüle >',
 	'unrealircd_network_panel_accounts' => 'Panel Hesapları',
 	'unrealircd_network_panel_plugins' => 'Eklentiler',
+	
+
+	'unrealircd_users_overview' => 'Kullanıcı Genel Bakış',
+	'unrealircd_users_overview_notice' => 'Daha fazla bilgi görüntülemek için bir kullanıcı adına tıklayın.',
+	'unrealircd_users_overview_nick' => 'Nick',
+	'unrealircd_users_overview_country' => 'Ülke',
+	'unrealircd_users_overview_host_ip' => 'Host / IP',
+	'unrealircd_users_overview_account' => 'Hesap',
+	'unrealircd_users_overview_account_title' => 'Kullanıcı hizmetlere giriş yaptıysa, bu hizmet hesabı adıdır.',
+	'unrealircd_users_overview_oper' => 'Oper',
+	'unrealircd_users_overview_connected_to' => 'Bağlı Olduğu Sunucu',
+	'unrealircd_users_overview_rep' => 'Rep.',
+	'unrealircd_users_overview_rep_title' => 'Bu IP adresinden son haftalarda bağlantı sağlandıysa itibar puanı artar. Düşük bir itibar puanı (örneğin <10), yeni bir IP adresine işaret eder.',
+	'unrealircd_user_actions_apply' => 'İşlemi uygula:',
+	'unrealircd_user_actions_duration' => 'Süre:',
+	'unrealircd_user_actions_reason' => 'Sebep:',
+	'unrealircd_user_actions_reason_apply' => 'Uygula',
+	'unrealircd_user_actions_apply_ban' => 'Ban uygula',
+	'unrealircd_user_actions_apply_ban_notice' => 'Bunu yapmak istediğinizden emin misiniz?',
+	'unrealircd_user_actions_cancel' => 'İptal',
+	'unrealircd_user_actions_apply' => 'Uygula',
+	'unrealircd_user_view_details' => 'Detayları Gör',
+	'unrealircd_user_view_kill' => 'Bağlantıyı Kes',
+	'unrealircd_user_view_copy' => 'Kopyala',
+	'unrealircd_user_userch' => 'Bir hata oluştu',
+	'unrealircd_user_banlen_h' => 'Kullanıcı bulunamadı: Kullanıcı çevrimiçi değil',
+	'unrealircd_user_kill_failed' => '%s killenmedi: %s',
+
+
+	// Users Details
+	'unrealircd_user_details_title' => 'Kullanıcı Sorgulama',
+	'unrealircd_user_details_nonick' => 'Kullanıcı bulunamadı: %s',
+	'unrealircd_user_buttongo' => 'Git',
+	'unrealircd_user_basic_information' => 'Temel Bilgiler',
+	'unrealircd_user_settings' => 'Kullanıcı Ayarları',
+	'unrealircd_user_channels' => 'Kanallar',
+
+
 
 	
 	// Other
