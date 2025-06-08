@@ -27,7 +27,7 @@ if (!empty($_POST) && $can_ban)
 
 			if (!$bantype) /* shouldn't happen? */
 			{
-				Message::Fail("An error occured");
+				Message::Fail(__('unrealircd_user_userch'));
 			}
 			
 			else
@@ -50,7 +50,7 @@ if (!empty($_POST) && $can_ban)
 				$user = $rpc->user()->get($user);
 
 				if (!$user && $bantype !== "qline") {
-					Message::Fail("Could not find that user: User not online");
+					Message::Fail(__('unrealircd_user_banlen_h'));
 				}
 				
 				else
@@ -66,7 +66,7 @@ if (!empty($_POST) && $can_ban)
 						if ($rpc->user()->kill($user->id, $reason))
 							Message::Success($user->name . "(*@" . $user->hostname . ") has been killed: $reason");
 						else
-							Message::Fail("Could not kill $user->name: $rpc->error");
+						Message::Fail(sprintf(__("unrealircd_user_kill_failed"), $user->name, $rpc->error));
 					}
 					else if ($rpc->serverban()->add($user->id, $bantype, $duration, $reason))
 						Message::Success($user->name . " (*@" . $user->hostname . ") has been $bantype" . "d $msg_msg: $reason");
@@ -80,9 +80,9 @@ if (!empty($_POST) && $can_ban)
 }
 
 ?>
-<h4>Users Overview</h4>
+<h4><?php echo __('unrealircd_users_overview'); ?></h4>
 
-Click on a username to view more information.
+<?php echo __('unrealircd_users_overview_notice'); ?>
 
 <div class="usertable">
 	<form method="post">
@@ -91,13 +91,13 @@ Click on a username to view more information.
 	<table id="data_list" class="table-striped display responsive nowrap" style="width:100%">
 	<thead class="table-primary">
 		<th scope="col"><input type="checkbox" label='selectall' onClick="toggle_user(this)" /></th>
-		<th scope="col">Nick</th>
-		<th class="countrycol" scope="col">Country</th>
-		<th class="hostname" scope="col">Host / IP</th>
-		<th class="accountcol" scope="col"><span data-toggle="tooltip" data-placement="bottom" title="The services account name, if the user identified to services." style="border-bottom: 1px dotted #000000">Account</span></th>
-		<th class="opercol" scope="col">Oper</th>
-		<th class="uplinkcol" scope="col">Connected to</th>
-		<th class="reputationcol" scope="col"><span id="reputationheader" data-toggle="tooltip" data-placement="bottom" title="The reputation score gets higher when someone with this IP address has been connected in the past weeks. A low reputation score (like <10) is an indication of a new IP." style="border-bottom: 1px dotted #000000">Rep.</span> <a href="https://www.unrealircd.org/docs/Reputation_score" target="_blank">ℹ️</a></th>
+		<th scope="col"><?php echo __('unrealircd_users_overview_nick'); ?></th>
+		<th class="countrycol" scope="col"><?php echo __('unrealircd_users_overview_country'); ?></th>
+		<th class="hostname" scope="col"><?php echo __('unrealircd_users_overview_host_ip'); ?></th>
+		<th class="accountcol" scope="col"><span data-toggle="tooltip" data-placement="bottom" title="<?php echo __('unrealircd_users_overview_account_title'); ?>" style="border-bottom: 1px dotted #000000"><?php echo __('unrealircd_users_overview_account'); ?></span></th>
+		<th class="opercol" scope="col"><?php echo __('unrealircd_users_overview_oper'); ?></th>
+		<th class="uplinkcol" scope="col"><?php echo __('unrealircd_users_overview_connected_to'); ?></th>
+		<th class="reputationcol" scope="col"><span id="reputationheader" data-toggle="tooltip" data-placement="bottom" title="<?php echo __('unrealircd_users_overview_rep_title'); ?>" style="border-bottom: 1px dotted #000000"><?php echo __('unrealircd_users_overview_rep'); ?></span> <a href="https://www.unrealircd.org/docs/Reputation_score" target="_blank">ℹ️</a></th>
 	</thead>
 	</table>
 
@@ -105,7 +105,7 @@ Click on a username to view more information.
 	<table class="table table-responsive table-light">
 	<tr>
 	<td colspan="2" class="<?php echo $can_ban ? "" : "disabled"?>">
-		<label for="bantype">Apply action: </label>
+		<label for="bantype"><?php echo __('unrealircd_user_actions_apply'); ?></label>
 		<select name="bantype" id="bantype">
 				<option value=""></option>
 			<optgroup label="Bans">
@@ -114,7 +114,7 @@ Click on a username to view more information.
 				<option value="kill">Kill</option>
 			</optgroup>
 		</select></td><td colspan="2">
-		<label for="banlen_w">Duration: </label>
+		<label for="banlen_w"><?php echo __('unrealircd_user_actions_duration'); ?></label>
 		<select name="banlen_w" id="banlen_w">
 				<?php
 				for ($i = 0; $i <= 56; $i++)
@@ -163,10 +163,10 @@ Click on a username to view more information.
 	</td>
 	<tr><td colspan="3">
 	
-	<label for="ban_reason">Reason: </label>
+	<label for="ban_reason"><?php echo __('unrealircd_user_actions_reason'); ?></label>
 	<input class="form-control <?php echo $can_ban ? "" : "disabled"?>" type="text" name="ban_reason" id="ban_reason" value="No reason">
 	<button type="button" class="btn btn-primary <?php echo $can_ban ? "" : "disabled"?>" data-toggle="modal" data-target="#ban_confirmation">
-			Apply
+			<?php echo __('unrealircd_user_actions_reason_apply'); ?>
 	</button></td></table>
 
 	<!-- Ban confirmation modal -->
@@ -174,18 +174,18 @@ Click on a username to view more information.
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 		<div class="modal-header">
-			<h5 class="modal-title" id="ban_confirmation_label">Apply ban</h5>
+			<h5 class="modal-title" id="ban_confirmation_label"><?php echo __('unrealircd_user_actions_apply_ban'); ?></h5>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
 			</button>
 		</div>
 		<div class="modal-body">
-			Are you sure you want to do this?
+			<?php echo __('unrealircd_user_actions_apply_ban_notice'); ?>
 			
 		</div>
 		<div class="modal-footer">
-			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-			<button type="submit" action="post" class="btn btn-danger">Apply</button>
+			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo __('unrealircd_user_actions_cancel'); ?></button>
+			<button type="submit" action="post" class="btn btn-danger"><?php echo __('unrealircd_user_actions_apply'); ?></button>
 			
 		</div>
 		</div>
@@ -222,9 +222,9 @@ Click on a username to view more information.
 	</style>
 
 	<div id='rclickmenu' class="nav-item list-group">
-		<div id="rclick_opt1" class="item list-group-item-action">View details</div>
-		<div id="rclick_opt2" class="item list-group-item-action">Kill</div>
-		<div id="rclick_opt3" class="item list-group-item-action">Copy
+		<div id="rclick_opt1" class="item list-group-item-action"><?php echo __('unrealircd_user_view_details'); ?></div>
+		<div id="rclick_opt2" class="item list-group-item-action"><?php echo __('unrealircd_user_view_kill'); ?></div>
+		<div id="rclick_opt3" class="item list-group-item-action"><?php echo __('unrealircd_user_view_copy'); ?>
 	</div>
 </div>
 
