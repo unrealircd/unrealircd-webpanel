@@ -99,6 +99,26 @@ return [
 	'rpc_display_hostname' => 'Hostname',
 	'rpc_display_port' => 'Port',
 	'rpc_display_rpcuser' => 'RPC User',
+	
+	//Overview
+	'unrealircd_network_overview' => 'Network Overview',
+	'unrealircd_network_overview_live' => 'Live',
+	'unrealircd_password_breach_title' => '<h6><strong>Urgent</strong></h6>',
+	'unrealircd_password_breach_message' => 'Your password was found in a data breach %s time(s).',
+	'unrealircd_password_breach_action' => 'Please <strong><a href="%ssettings/user-edit.php">update your password</a></strong> immediately.',
+	'unrealircd_network_users_online' => 'Users Online',
+	'unrealircd_network_channels' => 'Channels',
+	'unrealircd_network_operators' => 'Operators',
+	'unrealircd_network_view_in_users' => 'View in Users >',
+	'unrealircd_network_servers' => 'Servers',
+	'unrealircd_network_servers_bans' => 'Server Bans',
+	'unrealircd_network_spamfilter' => 'Spamfilter',
+	'unrealircd_network_server_ban_exceptions' => 'Server Ban Exceptions',
+	'unrealircd_network_services_online' => 'Services Online',
+	'unrealircd_network_services_view' => 'View in Servers >',
+	'unrealircd_network_panel_accounts' => 'Panel Accounts',
+	'unrealircd_network_panel_plugins' => 'Plugins',
+
 
 	// Other
 	'other_base_url' => 'The base_url was not found in your config. Setup went wrong?',
