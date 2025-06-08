@@ -453,7 +453,54 @@ if (!read_config_file())
 
 require_once UPATH . "/Classes/class-hook.php";
 if (!is_dir(UPATH . "/vendor"))
-	die("The vendor/ directory is missing. Most likely the admin forgot to run 'composer install'\n");
+    die('<div style="
+        max-width:600px;
+        margin:60px auto;
+        padding:20px 25px;
+        background:linear-gradient(135deg, #fff0f0, #ffeaea);
+        color:#b30000;
+        font-family:-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, sans-serif;
+        font-size:16px;
+        line-height:1.6;
+        border-left:6px solid #ff4d4f;
+        border-radius:10px;
+        box-shadow:0 8px 20px rgba(0,0,0,0.05);
+    ">
+        <strong>🚫 The <code style="
+            background:#ffd6d6;
+            padding:2px 6px;
+            border-radius:4px;
+            font-family:monospace;
+        ">vendor/</code> directory is missing.</strong><br>
+        Most likely the admin forgot to run 
+        <code style="
+            background:#ffd6d6;
+            padding:2px 6px;
+            border-radius:4px;
+            font-family:monospace;
+        ">composer install</code>.
+    </div>
+
+    <div style="
+        max-width:600px;
+        margin:20px auto 60px auto;
+        padding:20px 25px;
+        background:linear-gradient(135deg, #e6f7ff, #f0faff);
+        color:#095c99;
+        font-family:-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, sans-serif;
+        font-size:16px;
+        line-height:1.6;
+        border-left:6px solid #1890ff;
+        border-radius:10px;
+        box-shadow:0 8px 20px rgba(0,0,0,0.05);
+    ">
+        <strong>📦 Installation</strong><br>
+        See <a href="https://www.unrealircd.org/docs/UnrealIRCd_webpanel" target="_blank" style="
+            color:#096dd9;
+            text-decoration:underline;
+            font-weight:500;
+        ">UnrealIRCd WebPanel Documentation</a> for all documentation.
+    </div>');
 require_once UPATH . '/vendor/autoload.php';
 require_once UPATH . "/Classes/class-cmodes.php";
 require_once UPATH . "/inc/defines.php";
