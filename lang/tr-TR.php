@@ -101,6 +101,26 @@ return [
 	'rpc_display_port' => 'Port',
 	'rpc_display_rpcuser' => 'RPC Kullanıcısı',
 	
+	//Overview
+	'unrealircd_network_overview' => 'Ağ Genel Bakış',
+	'unrealircd_network_overview_live' => 'Canlı',
+	'unrealircd_password_breach_title' => '<h6><strong>Acil</strong></h6>',
+	'unrealircd_password_breach_message' => 'Şifreniz %s kez veri ihlalinde bulundu.',
+	'unrealircd_password_breach_action' => 'Lütfen <strong><a href="%ssettings/user-edit.php">şifrenizi hemen güncelleyin</a></strong>.',
+	'unrealircd_network_users_online' => 'Online Kullanıcılar',
+	'unrealircd_network_channels' => 'Kanallar',
+	'unrealircd_network_operators' => 'Operatörler',
+	'unrealircd_network_view_in_users' => 'Kullanıcıları görüntüle >',
+	'unrealircd_network_servers' => 'Sunucular',
+	'unrealircd_network_servers_bans' => 'Sunucu Yasakları',
+	'unrealircd_network_spamfilter' => 'Spamfilter',
+	'unrealircd_network_server_ban_exceptions' => 'Sunucu Ban İstisnaları',
+	'unrealircd_network_services_online' => 'Çevrimiçi Servisler',
+	'unrealircd_network_services_view' => 'Sunucuları görüntüle >',
+	'unrealircd_network_panel_accounts' => 'Panel Hesapları',
+	'unrealircd_network_panel_plugins' => 'Eklentiler',
+
+	
 	// Other
 	'other_base_url' => 'config dosyanızda base_url bulunamadı. Kurulumda bir hata mı oldu?',
 	'other_auth_provided' => 'Herhangi bir kimlik doğrulama eklentisi yüklenmedi. sql_db, file_db veya benzeri bir kimlik doğrulama eklentisi yüklemelisiniz!',
