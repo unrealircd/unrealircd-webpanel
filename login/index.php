@@ -1,5 +1,6 @@
 <?php
 require_once "../inc/common.php";
+require_once "../inc/languages.php";
 require_once "../misc/pwa-manifest.php";
 
 $logout = false;
@@ -16,7 +17,7 @@ $redirect = (isset($_GET['redirect'])) ? $_GET['redirect'] : get_config("base_ur
 if (!empty($_GET['logout']))
 {
 	if (!isset($_SESSION['id']))
-		$failmsg = "Nothing to logout from";
+	    $failmsg = __('user_login_no_id');
 	else {
 		$_SESSION = NULL;
 		session_destroy();
@@ -25,7 +26,7 @@ if (!empty($_GET['logout']))
 }
 if (!empty($_GET['timeout']))
 {
-	$failmsg = "Your session has timed out. Please login again to continue";
+	$failmsg = __('user_login_timeout');
 	$_SESSION = NULL;
 	session_destroy();
 }
@@ -71,12 +72,12 @@ if (!empty($_POST))
 				"IP" => $_SERVER['REMOTE_ADDR']
 			];
 			Hook::run(HOOKTYPE_USER_LOGIN_FAIL, $fail);
-			$failmsg = "Incorrect login";
+			$failmsg = __('user_login_fail');
 		}
 
 	}
 	else
-	$failmsg = "Couldn't log you in: Missing credentials";
+	$failmsg = __('user_login_missing');
 }
 
 ?><!DOCTYPE html>
@@ -168,12 +169,12 @@ if (!empty($_POST))
 		<div class="card shadow-2-strong" style="border-radius: 1rem;">
 		  <div class="card-body p-5 text-center">
 			<form id="login" method="post" action="index.php?redirect=<?php echo $redirect; ?>">
-				<h3 class="login-h3"><img class="login-img mb-4" src="<?php echo get_config("base_url"); ?>img/unreal.jpg">	Log in to use Admin Panel</h3>
+				<h3 class="login-h3"><img class="login-img mb-4" src="<?php echo get_config("base_url"); ?>img/unreal.jpg">	<?php echo __('login_title'); ?></h3>
 				
 					<?php 
 					if (isset($failmsg)) Message::Fail($failmsg);
 					if ($logout)
-						Message::Success("You have been logged out");
+						Message::Success(__('user_login_logged'));
 					?>
 					<div class="input-group">
 					<div id="username" class="input-group mb-3">
@@ -181,7 +182,7 @@ if (!empty($_POST))
 							<span class="input-group-text" id="basic-addon1"><i class="p-1 fa-solid fa-user login-icon"></i></span>
 						</div><input type="text" id="userinp" class="form-control login-input" name="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
 						<div style="font-size:20px" id="user_inv" class="invalid-feedback">
-							Username cannot be empty.
+							<?php echo __('username_empty'); ?>
 						</div>
 
 					</div>
@@ -190,15 +191,39 @@ if (!empty($_POST))
 							<span class="input-group-text" id="basic-addon1"><i class="p-1 fa-solid fa-key login-icon"></i></span>
 						</div><input type="password" id="passinp" class="form-control login-input" name="password" placeholder="Password">
 						<div style="font-size:20px" id="pass_inv" class="invalid-feedback">
-						Password cannot be empty.
+						<?php echo __('password_empty'); ?>
 						</div>
 
 					</div>
 
 				</div>
-				<button type="submit" class="btn btn-primary btn-block login-btn">Log-In</button>
+				<button type="submit" class="btn btn-primary btn-block login-btn"><?php echo __('login_button'); ?></button>
 			</form>
 			</div>
+			<div style="text-align: right; margin-bottom: 1.5rem; padding-right: 15px; max-width: 250px; margin-left: auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+  <select name="lang" id="lang" onchange="changeLanguage(this.value)"
+          style="padding: 6px 12px; font-size: 1rem; border-radius: 6px; border: 1.5px solid #ccc; 
+                 background-color: #f9f9f9; cursor: pointer; vertical-align: middle; 
+                 transition: border-color 0.3s ease, box-shadow 0.3s ease; width: 130px;">
+    <?php
+      $languages = get_available_languages();
+      $current = $_SESSION['lang'] ?? 'en-US';
+      foreach ($languages as $code => $name) {
+          $selected = ($code === $current) ? 'selected' : '';
+          echo "<option value=\"$code\" $selected>$name</option>";
+      }
+    ?>
+  </select>
+</div>
+
+<script>
+function changeLanguage(lang) {
+  const url = new URL(window.location);
+  url.searchParams.set('lang', lang);
+  window.location.href = url.toString();
+}
+</script>
+
 		</div>
 	</div>
 </div>
@@ -237,4 +262,3 @@ body {
 			form.submit();
 	});
 </script>
-
