@@ -1,7 +1,6 @@
 <?php
 /*
  * These translation files have been specially created for the UnrealIRCd Web Panel interface.
- * The goal is to help users manage the panel in the Turkish language with ease.
  * All texts have been translated from the original English version of the UnrealIRCd Web Panel.
  * No official support from UnrealIRCd is provided by the developer/translator of this file.
  *
@@ -118,6 +117,42 @@ return [
 	'unrealircd_network_services_view' => 'View in Servers >',
 	'unrealircd_network_panel_accounts' => 'Panel Accounts',
 	'unrealircd_network_panel_plugins' => 'Plugins',
+	
+
+	'unrealircd_users_overview' => 'Users Overview',
+	'unrealircd_users_overview_notice' => 'Click on a username to view more information.',
+	'unrealircd_users_overview_nick' => 'Nick',
+	'unrealircd_users_overview_country' => 'Country',
+	'unrealircd_users_overview_host_ip' => 'Host / IP',
+	'unrealircd_users_overview_account' => 'Account',
+	'unrealircd_users_overview_account_title' => 'The services account name, if the user identified to services.',
+	'unrealircd_users_overview_oper' => 'Oper',
+	'unrealircd_users_overview_connected_to' => 'Connected to',
+	'unrealircd_users_overview_rep' => 'Rep.',
+	'unrealircd_users_overview_rep_title' => 'The reputation score gets higher when someone with this IP address has been connected in the past weeks. A low reputation score (like <10) is an indication of a new IP.',
+	'unrealircd_user_actions_apply' => 'Apply action: ',
+	'unrealircd_user_actions_duration' => 'Duration: ',
+	'unrealircd_user_actions_reason' => 'Reason: ',
+	'unrealircd_user_actions_reason_apply' => 'Apply',
+	'unrealircd_user_actions_apply_ban' => 'Apply ban',
+	'unrealircd_user_actions_apply_ban_notice' => 'Are you sure you want to do this?',
+	'unrealircd_user_actions_cancel' => 'Cancel',
+	'unrealircd_user_actions_apply' => 'Apply',
+	'unrealircd_user_view_details' => 'View details',
+	'unrealircd_user_view_kill' => 'Kill',
+	'unrealircd_user_view_copy' => 'Copy',
+	'unrealircd_user_userch' => 'An error occured',
+	'unrealircd_user_banlen_h' => 'Could not find that user: User not online',
+	'unrealircd_user_kill_failed' => '%s Could not kill: %s',
+   
+   //Users Details
+   'unrealircd_user_details_title' => 'User Lookup',
+   'unrealircd_user_details_nonick' => 'Could not find user: %s',
+   'unrealircd_user_buttongo' => 'Go',
+   'unrealircd_user_basic_information' => 'Basic Information',
+   'unrealircd_user_settings' => 'User Settings',
+   'unrealircd_user_channels' => 'Channels',
+  
 
 
 	// Other
