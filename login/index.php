@@ -85,6 +85,7 @@ if (!empty($_POST))
 <link rel="manifest" href="<?php echo get_config("base_url"); ?>manifest.json">	
 <link href="<?php echo get_config("base_url"); ?>css/unrealircd-admin.css" rel="stylesheet">
 <script src="<?php echo get_config("base_url"); ?>js/unrealircd-admin.js"></script>
+<script src="<?php echo get_config("base_url"); ?>js/togglepassword.js"></script> 
 
 <script> const BASE_URL = "<?php echo get_config("base_url"); ?>"; </script>
 
@@ -186,16 +187,20 @@ if (!empty($_POST))
 						</div>
 
 					</div>
-					<div id="password" class="input-group mb-3">
-						<div class="input-group-prepend">
-							<span class="input-group-text" id="basic-addon1"><i class="p-1 fa-solid fa-key login-icon"></i></span>
-						</div><input type="password" id="passinp" class="form-control login-input" name="password" placeholder="Password">
-						<div style="font-size:20px" id="pass_inv" class="invalid-feedback">
-						<?php echo __('password_empty'); ?>
-						</div>
+				<div id="password" class="input-group mb-3">
+   						 <div class="input-group-prepend">
+       						 <span class="input-group-text" id="basic-addon1">
+           						 <i class="p-1 fa-solid fa-key login-icon"></i>
+       					 </span>
+  					  </div>
+    			<input type="password" id="passinp" class="form-control login-input" name="password" placeholder="Password">
+   			 <button class="btn btn-outline-secondary" type="button" id="togglePass" onclick="togglePassword()">
+       				 <i class="fa-solid fa-eye" id="toggleIcon"></i>
+   					 </button>
 
-					</div>
-
+   			 <div style="font-size:20px" id="pass_inv" class="invalid-feedback">
+     			   <?php echo __('password_empty'); ?>
+   			 </div>
 				</div>
 				<button type="submit" class="btn btn-primary btn-block login-btn"><?php echo __('login_button'); ?></button>
 			</form>
