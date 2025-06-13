@@ -50,7 +50,8 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 <script src="<?php echo get_config("base_url"); ?>js/datatables.min.js"></script>
 <script src="<?php echo get_config("base_url"); ?>js/datatables-natural-sort.js"></script>
 <script src="<?php echo get_config("base_url"); ?>js/datatables-ellipsis.js"></script>
-<script src="<?php echo get_config("base_url"); ?>js/moment-with-locales.min.js"></script> 
+<script src="<?php echo get_config("base_url"); ?>js/moment-with-locales.min.js"></script>
+<script src="<?php echo get_config("base_url"); ?>js/togglepassword.js"></script> 
 <link rel="manifest" href="<?php echo get_config("base_url"); ?>manifest.json">	
 <script>
 		console.log("Attempting to add service worker...");

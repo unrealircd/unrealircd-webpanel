@@ -1,5 +1,6 @@
 <?php
 require_once "../inc/common.php";
+require_once "../inc/languages.php";
 require_once "../inc/header.php";
 
 $can_edit = current_user_can(PERMISSION_MANAGE_USERS);
@@ -15,7 +16,7 @@ if ($can_edit)
 			set_at_least_one_default_rpc_server();
 			write_config("unrealircd");
 		} else {
-			Message::Fail("Delete failed: could not find server");
+			Message::Fail(__('rpc_servers_delete_failed'));
 		}
 	} else
 	if (isset($_POST['do_add_server']))
@@ -31,7 +32,7 @@ if ($can_edit)
 		if (isset($config["unrealircd"][$opts->rpc_displayname]) &&
 			!($opts->rpc_displayname == $opts->edit_existing))
 		{
-			die("Server with that name already exists"); // TODO: pretier :D
+			die(__('rpc_servers_already_exists')); // TODO: pretier :D
 		}
 
 		$new_properties = [
@@ -47,7 +48,7 @@ if ($can_edit)
 		{
 			// Change existing server
 			if (!isset($config["unrealircd"][$opts->edit_existing]))
-				die("Editing a server that does not exist!?"); // not very graceful, isn't it?
+				die(__('rpc_servers_not_exist')); // not very graceful, isn't it?
 			if ($new_properties["rpc_password"] == "****************")
 				$new_properties["rpc_password"] = $config["unrealircd"][$opts->edit_existing]["rpc_password"];
 			// name change? unset the old one
@@ -69,24 +70,24 @@ if ($can_edit)
 		/* And write the new config */
 		write_config();
 
-		Message::Success("RPC Server successfully ". (empty($opts->edit_existing) ? "added" : "modified").".");
+		Message::Success(
+    __(empty($opts->edit_existing) ? 'rpc_servers_added' : 'rpc_servers_modified')
+		);
 	}
 }
 
 ?>
 
-<h2>RPC Servers</h2>
-You can configure which JSON-RPC server(s) the panel can connect to.<br><br>
-You normally only need one server, but it can be useful to have multiple servers, so
-you can switch to a secondary server in case the primary server goes down.<br>
-<br>
+<h2><?php echo __('rpc_servers_title'); ?></h2>
+<p><?php echo __('rpc_servers_description_1'); ?><br><br>
+<?php echo __('rpc_servers_description_2'); ?><br><br></p>
+
 
 <?php
 if (empty($config["unrealircd"]))
 {
-	Message::Info("Let's get your panel linked to UnrealIRCd. ".
-	              "Read <u><a href=\"https://www.unrealircd.org/docs/UnrealIRCd_webpanel#Configuring_UnrealIRCd\" target=\"_blank\">the UnrealIRCd instructions</a></u> ".
-	              "and then click <i>Add Server</i> below.");
+Message::Info(__('rpc_servers_link_panel_info'));
+
 }
 ?>
 
@@ -96,7 +97,7 @@ if (empty($config["unrealircd"]))
 		<?php if (1) /* current_user_can(PERMISSION_MANAGE_RPC_SERVERS)) */ { ?>
 		<div class="col-sm-3">
 			<form method="post">
-			<div class="btn btn-primary" <?php echo ($can_edit) ? 'onclick="add_rpc_server()"' : 'hidden'?>>Add Server</div>
+			<div class="btn btn-primary" <?php echo ($can_edit) ? 'onclick="add_rpc_server()"' : 'hidden'?>><?php echo __('rpc_add_servers'); ?></div>
 			</form>
 		</div>
 		<?php } ?>
@@ -110,50 +111,50 @@ if (empty($config["unrealircd"]))
 			<input name="edit_existing" type="hidden" id="edit_existing" value="">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="server_add_title">Add RPC Server</h5>
+					<h5 class="modal-title" id="server_add_title"><?php echo __('rpc_add_server_title'); ?></h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span></button>		
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label for="rpc_displayname">Display name</label>
+						<label for="rpc_displayname"><?php echo __('rpc_add_display_name'); ?></label>
 						<input name="rpc_displayname" type="text" class="form-control" id="rpc_displayname" aria-describedby="rpc_displayname_help" value="" required>
-						<small id="rpc_displayname_help" class="form-text text-muted">A short display name for in the RPC server list.</small>
+						<small id="rpc_displayname_help" class="form-text text-muted"><?php echo __('rpc_add_display_name_help'); ?></small>
 					</div>
 					<div class="form-group form-check">
 						<input name="rpc_default" type="checkbox" class="revalidation-needed-rpc form-check-input" id="rpc_default">
-						<label class="form-check-label" for="rpc_default">Default server</label>
-						<small id="rpc_default_help" class="form-text text-muted">Make this the default (primary) server that will be used for connections.</code></small>
+						<label class="form-check-label" for="rpc_default"><?php echo __('rpc_add_default_server'); ?></label>
+						<small id="rpc_default_help" class="form-text text-muted"><?php echo __('rpc_add_default_server_help'); ?></code></small>
 					</div>
 					<div class="form-group">
-						<label for="rpc_host">Hostname or IP</label>
+						<label for="rpc_host"><?php echo __('rpc_add_default_hostname'); ?></label>
 						<input name="rpc_host" type="text" class="revalidation-needed-rpc form-control" id="rpc_host" aria-describedby="hostname_help" value="127.0.0.1">
-						<small id="hostname_help" class="form-text text-muted">The hostname or IP address of your UnrealIRCd server. You should use <code>127.0.0.1</code> for the same machine.</small>
+						<small id="hostname_help" class="form-text text-muted"><?php echo __('rpc_add_default_hostname_help'); ?></small>
 					</div>
 					<div class="form-group">
-						<label for="rpc_port">Server Port</label>
+						<label for="rpc_port"><?php echo __('rpc_add_server_port'); ?></label>
 						<input name="rpc_port" type="text" class="revalidation-needed-rpc form-control" id="rpc_port" aria-describedby="port_help" value="8600">
-						<small id="port_help" class="form-text text-muted">The port which you designated for RPC connections in your <code>unrealircd.conf</code></small>
+						<small id="port_help" class="form-text text-muted"><?php echo __('rpc_add_server_port_help'); ?></small>
 					</div>
 					<div class="form-group form-check">
 						<input name="rpc_tls_verify_cert" type="checkbox" class="revalidation-needed-rpc form-check-input" id="rpc_tls_verify_cert">
-						<label class="form-check-label" for="rpc_tls_verify_cert">Verify SSL/TLS certificate</label>
-						<small id="rpc_tls_verify_cert_help" class="form-text text-muted">Can only be used with hostnames, don't enable this for 127.0.0.1.</code></small>
+						<label class="form-check-label" for="rpc_tls_verify_cert"><?php echo __('rpc_add_certificate'); ?></label>
+						<small id="rpc_tls_verify_cert_help" class="form-text text-muted"><?php echo __('rpc_tls_verify_cert_help'); ?></small>
 					</div>
 					<div class="form-group">
-						<label for="rpc_username">Username</label>
+						<label for="rpc_username"><?php echo __('rpc_add_username'); ?></label>
 						<input name="rpc_user" type="text" class="revalidation-needed-rpc form-control" id="rpc_user" aria-describedby="username_help" autocomplete="new-password">
-						<small id="username_help" class="form-text text-muted">The name of your <code>rpc-user</code> block as defined in your <code>unrealircd.conf</code></small>
+						<small id="username_help" class="form-text text-muted"><?php echo __('rpc_add_username_help'); ?></small>
 					</div>
 					<div class="form-group">
-						<label for="rpc_password">Password</label>
+						<label for="rpc_password"><?php echo __('rpc_add_password'); ?></label>
 						<input name="rpc_password" type="password" class="revalidation-needed-rpc form-control" id="rpc_password" autocomplete="new-password">
 					</div>
 				</div>
 								
 				<div class="modal-footer">
-					<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-					<button type="submit" name="do_add_server" id="do_add_server" class="btn btn-primary">Add Server</button>
+					<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo __('rpc_add_cancel'); ?></button>
+					<button type="submit" name="do_add_server" id="do_add_server" class="btn btn-primary"><?php echo __('rpc_add_server_add'); ?></button>
 				</div>
 			</div>
 		</form>
@@ -165,17 +166,17 @@ if (empty($config["unrealircd"]))
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">RPC Server error</h5>
+				<h5 class="modal-title"><?php echo __('rpc_add_error_notice_1'); ?></h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
-				The RPC Server failed to connect. Check your settings and try again.
+				<?php echo __('rpc_add_error_notice_2'); ?>
 			</div>
 							
 			<div class="modal-footer">
-				<button id="CloseButton" type="button" class="btn btn-primary" data-dismiss="modal" onclick="cancel_error()">OK</button>
+				<button id="CloseButton" type="button" class="btn btn-primary" data-dismiss="modal" onclick="cancel_error()"><?php echo __('rpc_add_error_no'); ?></button>
 			</div>
 		</div>
 	</div>
@@ -188,17 +189,17 @@ if (empty($config["unrealircd"]))
 			<form method="post">
 				<input name="del_server_name" type="hidden" id="del_server_name" value="">
 				<div class="modal-header">
-					<h5 class="modal-title">Confirm deletion</h5>
+					<h5 class="modal-title"><?php echo __('rpc_confirm_deletion'); ?></h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					Are you sure you want to delete this server?
+					<?php echo __('rpc_confirm_deletion_notice'); ?>
 				</div>
 				<div class="modal-footer">
-					<button id="CloseButton" type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-					<button type="submit" name="do_del_server" id="do_del_server" class="btn btn-danger">Delete Server</button>
+					<button id="CloseButton" type="button" class="btn btn-primary" data-dismiss="modal"><?php echo __('rpc_confirm_deletion_cancel'); ?></button>
+					<button type="submit" name="do_del_server" id="do_del_server" class="btn btn-danger"><?php echo __('rpc_confirm_deletion_delete_server'); ?></button>
 				</div>
 			</form>
 		</div>
@@ -220,10 +221,10 @@ border-radius: 3px;
 <table class="container-xxl table table-sm table-responsive caption-top table-striped">
 	<thead class="table-primary">
 	<?php if ($can_edit){ ?><th scope="col"></th><?php }?>
-	<th scope="col">Display name</th>
-	<th scope="col">Hostname</th>
-	<th scope="col">Port</th>
-	<th scope="col">RPC User</th>
+	<th scope="col"><?php echo __('rpc_display_name'); ?></th>
+	<th scope="col"><?php echo __('rpc_display_hostname'); ?></th>
+	<th scope="col"><?php echo __('rpc_display_port'); ?></th>
+	<th scope="col"><?php echo __('rpc_display_rpcuser'); ?></th>
 	</thead>
 	<tbody>
 	<?php
@@ -322,7 +323,7 @@ border-radius: 3px;
 		$('#rpc_port').val(port);
 		$('#rpc_user').val(rpc_user);
 		$('#rpc_password').val("****************"); // magic value to indicate saved password
-		$('#server_add_title').html("Edit Server");
+		$('#server_add_title').html(<?php echo json_encode(__('rpc_add_server_edit')); ?>);
 		$('#do_add_server').html("Submit");
 		$('#rpc_tls_verify_cert').prop('checked', tls_verify_cert);
 		$('#do_del_server').show();
@@ -338,8 +339,8 @@ border-radius: 3px;
 		$('#rpc_port').val("8600");
 		$('#rpc_user').val("");
 		$('#rpc_password').val("");
-		$('#server_add_title').html("Add Server");
-		$('#do_add_server').html("Add Server");
+		$('#server_add_title').html(<?php echo json_encode(__('rpc_add_server_add')); ?>);
+		$('#do_add_server').html(<?php echo json_encode(__('rpc_add_server_add')); ?>);
 		$('#rpc_tls_verify_cert').prop('checked', false);
 		$('#do_del_server').hide();
 		$('#server_add').modal('show');
