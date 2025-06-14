@@ -13,7 +13,7 @@ define('DEFAULT_CHAN_DETAIL_QUICK_ACTION_TIME', 60);
  * Default reason for a quick-ban from the channel
  * details page.
  */
-define('DEFAULT_CHAN_DETAIL_QUICK_BAN_REASON', "You have been removed from this channel.");
+define('DEFAULT_CHAN_DETAIL_QUICK_BAN_REASON', __('dcdq_ban_reason'));
 /**
  * The version of our webpanel
  */
