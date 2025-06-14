@@ -1,7 +1,7 @@
 <?php
 
 if (!defined('UPATH'))
-		die("Access denied");
+	    die(__('access_denied'));
 
 function connect_to_ircd()
 {
@@ -19,7 +19,7 @@ function connect_to_ircd()
 	{
 		if ($is_api_page)
 			return;
-		Message::Fail("No RPC server configured. Go to Settings - RPC Servers.");
+		Message::Fail(__('rpc_serverconfigured_fail'));
 		die;
 	}
 	$host = $config["unrealircd"][$server]["host"];
@@ -35,15 +35,14 @@ function connect_to_ircd()
 	{
 		if ($is_api_page)
 			return;
-		die("RPC Server is missing credentials");
+		die(__('rpc_serverconfigured_credentials'));
 	}
 
 	if ($rpc_password === null)
 	{
 		if ($is_api_page)
 			return;
-		Message::Fail("Your RPC password in the DB was encrypted with a different key than config/config.php contains.<br>\n".
-		              "Either restore your previous config/config.php or start with a fresh database.<br>\n");
+		Message::Fail(__('rpc_serverconfigured_config'));
 		die;
 	}
 
@@ -67,9 +66,10 @@ function connect_to_ircd()
 	{
 		if ($is_api_page)
 			return;
-		Message::Fail("Unable to connect to UnrealIRCd: ".$e->getMessage() . "<br>".
-		              "Verify that the connection details from Settings - RPC Servers match the ones in UnrealIRCd ".
-		              "and that UnrealIRCd is up and running");
+		Message::Fail(sprintf(
+    __('rpc_serverconfigured_nounrealircd'),
+    htmlspecialchars($e->getMessage())
+		));
 		throw $e;
 	}
 }
