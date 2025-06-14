@@ -12,8 +12,8 @@ require_once "inc/header.php";
 
 ?>
 <div class="row ml-0">
-	<h2>Network Overview</h2>
-	<span class="badge bg-danger text-light ml-4 pl-2 pr-2 rounded-pill" style="height:fit-content">LIVE</span>
+	<h2><?php echo __('unrealircd_network_overview'); ?></h2>
+	<span class="badge bg-danger text-light ml-4 pl-2 pr-2 rounded-pill" style="height:fit-content"><?php echo __('unrealircd_network_overview_live'); ?></span>
 		<?php checkup_widget(); ?>
 	</div>
 <?php
@@ -32,8 +32,12 @@ $current_user = unreal_get_current_user();
 if (isset($current_user->user_meta['hibp']))
 {
 	$num = $current_user->user_meta['hibp'];
-	Message::Fail("<h6><strong>Urgent</strong></h6>","Your password was found in a data breach $num time(s).",
-		"Please <strong><a href=\"".get_config("base_url")."settings/user-edit.php\">update your password</a></strong> immediately");
+Message::Fail(
+    __('unrealircd_password_breach_title'),
+    sprintf(__('unrealircd_password_breach_message'), $num),
+    sprintf(__('unrealircd_password_breach_action'), get_config("base_url"))
+);
+
 }
 ?>
 <style>
@@ -128,7 +132,7 @@ if (isset($current_user->user_meta['hibp']))
 									</div>
 									<div class="col">
 										<h5 id="stats_user_total" class="display-4 numberDisplay"></h5>
-										<h5 class="display-5">Users Online</h5>
+										<h5 class="display-5"><?php echo __('unrealircd_network_users_online'); ?></h5>
 									</div>
 								</div>
 							</div>
@@ -145,7 +149,7 @@ if (isset($current_user->user_meta['hibp']))
 									</div>
 									<div class="col">
 										<h5 id="stats_channel_total" class="display-4 numberDisplay"></h5>
-										<h5 class="display-5">Channels</h5>
+										<h5 class="display-5"><?php echo __('unrealircd_network_channels'); ?></h5>
 									</div>
 								</div>
 							</div>
@@ -162,8 +166,8 @@ if (isset($current_user->user_meta['hibp']))
 									</div>
 									<div class="col">
 										<h5 id="stats_oper_total" class="display-4 numberDisplay"></h5>
-										<h5 class="display-5" style="margin-top: -3px">Operators</h5>
-										<h5 style="font-size: 10px; margin-top:-12px">View in Users ></h5>
+										<h5 class="display-5" style="margin-top: -3px"><?php echo __('unrealircd_network_operators'); ?></h5>
+										<h5 style="font-size: 10px; margin-top:-12px"><?php echo __('unrealircd_network_view_in_users'); ?></h5>
 									</div>
 								</div>
 							</div>
@@ -180,7 +184,7 @@ if (isset($current_user->user_meta['hibp']))
 									</div>
 									<div class="col">
 										<h5 id="stats_server_total" class="display-4 numberDisplay"></h5>
-										<h5 class="display-5">Servers</h5>
+										<h5 class="display-5"><?php echo __('unrealircd_network_servers'); ?></h5>
 									</div>
 								</div>
 							</div>
@@ -202,7 +206,7 @@ if (isset($current_user->user_meta['hibp']))
 									</div>
 									<div class="col">
 										<h5 id="num_server_bans" class="display-4 numberDisplay"></h5>
-										<h5 class="display-5">Server Bans</h5>
+										<h5 class="display-5"><?php echo __('unrealircd_network_servers_bans'); ?></h5>
 									</div>
 								</div>
 							</div>
@@ -219,7 +223,7 @@ if (isset($current_user->user_meta['hibp']))
 									</div>
 									<div class="col">
 										<h5 id="num_spamfilter_entries" class="display-4 numberDisplay"></h5>
-										<h5 class="display-5">Spamfilter</h5>
+										<h5 class="display-5"><?php echo __('unrealircd_network_spamfilter'); ?></h5>
 									</div>
 								</div>
 							</div>
@@ -236,7 +240,7 @@ if (isset($current_user->user_meta['hibp']))
 									</div>
 									<div class="col">
 										<h5 id="num_ban_exceptions" class="display-4 numberDisplay"></h5>
-										<h5 class="display-5">Server Ban Exceptions</h5>
+										<h5 class="display-5"><?php echo __('unrealircd_network_server_ban_exceptions'); ?></h5>
 									</div>
 								</div>
 							</div>
@@ -253,8 +257,8 @@ if (isset($current_user->user_meta['hibp']))
 									</div>
 									<div class="col">
 										<h5 id="stats_uline_total" class="display-4 numberDisplay"></h5>
-										<h5 class="display-5" style="margin-top: -3px">Services Online</h5>
-										<h5 style="font-size: 10px; margin-top:-12px">View in Servers ></h5>
+										<h5 class="display-5" style="margin-top: -3px"><?php echo __('unrealircd_network_services_online'); ?></h5>
+										<h5 style="font-size: 10px; margin-top:-12px"><?php echo __('unrealircd_network_services_view'); ?></h5>
 									</div>
 								</div>
 							</div>
@@ -342,7 +346,7 @@ if (isset($current_user->user_meta['hibp']))
 									</div>
 									<div class="col">
 										<h5 class="display-4 numberDisplay"><?php echo $num_of_panel_admins; ?></h5>
-										<h5 class="display-5">Panel Accounts</h5>
+										<h5 class="display-5"><?php echo __('unrealircd_network_panel_accounts'); ?></h5>
 									</div>
 								</div>
 							</div>
@@ -359,7 +363,7 @@ if (isset($current_user->user_meta['hibp']))
 									</div>
 									<div class="col">
 										<h5 class="display-4 numberDisplay"><?php echo count(Plugins::$list); ?></h5>
-										<h5 class="display-5">Plugins</h5>
+										<h5 class="display-5"><?php echo __('unrealircd_network_panel_plugins'); ?></h5>
 									</div>
 								</div>
 							</div>
