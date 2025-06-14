@@ -9,7 +9,7 @@
  *
  * Translation by: Valware  
  * File added and maintained by: OmerAti  
- * Date: 14.06.2025
+ * Date: 08.06.2025
  */
  
 return [
@@ -159,4 +159,16 @@ return [
 	// Other
 	'other_base_url' => 'The base_url was not found in your config. Setup went wrong?',
 	'other_auth_provided' => 'No authentication plugin loaded. You must load either sql_db, file_db, or a similar auth plugin!',
+	'die_vendor' => 'The vendor/ directory is missing. Most likely the admin forgot to run composer install\n',
+	'access_denied' => 'Access denied',
+	'rpc_serverconfigured_fail' => 'No RPC server configured. Go to Settings - RPC Servers.',
+	'rpc_serverconfigured_credentials' => 'RPC Server is missing credentials',
+	'rpc_serverconfigured_config' => 'Your RPC password in the database was encrypted with a different key than the one in config/config.php.<br>
+	Please either restore your previous config/config.php file or start with a fresh database.<br>',
+	'rpc_serverconfigured_nounrealircd' =>
+    'Unable to connect to UnrealIRCd: %s<br>' .
+    'Verify that the connection details from Settings - RPC Servers match the ones in UnrealIRCd,<br>' .
+    'and that UnrealIRCd is up and running.',
+	'dcdq_ban_reason' => 'You have been removed from this channel.',
+
 ];
