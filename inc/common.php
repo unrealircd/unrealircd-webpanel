@@ -11,12 +11,8 @@ function check_requirements()
 {
 	if (version_compare(PHP_VERSION, '8.0.0', '<'))
 	{
-		die("This webserver is using PHP version ".PHP_VERSION." but we require at least PHP 8.0.0.<br>".
-			"If you already installed PHP8 but are still seeing this error, then it means ".
-			"apache/nginx/.. is loading an older PHP version. Eg. on Debian/Ubuntu you need ".
-			"<code>apt-get install libapache2-mod-php8.2</code> (or a similar version) and ".
-			"<code>apt-get remove libapache2-mod-php7.4</code> (or a similar version). ".
-			"You may also need to choose again the PHP module to load in apache via <code>a2enmod php8.2</code>");
+	die(sprintf(__('requirements_php_version'), PHP_VERSION));
+
 	}
 
 	$loaded_extensions = get_loaded_extensions();
@@ -28,7 +24,7 @@ function check_requirements()
 
 	if (count($missing_extensions) > 0)
 	{
-		$text = "<html>The following PHP module(s) need to be loaded:<br>\n<ul>\n";
+		$text = "<html>" . __('requirements_extensions_missing_title') . "<br>\n<ul>\n";
 		$cmd = 'apt-get install';
 		foreach($missing_extensions as $mod)
 		{
@@ -36,9 +32,7 @@ function check_requirements()
 			$cmd .= " php-$mod";
 		}
 		$text .= "</ul>\n";
-		$text .= "You need to install/enable these PHP packages and restart the webserver.<br>".
-				 "If you are on Debian/Ubuntu then run <code>$cmd</code> ".
-				 "and restart your webserver (eg: <code>systemctl restart apache2</code> for apache).";
+		$text .= sprintf(__('requirements_extensions_missing_cmd'), $cmd);
 		die($text);
 	}
 }
@@ -193,24 +187,24 @@ function write_config_file()
 	$tmpfile = UPATH.'/config/config.tmp.'.bin2hex(random_bytes(8)).'.php';
 	$fd = fopen($tmpfile, "w");
 	if (!$fd)
-		die("Could not write to temporary config file $tmpfile.<br>We need write permissions on the config/ directory!<br>");
+		die(sprintf(__('config_write_error'), htmlspecialchars($tmpfile)));
 
 	$str = var_export($file_settings, true);
 	if ($str === null)
-		die("Error while running write_config_file() -- weird!");
+		die(__('requirements_write_config_weird'));
 	if (!fwrite($fd, "<?php\n".
-			"/* This config file is written automatically by the UnrealIRCd webpanel.\n".
-			" * You are not really supposed to edit it manually.\n".
+			"/* " . __('requirements_config_file_notice_1') . "\n".
+			" * " . __('requirements_config_file_notice_2') . "\n".
 			" */\n".
 			'$config = '.$str.";\n"))
 	{
-		die("Error writing to config file $tmpfile (on fwrite).<br>");
+		die(sprintf(__('requirements_write_config_fwrite'), htmlspecialchars($tmpfile)));
 	}
 	if (!fclose($fd))
-		die("Error writing to config file $tmpfile (on close).<br>");
+		 die(sprintf(__('requirements_write_config_fclose'), htmlspecialchars($tmpfile)));
 	/* Now atomically rename the file */
 	if (!rename($tmpfile, $cfg_filename))
-		die("Could not write (rename) to file ".$cfg_filename."<br>");
+		die(sprintf(__('requirements_write_config_rename_error'), htmlspecialchars($cfg_filename)));
 	if (function_exists('opcache_invalidate'))
 		opcache_invalidate($cfg_filename);
 
@@ -454,7 +448,7 @@ if (!read_config_file())
 
 require_once UPATH . "/Classes/class-hook.php";
 if (!is_dir(UPATH . "/vendor"))
-	die("The vendor/ directory is missing. Most likely the admin forgot to run 'composer install'\n");
+    die(__('die_vendor'));
 require_once UPATH . '/vendor/autoload.php';
 require_once UPATH . "/Classes/class-cmodes.php";
 require_once UPATH . "/inc/defines.php";
@@ -482,27 +476,27 @@ if (!page_requires_no_config())
 
 	/* And a check... */
 	if (!get_config("base_url"))
-		die("The base_url was not found in your config. Setup went wrong?");
+		die(__('other_base_url'));
 }
 
 $pages = [
-	"Overview"	 => ["script"=>""],
-	"Users"		=> ["script"=>"users/index.php"],
-	"Channels"	 => ["script"=>"channels/index.php"],
-	"Servers"	  => ["script"=>"servers/index.php"],
-	"Server Bans"  => [
-		"Server Bans" => ["script" => "server-bans/index.php"],
-		"Name Bans" => ["script" => "server-bans/name-bans.php"],
-		"Ban Exceptions" => ["script" => "server-bans/ban-exceptions.php"],
+	__('menu_overview') => ["script" => ""],
+	__('menu_users') => ["script"=>"users/index.php"],
+	__('menu_channels') => ["script"=>"channels/index.php"],
+	__('menu_servers') => ["script"=>"servers/index.php"],
+	__('a_menu_servers_bans')  => [
+		__('menu_server_ban') => ["script" => "server-bans/index.php"],
+		__('menu_name_bans') => ["script" => "server-bans/name-bans.php"],
+		__('menu_ban_exceptions') => ["script" => "server-bans/ban-exceptions.php"],
 	],
-	"Spamfilter"   => ["script" => "server-bans/spamfilter.php"],
-	"Logs"   => ["script" => "logs/index.php"],
-	"Tools" => [
-		"IP WHOIS" => ["script" => "tools/ip-whois.php","no_irc_server_required"=>true],
+	__('menu_spamfilter') => ["script" => "server-bans/spamfilter.php"],
+	__('menu_logs')   => ["script" => "logs/index.php"],
+	__('a_menu_tools') => [
+		__('menu_ip_whois') => ["script" => "tools/ip-whois.php","no_irc_server_required"=>true],
 	],
-	"Settings" => [
-		"General Settings" => ["script" => "settings/general.php"],
-		"RPC Servers" => ["script" => "settings/rpc-servers.php","no_irc_server_required"=>true],
+	__('a_menu_settings') => [
+		__('menu_general_settings') => ["script" => "settings/general.php"],
+		__('menu_rpc_servers') => ["script" => "settings/rpc-servers.php","no_irc_server_required"=>true],
 	],
 ];
 
@@ -512,7 +506,7 @@ if (!panel_start_session())
 	if (!page_requires_no_login())
 	{
 		if (!is_auth_provided())
-			die("No authentication plugin loaded. You must load either sql_db, file_db, or a similar auth plugin!");
+			die(__('other_auth_provided'));
 		$current_page = $_SERVER['REQUEST_URI'];
 		header("Location: ".get_config("base_url")."login/?redirect=".urlencode($current_page));
 		die;
