@@ -41,6 +41,11 @@ return [
 	'a_menu_settings' => 'Settings',
 	'menu_general_settings' => 'General Settings',
 	'menu_rpc_servers' => 'RPC Servers',
+	'menu_logout' => 'Logout',
+	'menu_settings' => 'Panel Settings',
+	'menu_accounts' => 'Accounts',
+	'menu_role_editor' => 'Role Editor',
+	'menu_plugins' => 'Plugins',
 	
 	// Requirements
 	'requirements_php_version' => 'This webserver is using PHP version %s, but we require at least PHP 8.0.0.<br>' .
