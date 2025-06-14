@@ -1,4 +1,5 @@
 <?php
+require_once "languages.php";
 if (ini_get('output_buffering') == true) {
 	ini_set('output_buffering', 'off');
 }
