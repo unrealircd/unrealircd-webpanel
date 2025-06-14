@@ -512,26 +512,26 @@ if (!panel_start_session())
 		die;
 	}
 } else {
-	$pages["Settings"]["Accounts"] = [
+	$pages[__('menu_settings')][__('menu_accounts')] = [
 		"script" => "settings/index.php",
 		"no_irc_server_required"=>true
 	];
 	if (current_user_can(PERMISSION_MANAGE_USERS))
 	{
-		$pages["Settings"]["Role Editor"] = [
+		$pages[__('menu_settings')][__('menu_role_editor')] = [
 			"script"=>"settings/user-role-edit.php",
 			"no_irc_server_required"=>true
 		];
 	}
 	if (current_user_can(PERMISSION_MANAGE_PLUGINS))
 	{
-		$pages["Settings"]["Plugins"] = ["script" => "settings/plugins.php"];
+		$pages[__('menu_settings')][__('menu_plugins')] = ["script" => "settings/plugins.php"];
 	}
 	$user = unreal_get_current_user();
 	if ($user)
 	{
 		/* Add logout page, if logged in */
-		$pages["Logout"] = [
+		$pages[__('menu_logout')] = [
 			"script"=>"login/?logout=true",
 			"no_irc_server_required"=>true
 		];
