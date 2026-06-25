@@ -6,11 +6,11 @@ COPY . .
 
 RUN composer install
 
-FROM trafex/php-nginx
+FROM trafex/php-nginx:3.11.1
 
 USER root
 
-RUN apk add --no-cache php83-sodium
+RUN apk add --no-cache php85-sodium
 
 USER nobody
 
