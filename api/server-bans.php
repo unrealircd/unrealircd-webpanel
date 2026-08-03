@@ -24,8 +24,8 @@ foreach($tkls as $tkl)
         "Duration" => $tkl->duration_string,
         "Reason" => htmlspecialchars($tkl->reason),
         "Set By" => $set_by,
-        "Set On" => $tkl->set_at_string,
-        "Expires" => $tkl->expire_at_string,
+        "Set On" => $tkl->set_at,
+        "Expires" => $tkl->expire_at,
     ];
 }
 
