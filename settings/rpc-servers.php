@@ -50,6 +50,8 @@ if ($can_edit)
 				die("Editing a server that does not exist!?"); // not very graceful, isn't it?
 			if ($new_properties["rpc_password"] == "****************")
 				$new_properties["rpc_password"] = $config["unrealircd"][$opts->edit_existing]["rpc_password"];
+			if (!str_starts_with($new_properties['rpc_password'], 'secret:'))
+				$new_properties['rpc_password'] = secret_encrypt($new_properties['rpc_password']);
 			// name change? unset the old one
 			if ($opts->edit_existing != $opts->rpc_displayname)
 				unset($config["unrealircd"][$opts->edit_existing]);
@@ -57,8 +59,8 @@ if ($can_edit)
 			$config["unrealircd"][$opts->rpc_displayname] = $new_properties;
 		} else {
 			// Add new server
+			$new_properties['rpc_password'] = secret_encrypt($new_properties['rpc_password']);
 			$config["unrealircd"][$opts->rpc_displayname] = $new_properties;
-			// TODO: encrypt pwd ;)
 		}
 
 		if ($new_properties["default"])
@@ -235,16 +237,16 @@ border-radius: 3px;
 			$primary = "";
 			if (isset($e["default"]) && $e["default"])
                             $primary = " <span class=\"badge rounded-pill badge-success\">Default</span>";
-                        $name = htmlspecialchars($name);
-                        $default_server = $e["default"] ? "true" : "false";
-                        $host = htmlspecialchars($e["host"]);
-                        $port = htmlspecialchars($e["port"]);
-                        $rpc_user = htmlspecialchars($e["rpc_user"]);
-                        $tls_verify_cert = $e["tls_verify_cert"] ? "true" : "false";
-                        $html_name = "<a href=\"javascript:edit_rpc_server('$name',$default_server,'$host','$port','$rpc_user',$tls_verify_cert)\">$name</a>";
+			$display_name = htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+			$host = htmlspecialchars($e['host'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+			$port = htmlspecialchars((string)$e['port'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+			$rpc_user = htmlspecialchars($e['rpc_user'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+			$server_args = [$name, !empty($e['default']), $e['host'], (string)$e['port'], $e['rpc_user'], !empty($e['tls_verify_cert'])];
+			$server_data = htmlspecialchars(json_encode($server_args, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR), ENT_QUOTES, 'UTF-8');
+			$html_name = '<button type="button" class="btn btn-link p-0" data-server="'.$server_data.'" onclick="edit_rpc_server_data(this.dataset.server)">'.$display_name.'</button>';
 			echo "<tr>";
 			if ($can_edit)
-				echo "<td scope=\"col\"><button type=\"button\" class=\"btn btn-xs btn-danger\" onclick=\"confirm_delete('".$name."')\"><i class=\"fa fa-trash fa-1\" aria-hidden=\"true\"></i></button></td>";
+				echo '<td scope="col"><button type="button" class="btn btn-xs btn-danger" data-name="'.$display_name.'" onclick="confirm_delete(this.dataset.name)"><i class="fa fa-trash fa-1" aria-hidden="true"></i></button></td>';
 			echo "<td scope=\"col\">".$html_name.$primary."</td>";
 			echo "<td scope=\"col\"><code>".$host."</code></td>";
 			echo "<td scope=\"col\"><code>".$port."</code></td>";
@@ -278,7 +280,7 @@ border-radius: 3px;
 	{
 		fetch('<?php echo get_config("base_url"); ?>' + 'api/test_rpc_server.php', {
 		      method:'POST',
-		      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+		      headers: {'Content-Type':'application/x-www-form-urlencoded', 'X-CSRF-Token': PANEL_CSRF_TOKEN},
 		      body: 'method=rpc&'+
 		            'host='+encodeURIComponent(rpc_host.value)+
 		            '&port='+encodeURIComponent(rpc_port.value)+
@@ -311,6 +313,11 @@ border-radius: 3px;
 	{
 		$('#server_add').modal('show');
 		return true;
+	}
+
+	function edit_rpc_server_data(json)
+	{
+		edit_rpc_server(...JSON.parse(json));
 	}
 
 	function edit_rpc_server(name, default_server, host, port, rpc_user, tls_verify_cert)

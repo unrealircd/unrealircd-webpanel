@@ -3,6 +3,7 @@
 /** For handling installation BEFORE any backend and user is configured */
 
 require_once "../inc/common.php";
+panel_check_csrf();
 
 /* only let this happen pre-config */
 if (file_exists("../config/config.php"))

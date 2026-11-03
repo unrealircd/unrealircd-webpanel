@@ -2,6 +2,12 @@
 
 require_once "../inc/common.php";
 
+if (!current_user_can(PERMISSION_MANAGE_USERS))
+{
+	http_response_code(403);
+	die(json_encode(['error' => 'Access denied']));
+}
+
 if (!isset($_POST) || empty($_POST))
 		die(json_encode(["error" => "Incorrect parameters"]));
 

@@ -182,8 +182,10 @@ function requestInstall(name, uninstall = false)
         }
     };
 
-    xhr.open('GET', BASE_URL + 'api/plugin.php?'+inst+'=' + name, true);
-    xhr.send();
+    xhr.open('POST', BASE_URL + 'api/plugin.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.setRequestHeader('X-CSRF-Token', PANEL_CSRF_TOKEN);
+    xhr.send(encodeURIComponent(inst) + '=' + encodeURIComponent(name));
     return true;
 }
 

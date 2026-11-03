@@ -90,9 +90,19 @@ elseif (isset($_POST['update_role']) && $role_name = $_POST['update_role'])
     }
     else
     {
-        $config['user_roles'][$role_name] = $_POST['permissions'];
-        write_config('user_roles');
-        $success[] = "Successfully updated role \"$role_name\"";
+        if (in_array($role_name, ['Super-Admin', 'Read-Only'], true))
+        {
+            $errors[] = 'Built-in roles cannot be modified.';
+        }
+        else
+        {
+            $requested = $_POST['permissions'] ?? [];
+            if (!is_array($requested))
+                $requested = [];
+            $config['user_roles'][$role_name] = array_values(array_intersect($requested, array_values(get_panel_user_permission_list())));
+            write_config('user_roles');
+            $success[] = "Successfully updated role \"$role_name\"";
+        }
         $list = get_panel_user_roles_list(); // refresh
     }
 }

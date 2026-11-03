@@ -25,14 +25,14 @@ foreach($users as $user)
 			$hostip = $user->hostname . " (".$user->ip.")";
 	$hostip = htmlspecialchars($hostip);
 	
-	$account = (isset($user->user->account)) ? "<a href=\"".get_config("base_url")."users/?account=".$user->user->account."\">".htmlspecialchars($user->user->account)."</a>" : '<span class="badge rounded-pill badge-primary">None</span>';
-	$oper = (isset($user->user->operlogin)) ? $user->user->operlogin." <span class=\"badge rounded-pill badge-secondary\">".$user->user->operclass."</span>" : "";
+	$account = (isset($user->user->account)) ? "<a href=\"".get_config("base_url")."users/?account=".rawurlencode($user->user->account)."\">".htmlspecialchars($user->user->account, ENT_QUOTES, 'UTF-8')."</a>" : '<span class="badge rounded-pill badge-primary">None</span>';
+	$oper = (isset($user->user->operlogin)) ? htmlspecialchars($user->user->operlogin, ENT_QUOTES, 'UTF-8')." <span class=\"badge rounded-pill badge-secondary\">".htmlspecialchars($user->user->operclass, ENT_QUOTES, 'UTF-8')."</span>" : "";
 	if (!strlen($oper))
 			$oper = (strpos($user->user->modes, "S") !== false) ? '<span class="badge rounded-pill badge-warning">Services Bot</span>' : "";
 	$servername = $user->user->servername;
 	$reputation = $user->user->reputation;
 
-	$nick = "<a href=\"details.php?nick=".$user->id."\">$nick</a>";
+	$nick = "<a href=\"details.php?nick=".rawurlencode($user->id)."\">$nick</a>";
 
 	$out[] = [
 		"Select" => "<input type=\"checkbox\" value='" . base64_encode($user->id)."' name=\"userch[]\">", /* yeah ridiculous to have here in this file and the feed ;) */

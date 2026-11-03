@@ -39,7 +39,21 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 	<!-- insert your javascript bread in here to make toast -->
   </div>
 </div>
-<script> const BASE_URL = "<?php echo get_config("base_url"); ?>"; </script>
+<script>
+const BASE_URL = <?php echo json_encode(get_config('base_url'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+const PANEL_CSRF_TOKEN = <?php echo json_encode(panel_csrf_token()); ?>;
+// Include a token in existing and newly inserted POST forms without changing their handlers.
+function panelProtectForm(form) {
+    if (form.method.toUpperCase() !== 'POST' || form.querySelector('input[name="_csrf"]')) return;
+    const field = document.createElement('input');
+    field.type = 'hidden';
+    field.name = '_csrf';
+    field.value = PANEL_CSRF_TOKEN;
+    form.appendChild(field);
+}
+document.addEventListener('DOMContentLoaded', () => document.querySelectorAll('form').forEach(panelProtectForm));
+document.addEventListener('submit', event => panelProtectForm(event.target), true);
+</script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
@@ -85,7 +99,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 		{
 			fetch(BASE_URL + 'api/set_rpc_server.php', {
 			      method:'POST',
-			      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+			      headers: {'Content-Type':'application/x-www-form-urlencoded', 'X-CSRF-Token': PANEL_CSRF_TOKEN},
 			      body: 'server='+encodeURIComponent(name)
 			      })
 			.then(response => response.json())
@@ -305,6 +319,15 @@ foreach ($pages as $name => $page)
 
 	const searchBox = document.getElementById('search_box');
 	const searchResults =document.getElementById('search-results');
+	const escapeSearchHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+		'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+	}[char]));
+	const escapeSearchName = value => {
+		const raw = String(value ?? '');
+		return raw.startsWith('<code>') && raw.endsWith('</code>')
+			? '<code>' + escapeSearchHtml(raw.slice(6, -7)) + '</code>'
+			: escapeSearchHtml(raw);
+	};
 	// Add event listener for keyup event
 	searchBox.addEventListener('input', function(event) {
 	// Get the value from the input box
@@ -343,7 +366,7 @@ foreach ($pages as $name => $page)
 					user_result.onclick = function(){
 						window.location.href = BASE_URL+"users/details.php?nick="+encodeURIComponent(data.users[key].name);
 					};
-					user_result.innerHTML = "<span class='p-0'>"+data.users[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.users[key].label+"</div></span><i>"+data.users[key].data+"</i>";
+					user_result.innerHTML = "<span class='p-0'>"+escapeSearchHtml(data.users[key].name)+"<div class='badge ml-2 badge-primary'>Matches "+escapeSearchHtml(data.users[key].label)+"</div></span><i>"+escapeSearchHtml(data.users[key].data)+"</i>";
 					searchResults.appendChild(user_result);
 				}
 
@@ -360,7 +383,7 @@ foreach ($pages as $name => $page)
 					channel_result.onclick = function(){
 						window.location.href = BASE_URL+"channels/details.php?chan="+encodeURIComponent(data.channels[key].name);
 					};
-					channel_result.innerHTML = "<span class='p-0'>"+data.channels[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.channels[key].label+"</div></span><i>"+(data.channels[key].topic?data.channels[key].topic:"")+"</i>";
+					channel_result.innerHTML = "<span class='p-0'>"+escapeSearchHtml(data.channels[key].name)+"<div class='badge ml-2 badge-primary'>Matches "+escapeSearchHtml(data.channels[key].label)+"</div></span><i>"+escapeSearchHtml(data.channels[key].topic)+"</i>";
 					searchResults.appendChild(channel_result);
 				}
 				
@@ -377,7 +400,7 @@ foreach ($pages as $name => $page)
 					serv_result.onclick = function(){
 						window.location.href = BASE_URL+"servers/details.php?server="+encodeURIComponent(data.servers[key].name);
 					};
-					serv_result.innerHTML = data.servers[key].name;
+					serv_result.textContent = data.servers[key].name;
 					searchResults.appendChild(serv_result);
 				}
 
@@ -394,7 +417,7 @@ foreach ($pages as $name => $page)
 					serv_result.onclick = function(){
 						window.location.href = BASE_URL+"server-bans";
 					};
-					serv_result.innerHTML = "<span class='p-0'>"+data.server_bans[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.server_bans[key].label+"</div></span><i>"+(data.server_bans[key].data?data.server_bans[key].data:"")+"</i>";
+					serv_result.innerHTML = "<span class='p-0'>"+escapeSearchHtml(data.server_bans[key].name)+"<div class='badge ml-2 badge-primary'>Matches "+escapeSearchHtml(data.server_bans[key].label)+"</div></span><i>"+escapeSearchHtml(data.server_bans[key].data)+"</i>";
 					searchResults.appendChild(serv_result);
 				}
 
@@ -411,7 +434,7 @@ foreach ($pages as $name => $page)
 					serv_result.onclick = function(){
 						window.location.href = BASE_URL+"server-bans/ban-exceptions";
 					};
-					serv_result.innerHTML = "<span class='p-0'>"+data.excepts[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.excepts[key].label+"</div></span><i>"+(data.excepts[key].data?data.excepts[key].data:"")+"</i>";
+					serv_result.innerHTML = "<span class='p-0'>"+escapeSearchHtml(data.excepts[key].name)+"<div class='badge ml-2 badge-primary'>Matches "+escapeSearchHtml(data.excepts[key].label)+"</div></span><i>"+escapeSearchHtml(data.excepts[key].data)+"</i>";
 					searchResults.appendChild(serv_result);
 				}
 
@@ -428,7 +451,7 @@ foreach ($pages as $name => $page)
 					serv_result.onclick = function(){
 						window.location.href = BASE_URL+"server-bans/name-bans";
 					};
-					serv_result.innerHTML = "<span class='p-0'>"+data.name_bans[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.name_bans[key].label+"</div></span><i>"+(data.name_bans[key].data?data.name_bans[key].data:"")+"</i>";
+					serv_result.innerHTML = "<span class='p-0'>"+escapeSearchHtml(data.name_bans[key].name)+"<div class='badge ml-2 badge-primary'>Matches "+escapeSearchHtml(data.name_bans[key].label)+"</div></span><i>"+escapeSearchHtml(data.name_bans[key].data)+"</i>";
 					searchResults.appendChild(serv_result);
 				}
 				//Spamfilter
@@ -444,7 +467,7 @@ foreach ($pages as $name => $page)
 					serv_result.onclick = function(){
 						window.location.href = BASE_URL+"server-bans/spamfilter.php";
 					};
-					serv_result.innerHTML = "<span class='p-0'>"+data.spamfilter[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.spamfilter[key].label+"</div></span><i>"+(data.spamfilter[key].data?data.spamfilter[key].data:"")+"</i>";
+					serv_result.innerHTML = "<span class='p-0'>"+escapeSearchHtml(data.spamfilter[key].name)+"<div class='badge ml-2 badge-primary'>Matches "+escapeSearchHtml(data.spamfilter[key].label)+"</div></span><i>"+escapeSearchHtml(data.spamfilter[key].data)+"</i>";
 					searchResults.appendChild(serv_result);
 				}
 
@@ -461,7 +484,7 @@ foreach ($pages as $name => $page)
 					log_result.onclick = function(){
 						window.location.href = BASE_URL+"logs";
 					};
-					log_result.innerHTML = data.logs[key].msg;
+					log_result.textContent = data.logs[key].msg;
 					searchResults.appendChild(log_result);
 				}
 				

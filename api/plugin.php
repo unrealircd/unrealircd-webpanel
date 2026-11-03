@@ -1,27 +1,31 @@
 <?php
 
-session_start();
-if (!isset($_SESSION['id']))
-    die("Access denied");
 require_once('common_api.php');
 
 if (!current_user_can(PERMISSION_MANAGE_PLUGINS))
     die(json_encode(['error' => "Access denied"]));
-if (empty($_GET))
-    die(json_encode($config['third-party-plugins']['data']));
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET')
+    die(json_encode($config['third-party-plugins']['data'] ?? []));
 
-elseif(isset($_GET['install']))
+// Mutations must not be triggered by a GET request or a cross-site link.
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST')
 {
-    install_plugin($_GET['install']);
+    header('Allow: GET, POST');
+    http_response_code(405);
+    die(json_encode(['error' => 'Method not allowed']));
 }
-elseif (isset($_GET['uninstall']))
-{
-    uninstall_plugin($_GET['uninstall']);
-}
+if (isset($_POST['install']))
+    install_plugin($_POST['install']);
+elseif (isset($_POST['uninstall']))
+    uninstall_plugin($_POST['uninstall']);
+else
+    die(json_encode(['error' => 'Unknown operation']));
 
 function uninstall_plugin($name)
 {
     global $config;
+    if (!is_string($name) || !preg_match('/\A[a-zA-Z0-9_-]+\z/D', $name))
+        die(json_encode(['error' => 'Invalid plugin name']));
     if (!Plugins::plugin_exists($name))
         die(json_encode(['error' => "Plugin not loaded"]));
     
@@ -41,6 +45,8 @@ function uninstall_plugin($name)
 function install_plugin($name)
 {
     global $config;
+    if (!is_string($name) || !preg_match('/\A[a-zA-Z0-9_-]+\z/D', $name))
+        die(json_encode(['error' => 'Invalid plugin name']));
     if (in_array($name, $config['plugins']))
         die(json_encode(["error" => "Plugin already installed"]));
     $url = get_plugin_install_path_from_name($name);

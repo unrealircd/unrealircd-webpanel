@@ -5,19 +5,24 @@
  * with old credentials/uid weirdness.
  * Code from example #1 at https://www.php.net/manual/en/function.session-destroy.php
  */
+ini_set('session.use_strict_mode', '1');
+ini_set('session.use_only_cookies', '1');
+session_set_cookie_params([
+    'lifetime' => 86400,
+    'path' => '/',
+    'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+    'httponly' => true,
+    'samesite' => 'Lax',
+]);
 session_start();
-$_SESSION = Array();
-if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000,
-        $params["path"], $params["domain"],
-        $params["secure"], $params["httponly"]
-    );
-}
-session_destroy();
+// Installation may be opened by a logged-in operator. Keep the CSRF token
+// while clearing any previous authenticated identity.
+unset($_SESSION['id'], $_SESSION['session_timeout'], $_SESSION['last-activity']);
 
 require_once "../inc/common.php";
 require_once "../misc/pwa-manifest.php";
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST')
+    panel_check_csrf();
 
 /* Get the base url */
 $uri = $_SERVER['REQUEST_URI'];
@@ -198,6 +203,7 @@ $writable = (is_writable("../config/")) ? true: false;
 
 <!-- Form start -->
 <form method="post">
+<input type="hidden" name="_csrf" value="<?php echo htmlspecialchars(panel_csrf_token(), ENT_QUOTES, 'UTF-8'); ?>">
 <div id="page3" class="container">
 	<h5>Database Backend</h5>
 	<br>
@@ -337,7 +343,8 @@ $writable = (is_writable("../config/")) ? true: false;
 </div>
 
 <script>
-	let BASE_URL = '<?php echo BASE_URL; ?>';
+	let BASE_URL = <?php echo json_encode(BASE_URL, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+	const PANEL_CSRF_TOKEN = <?php echo json_encode(panel_csrf_token()); ?>;
 	let chmod_help = document.getElementById('chmod_help');
 
 	if (chmod_help)
@@ -409,7 +416,7 @@ $writable = (is_writable("../config/")) ? true: false;
 		sql_test_conn.innerHTML = "Checking...";
 		fetch(BASE_URL + 'api/installation.php', {
 		      method:'POST',
-		      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+		      headers: {'Content-Type':'application/x-www-form-urlencoded', 'X-CSRF-Token': PANEL_CSRF_TOKEN},
 		      body: 'method=sql&'+
 		            'host='+encodeURIComponent(sql_host.value)+
 		            '&database='+encodeURIComponent(sql_db.value)+

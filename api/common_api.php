@@ -3,8 +3,11 @@ include "../inc/common.php";
 
 if(session_status() !== PHP_SESSION_ACTIVE) session_start();
 
-if (!isset($_SESSION['id']))
-	die("Access denied");
+if (!unreal_get_current_user())
+{
+    http_response_code(403);
+    die("Access denied");
+}
 
 // Close the session now, otherwise other pages block
 session_write_close();

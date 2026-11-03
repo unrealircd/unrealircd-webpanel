@@ -2,7 +2,7 @@
 
 require_once "../inc/common.php";
 require_once "../inc/header.php";
-do_log($_POST);
+// Do not dump credential changes to the debug display.
 
 $us = unreal_get_current_user();
 $id = (isset($_GET['id'])) ? $_GET['id'] : $us->id;
@@ -16,7 +16,11 @@ $roles_list = get_panel_user_roles_list();
 
 if ($postbutton && isset($_POST['user_role']) && $caneditpermissions)
 {
-    if ($_POST['user_role'] != $edit_user->user_meta['role'])
+    if (!is_string($_POST['user_role']) || !array_key_exists($_POST['user_role'], $roles_list))
+    {
+        Message::Fail('Unknown role');
+    }
+    elseif ($_POST['user_role'] != $edit_user->user_meta['role'])
     {
         $edit_user->add_meta("role", $_POST['user_role']);
         $edit_user->delete_meta("permissions");
@@ -59,14 +63,14 @@ if ($postbutton && $can_edit_profile)
     $edit_user = new PanelUser($edit_user->username);
 }
 ?>
-<h4>Edit User: "<?php echo $edit_user->username; ?>"</h4>
+<h4>Edit User: "<?php echo htmlspecialchars($edit_user->username, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"</h4>
 <br>
 <form method="post" action="user-edit.php?id=<?php echo $edit_user->id; ?>" autocomplete="off" enctype="multipart/form-data">
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" style="width: 175px;">Username</span>
-    </div><input disabled type="text" class="form-control" name="username" id="username" placeholder="<?php echo $edit_user->username; ?>">
+    </div><input disabled type="text" class="form-control" name="username" id="username" placeholder="<?php echo htmlspecialchars($edit_user->username, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 </div>
 
 <div class="input-group mb-3">
@@ -77,7 +81,8 @@ if ($postbutton && $can_edit_profile)
                     foreach($roles_list as $s => $l)
                     {
                         $selected = ($s == $edit_user->user_meta['role']) ? "selected=\"selected\"" : "";
-                        echo "<option value=\"$s\" $selected>$s</option>";
+                        $safe_role = htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        echo "<option value=\"$safe_role\" $selected>$safe_role</option>";
                     }
                 ?>
             </select>
@@ -88,34 +93,34 @@ if ($postbutton && $can_edit_profile)
 <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" style="width: 175px;">First Name</span>
-    </div><input <?php echo $caneditprofile; ?> type="text" class="form-control" name="first_name" id="first_name" placeholder="<?php echo $edit_user->first_name; ?>">
+    </div><input <?php echo $caneditprofile; ?> type="text" class="form-control" name="first_name" id="first_name" placeholder="<?php echo htmlspecialchars($edit_user->first_name ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 </div>
 
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" style="width: 175px;">Last Name</span>
-    </div><input <?php echo $caneditprofile; ?> type="text" class="form-control" name="last_name" id="last_name" placeholder="<?php echo $edit_user->last_name; ?>">
+    </div><input <?php echo $caneditprofile; ?> type="text" class="form-control" name="last_name" id="last_name" placeholder="<?php echo htmlspecialchars($edit_user->last_name ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 </div>
 
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" style="width: 175px;">Bio</span>
-    </div><textarea <?php echo $caneditprofile; ?> class="form-control" name="bio" id="username"><?php echo $edit_user->bio; ?></textarea>
+    </div><textarea <?php echo $caneditprofile; ?> class="form-control" name="bio" id="username"><?php echo htmlspecialchars($edit_user->bio ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></textarea>
 </div>
 
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" style="width: 175px;">Email</span>
-    </div><input <?php echo $caneditprofile; ?> type="text" class="form-control" name="email" id="email" autocomplete="off" value="<?php echo $edit_user->email; ?>">
+    </div><input <?php echo $caneditprofile; ?> type="text" class="form-control" name="email" id="email" autocomplete="off" value="<?php echo htmlspecialchars($edit_user->email ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 </div>
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" style="width: 175px;">Session timeout</span>
-    </div><input <?php echo $caneditprofile; ?> type="text" class="form-control" name="session_timeout" id="session_timeout" autocomplete="off" value="<?php echo $edit_user->user_meta['session_timeout'] ?? 3600; ?>">
+    </div><input <?php echo $caneditprofile; ?> type="text" class="form-control" name="session_timeout" id="session_timeout" autocomplete="off" value="<?php echo htmlspecialchars((string)($edit_user->user_meta['session_timeout'] ?? 3600), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 </div>
 
 <div class="input-group mb-3">

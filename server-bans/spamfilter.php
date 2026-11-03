@@ -286,14 +286,16 @@ $spamfilter = $rpc->spamfilter()->getAll();
 		{
 			echo "<tr>";
 			echo "<td><input type=\"checkbox\" value='" . base64_encode($sf->name).",".base64_encode($sf->match_type).",".base64_encode($sf->spamfilter_targets).",".base64_encode($sf->ban_action) . "' name=\"sf[]\"></td>";
-			echo "<td>".$sf->match_type."</td>";
-			echo "<td data-toggle='tooltip' data-placement='bottom' title='$sf->name'>".(strlen($sf->name) > 50 ? substr($sf->name, 0, 50)."..." : $sf->name)."</td>";
+			$escape = static fn($value) => htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+			$short_name = strlen($sf->name) > 50 ? substr($sf->name, 0, 50)."..." : $sf->name;
+			echo "<td>".$escape($sf->match_type)."</td>";
+			echo "<td data-toggle='tooltip' data-placement='bottom' title='".$escape($sf->name)."'>".$escape($short_name)."</td>";
 			echo "<td>".spamfilter_targets_to_string_with_info($sf->spamfilter_targets)."</td>";
-			echo "<td><span class=\"badge rounded-pill badge-info\">".$sf->ban_action."</span></td>";
-			echo "<td>".$sf->ban_duration_string."</td>";
-			echo "<td>".$sf->reason."</td>";
-			echo "<td>".show_nick_only($sf->set_by)."</td>";
-			echo "<td>".$sf->set_at_string."</td>";
+			echo "<td><span class=\"badge rounded-pill badge-info\">".$escape($sf->ban_action)."</span></td>";
+			echo "<td>".$escape($sf->ban_duration_string)."</td>";
+			echo "<td>".$escape($sf->reason)."</td>";
+			echo "<td>".$escape(show_nick_only($sf->set_by))."</td>";
+			echo "<td>".$escape($sf->set_at_string)."</td>";
 			
 		}
 	?></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2" <?php echo (current_user_can(PERMISSION_SPAMFILTER_DEL)) ? "" : "disabled"; ?>>

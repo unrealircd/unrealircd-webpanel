@@ -5,14 +5,27 @@ require_once "../misc/pwa-manifest.php";
 $logout = false;
 
 $redirect = get_config("base_url");
-if (!empty($_GET['redirect']))
+// Only permit local relative paths or absolute URLs under our configured base URL.
+if (isset($_GET['redirect']) && is_string($_GET['redirect']))
 {
-	$str = urldecode($_GET['redirect']);
-	if (str_starts_with($str, get_config("base_url"))) // prevent redirects to like https://othersite/
-		$redirect = $_GET['redirect'];
+	$candidate = $_GET['redirect'];
+	$parts = parse_url($candidate);
+	$base = parse_url(get_config('base_url'));
+	if ($parts !== false && $base !== false && !str_contains($candidate, "\r") && !str_contains($candidate, "\n"))
+	{
+		if (!isset($parts['host'], $parts['scheme']) &&
+		    str_starts_with($candidate, '/') && !str_starts_with($candidate, '//') &&
+		    !str_contains($candidate, '\\') &&
+		    str_starts_with($parts['path'] ?? '', $base['path'] ?? '/'))
+			$redirect = $candidate;
+		elseif (isset($parts['host'], $parts['scheme'], $base['host'], $base['scheme']) &&
+		        strcasecmp($parts['host'], $base['host']) === 0 &&
+		        strcasecmp($parts['scheme'], $base['scheme']) === 0 &&
+		        ($parts['port'] ?? null) === ($base['port'] ?? null) &&
+		        str_starts_with($parts['path'] ?? '/', $base['path'] ?? '/'))
+			$redirect = $candidate;
+	}
 }
-
-$redirect = (isset($_GET['redirect'])) ? $_GET['redirect'] : get_config("base_url");
 if (!empty($_GET['logout']))
 {
 	if (!isset($_SESSION['id']))
@@ -48,6 +61,8 @@ if (!empty($_POST))
 				unset($ar);
 				unset($hash);
 			}
+			session_regenerate_id(true);
+			$_SESSION = [];
 			panel_start_session($user);
 			$_SESSION['id'] = $user->id;
 			$user->add_meta("last_login", date("Y-m-d H:i:s"));
@@ -167,7 +182,8 @@ if (!empty($_POST))
 	  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
 		<div class="card shadow-2-strong" style="border-radius: 1rem;">
 		  <div class="card-body p-5 text-center">
-			<form id="login" method="post" action="index.php?redirect=<?php echo $redirect; ?>">
+			<form id="login" method="post" action="index.php?redirect=<?php echo htmlspecialchars(rawurlencode($redirect), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+				<input type="hidden" name="_csrf" value="<?php echo htmlspecialchars(panel_csrf_token(), ENT_QUOTES, 'UTF-8'); ?>">
 				<h3 class="login-h3"><img class="login-img mb-4" src="<?php echo get_config("base_url"); ?>img/unreal.jpg">	Log in to use Admin Panel</h3>
 				
 					<?php 

@@ -456,26 +456,29 @@ function generate_role_list($list)
 		<div class="container-xxl" style="max-width: 1430px;">
 		<div class="accordion" id="roles_accord">
 
-<?php foreach($list as $role => $slug) {?>
+<?php foreach($list as $role => $slug) {
+    $safe_role = htmlspecialchars($role, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $safe_id = htmlspecialchars(to_slug($role), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+?>
 	<div class="card">
-		<div class="card-header" id="<?php echo to_slug($role); ?>_heading">
-			<div class="btn-header-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapse_<?php echo to_slug($role); ?>" aria-expanded="true" aria-controls="collapse_<?php echo to_slug($role); ?>">
-				<?php echo $role ?>
+		<div class="card-header" id="<?php echo $safe_id; ?>_heading">
+			<div class="btn-header-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapse_<?php echo $safe_id; ?>" aria-expanded="true" aria-controls="collapse_<?php echo $safe_id; ?>">
+				<?php echo $safe_role; ?>
 				
 			</div>
 		</div>
 
-		<div id="collapse_<?php echo to_slug($role); ?>" class="collapse" aria-labelledby="<?php echo to_slug($role); ?>_heading" data-parent="#roles_accord">
+		<div id="collapse_<?php echo $safe_id; ?>" class="collapse" aria-labelledby="<?php echo $safe_id; ?>_heading" data-parent="#roles_accord">
 			<div id="results_rpc" class="card-body">
 				<form method="post">
 				<?php if ($role !== "Super-Admin" && $role !== "Read-Only") { ?>
 					<div class="container row mb-2">
-						<button id="update_role" name="update_role" value="<?php echo $role ?>" class="btn btn-primary ml-1 mr-2" >Update</button>
-						<button id="delete_role" name="del_role_name" value="<?php echo $role ?>" class="btn btn-danger"><i class="fa fa-trash fa-1" aria-hidden="true"></i></button>
+						<button id="update_role" name="update_role" value="<?php echo $safe_role; ?>" class="btn btn-primary ml-1 mr-2" >Update</button>
+						<button id="delete_role" name="del_role_name" value="<?php echo $safe_role; ?>" class="btn btn-danger"><i class="fa fa-trash fa-1" aria-hidden="true"></i></button>
 					</div>
 					
 				<?php } ?>
-				<div id="<?php echo $role; ?>_input_area"><?php
+				<div id="<?php echo $safe_id; ?>_input_area"><?php
 					foreach($list2 as $desc => $slug)
 					{
 					$attributes = "";

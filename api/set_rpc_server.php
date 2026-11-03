@@ -3,6 +3,12 @@
 
 require_once "../inc/common.php";
 
+if (!current_user_can(PERMISSION_MANAGE_USERS))
+{
+	http_response_code(403);
+	die('Access denied');
+}
+
 if (!isset($_POST['server']))
 	die("ERROR: No server selected");
 

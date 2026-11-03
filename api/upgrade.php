@@ -1,6 +1,19 @@
 <?php
 require_once('common_api.php');
 
+// Updating application code requires explicit administrative permission.
+if (!current_user_can(PERMISSION_MANAGE_PLUGINS))
+{
+    http_response_code(403);
+    die('Access denied');
+}
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST')
+{
+    header('Allow: POST');
+    http_response_code(405);
+    die('POST required');
+}
+
 if (!$rpc)
     die();
     

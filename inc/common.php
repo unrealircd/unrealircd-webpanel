@@ -412,14 +412,35 @@ function upgrade_check()
 
 function panel_start_session($user = false)
 {
-	if (!isset($_SESSION))
+	if (session_status() !== PHP_SESSION_ACTIVE)
 	{
-		session_set_cookie_params(86400); // can't set this to session_timeout due to catch-22
+		ini_set('session.use_strict_mode', '1');
+		ini_set('session.use_only_cookies', '1');
+		$https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+		session_set_cookie_params([
+			'lifetime' => 86400,
+			'path' => '/',
+			'secure' => $https,
+			'httponly' => true,
+			'samesite' => 'Lax',
+		]);
 		session_start();
 	}
 
 	if ($user === false)
 	{
+		// Expire authentication before refreshing its activity timestamp.
+		if (isset($_SESSION['id']))
+		{
+			$timeout = max(0, (int)($_SESSION['session_timeout'] ?? 3600));
+			$last_activity = (int)($_SESSION['last-activity'] ?? 0);
+			if ($last_activity === 0 || time() - $last_activity >= $timeout)
+			{
+				$_SESSION = [];
+				session_regenerate_id(true);
+				return false;
+			}
+		}
 		$user = unreal_get_current_user();
 		if ($user === false)
 			return false;
@@ -427,13 +448,33 @@ function panel_start_session($user = false)
 
 	$timeout = 3600;
 	if (isset($user->user_meta['session_timeout']))
-		$timeout = (INT)$user->user_meta['session_timeout'];
+		$timeout = (int)$user->user_meta['session_timeout'];
 
-	if (!isset($_SESSION['session_timeout']))
-		$_SESSION['session_timeout'] = $timeout;
-
+	$_SESSION['session_timeout'] = $timeout;
 	$_SESSION['last-activity'] = time();
 	return true;
+}
+
+/** Per-session token for every state-changing request. */
+function panel_csrf_token(): string
+{
+	if (empty($_SESSION['csrf_token']))
+		$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+	return $_SESSION['csrf_token'];
+}
+
+function panel_check_csrf(): void
+{
+	if (!in_array($_SERVER['REQUEST_METHOD'] ?? 'GET', ['POST', 'PUT', 'PATCH', 'DELETE'], true))
+		return;
+
+	$submitted = $_POST['_csrf'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+	if (!is_string($submitted) || !hash_equals(panel_csrf_token(), $submitted))
+	{
+		http_response_code(403);
+		header('Content-Type: text/plain; charset=utf-8');
+		exit('Invalid CSRF token');
+	}
 }
 
 /* Now read the config, and redirect to install screen if we don't have it */
@@ -506,7 +547,11 @@ $pages = [
 ];
 
 
-if (!panel_start_session())
+$panel_logged_in = panel_start_session();
+// The initial installer is intentionally exempt until it has a configured session.
+if (!page_requires_no_config())
+	panel_check_csrf();
+if (!$panel_logged_in)
 {
 	if (!page_requires_no_login())
 	{
