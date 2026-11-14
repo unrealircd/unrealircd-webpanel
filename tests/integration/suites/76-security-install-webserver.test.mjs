@@ -57,6 +57,13 @@ describe('Security: install & web server', () => {
       assert.ok(ov.text.includes('config/config.php.bak'));
     } finally { dexec(`rm -f ${WEBROOT}/config/config.php.bak`); }
   });
+  test('.prism/ (editor files) is not handed out', async () => {
+    dexec(`mkdir -p ${WEBROOT}/.prism/gadgets/x && echo '{"secret":1}' > ${WEBROOT}/.prism/gadgets/x/gadget.json && echo '{}' > ${WEBROOT}/.prism/decisions.jsonl`);
+    try {
+      for (const f of ['.prism/gadgets/x/gadget.json', '.prism/decisions.jsonl', '.prism/'])
+        assert.notEqual((await new Client().get(f)).status, 200, f);
+    } finally { dexec(`rm -rf ${WEBROOT}/.prism`); }
+  });
   test('.git/ is not handed out', async () => {
     dexec(`mkdir -p ${WEBROOT}/.git && echo 'ref: refs/heads/main' > ${WEBROOT}/.git/HEAD`);
     try {

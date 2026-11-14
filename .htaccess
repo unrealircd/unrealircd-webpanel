@@ -37,3 +37,9 @@
     RewriteEngine On
     RewriteRule (^|/)\.(git|prism)(/|$) - [F,L]
 </IfModule>
+# The same without mod_rewrite (.git/ and .prism/ also have their own deny, where possible)
+<IfModule !mod_rewrite.c>
+    <IfModule mod_alias.c>
+        RedirectMatch 404 (^|/)\.(git|prism)(/|$)
+    </IfModule>
+</IfModule>
