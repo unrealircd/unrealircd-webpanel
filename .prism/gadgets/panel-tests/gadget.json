@@ -1,0 +1,7 @@
+{
+  "id": "panel-tests",
+  "name": "Panel tests",
+  "description": "Runs the panel's test suite (PHPUnit unit tests + node:test integration and browser tests, see tests/README.md) and shows every test grouped by category.",
+  "backend": "backend.mjs",
+  "permissions": { "shell": true, "network": true, "workspace": "read" }
+}

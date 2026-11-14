@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="prism-gadget://_sdk/base.css">
+<link rel="stylesheet" href="prism-gadget://_sdk/kit.css">
+<script src="prism-gadget://_sdk/prism.js"></script>
+<script src="prism-gadget://_sdk/kit.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box }
+  html, body { height: 100%; margin: 0 }
+  .k-app { height: 100%; display: flex; flex-direction: column; min-height: 0 }
+  .k-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
+  .k-top .k-title { flex: 1 1 120px; min-width: 0 }
+  .status { width: 100%; font-size: 12px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+  .totals { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; align-items: center }
+  .pill { font-size: 12px; padding: 3px 9px; border-radius: 999px; white-space: nowrap }
+  .pill b { font-variant-numeric: tabular-nums; margin-right: 4px }
+  .pass { background: color-mix(in srgb, var(--mint) 18%, transparent); color: var(--mint) }
+  .fail { background: color-mix(in srgb, var(--rose) 20%, transparent); color: var(--rose) }
+  .skip { background: rgba(255,255,255,.07) }
+  label.only { font-size: 12px; display: flex; gap: 5px; align-items: center; margin-left: auto; white-space: nowrap }
+  .k-body { flex: 1; overflow: auto; min-height: 0 }
+  .cat { margin-bottom: 10px; padding: 0 }
+  .cat-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 10px; cursor: pointer }
+  .cat-head .name { font-weight: 600; font-size: 13px; flex: 1 1 140px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+  .cat-head .chev { width: 14px; opacity: .6 }
+  .bar { flex: 1 1 100%; height: 4px; border-radius: 2px; background: rgba(255,255,255,.06); overflow: hidden; display: flex }
+  .bar i { display: block; height: 100% }
+  .tests { padding: 0 10px 8px }
+  .t { display: flex; gap: 8px; align-items: flex-start; padding: 5px 0; border-top: 1px solid rgba(255,255,255,.06); min-width: 0 }
+  .dot { flex: 0 0 8px; height: 8px; border-radius: 50%; margin-top: 5px }
+  .dot.pass { background: var(--mint) } .dot.fail { background: var(--rose) } .dot.skip { background: rgba(255,255,255,.3) }
+  .t .main { flex: 1; min-width: 0 }
+  .t .nm { font-size: 13px; overflow-wrap: anywhere }
+  .t .msg { display: block; margin-top: 3px; font-family: var(--mono, monospace); font-size: 11px; color: var(--rose); overflow-wrap: anywhere; white-space: pre-wrap }
+  .t .msg.dim { color: inherit }
+  .t .meta { flex: 0 0 auto; font-size: 11px; white-space: nowrap; display: flex; gap: 6px; align-items: center }
+  .tag { font-size: 10px; padding: 1px 6px; border-radius: 999px; background: rgba(255,255,255,.07) }
+  .t button { font-size: 11px; padding: 1px 7px }
+  .logwrap { border-top: 1px solid rgba(255,255,255,.08); max-height: 40%; display: flex; flex-direction: column; min-height: 0 }
+  .logwrap summary { cursor: pointer; padding: 6px 12px; font-size: 12px }
+  .log { margin: 0; padding: 6px 12px 10px; overflow: auto; font-size: 11px; white-space: pre-wrap; overflow-wrap: anywhere; min-height: 0; flex: 1 }
+  .empty { padding: 24px 12px; text-align: center }
+</style>
+</head>
+<body>
+<div class="k-app">
+  <div class="k-top">
+    <div class="k-title">Panel tests</div>
+    <button id="stop" hidden>Stop</button>
+    <button id="run" class="primary">Run all tests</button>
+    <div id="status" class="status dim"></div>
+    <div class="totals"><span id="totals" style="display:contents"></span>
+      <label class="only dim"><input type="checkbox" id="failedOnly"> Only failures</label></div>
+  </div>
+  <div id="body" class="k-body"></div>
+  <details id="logbox" class="logwrap">
+    <summary class="dim">Test output</summary>
+    <pre id="log" class="log mono"></pre>
+  </details>
+</div>
+<script>
+const { h, mount } = window.kit;
+let S = null;
+const openCats = new Set();
+let failedOnly = false;
+
+function testRow(t) {
+  return h('div', { class: 't' },
+    h('span', { class: 'dot ' + t.status, title: t.status }),
+    h('div', { class: 'main' },
+      h('div', { class: 'nm' }, t.name),
+      t.message ? h('span', { class: 'msg' + (t.status === 'fail' ? '' : ' dim') }, t.message) : ''),
+    h('div', { class: 'meta dim' },
+      h('span', { class: 'tag' }, t.source === 'unit' ? 'unit' : 'integration'),
+      t.time ? h('span', {}, t.time < 1 ? Math.round(t.time * 1000) + ' ms' : t.time.toFixed(1) + ' s') : '',
+      t.status === 'fail' ? h('button', { disabled: S && S.running, title: 'Run only this test again', onclick: () => go({ only: t.filter.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), label: t.name }) }, 'Rerun') : ''));
+}
+
+function catCard(g) {
+  const open = openCats.has(g.name) || (g.failed > 0 && !openCats.has('closed:' + g.name));
+  const total = g.tests.length;
+  const shown = failedOnly ? g.tests.filter(t => t.status !== 'pass') : g.tests;
+  return h('div', { class: 'cat k-card' },
+    h('div', { class: 'cat-head', onclick: () => {
+        if (open) { openCats.delete(g.name); openCats.add('closed:' + g.name); }
+        else { openCats.add(g.name); openCats.delete('closed:' + g.name); }
+        render(); } },
+      h('span', { class: 'chev' }, open ? '▾' : '▸'),
+      h('span', { class: 'name', title: g.name }, g.name),
+      h('span', { class: 'pill pass' }, h('b', {}, String(g.passed)), 'passed'),
+      g.failed ? h('span', { class: 'pill fail' }, h('b', {}, String(g.failed)), 'failed') : '',
+      g.skipped ? h('span', { class: 'pill skip' }, h('b', {}, String(g.skipped)), 'skipped') : '',
+      h('button', { disabled: S && S.running, title: 'Run only this category', onclick: (e) => { e.stopPropagation(); go({ category: g.name }); } }, 'Run'),
+      h('div', { class: 'bar' },
+        h('i', { style: `width:${100 * g.passed / total}%;background:var(--mint)` }),
+        h('i', { style: `width:${100 * g.failed / total}%;background:var(--rose)` }))),
+    open ? h('div', { class: 'tests' }, ...(shown.length ? shown.map(testRow) : [h('div', { class: 't dim' }, 'All passed.')])) : '');
+}
+
+function render() {
+  if (!S) return;
+  const L = S.last;
+  const runEl = document.getElementById('run');
+  runEl.disabled = S.running;
+  runEl.textContent = S.running ? 'Running…' : 'Run all tests';
+  document.getElementById('stop').hidden = !S.running;
+  const st = document.getElementById('status');
+  if (S.running) {
+    const r = S.run;
+    st.textContent = `${r.steps ? 'Step ' + r.steps + ' · ' : ''}${r.step} · ${kit.dur(Date.now() - r.startedAt)}` + (r.passed || r.failed ? ` · ${r.passed} passed, ${r.failed} failed so far` : '') + (r.only ? ` · only: ${r.only}` : '');
+    st.className = 'status dim';
+  } else if (L) {
+    st.textContent = (L.error ? 'Problem: ' + L.error + ' · ' : '') + `Last run ${kit.ago(L.finishedAt)}` + (L.durationMs ? `, took ${kit.dur(L.durationMs)}` : '') + (L.only ? ` · only: ${L.only}` : '');
+    st.className = 'status ' + (L.error ? 'warn' : 'dim');
+  } else { st.textContent = 'No run yet.'; st.className = 'status dim'; }
+
+  const t = L && L.totals;
+  mount(document.getElementById('totals'), ...(t ? [
+    h('span', { class: 'pill' }, h('b', {}, String(t.tests)), 'tests'),
+    h('span', { class: 'pill pass' }, h('b', {}, String(t.passed)), 'passed'),
+    t.failed ? h('span', { class: 'pill fail' }, h('b', {}, String(t.failed)), 'failed') : '',
+    t.skipped ? h('span', { class: 'pill skip' }, h('b', {}, String(t.skipped)), 'skipped') : '',
+  ] : []));
+
+  const body = document.getElementById('body');
+  if (!L || !L.groups || !L.groups.length) {
+    mount(body, h('div', { class: 'empty dim' }, S.running ? 'Running… the results show up here when the run is done.' : (L && L.error ? 'No test results. See the test output below.' : 'Press “Run all tests”. The first run builds the Docker test images and takes a while.')));
+  } else {
+    const groups = failedOnly ? L.groups.filter(g => g.failed || g.skipped) : L.groups;
+    mount(body, ...(groups.length ? groups.map(catCard) : [h('div', { class: 'empty dim' }, 'No failures.')]));
+  }
+  const log = (S.running ? S.run.log : (L && L.logTail)) || [];
+  const pre = document.getElementById('log');
+  const atEnd = pre.scrollTop + pre.clientHeight >= pre.scrollHeight - 20;
+  pre.textContent = log.join('\n');
+  if (atEnd) pre.scrollTop = pre.scrollHeight;
+}
+
+async function go(args) {
+  const r = await prism.call('run', args || {});
+  if (!r.started) kit.toast(r.reason || 'Could not start');
+  S = await prism.call('state'); render();
+}
+
+prism.ready(async () => {
+  document.getElementById('run').onclick = () => go();
+  document.getElementById('stop').onclick = () => prism.call('stop');
+  const fo = document.getElementById('failedOnly');
+  failedOnly = await prism.state.get('failedOnly', false);
+  fo.checked = failedOnly;
+  fo.onchange = () => { failedOnly = fo.checked; prism.state.set('failedOnly', failedOnly); render(); };
+  prism.on('state', (s) => { S = s; render(); });
+  S = await prism.call('state');
+  render();
+  setInterval(() => { if (S && S.running) render(); }, 1000);
+  /* do not rely only on pushed updates: while a run seems to go on, ask again */
+  setInterval(async () => { if (S && S.running) { S = await prism.call('state'); render(); } }, 4000);
+  document.addEventListener('visibilitychange', async () => { if (!document.hidden) { S = await prism.call('state'); render(); } });
+});
+</script>
+</body>
+</html>
