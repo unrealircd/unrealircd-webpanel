@@ -1,0 +1,13 @@
+{
+  "name": "unrealircd-webpanel-integration-tests",
+  "private": true,
+  "type": "module",
+  "description": "Integration and browser tests of the panel against a real UnrealIRCd, in Docker. Compares the original code (23112d4) with this checkout.",
+  "scripts": {
+    "test": "node run-tests.mjs",
+    "test:only": "node run-tests.mjs --skip-prepare"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0"
+  }
+}

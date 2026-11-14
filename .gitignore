@@ -3,3 +3,7 @@ vendor/
 vendor/**
 /log
 **~
+
+# test tools
+tests/integration/node_modules/
+.phpunit.result.cache

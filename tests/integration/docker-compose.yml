@@ -1,0 +1,23 @@
+# Test stack for the panel's integration tests. Only listens on 127.0.0.1.
+#   ircd:  UnrealIRCd with JSON-RPC (port 8600 inside the network) and plain IRC on 127.0.0.1:${IRC_PORT}
+#   panel: PHP + Apache serving a copy of this checkout at /unrealircd-webpanel/.
+#          run-tests.mjs makes the copy in PANEL_DIR, so the tests never touch
+#          the config or accounts of the checkout itself.
+name: unrealircd-panel-tests
+services:
+  ircd:
+    build:
+      context: ircd
+    ports:
+      - "127.0.0.1:${IRC_PORT:-16667}:6667"
+    volumes:
+      - ./ircd/unrealircd.conf:/home/ircd/unrealircd/conf/unrealircd.conf:ro
+  panel:
+    build:
+      context: panel
+    volumes:
+      - ${PANEL_DIR:?set PANEL_DIR}:/var/www/html/unrealircd-webpanel
+    ports:
+      - "127.0.0.1:${PANEL_PORT:-18080}:80"
+    depends_on:
+      - ircd

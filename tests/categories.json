@@ -1,0 +1,28 @@
+{
+  "about": "Test categories, in display order. Integration and browser tests use the describe() name as their category; PHPUnit test classes are mapped here.",
+  "order": [
+    "Login & sessions",
+    "Accounts & roles",
+    "IRC users",
+    "Channels",
+    "Servers",
+    "Server bans",
+    "Logs & search",
+    "Settings & RPC servers",
+    "Helpers",
+    "Security: script injection",
+    "Security: forged requests",
+    "Security: permissions",
+    "Security: install & web server"
+  ],
+  "phpunit": {
+    "LoginRedirectTest": "Login & sessions",
+    "SessionTest": "Login & sessions",
+    "PermissionsTest": "Accounts & roles",
+    "ChannelHelpersTest": "Channels",
+    "IrcDataTest": "Channels",
+    "StringsTest": "Helpers",
+    "EscapingTest": "Security: script injection",
+    "InstallChecksTest": "Security: install & web server"
+  }
+}

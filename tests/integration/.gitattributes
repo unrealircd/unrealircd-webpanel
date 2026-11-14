@@ -1,0 +1,2 @@
+# These files are used inside Linux containers: always LF
+* text=auto eol=lf
