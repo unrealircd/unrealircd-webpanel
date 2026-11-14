@@ -13,6 +13,8 @@
  * - Strict mode: PHP does not accept session IDs it did not create.
  * - The idle timeout is enforced on the server, not only by the browser.
  * - All state changing requests need a CSRF token (see panel_csrf_check()).
+ * - The scripts in api/ refuse requests that another website started,
+ *   see panel_api_same_origin_only().
  */
 
 if (!defined('PANEL_SESSION_UID'))
@@ -156,3 +158,28 @@ function panel_csrf_valid() : bool
 		return false;
 	return hash_equals($expected, $given);
 }
+
+/** Refuse requests to the API that do not come from the panel's own pages. */
+function panel_api_same_origin_only()
+{
+	$site = strtolower(trim((string)($_SERVER['HTTP_SEC_FETCH_SITE'] ?? '')));
+	$mode = strtolower(trim((string)($_SERVER['HTTP_SEC_FETCH_MODE'] ?? '')));
+	if ((($site === '') || ($site === 'same-origin')) && ($mode !== 'navigate'))
+		return; /* our own code, old browser, someone using curl, or insecure http */
+	http_response_code(403);
+	header("Content-type: application/json; charset=utf-8");
+	header("Cache-Control: no-store");
+	die(json_encode(["error" => "This API can only be used by the panel's own pages"]));
+}
+
+/** Returns true if current script is one in /api/ */
+function panel_is_api_script()
+{
+	$script = $_SERVER['SCRIPT_FILENAME'] ?? '';
+	if (($script === '') || (($script = realpath($script)) === false))
+		return false;
+	return dirname($script) === realpath(__DIR__ . '/../api');
+}
+
+if (panel_is_api_script())
+	panel_api_same_origin_only();
