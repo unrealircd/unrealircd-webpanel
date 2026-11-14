@@ -370,8 +370,9 @@ function user_can(PanelUser $user, $permission) : bool
 	}
 
 	/* Accounts without a role get no permissions.
-	 * (The old 'permissions' meta from early 2023 is no longer honoured:
-	 *  it was mostly used by the old DEFAULT_USER account "default".)
+	 * (The old 'permissions' meta from early 2023 is no longer honoured.
+	 *  upgrade_check() turned it into a role once, see
+	 *  convert_old_permissions_to_roles().)
 	 */
 	return false;
 }
@@ -462,6 +463,58 @@ function get_panel_user_roles_list()
 			$list[$r] = $role;
 
 	return $list;
+}
+
+/**
+ * Give a role to accounts from before roles existed (early 2023).
+ * Such accounts only have their rights in the old 'permissions' meta,
+ * which user_can() no longer reads. Each account gets a role with exactly
+ * the same permissions: an existing role if one matches, otherwise a new
+ * role "Old permissions 1", "Old permissions 2" and so on.
+ * Called once, from upgrade_check().
+ */
+function convert_old_permissions_to_roles()
+{
+	GLOBAL $config;
+
+	$userlist = [];
+	Hook::run(HOOKTYPE_GET_USER_LIST, $userlist);
+	foreach ($userlist as $user)
+	{
+		if (isset($user->user_meta['role']) || !isset($user->user_meta['permissions']))
+			continue;
+		$old = @unserialize($user->user_meta['permissions'], ['allowed_classes' => false]);
+		if (!is_array($old))
+			continue;
+		$perms = [];
+		foreach ($old as $p)
+			if (is_string($p) && !in_array($p, $perms, true))
+				$perms[] = $p;
+		sort($perms, SORT_STRING);
+
+		$role = NULL;
+		foreach (get_panel_user_roles_list() as $name => $role_perms)
+		{
+			$role_perms = array_values((array)$role_perms);
+			sort($role_perms, SORT_STRING);
+			if ($role_perms === $perms)
+			{
+				$role = $name;
+				break;
+			}
+		}
+		if ($role === NULL)
+		{
+			$slugs = array_map('to_slug', array_keys(get_panel_user_roles_list()));
+			$i = 1;
+			while (in_array(to_slug("Old permissions $i"), $slugs, true))
+				$i++;
+			$role = "Old permissions $i";
+			$config['user_roles'][$role] = $perms;
+			write_config('user_roles');
+		}
+		$user->add_meta("role", $role);
+	}
 }
 
 function generate_role_list($list)

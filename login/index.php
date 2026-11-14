@@ -56,7 +56,7 @@ if (!empty($_POST))
 		 */
 		if (!isset($user->id))
 			PanelUser::password_hash($_POST['password']);
-		if (isset($user->id) && ($_POST['username'] === "default") && ($_POST['password'] === "testing"))
+		if (isset($user->id) && (strcasecmp($user->username, "default") === 0) && ($_POST['password'] === "testing"))
 		{
 			/* The old default account (early 2023 sample config). Never
 			 * allow it with its well-known password. An admin has to

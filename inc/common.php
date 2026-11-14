@@ -393,6 +393,15 @@ function upgrade_check()
 		if ($changed)
 			write_config("unrealircd");
 	}
+	/* - giving a role to accounts from before roles existed, whose
+	 *   rights are in the old 'permissions' meta (only once)
+	 */
+	if (empty($config['old_permissions_converted']))
+	{
+		convert_old_permissions_to_roles();
+		$config['old_permissions_converted'] = true;
+		write_config('old_permissions_converted');
+	}
 
 	$version = get_version();
 	if (!isset($config['webpanel_version']))
