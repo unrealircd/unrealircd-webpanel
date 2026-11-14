@@ -24,17 +24,17 @@ function generate_html_servermodes($server)
                     if (isset(IRCList::$cmodes[$mode])) {
                     ?>
                     <tr>
-                        <th><?php echo IRCList::$cmodes[$mode]['name']; ?></th>
-                        <th><code><?php echo $mode; ?></code></th>
-                        <td><?php echo IRCList::$cmodes[$mode]['description']; ?></td>
-                        <td><div class="badge rounded-pill badge-dark"><?php echo IRCList::$cmodes[$mode]['requires']; ?></div></td>
+                        <th><?php echo h(IRCList::$cmodes[$mode]['name']); ?></th>
+                        <th><code><?php echo h($mode); ?></code></th>
+                        <td><?php echo h(IRCList::$cmodes[$mode]['description']); ?></td>
+                        <td><div class="badge rounded-pill badge-dark"><?php echo h(IRCList::$cmodes[$mode]['requires']); ?></div></td>
                     </tr><?php
                     }
                     else {
                         ?>
                         <tr>
                         <th>Unknown</th>
-                        <td>Mode "<?php echo $mode; ?>"</td>
+                        <td>Mode "<?php echo h($mode); ?>"</td>
                         <td></td>
                     </tr><?php
                     }   
@@ -77,10 +77,11 @@ function sinfo_conv_version_string($server) : string
                 $tooltip = "Installed from GitHub";
                 $display_string = $tok[0]."-".$tok[1];
             }
-            $tooltip = htmlspecialchars($tooltip);
-            $display_string = htmlspecialchars($display_string);
         }
-        $return = "<span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"$tooltip\"><code>" . $display_string . "</code> <div class=\"badge rounded-pill badge-dark\">$badge</div></a>";
+        $tooltip = h($tooltip);
+        $display_string = h($display_string);
+        $badge = h($badge);
+        $return = "<span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"$tooltip\"><code>" . $display_string . "</code> <div class=\"badge rounded-pill badge-dark\">$badge</div></span>";
     }
     if (isset($server->server->ulined) && $server->server->ulined)
         $return .= "<div class=\"badge rounded-pill badge-warning\">Services</div>";
@@ -105,7 +106,7 @@ function generate_html_serverinfo($server)
             </tr><tr>
                 <th>Uplink</th>
                 <?php $serverlkup = (isset($server->server->uplink)) ? $rpc->server()->get($server->server->uplink) : NULL; ?>
-                <td colspan="2"><code><?php echo ($serverlkup) ? "<a href=\"".get_config("base_url")."servers/details.php?server=".htmlspecialchars($serverlkup->id)."\">".htmlspecialchars($server->server->uplink)."</a>" : "No uplink"; ?></code></td>
+                <td colspan="2"><code><?php echo ($serverlkup) ? "<a href=\"".h(get_config("base_url")."servers/details.php?server=".urlencode($serverlkup->id))."\">".h($server->server->uplink)."</a>" : "No uplink"; ?></code></td>
             </tr><tr>
                 <th>User count</th>
                 <td colspan="2"><code><?php echo htmlspecialchars($server->server->num_users); ?></code></td>
@@ -383,7 +384,7 @@ function generate_html_modlist($srv)
     $modules = $rpc->server()->module_list($srv->id);
     if (!$modules || !$modules->list)
     {
-        echo $rpc->error;
+        echo h($rpc->error);
     } else {
         ?>
 
@@ -418,6 +419,25 @@ function generate_html_modlist($srv)
     <?php
 }
 
+
+/* Build a HTML list from server names / log lines, escaping each item */
+function rehash_html_list(array $items) : RawHTML
+{
+	$html = "<ol>";
+	foreach ($items as $item)
+		$html .= "<li>".h($item)."</li>";
+	$html .= "</ol>";
+	return new RawHTML($html);
+}
+
+/* Same, for lists grouped by log source */
+function rehash_html_grouped_list(array $groups) : RawHTML
+{
+	$html = "";
+	foreach ($groups as $source => $items)
+		$html .= "<h6>".h($source)."</h6>".rehash_html_list($items)->html;
+	return new RawHTML($html);
+}
 
 function get_unreal_latest_version()
 {

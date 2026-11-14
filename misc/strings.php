@@ -1,5 +1,91 @@
 <?php
 
+/** Escape a value for use in HTML, both in element content and in
+ * (quoted) attribute values. Always use this for any data that
+ * comes from IRC, from the RPC server, from the user or from the URL.
+ * Invalid UTF-8 is replaced instead of making the whole string vanish.
+ */
+function h($str) : string
+{
+	if ($str === NULL || is_array($str) || is_object($str))
+		return '';
+	return htmlspecialchars((string)$str, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8');
+}
+
+/** Encode a value for use inside a JavaScript string or expression
+ * in an inline <script> block (also safe inside HTML attributes
+ * when combined with h()).
+ */
+function js_value($value) : string
+{
+	return json_encode($value, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE | JSON_UNESCAPED_SLASHES);
+}
+
+/** Check that a value is a plain hostname or IP address,
+ * for use as the RPC server host (in a wss://host:port URL).
+ */
+function is_valid_rpc_host($host) : bool
+{
+	if (!is_string($host) || ($host === ""))
+		return false;
+	if (filter_var($host, FILTER_VALIDATE_IP) !== false)
+		return true;
+	return (bool)preg_match('/^(?=.{1,253}$)([A-Za-z0-9_]([A-Za-z0-9_-]{0,61}[A-Za-z0-9_])?\.)*[A-Za-z0-9_]([A-Za-z0-9_-]{0,61}[A-Za-z0-9_])?$/D', $host); /* D: no trailing newline */
+}
+
+/** Escape an IRC name (channel, nick) for display and make lookalike names
+ * stand out (same as irc_name_html() in js/unrealircd-admin.js):
+ * invisible characters are shown as their code point, and names that mix
+ * Latin with Cyrillic or Greek, or contain invalid UTF-8 (which UnrealIRCd
+ * shows as U+FFFD), get a warning badge.
+ */
+function irc_name_html($name) : string
+{
+	$name = (string)$name;
+	if (!mb_check_encoding($name, 'UTF-8'))
+	{
+		/* Replace invalid bytes with U+FFFD (like UnrealIRCd's JSON does), not '?' */
+		$old = mb_substitute_character();
+		mb_substitute_character(0xFFFD);
+		$name = mb_convert_encoding($name, 'UTF-8', 'UTF-8');
+		mb_substitute_character($old);
+	}
+	$out = preg_replace_callback('/[\p{Cf}\p{Cc}\x{115F}\x{1160}\x{3164}\x{FFA0}\x{2800}]/u', function ($m) {
+		return "\x01".sprintf("U+%04X", mb_ord($m[0], 'UTF-8'))."\x02";
+	}, $name);
+	if ($out === null)
+		$out = $name;
+	$out = h($out);
+	$out = preg_replace('/\x01(U\+[0-9A-F]+)\x02/', '<span class="badge badge-warning" title="Invisible character">$1</span>', $out);
+	if (str_contains($name, "\u{FFFD}"))
+		$out .= ' <span class="badge badge-danger" title="This name contains bytes that are not valid UTF-8. The panel cannot address it reliably.">invalid UTF-8</span>';
+	if (preg_match('/\p{Latin}/u', $name) && preg_match('/[\p{Cyrillic}\p{Greek}]/u', $name))
+		$out .= ' <span class="badge badge-warning" title="This name mixes Latin with Cyrillic or Greek letters, it may imitate another name">mixed scripts</span>';
+	return $out;
+}
+
+/** Only allow redirects to a path on this panel.
+ * Rejects absolute URLs, scheme-relative ones (//host), backslashes and
+ * any control character (browsers drop TAB/CR/LF, so "/\t/evil.example"
+ * would otherwise turn into "//evil.example").
+ */
+function panel_safe_redirect($target, $base) : string
+{
+	$base = (string)$base;
+	$base_path = parse_url((string)$base, PHP_URL_PATH);
+	if (!is_string($base_path) || ($base_path === ""))
+		$base_path = "/";
+	if (!is_string($target) || ($target === ""))
+		return $base;
+	if (preg_match('/[\x00-\x20\x7F\\\\]/', $target))
+		return $base;
+	if (($target[0] !== '/') || str_starts_with($target, '//'))
+		return $base;
+	if (!str_starts_with($target, $base_path))
+		return $base;
+	return $target;
+}
+
 function to_slug($str)
 {
 	return str_replace(['-', ' '], '_', strtolower($str));
@@ -30,7 +116,10 @@ function glue($array, $delimiter = " ")
 	$string = "";
 	foreach($array as $str)
 	{
-		if (!$str)
+		/* Only skip removed (NULL) and empty items. Do not use !$str here,
+		 * that would also drop the string "0", eg a channel key of 0.
+		 */
+		if ($str === NULL || $str === false || $str === '')
 			continue;
 		$string .= $str.$delimiter;
 	}

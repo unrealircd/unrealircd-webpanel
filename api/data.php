@@ -1,8 +1,12 @@
 <?php
 
-session_start();
-if (!isset($_SESSION['id']))
-    die("Access denied");
+require_once "../inc/session.php";
+header('Content-Type: application/json');
+
+panel_session_begin();
+if (panel_session_uid() === NULL)
+    die(json_encode(["error" => "Access denied"]));
+session_write_close();
 
 $cpuUsage = sys_getloadavg();
 

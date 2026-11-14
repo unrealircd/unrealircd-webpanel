@@ -35,17 +35,22 @@ $(document).ready( function () {
 			headerOffset: 53
 		},
 		'ajax': {
-			'url': '<?php echo get_config("base_url"); ?>api/channels.php',
+			'url': BASE_URL + 'api/channels.php',
 			dataSrc: ''
 		},
 		'pageLength':100,
 		'order':[[1,'desc']],
+		/* The API returns raw values: everything is escaped here */
 		'columns': [
-			{ 'data': 'Name', 'responsivePriority': 1, 'className':'virtuallink' },
-			{ 'data': 'Users', 'responsivePriority': 2 },
-			{ 'data': 'Modes', 'responsivePriority': 3 },
-			{ 'data': 'Topic', 'responsivePriority': 5, 'className':'tdwrap' },
-			{ 'data': 'Created', 'responsivePriority': 4 },
+			{ 'data': 'Name', 'responsivePriority': 1, 'className':'virtuallink', 'render': render_irc_name },
+			{ 'data': 'Users', 'responsivePriority': 2, 'render': DataTable.render.text() },
+			{ 'data': 'Modes', 'responsivePriority': 3, 'render': dt_safe_render(function (data, type, row) {
+				return '<span data-toggle="tooltip" data-placement="bottom" title="' + escapeHTML(row['ModesFull']) + '">' + escapeHTML(data) + '</span>';
+			}) },
+			{ 'data': 'Topic', 'responsivePriority': 5, 'className':'tdwrap', 'render': DataTable.render.text() },
+			{ 'data': 'Created', 'responsivePriority': 4, 'render': dt_safe_render(function (data, type, row) {
+				return '<span data-toggle="tooltip" data-placement="bottom" title="' + escapeHTML(row['CreatedFull']) + '">' + escapeHTML(data) + '</span>';
+			}) },
 		],
 	};
 	/* Hide on mobile */
@@ -78,8 +83,9 @@ function show_channel(e)
 
 	/* For all the other columns we show the view screen */
 	var data = data_list_table.row(e).data();
-	channel = data['Name'];
-	window.location = '<?php echo get_config('base_url'); ?>channels/details.php?chan=' +
+	/* data['Name'] is the raw channel name (never an escaped one) */
+	var channel = data['Name'];
+	window.location = BASE_URL + 'channels/details.php?chan=' +
 	                  encodeURIComponent(channel);
 	// not working: still expands on mobile: e.stopImmediatePropagation();
 	return true;

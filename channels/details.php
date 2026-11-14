@@ -14,7 +14,7 @@ $channelObj = NULL;
 $can_edit = current_user_can(PERMISSION_EDIT_CHANNEL);
 do_log($_GET);
 do_log($_POST);
-if (isset($_GET['chan']))
+if (isset($_GET['chan']) && is_string($_GET['chan']))
 {
 	$channel = $_GET['chan'];
 	$channelObj = $rpc->channel()->get($channel, 4);
@@ -26,6 +26,13 @@ if (isset($_GET['chan']))
 		$channame = $channelObj->name;
 		$title .= " for \"" . $channame . "\"";
 		do_log($channelObj);
+		/* UnrealIRCd's JSON output replaces invalid UTF-8 with U+FFFD, so for
+		 * such a channel the name we have is not the real one, and a channel
+		 * with exactly this U+FFFD name may be a different (decoy) channel.
+		 * Do not allow changes then.
+		 */
+		if (str_contains($channame, "\u{FFFD}"))
+			$can_edit = false;
 	}
 }
 $topicset = false;
@@ -52,21 +59,23 @@ if (!empty($_POST))
 			}
 		}
 		$checkboxes = (isset($_POST['ban_checkboxes'])) ? $_POST['ban_checkboxes'] : [];
+		if (!is_array($checkboxes))
+			$checkboxes = [];
 		if (isset($_POST['delete_sel_ex']))
 		{
-			foreach($_POST['ce_checkboxes'] as $c)
+			foreach((array)($_POST['ce_checkboxes'] ?? []) as $c)
 				$checkboxes[] = $c;
 			do_delete_chanex($channelObj, $checkboxes);
 		}
 		if (isset($_POST['delete_sel_inv']))
 		{
-			foreach($_POST['ci_checkboxes'] as $c)
+			foreach((array)($_POST['ci_checkboxes'] ?? []) as $c)
 				$checkboxes[] = $c;
 			do_delete_invite($channelObj, $checkboxes);
 		}
 		else if (isset($_POST['delete_sel_ban']))
 		{
-			foreach($_POST['cb_checkboxes'] as $c)
+			foreach((array)($_POST['cb_checkboxes'] ?? []) as $c)
 				$checkboxes[] = $c;
 			do_delete_chanban($channelObj, $checkboxes);
 		}
@@ -77,7 +86,10 @@ if (!empty($_POST))
 				$mode = $_POST['add_chban'];
 			else
 				$mode = (isset($_POST['add_chinv'])) ? $_POST['add_chinv'] : $_POST['add_chex'];
-			
+			/* Only list modes can be added here */
+			if (!in_array($mode, ["b", "e", "I"], true))
+				$mode = "b";
+
 			$nick = (strlen($_POST['ban_nick'])) ? $_POST['ban_nick'] : false;
 			$action_string = (isset($_POST['bantype_sel_action']) && strlen($_POST['bantype_sel_action'])) ? $_POST['bantype_sel_action'] : false;
 			$action = "";
@@ -211,13 +223,21 @@ if (!empty($_POST))
 }
 
 ?>
-<title><?php echo $title; ?></title>
-<h6><?php echo $title; ?></h6>
+<title><?php echo h($title); ?></title>
+<h6><?php echo $channelObj ? "Channel Lookup for \"".irc_name_html($channame)."\"" : h($title); ?></h6>
+<?php
+if ($channelObj && str_contains($channame, "\u{FFFD}"))
+{
+	Message::Warning("This channel name contains bytes that are not valid UTF-8. ".
+	                 "The panel only sees an altered name, so it may be showing (and changing) a different channel. ".
+	                 "Editing is disabled for this channel, use IRC instead.");
+}
+?>
 
 
 <form method="get" action="details.php">
 	<div class="text-left input-group" style="width: 35%;">
-		<input class="form-control" id="chan" name="chan" type="text" value="<?php echo $channame; ?>">
+		<input class="form-control" id="chan" name="chan" type="text" value="<?php echo h($channame); ?>">
 		<div class="input-group-append">
 			<button type="submit" class="btn btn-primary">Go</button>
 		</div>
@@ -422,14 +442,23 @@ if (!empty($_POST))
 <br>
 <h6>
 	Topic:<br></h6>
-	<form method="post" action="details.php?chan=<?php echo urlencode($channelObj->name); ?>">
+	<form method="post" action="details.php?chan=<?php echo h(urlencode($channelObj->name)); ?>">
 	<div class="input-group">
-	<input maxlength="360" type="text" class="input-group form-control" name="set_topic" value="<?php echo (isset($channelObj->topic)) ? htmlspecialchars($channelObj->topic) : ""; ?>">
+	<input maxlength="360" type="text" class="input-group form-control" name="set_topic" value="<?php echo (isset($channelObj->topic)) ? h($channelObj->topic) : ""; ?>">
 	<div class="input-group-append"><button type="submit" name="update_topic" value="true" class="btn btn-info">Update Topic</button></div></div>
 	</form>
-<?php 
+<?php
+if (isset($channelObj->topic) && str_contains($channelObj->topic, "\u{FFFD}"))
+{
+	/* UnrealIRCd replaces invalid UTF-8 in its JSON output, and may
+	 * shorten such text. What is shown here may not be the full topic,
+	 * and saving it would replace the real topic with this version.
+	 */
+	Message::Warning("This topic contains bytes that are not valid UTF-8. What is shown here may be altered or shortened, ".
+	                 "and saving it will replace the real topic with the version shown.");
+}
 if ($topicset)
-	Message::Success("The topic for $channelObj->name has been updated to be: \"".htmlspecialchars($channelObj->topic)."\"");
+	Message::Success("The topic for $channelObj->name has been updated to be: \"".$channelObj->topic."\"");
 ?>
 <br>
 
@@ -563,8 +592,17 @@ if ($topicset)
 		options.style.display = '';
 	});
 
-    // show dat first tab
-$('.nav-tabs a[href="#chanmodes"]').tab('show')
+    // show the tab of the list that was just changed (so the result is visible), otherwise the first one
+<?php
+	$tab = "#chanmodes";
+	if (isset($_POST['delete_sel_ban']) || isset($_POST['add_chban']))
+		$tab = "#chanbans";
+	else if (isset($_POST['delete_sel_ex']) || (isset($_POST['add_chex']) && isset($_POST['ban_nick'])))
+		$tab = "#chanex";
+	else if (isset($_POST['delete_sel_inv']) || isset($_POST['add_chinv']))
+		$tab = "#chaninv";
+?>
+$('.nav-tabs a[href="<?php echo $tab; ?>"]').tab('show')
 </script>
 <?php 
 require_once("../inc/footer.php");

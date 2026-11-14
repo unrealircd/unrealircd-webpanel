@@ -6,16 +6,17 @@ require_once "../inc/header.php";
 $ip_info = [];
 $ip = NULL;
 $noip = NULL;
-if (isset($_GET['ip']))
-    $_POST['ip'] = $_GET['ip'];
-
-if (isset($_POST['ip']))
-    $ip = $_POST['ip'];
+if (isset($_GET['ip']) && is_string($_GET['ip']))
+    $ip = trim($_GET['ip']);
+else if (isset($_POST['ip']) && is_string($_POST['ip']))
+    $ip = trim($_POST['ip']);
+if ($ip === "")
+    $ip = NULL;
 
 $title = "IP WHOIS Lookup";
-$title .= (isset($noip)) ? "" : " for $ip";
+$title .= (isset($ip)) ? " for $ip" : "";
 
-echo "<h4>$title</h4>";
+echo "<h4>".h($title)."</h4>";
 
 
 if (!isset($ip))
@@ -58,7 +59,7 @@ else
 <br>
 <form method="get" action="ip-whois.php">
 <div class="input-group">
-	<input class="short-form-control" id="ip" name="ip" type="text" value=<?php echo $ip; ?>>
+	<input class="short-form-control" id="ip" name="ip" type="text" value="<?php echo h($ip); ?>">
 	<div class="input-group-append">
 		<br><button type="submit" class="btn btn-primary">Go</button>
 	</div>
@@ -67,7 +68,7 @@ else
 
 <?php
 
-if ($ip)
+if ($ip && !empty($ip_info))
 {
     ?>
     <div class="container-xxl mt-3">
@@ -83,7 +84,7 @@ if ($ip)
     
     <?php
 }
-if (isset($whois))
+if (isset($whois) && strlen($whois))
 {
 ?>
 
@@ -97,7 +98,7 @@ if (isset($whois))
 			</button>
 		</div>
 		<div class="modal-body">
-            <code><?php echo str_replace("\n", "<br>",htmlspecialchars($whois)); ?></code>
+            <code><?php echo str_replace("\n", "<br>", h($whois)); ?></code>
 		</div>
 		<div class="modal-footer">
             <button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

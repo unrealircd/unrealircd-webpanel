@@ -24,7 +24,7 @@ function generate_html_whois($user)
 			right: 25px;
 			background-color:lightgrey;
 			font-size:small;"
-		>Reputation <span class="badge badge-danger" style="font-size:small;"><?php echo $user->user->reputation; ?></span>
+		>Reputation <span class="badge badge-danger" style="font-size:small;"><?php echo h($user->user->reputation); ?></span>
 		</span>
 		<tbody>
 			<tr>
@@ -48,12 +48,12 @@ function generate_html_whois($user)
 							width="20"
 							height="15">
 					<?php } ?>
-					<a href="<?php echo htmlspecialchars(get_config("base_url")."tools/ip-whois.php?ip=$user->ip"); ?>"><button class="btn-sm btn-primary">WHOIS IP</button></a>
+					<a href="<?php echo h(get_config("base_url")."tools/ip-whois.php?ip=".urlencode($user->ip ?? "")); ?>"><button class="btn-sm btn-primary">WHOIS IP</button></a>
 				</td>
 				<td><button id="ipnotes" class="btn btn-sm btn-secondary fa-solid fa-sticky-note text-nowrap"> <?php echo $numnotes['ip']?></button></td>
 			</tr><tr>
 				<th>ASN</th>
-				<td colspan="2"><code><?php echo "$asname ($asn)"; ?></code></td>
+				<td colspan="2"><code><?php echo h("$asname ($asn)"); ?></code></td>
 			</tr><tr>
 				<th>Ident</th>
 				<td colspan="2"><code><?php echo htmlspecialchars($user->user->username); ?></code></td>
@@ -67,12 +67,12 @@ function generate_html_whois($user)
 				<th>Connected to</th>
 				<?php $serverlkup = $rpc->server()->get($user->user->servername); ?>
 			   
-				<td colspan="2"><a href="<?php echo get_config("base_url")."servers/details.php?server=$serverlkup->id"; ?>"><code><?php echo htmlspecialchars($user->user->servername); ?></code></td>
+				<td colspan="2"><a href="<?php echo h(get_config("base_url")."servers/details.php?server=".urlencode($serverlkup->id ?? "")); ?>"><code><?php echo h($user->user->servername); ?></code></a></td>
 
 			</tr>
 			<tr>
 				<th>Logged in as</th>
-				<td colspan="2"><code><?php echo (isset($user->user->account)) ? "<a href=\"".get_config("base_url")."users/?account=".htmlspecialchars($user->user->account)."\">".htmlspecialchars($user->user->account)."</a>" : ""; ?></code></td>
+				<td colspan="2"><code><?php echo (isset($user->user->account)) ? "<a href=\"".h(get_config("base_url")."users/?account=".urlencode($user->user->account))."\">".h($user->user->account)."</a>" : ""; ?></code></td>
 				<td><button id="account_notes" class="btn btn-sm btn-secondary fa-solid fa-sticky-note text-nowrap"> <?php echo $numnotes['account']?></button></td>
 			</tr>
 			<tr>
@@ -84,7 +84,7 @@ function generate_html_whois($user)
 						background-color: blanchedalmond\"><tr>";
 						foreach($user->user->{"security-groups"} as $sg)
 						{
-							echo "<th><div class=\"badge badge-secondary rounded-pill\">$sg</th></tr><tr>";
+							echo "<th><div class=\"badge badge-secondary rounded-pill\">".h($sg)."</div></th></tr><tr>";
 						}
 						echo "</tr></table>"; ?>
 						</td>
@@ -365,7 +365,7 @@ function generate_html_userchannels($user)
 				{
 					?>
 					<tr>
-						<td><?php echo "<a href=\"".get_config("base_url")."channels/details.php?chan=".urlencode($chan->name)."\">$chan->name</a>"; ?></td>
+						<td><?php echo "<a href=\"".h(get_config("base_url")."channels/details.php?chan=".urlencode($chan->name))."\">".irc_name_html($chan->name)."</a>"; ?></td>
 						<td>
 							
 							<?php

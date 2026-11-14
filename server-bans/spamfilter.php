@@ -139,9 +139,11 @@ if (!empty($_POST))
 		if (!current_user_can(PERMISSION_SPAMFILTER_DEL))
 			Message::Fail("Could not delete Spamfilter entry or entries: Permission denied");
 		else
-			foreach ($_POST['sf'] as $key => $value)
+			foreach ((array)$_POST['sf'] as $key => $value)
 			{
-				$tok = explode(",", $value);
+				$tok = explode(",", (string)$value);
+				if (count($tok) != 4)
+					continue;
 				$name = base64_decode($tok[0]);
 				$match_type = base64_decode($tok[1]);
 				$spamfilter_targets = base64_decode($tok[2]);
@@ -285,16 +287,17 @@ $spamfilter = $rpc->spamfilter()->getAll();
 		foreach($spamfilter as $sf)
 		{
 			echo "<tr>";
-			echo "<td><input type=\"checkbox\" value='" . base64_encode($sf->name).",".base64_encode($sf->match_type).",".base64_encode($sf->spamfilter_targets).",".base64_encode($sf->ban_action) . "' name=\"sf[]\"></td>";
-			echo "<td>".$sf->match_type."</td>";
-			echo "<td data-toggle='tooltip' data-placement='bottom' title='$sf->name'>".(strlen($sf->name) > 50 ? substr($sf->name, 0, 50)."..." : $sf->name)."</td>";
+			echo "<td><input type=\"checkbox\" value=\"" . h(base64_encode($sf->name).",".base64_encode($sf->match_type).",".base64_encode($sf->spamfilter_targets).",".base64_encode($sf->ban_action)) . "\" name=\"sf[]\"></td>";
+			echo "<td>".h($sf->match_type)."</td>";
+			echo "<td data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"".h($sf->name)."\">".h(mb_strlen($sf->name) > 50 ? mb_substr($sf->name, 0, 50)."..." : $sf->name)."</td>";
 			echo "<td>".spamfilter_targets_to_string_with_info($sf->spamfilter_targets)."</td>";
-			echo "<td><span class=\"badge rounded-pill badge-info\">".$sf->ban_action."</span></td>";
-			echo "<td>".$sf->ban_duration_string."</td>";
-			echo "<td>".$sf->reason."</td>";
-			echo "<td>".show_nick_only($sf->set_by)."</td>";
-			echo "<td>".$sf->set_at_string."</td>";
-			
+			echo "<td><span class=\"badge rounded-pill badge-info\">".h($sf->ban_action)."</span></td>";
+			echo "<td>".h($sf->ban_duration_string)."</td>";
+			echo "<td>".h($sf->reason)."</td>";
+			echo "<td>".h(show_nick_only($sf->set_by))."</td>";
+			echo "<td>".h($sf->set_at_string)."</td>";
+			echo "</tr>";
+
 		}
 	?></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2" <?php echo (current_user_can(PERMISSION_SPAMFILTER_DEL)) ? "" : "disabled"; ?>>
 	Delete selected

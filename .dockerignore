@@ -1,0 +1,10 @@
+# Not part of the panel image
+.git
+.prism
+tests
+phpunit.xml
+vendor
+node_modules
+config/config.php
+data/database.php
+manifest.json

@@ -13,7 +13,7 @@ $rehash_success = [];
 
 if (isset($_POST))
 {
-	if (isset($_POST['rehash']) && $can_rehash)
+	if (isset($_POST['rehash']) && $can_rehash && is_string($_POST['rehash']))
 	{
 		$servID = $_POST['rehash'];
 		if ($response = $rpc->server()->rehash($servID)) 
@@ -40,16 +40,16 @@ if (isset($_POST))
 				}		 
 			}
 	}	
-	if (isset($_POST['disconnect']) && $can_rehash)
+	if (isset($_POST['disconnect']) && $can_rehash && is_string($_POST['disconnect']))
 	{
-		if ($rpc->server()->disconnect($_POST['disconnect'], $_POST['reason']))
+		if ($rpc->server()->disconnect($_POST['disconnect'], (string)($_POST['reason'] ?? "No reason")))
 			Message::Success("Server \"".$_POST['disconnect']."\" has been successfully disconnected from the network.");
 		else
 			Message::Fail((isset($rpc->error)) ? $rpc->error : "No error");
 	}
 	
 }
-if (isset($_GET['server']))
+if (isset($_GET['server']) && is_string($_GET['server']))
 {
 	$servername = $_GET['server'];
 	$srv = $rpc->server()->get($servername);
@@ -64,27 +64,11 @@ if (isset($_GET['server']))
 		$title .= " for \"" . $servername . "\"";
 	}
 }
-if (!empty($rehash_success)) {
+if (!empty($rehash_success) || !empty($rehash_errors)) {
 	do_log($rehash_success);
-	$servlist_bullet = "<ol>";
-
-	foreach ($rehash_success as $serv) {
-		$servlist_bullet .= "<li>$serv</li>";
-	}
-	$servlist_bullet .= "</ol>";
-	$servlist_err_bullet = "";
-	foreach ($rehash_errors as $serv => $err) {
-		$servlist_err_bullet .= "<h6>$serv</h6><ol>";
-		foreach ($err as $er)
-			$servlist_err_bullet .= "<li>$er</li>";
-		echo "</ol>";
-	}
-	$servlist_warn_bullet = ""; foreach ($rehash_warnings as $server => $warning) {
-		$servlist_warn_bullet .= "<h6>$serv</h6><ol>";
-		foreach ($warning as $w)
-			$servlist_warn_bullet .= "<li>$w</li>";
-		$servlist_warn_bullet .= "</ol>";
-	}
+	$servlist_bullet = rehash_html_list($rehash_success);
+	$servlist_err_bullet = rehash_html_grouped_list($rehash_errors);
+	$servlist_warn_bullet = rehash_html_grouped_list($rehash_warnings);
 	if (!empty($rehash_success))
 		Message::Success(
 			"The following server(s) were successfully rehashed:",
@@ -102,12 +86,12 @@ if (!empty($rehash_success)) {
 		);
 	}
 ?>
-<title><?php echo $title; ?></title>
-<h4><?php echo $title; ?></h4>
+<title><?php echo h($title); ?></title>
+<h4><?php echo h($title); ?></h4>
 <br>
 <form method="get" action="details.php">
 <div class="input-group short-form-control">
-	<input class="short-form-control" id="server" name="server" type="text" value=<?php echo $servername; ?>>
+	<input class="short-form-control" id="server" name="server" type="text" value="<?php echo h($servername); ?>">
 	<div class="input-group-append">
 		<br><button type="submit" class="btn btn-primary">Go</button>
 	</div>
@@ -139,11 +123,11 @@ if (!empty($rehash_success)) {
 		</div>
 		<div class="modal-body">
 			<form method="post">
-			Please enter a reason for disconnecting "<?php echo $srv->name; ?>"?
+			Please enter a reason for disconnecting "<?php echo h($srv->name); ?>"?
 			<input type="text" class="short-form-control form-control" id="reason" name="reason" value="No reason">
 		</div>
 		<div class="modal-footer">
-				<input type="hidden" id="server" name="disconnect" value="<?php echo $srv->name; ?>"></input>
+				<input type="hidden" id="server" name="disconnect" value="<?php echo h($srv->name); ?>"></input>
 				<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 				<button type="submit" action="post" class="btn btn-danger">Disconnect</button>
 			</form>
@@ -163,10 +147,10 @@ if (!empty($rehash_success)) {
 		</div>
 		<div class="modal-body">
 			<form method="post">
-			Are you sure you want to rehash <?php echo $srv->name; ?>?
+			Are you sure you want to rehash <?php echo h($srv->name); ?>?
 		</div>
 		<div class="modal-footer">
-				<input type="hidden" id="server" name="rehash" value="<?php echo $srv->name; ?>"></input>
+				<input type="hidden" id="server" name="rehash" value="<?php echo h($srv->name); ?>"></input>
 				<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 				<button type="submit" action="post" class="btn btn-primary">Rehash</button>
 			</form>

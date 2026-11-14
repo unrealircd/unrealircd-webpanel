@@ -1,42 +1,75 @@
 <?php
+define('PANEL_PAGE_LOGIN', 1);
 require_once "../inc/common.php";
 require_once "../misc/pwa-manifest.php";
 
 $logout = false;
 
-$redirect = get_config("base_url");
-if (!empty($_GET['redirect']))
-{
-	$str = urldecode($_GET['redirect']);
-	if (str_starts_with($str, get_config("base_url"))) // prevent redirects to like https://othersite/
-		$redirect = $_GET['redirect'];
-}
+$redirect = panel_safe_redirect($_GET['redirect'] ?? "", get_config("base_url"));
 
-$redirect = (isset($_GET['redirect'])) ? $_GET['redirect'] : get_config("base_url");
 if (!empty($_GET['logout']))
 {
-	if (!isset($_SESSION['id']))
+	/* The logout link carries the CSRF token, so another website
+	 * cannot log the user out with a plain link or image.
+	 */
+	$tok = is_string($_GET['logout']) ? rtrim($_GET['logout'], "/") : "";
+	if (panel_session_uid() === NULL)
 		$failmsg = "Nothing to logout from";
-	else {
-		$_SESSION = NULL;
-		session_destroy();
+	else if (!hash_equals(panel_csrf_token(), $tok)) {
+		$failmsg = "Could not log you out: the logout link has expired. Use the Logout item in the menu.";
+	} else {
+		panel_session_logout();
 		$logout = true;
 	}
 }
-if (!empty($_GET['timeout']))
+if (!empty($_GET['timeout']) && (panel_session_uid() !== NULL) && ($_SERVER['REQUEST_METHOD'] === 'GET'))
 {
-	$failmsg = "Your session has timed out. Please login again to continue";
-	$_SESSION = NULL;
-	session_destroy();
+	/* Still (or again) logged in: nothing timed out. Never log out
+	 * because of this parameter, just go on to the page.
+	 */
+	header('Location: ' . $redirect);
+	die();
 }
+if (!empty($_SESSION['timed_out']) || (!empty($_GET['timeout']) && (panel_session_uid() === NULL)))
+{
+	/* The server already logged out when the session really timed out,
+	 * so only show the message. The session keeps its CSRF token, so
+	 * login forms that are open in other tabs keep working.
+	 */
+	$failmsg = "Your session has timed out. Please login again to continue";
+	unset($_SESSION['timed_out']);
+}
+if ($panel_csrf_failed)
+	$failmsg = "Your login form had expired. Please try again.";
+
 if (!empty($_POST))
 {
-	if ($_POST['username'] && $_POST['password'])
+	if (isset($_POST['username']) && isset($_POST['password']) &&
+	    is_string($_POST['username']) && is_string($_POST['password']) &&
+	    strlen($_POST['username']) && strlen($_POST['password']))
 	{
 		$user = new PanelUser($_POST['username']);
 		/* not being too informative with the login error in case of attackers */
 		$hash_needs_updating = false;
-		if (isset($user->id) && $user->password_verify($_POST['password'], $hash_needs_updating))
+		/* Spend the same time on unknown usernames as on a password check,
+		 * so the response time does not show which usernames exist.
+		 */
+		if (!isset($user->id))
+			PanelUser::password_hash($_POST['password']);
+		if (isset($user->id) && ($_POST['username'] === "default") && ($_POST['password'] === "testing"))
+		{
+			/* The old default account (early 2023 sample config). Never
+			 * allow it with its well-known password. An admin has to
+			 * change its password or delete it.
+			 */
+			$fail = [
+				"login" => h($_POST['username']), /* escaped, as before: plugins may show it */
+				"IP" => $_SERVER['REMOTE_ADDR']
+			];
+			Hook::run(HOOKTYPE_USER_LOGIN_FAIL, $fail);
+			$failmsg = "Incorrect login";
+		}
+		else if (isset($user->id) && $user->password_verify($_POST['password'], $hash_needs_updating))
 		{
 			/* SUCCESSFUL LOGIN */
 			if ($hash_needs_updating)
@@ -48,13 +81,13 @@ if (!empty($_POST))
 				unset($ar);
 				unset($hash);
 			}
+			/* Logs in with a new session ID (no session fixation) */
 			panel_start_session($user);
-			$_SESSION['id'] = $user->id;
 			$user->add_meta("last_login", date("Y-m-d H:i:s"));
 			Hook::run(HOOKTYPE_USER_LOGIN, $user);
 
 			// ensure we have a manifest file for installing a PWA
-			if (!file_exists("../manifest.json"))
+			if (!file_exists(UPATH."/manifest.json"))
 				create_pwa_manifest();
 
 			/* Middle of install? Override redirect: */
@@ -67,7 +100,7 @@ if (!empty($_POST))
 		{
 			/* LOGIN FAILED */
 			$fail = [
-				"login" => htmlspecialchars($_POST['username']),
+				"login" => h($_POST['username']), /* escaped, as before: plugins may show it */
 				"IP" => $_SERVER['REMOTE_ADDR']
 			];
 			Hook::run(HOOKTYPE_USER_LOGIN_FAIL, $fail);
@@ -81,11 +114,11 @@ if (!empty($_POST))
 
 ?><!DOCTYPE html>
 <head>
-<link rel="manifest" href="<?php echo get_config("base_url"); ?>manifest.json">	
-<link href="<?php echo get_config("base_url"); ?>css/unrealircd-admin.css" rel="stylesheet">
-<script src="<?php echo get_config("base_url"); ?>js/unrealircd-admin.js"></script>
+<link rel="manifest" href="<?php echo h(get_config("base_url")); ?>manifest.json">
+<link href="<?php echo h(get_config("base_url")); ?>css/unrealircd-admin.css" rel="stylesheet">
+<script src="<?php echo h(get_config("base_url")); ?>js/unrealircd-admin.js"></script>
 
-<script> const BASE_URL = "<?php echo get_config("base_url"); ?>"; </script>
+<script> const BASE_URL = <?php echo js_value(get_config("base_url")); ?>; </script>
 
  <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
@@ -102,9 +135,7 @@ if (!empty($_POST))
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 
-<link rel="icon" type="image/png" href="<?php echo get_config("base_url"); ?>img/unreal.png">
-
-<link rel="manifest" href="<?php echo get_config("base_url"); ?>manifest.json">	
+<link rel="icon" type="image/png" href="<?php echo h(get_config("base_url")); ?>img/unreal.png">
 
 <script>
 		console.log("Attempting to add service worker...");
@@ -167,8 +198,9 @@ if (!empty($_POST))
 	  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
 		<div class="card shadow-2-strong" style="border-radius: 1rem;">
 		  <div class="card-body p-5 text-center">
-			<form id="login" method="post" action="index.php?redirect=<?php echo $redirect; ?>">
-				<h3 class="login-h3"><img class="login-img mb-4" src="<?php echo get_config("base_url"); ?>img/unreal.jpg">	Log in to use Admin Panel</h3>
+			<form id="login" method="post" action="index.php?redirect=<?php echo h(urlencode($redirect)); ?>">
+				<?php echo panel_csrf_field(); ?>
+				<h3 class="login-h3"><img class="login-img mb-4" src="<?php echo h(get_config("base_url")); ?>img/unreal.jpg">	Log in to use Admin Panel</h3>
 				
 					<?php 
 					if (isset($failmsg)) Message::Fail($failmsg);

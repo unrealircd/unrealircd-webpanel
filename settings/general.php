@@ -256,7 +256,7 @@ margin:0;}
         <label class="form-label" for="customFile">Upload an image</label>
         <input type="file" class="form-control" name="customFile" id="customFile" /> Might not show current image if caching is used. You'll notice the changes soon.
 
-        <iframe width="100%" height="500vh" id="frame" style="pointer-events: none;position:relative;margin-top:10px" src="<?php echo get_config('base_url'); ?>">Loading Live Preview</iframe>
+        <iframe width="100%" height="500vh" id="frame" style="pointer-events: none;position:relative;margin-top:10px" src="<?php echo h(get_config('base_url')); ?>">Loading Live Preview</iframe>
     </div>
 </div>
 <?php $a = []; Hook::run(HOOKTYPE_GENERAL_SETTINGS, $a); ?>

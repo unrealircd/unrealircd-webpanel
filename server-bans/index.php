@@ -13,8 +13,10 @@ if (!empty($_POST))
 			Message::Fail("Could not delete: Permission denied");
 		}
 		else {
-			foreach ($_POST['tklch'] as $key => $value) {
-				$tok = explode(",", $value);
+			foreach ((array)$_POST['tklch'] as $key => $value) {
+				$tok = explode(",", (string)$value);
+				if (count($tok) != 2)
+					continue;
 				$ban = base64_decode($tok[0]);
 				$type = base64_decode($tok[1]);
 				$success = false;
@@ -46,18 +48,18 @@ if (!empty($_POST))
 				Message::Fail("Unable to add Server Ban: No host or ban type selected");
 			} else
 			{
-				$ban_host = $_POST['ban_host'];
-				$ban_type = $_POST['ban_type'];
+				$ban_host = (string)$_POST['ban_host'];
+				$ban_type = (string)$_POST['ban_type'];
 				$ban_soft = empty($_POST['ban_soft']) ? false : true;
-				$ban_duration = $_POST['ban_duration'] ?? 0;
-				$ban_reason = $_POST['ban_reason'] ?? '';
+				$ban_duration = (string)($_POST['ban_duration'] ?? 0);
+				$ban_reason = (string)($_POST['ban_reason'] ?? '');
 				if (!str_contains($ban_host, "@"))
 					$ban_host = "*@$ban_host"; // prefix ban with *@ if no @ present
 				if ($ban_soft)
 					$ban_host = "%$ban_host"; // prefix ban with % if soft-ban
 				if ($rpc->serverban()->add($ban_host, $ban_type, $ban_duration, $ban_reason))
 				{
-					Message::Success("Ban added on ".htmlspecialchars($ban_host));
+					Message::Success("Ban added on ".$ban_host);
 				} else {
 					$success = false;
 					if (($rpc->errno == -1001) && !empty($_POST['edit_existing']))
@@ -75,14 +77,14 @@ if (!empty($_POST))
 								/* Good, now try the add operation */
 								if ($rpc->serverban()->add($ban_host, $ban_type, $ban_duration, $ban_reason))
 								{
-									Message::Success("Ban successfully modified: ".htmlspecialchars($ban_host));
+									Message::Success("Ban successfully modified: ".$ban_host);
 									$success = true;
 								}
 							}
 						}
 					}
 					if (!$success)
-						Message::Fail("The ".htmlspecialchars($ban_type)." on ".htmlspecialchars($ban_host)." could not be added: $rpc->error / $rpc->errno");
+						Message::Fail("The ".$ban_type." on ".$ban_host." could not be added: $rpc->error / $rpc->errno");
 				}
 			}
 		}
@@ -220,25 +222,30 @@ $(document).ready( function () {
 			headerOffset: 53
 		},
 		'ajax': {
-			'url': '<?php echo get_config("base_url"); ?>api/server-bans.php',
+			'url': BASE_URL + 'api/server-bans.php',
 			dataSrc: ''
 		},
+		/* The API returns raw text: escape everything here */
 		'columns': [
 			{ 'data': 'Select', 'responsivePriority': 1 },
-			{ 'data': 'Mask', 'responsivePriority': 2, 'className':'virtuallink' },
-			{ 'data': 'Type', 'responsivePriority': 3 },
-			{ 'data': 'Duration', 'responsivePriority': 4 },
-			{ 'data': 'Reason', 'responsivePriority': 5, 'render': DataTable.render.ellipsis(50, false) },
-			{ 'data': 'Set By', 'responsivePriority': 6 },
-			{ 'data': 'Set On', 'responsivePriority': 7 },
-			{ 'data': 'Expires', 'responsivePriority': 8 },
+			{ 'data': 'Mask', 'responsivePriority': 2, 'className':'virtuallink', 'render': DataTable.render.text() },
+			{ 'data': 'Type', 'responsivePriority': 3, 'render': DataTable.render.text() },
+			{ 'data': 'Duration', 'responsivePriority': 4, 'render': DataTable.render.text() },
+			{ 'data': 'Reason', 'responsivePriority': 5, 'render': dt_text_ellipsis(50) },
+			{ 'data': 'Set By', 'responsivePriority': 6, 'render': dt_safe_render(function (data, type, row) {
+				if (row['Config'])
+					return '<span class="badge rounded-pill badge-secondary">Config</span>';
+				return escapeHTML(data);
+			}) },
+			{ 'data': 'Set On', 'responsivePriority': 7, 'render': DataTable.render.text() },
+			{ 'data': 'Expires', 'responsivePriority': 8, 'render': DataTable.render.text() },
 		],
 		'pageLength':100,
 		'order':[[1,'asc']],
 		createdRow: function(row) {
 			var td = jQuery(row).find(".truncate");
 			td.each(function(index, el) {
-				jQuery(this).attr("title", jQuery(this).html());
+				jQuery(this).attr("title", jQuery(this).text());
 				});
 			},
 	};

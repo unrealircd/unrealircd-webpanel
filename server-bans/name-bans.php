@@ -13,9 +13,9 @@ if (!empty($_POST))
 		if (!current_user_can(PERMISSION_NAME_BAN_DEL))
 			Message::Fail("Could not delete name ban(s): Permission denied");
 		else
-			foreach ($_POST['tklch'] as $key => $value)
+			foreach ((array)$_POST['tklch'] as $key => $value)
 			{
-				$tok = base64_decode($value);
+				$tok = base64_decode((string)$value);
 				$success = false;
 				$success = $rpc->nameban()->delete($tok);
 
@@ -167,14 +167,14 @@ You can also forbid the use of channel names. This is useful in such cases where
 			if ($set_in_config)
 				echo "<td scope=\"col\"></td>";
 			else
-				echo "<td scope=\"col\"><input type=\"checkbox\" value='" . base64_encode($name_bans->name)."' name=\"tklch[]\"></td>";
-			echo "<td scope=\"col\">".$name_bans->name."</td>";
-			echo "<td scope=\"col\">".$name_bans->duration_string."</td>";
-			echo "<td scope=\"col\">".$name_bans->reason."</td>";
-			$set_by = $set_in_config ? "<span class=\"badge rounded-pill badge-secondary\">Config</span>" : show_nick_only($name_bans->set_by);
+				echo "<td scope=\"col\"><input type=\"checkbox\" value=\"" . h(base64_encode($name_bans->name))."\" name=\"tklch[]\"></td>";
+			echo "<td scope=\"col\">".h($name_bans->name)."</td>";
+			echo "<td scope=\"col\">".h($name_bans->duration_string)."</td>";
+			echo "<td scope=\"col\">".h($name_bans->reason)."</td>";
+			$set_by = $set_in_config ? "<span class=\"badge rounded-pill badge-secondary\">Config</span>" : h(show_nick_only($name_bans->set_by));
 			echo "<td scope=\"col\">".$set_by."</td>";
-			echo "<td scope=\"col\">".$name_bans->set_at_string."</td>";
-			echo "<td scope=\"col\">".$name_bans->expire_at_string."</td>";
+			echo "<td scope=\"col\">".h($name_bans->set_at_string)."</td>";
+			echo "<td scope=\"col\">".h($name_bans->expire_at_string)."</td>";
 			echo "</tr>";
 		}
 	?></tbody></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2" <?php echo (current_user_can(PERMISSION_NAME_BAN_DEL)) ? "" : "disabled"; ?>>

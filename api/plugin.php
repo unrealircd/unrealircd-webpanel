@@ -1,28 +1,48 @@
 <?php
 
-session_start();
-if (!isset($_SESSION['id']))
-    die("Access denied");
+define('NO_EVENT_STREAM_HEADER', 1);
 require_once('common_api.php');
 
 if (!current_user_can(PERMISSION_MANAGE_PLUGINS))
     die(json_encode(['error' => "Access denied"]));
-if (empty($_GET))
-    die(json_encode($config['third-party-plugins']['data']));
 
-elseif(isset($_GET['install']))
+/* Listing is a GET. Installing and uninstalling change the panel's code,
+ * so they need a POST (and thus the CSRF token, checked in inc/common.php).
+ */
+$is_post = (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST');
+if (isset($_GET['install']) || isset($_GET['uninstall']))
 {
-    install_plugin($_GET['install']);
+    http_response_code(405);
+    die(json_encode(['error' => "Use POST to install or uninstall plugins"]));
 }
-elseif (isset($_GET['uninstall']))
+if (!$is_post)
+    die(json_encode($config['third-party-plugins']['data'] ?? []));
+
+if (isset($_POST['install']) && is_string($_POST['install']))
 {
-    uninstall_plugin($_GET['uninstall']);
+    install_plugin($_POST['install']);
+}
+elseif (isset($_POST['uninstall']) && is_string($_POST['uninstall']))
+{
+    uninstall_plugin($_POST['uninstall']);
+}
+die(json_encode(['error' => "Nothing to do"]));
+
+/** A plugin name is used as a directory name: only allow simple names */
+function valid_plugin_name($name) : bool
+{
+    return is_string($name) && preg_match('/^[A-Za-z0-9_-]{1,64}$/D', $name);
 }
 
 function uninstall_plugin($name)
 {
     global $config;
-    if (!Plugins::plugin_exists($name))
+    if (!valid_plugin_name($name))
+        die(json_encode(['error' => "Invalid plugin name"]));
+    /* Never remove the database backends this way */
+    if (in_array($name, ["file_db", "sql_db"], true))
+        die(json_encode(['error' => "This plugin cannot be uninstalled here"]));
+    if (!in_array($name, $config['plugins'], true))
         die(json_encode(['error' => "Plugin not loaded"]));
     
     foreach($config['plugins'] as $k => $v)
@@ -41,9 +61,13 @@ function uninstall_plugin($name)
 function install_plugin($name)
 {
     global $config;
+    if (!valid_plugin_name($name))
+        die(json_encode(['error' => "Invalid plugin name"]));
     if (in_array($name, $config['plugins']))
         die(json_encode(["error" => "Plugin already installed"]));
     $url = get_plugin_install_path_from_name($name);
+    if (!$url)
+        die(json_encode(["error" => "Unknown plugin"]));
     $pluginfile = file_get_contents($url);
     if (!is_dir(UPATH."/data/tmp"))
         mkdir(UPATH."/data/tmp");

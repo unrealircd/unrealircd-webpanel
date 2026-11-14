@@ -3,6 +3,12 @@
 require_once "../inc/common.php";
 require_once "../inc/header.php";
 
+if (!current_user_can(PERMISSION_MANAGE_PLUGINS))
+{
+	Message::Fail("Access denied: you do not have permission to manage plugins");
+	require_once "../inc/footer.php";
+	die;
+}
 
 ?>
 
@@ -28,12 +34,12 @@ Your installed plugins:
             {
                 echo "<tr>";
                 echo "<th scope=\"col\"><input type=\"checkbox\" label='selectall' onClick=\"toggle_tkl(this)\" /></th>";
-                echo "<td scope=\"col\" onClick=\"create_plugin_info_modal('".$plugin->handle."')\">".$plugin->name."</td>";
-                echo "<td scope=\"col\"><code>".$plugin->version."</code></td>";
-                echo "<td scope=\"col\">".$plugin->description."</td>";
-                echo "<td scope=\"col\">".$plugin->author."</td>";
-                echo "<td scope=\"col\"><a href='mailto:$plugin->email'>".$plugin->email."</a></td>";
-                echo "<td width=\"110\" scope=\"col\"><div id=\"".$plugin->handle."install\" class='text-center btn-sm btn-danger btn-install-plugin'>Uninstall</div></td>";
+                echo "<td scope=\"col\" data-plugin=\"".h($plugin->handle)."\" class=\"plugin-info-link\">".h($plugin->name)."</td>";
+                echo "<td scope=\"col\"><code>".h($plugin->version)."</code></td>";
+                echo "<td scope=\"col\">".h($plugin->description)."</td>";
+                echo "<td scope=\"col\">".h($plugin->author)."</td>";
+                echo "<td scope=\"col\"><a href='".h("mailto:".$plugin->email)."'>".h($plugin->email)."</a></td>";
+                echo "<td width=\"110\" scope=\"col\"><div id=\"".h($plugin->handle)."install\" class='text-center btn-sm btn-danger btn-install-plugin'>Uninstall</div></td>";
                 echo "</tr>";
             }
         ?>
@@ -41,6 +47,9 @@ Your installed plugins:
 </table>
 
 <script>
+document.querySelectorAll(".plugin-info-link").forEach((el) => {
+    el.addEventListener('click', () => create_plugin_info_modal(el.dataset.plugin));
+});
 const ibtns = document.querySelectorAll(".btn-install-plugin");
     ibtns.forEach((ib) => {
         ib.addEventListener('click', (e) => {

@@ -11,15 +11,15 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="HandheldFriendly" content="true">
 
-<link href="<?php echo get_config("base_url"); ?>css/unrealircd-admin.css" rel="stylesheet">
-<link href="<?php echo get_config("base_url"); ?>css/right-click.css" rel="stylesheet">
+<link href="<?php echo h(get_config("base_url")); ?>css/unrealircd-admin.css" rel="stylesheet">
+<link href="<?php echo h(get_config("base_url")); ?>css/right-click.css" rel="stylesheet">
 <style>
 .big-page-item:hover, .big-page-item:active, .nav-link {
 	color: black;
 }
 </style>
 
-<link rel="stylesheet" href="<?php echo get_config("base_url"); ?>css/datatables.min.css" />
+<link rel="stylesheet" href="<?php echo h(get_config("base_url")); ?>css/datatables.min.css" />
 
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
@@ -31,7 +31,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 <title>UnrealIRCd Panel</title>
-<link rel="icon" type="image/png" href="<?php echo get_config("base_url"); ?>img/unreal.png">
+<link rel="icon" type="image/png" href="<?php echo h(get_config("base_url")); ?>img/unreal.png">
 </head>
 <body role="document">
 <div aria-live="polite" aria-atomic="true">
@@ -39,19 +39,73 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 	<!-- insert your javascript bread in here to make toast -->
   </div>
 </div>
-<script> const BASE_URL = "<?php echo get_config("base_url"); ?>"; </script>
+<script> const BASE_URL = <?php echo js_value(get_config("base_url")); ?>; </script>
+<meta name="csrf-token" content="<?php echo h(panel_csrf_token()); ?>">
+<script>
+/* CSRF protection: add the session's token to every form that is posted,
+ * and to every non-GET fetch()/XMLHttpRequest to the panel itself.
+ */
+(function () {
+	const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').content;
+	function add_token(form) {
+		if ((form.method || '').toLowerCase() !== 'post' || form.querySelector('input[name="csrf_token"]'))
+			return;
+		var i = document.createElement('input');
+		i.type = 'hidden';
+		i.name = 'csrf_token';
+		i.value = CSRF_TOKEN;
+		form.appendChild(i);
+	}
+	function same_origin(url) {
+		try { return new URL(url, window.location.href).origin === window.location.origin; }
+		catch (e) { return false; }
+	}
+	/* forms: on load, and just before submit (for forms added later) */
+	document.addEventListener('DOMContentLoaded', function () {
+		document.querySelectorAll('form').forEach(add_token);
+	});
+	document.addEventListener('submit', function (e) { if (e.target && e.target.tagName === 'FORM') add_token(e.target); }, true);
+	var orig_submit = HTMLFormElement.prototype.submit;
+	HTMLFormElement.prototype.submit = function () { add_token(this); return orig_submit.apply(this, arguments); };
+	/* fetch() */
+	var orig_fetch = window.fetch;
+	window.fetch = function (resource, init) {
+		init = init || {};
+		var method = (init.method || (resource && resource.method) || 'GET').toUpperCase();
+		var url = (typeof resource === 'string' || resource instanceof URL) ? resource : resource.url;
+		if (method !== 'GET' && method !== 'HEAD' && same_origin(url)) {
+			var headers = new Headers(init.headers || (resource instanceof Request ? resource.headers : undefined));
+			headers.set('X-CSRF-Token', CSRF_TOKEN);
+			init.headers = headers;
+		}
+		return orig_fetch.call(this, resource, init);
+	};
+	/* XMLHttpRequest */
+	var orig_open = XMLHttpRequest.prototype.open;
+	var orig_send = XMLHttpRequest.prototype.send;
+	XMLHttpRequest.prototype.open = function (method, url) {
+		this._csrf_needed = (String(method).toUpperCase() !== 'GET' && String(method).toUpperCase() !== 'HEAD' && same_origin(url));
+		return orig_open.apply(this, arguments);
+	};
+	XMLHttpRequest.prototype.send = function () {
+		if (this._csrf_needed)
+			this.setRequestHeader('X-CSRF-Token', CSRF_TOKEN);
+		return orig_send.apply(this, arguments);
+	};
+})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
-<script src="<?php echo get_config("base_url"); ?>js/unrealircd-admin.js"></script>
-<!-- <script defer src="<?php echo get_config("base_url"); ?>js/right-click-menus.js"></script> -- We're not doing this yet XD -->
-<script src="<?php echo get_config("base_url"); ?>js/bs-modal.js"></script>
-<script src="<?php echo get_config("base_url"); ?>js/bs-toast.js"></script>
-<script src="<?php echo get_config("base_url"); ?>js/datatables.min.js"></script>
-<script src="<?php echo get_config("base_url"); ?>js/datatables-natural-sort.js"></script>
-<script src="<?php echo get_config("base_url"); ?>js/datatables-ellipsis.js"></script>
-<script src="<?php echo get_config("base_url"); ?>js/moment-with-locales.min.js"></script> 
-<link rel="manifest" href="<?php echo get_config("base_url"); ?>manifest.json">	
+<script src="<?php echo h(get_config("base_url")); ?>js/unrealircd-admin.js"></script>
+<!-- <script defer src="<?php echo h(get_config("base_url")); ?>js/right-click-menus.js"></script> -- We're not doing this yet XD -->
+<script src="<?php echo h(get_config("base_url")); ?>js/bs-modal.js"></script>
+<script src="<?php echo h(get_config("base_url")); ?>js/bs-toast.js"></script>
+<script src="<?php echo h(get_config("base_url")); ?>js/datatables.min.js"></script>
+<script src="<?php echo h(get_config("base_url")); ?>js/datatables-natural-sort.js"></script>
+<script src="<?php echo h(get_config("base_url")); ?>js/datatables-ellipsis.js"></script>
+<script src="<?php echo h(get_config("base_url")); ?>js/moment-with-locales.min.js"></script> 
+<link rel="manifest" href="<?php echo h(get_config("base_url")); ?>manifest.json">	
 <script>
 		console.log("Attempting to add service worker...");
 		if ("serviceWorker" in navigator) {
@@ -70,7 +124,7 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 				if (this.readyState == 4 && this.status == 200) {
 					var data = JSON.parse(this.responseText);
 					if (data.session == 'none')
-						window.location = BASE_URL + 'login/?timeout=1&redirect=' + encodeURIComponent(window.location.pathname);
+						window.location = BASE_URL + 'login/?timeout=1&redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
 				}
 			};
 			xhttp.open("GET", BASE_URL + "api/timeout.php", true);
@@ -90,10 +144,12 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 			      })
 			.then(response => response.json())
 			.then(data => {
+				if (data.error)
+					alert("Could not change the RPC server: " + data.error);
 				location.reload();
 			})
 			.catch(error => {
-				// handle error? nah.
+				alert("Could not change the RPC server");
 			});
 		}
 </script>
@@ -156,7 +212,7 @@ function show_page_item($name, $page, $nestlevel, $small = false)
 			$url = str_replace('/index.php', '', $url);
                 if (!str_ends_with($url, ".php") && !empty($url))
                         $url = $url.'/';
-		echo "<a href=\"".get_config("base_url").$url."\" style=\"text-decoration: none\">\n";
+		echo "<a href=\"".h(get_config("base_url").$url)."\" style=\"text-decoration: none\">\n";
 	}
 	echo "<div class=\"big-page-item d-flex justify-content-between align-items-center $class\" style=\"$style\">$name
 		<div class=\"text-right padding-top\">
@@ -195,7 +251,7 @@ function show_page_item_mobile($name, $page, $nestlevel)
 	{
 		$style = "padding-bottom: 0px;";
 	} else {
-		echo "<a href=\"".get_config("base_url").$page."\" >\n";
+		echo "<a href=\"".h(get_config("base_url").$page)."\" >\n";
 	}
 	echo "<div class=\"bg-dark lil-page-item d-flex justify-content-between align-items-center $class\" style=\"$style\">$name
 		<div class=\"text-right padding-top\">
@@ -221,23 +277,36 @@ function rpc_server_nav()
 		return; // eg empty servers
 	$servers = get_config("unrealircd");
 	$cnt = count($servers);
+	/* Changing the default server changes it for everyone,
+	 * so only users who can manage the panel may do it.
+	 */
+	$can_switch = current_user_can(PERMISSION_MANAGE_USERS);
 ?>
 
 		<div class="dropdown navbar-expand-md navbar-nav">
-			<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $active_server ?></a>
+			<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo h($active_server); ?></a>
 			<div class="dropdown-menu">
 <?php
 			foreach($servers as $name=>$d)
 			{
-				$link = "";
-				if ($name != $active_server)
-					echo "<a class=\"dropdown-item\" href=\"javascript:change_active_server('".htmlspecialchars($name)."')\">".htmlspecialchars($name)."</a>\n";
+				if ($name == $active_server)
+					echo "<div class=\"dropdown-item\">".h($name)." <i>(current)</i></div>\n"; // current
+				else if ($can_switch)
+					echo "<a class=\"dropdown-item rpc-server-switch\" href=\"#\" data-server=\"".h($name)."\">".h($name)."</a>\n";
 				else
-					echo "<div class=\"dropdown-item\">".htmlspecialchars($name)." <i>(current)</i></div>\n"; // current
+					echo "<div class=\"dropdown-item text-muted\">".h($name)."</div>\n";
 			}
 ?>
 			</div>
 		</div>
+		<script>
+			document.querySelectorAll('.rpc-server-switch').forEach(function (el) {
+				el.addEventListener('click', function (e) {
+					e.preventDefault();
+					change_active_server(el.dataset.server);
+				});
+			});
+		</script>
 <?php
 }
 
@@ -256,8 +325,8 @@ foreach($pages as $name=>$page)
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div>
-			<a class="navbar-brand" href="<?php echo get_config("base_url"); ?>">
-			<img src="<?php echo get_config("base_url"); ?>img/unreal.png" height="25" width="25"> UnrealIRCd Admin Panel</a>
+			<a class="navbar-brand" href="<?php echo h(get_config("base_url")); ?>">
+			<img src="<?php echo h(get_config("base_url")); ?>img/unreal.png" height="25" width="25"> UnrealIRCd Admin Panel</a>
 		</div>
 		<?php rpc_server_nav(); ?>
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
@@ -324,147 +393,100 @@ foreach ($pages as $name => $page)
 				return response.json();
 			})
 			.then(data => {
-				searchResults.innerHTML = null;
-				// Work with the JSON data
-				console.log(data);
+				searchResults.textContent = '';
 
-				// Update UI with search results
+				/* All values from the API are raw IRC data:
+				 * they are only ever inserted as text (textContent).
+				 */
+				function add_section(title)
+				{
+					var search_label = document.createElement('div');
+					search_label.classList.add('card', 'bg-light', 'badge', 'p-2', 'm-1');
+					search_label.textContent = title;
+					searchResults.appendChild(search_label);
+				}
+				function add_result(name, label, extra, url, name_as_code)
+				{
+					var result = document.createElement('div');
+					result.classList.add('card', 'p-3', 'm-1');
+					result.onclick = function() { window.location.href = url; };
+					var span = document.createElement('span');
+					span.classList.add('p-0');
+					var n = document.createElement(name_as_code ? 'code' : 'span');
+					n.textContent = (name === undefined || name === null) ? '' : name;
+					span.appendChild(n);
+					if (label !== undefined && label !== null)
+					{
+						var badge = document.createElement('div');
+						badge.classList.add('badge', 'ml-2', 'badge-primary');
+						badge.textContent = 'Matches ' + label;
+						span.appendChild(badge);
+					}
+					result.appendChild(span);
+					if (extra)
+					{
+						var i = document.createElement('i');
+						i.textContent = extra;
+						result.appendChild(i);
+					}
+					searchResults.appendChild(result);
+				}
 
-				//users
-				var search_label =document.createElement('div');
-				search_label.classList.add('card', 'bg-light', 'badge','p-2', 'm-1');
-				search_label.innerText = "Users";
-				searchResults.appendChild(search_label);
+				add_section("Users");
 				for (let key in data.users)
 				{
-					console.log(key+": "+data.users[key].name);
-					var user_result =document.createElement('div');
-					user_result.classList.add('card','p-3', 'm-1');
-					user_result.onclick = function(){
-						window.location.href = BASE_URL+"users/details.php?nick="+encodeURIComponent(data.users[key].name);
-					};
-					user_result.innerHTML = "<span class='p-0'>"+data.users[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.users[key].label+"</div></span><i>"+data.users[key].data+"</i>";
-					searchResults.appendChild(user_result);
+					let r = data.users[key];
+					add_result(r.name, r.label, r.data, BASE_URL+"users/details.php?nick="+encodeURIComponent(r.name), false);
 				}
 
-				//channels
-				var search_label =document.createElement('div');
-				search_label.classList.add('card', 'badge', 'bg-light','p-2', 'm-1');
-				search_label.innerText = "Channels";
-				searchResults.appendChild(search_label);
+				add_section("Channels");
 				for (let key in data.channels)
 				{
-					console.log(key+": "+data.channels[key].name);
-					var channel_result =document.createElement('div');
-					channel_result.classList.add('card','p-3', 'm-1');
-					channel_result.onclick = function(){
-						window.location.href = BASE_URL+"channels/details.php?chan="+encodeURIComponent(data.channels[key].name);
-					};
-					channel_result.innerHTML = "<span class='p-0'>"+data.channels[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.channels[key].label+"</div></span><i>"+(data.channels[key].topic?data.channels[key].topic:"")+"</i>";
-					searchResults.appendChild(channel_result);
+					let r = data.channels[key];
+					add_result(r.name, r.label, r.topic ? r.topic : "", BASE_URL+"channels/details.php?chan="+encodeURIComponent(r.name), false);
 				}
-				
-				//Servers
-				var search_label =document.createElement('div');
-				search_label.classList.add('card', 'badge', 'bg-light','p-2', 'm-1');
-				search_label.innerText = "Servers";
-				searchResults.appendChild(search_label);
+
+				add_section("Servers");
 				for (let key in data.servers)
 				{
-					console.log(key+": "+data.servers[key].name);
-					var serv_result =document.createElement('div');
-					serv_result.classList.add('card','p-3', 'm-1');
-					serv_result.onclick = function(){
-						window.location.href = BASE_URL+"servers/details.php?server="+encodeURIComponent(data.servers[key].name);
-					};
-					serv_result.innerHTML = data.servers[key].name;
-					searchResults.appendChild(serv_result);
+					let r = data.servers[key];
+					add_result(r.name, null, "", BASE_URL+"servers/details.php?server="+encodeURIComponent(r.name), false);
 				}
 
-				//Server Bans
-				var search_label =document.createElement('div');
-				search_label.classList.add('card', 'badge', 'bg-light','p-2', 'm-1');
-				search_label.innerText = "Server Bans";
-				searchResults.appendChild(search_label);
+				add_section("Server Bans");
 				for (let key in data.server_bans)
 				{
-					console.log(key+": "+data.server_bans[key].name);
-					var serv_result =document.createElement('div');
-					serv_result.classList.add('card','p-3', 'm-1');
-					serv_result.onclick = function(){
-						window.location.href = BASE_URL+"server-bans";
-					};
-					serv_result.innerHTML = "<span class='p-0'>"+data.server_bans[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.server_bans[key].label+"</div></span><i>"+(data.server_bans[key].data?data.server_bans[key].data:"")+"</i>";
-					searchResults.appendChild(serv_result);
+					let r = data.server_bans[key];
+					add_result(r.name, r.label, r.data, BASE_URL+"server-bans/", true);
 				}
 
-				//Server Excepts
-				var search_label =document.createElement('div');
-				search_label.classList.add('card', 'badge', 'bg-light','p-2', 'm-1');
-				search_label.innerText = "Server Exceptions";
-				searchResults.appendChild(search_label);
+				add_section("Server Exceptions");
 				for (let key in data.excepts)
 				{
-					console.log(key+": "+data.excepts[key].name);
-					var serv_result =document.createElement('div');
-					serv_result.classList.add('card','p-3', 'm-1');
-					serv_result.onclick = function(){
-						window.location.href = BASE_URL+"server-bans/ban-exceptions";
-					};
-					serv_result.innerHTML = "<span class='p-0'>"+data.excepts[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.excepts[key].label+"</div></span><i>"+(data.excepts[key].data?data.excepts[key].data:"")+"</i>";
-					searchResults.appendChild(serv_result);
+					let r = data.excepts[key];
+					add_result(r.name, r.label, r.data, BASE_URL+"server-bans/ban-exceptions.php", true);
 				}
 
-				//Name Bans
-				var search_label =document.createElement('div');
-				search_label.classList.add('card', 'badge', 'bg-light','p-2', 'm-1');
-				search_label.innerText = "Name Bans";
-				searchResults.appendChild(search_label);
+				add_section("Name Bans");
 				for (let key in data.name_bans)
 				{
-					console.log(key+": "+data.name_bans[key].name);
-					var serv_result =document.createElement('div');
-					serv_result.classList.add('card','p-3', 'm-1');
-					serv_result.onclick = function(){
-						window.location.href = BASE_URL+"server-bans/name-bans";
-					};
-					serv_result.innerHTML = "<span class='p-0'>"+data.name_bans[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.name_bans[key].label+"</div></span><i>"+(data.name_bans[key].data?data.name_bans[key].data:"")+"</i>";
-					searchResults.appendChild(serv_result);
-				}
-				//Spamfilter
-				var search_label =document.createElement('div');
-				search_label.classList.add('card', 'badge', 'bg-light','p-2', 'm-1');
-				search_label.innerText = "Spamfilter";
-				searchResults.appendChild(search_label);
-				for (let key in data.spamfilter)
-				{
-					console.log(key+": "+data.spamfilter[key].name);
-					var serv_result =document.createElement('div');
-					serv_result.classList.add('card','p-3', 'm-1');
-					serv_result.onclick = function(){
-						window.location.href = BASE_URL+"server-bans/spamfilter.php";
-					};
-					serv_result.innerHTML = "<span class='p-0'>"+data.spamfilter[key].name+"<div class='badge ml-2 badge-primary'>Matches "+data.spamfilter[key].label+"</div></span><i>"+(data.spamfilter[key].data?data.spamfilter[key].data:"")+"</i>";
-					searchResults.appendChild(serv_result);
+					let r = data.name_bans[key];
+					add_result(r.name, r.label, r.data, BASE_URL+"server-bans/name-bans.php", true);
 				}
 
-				//Logs
-				var search_label =document.createElement('div');
-				search_label.classList.add('card', 'badge', 'bg-light','p-2', 'm-1');
-				search_label.innerText = "Logs";
-				searchResults.appendChild(search_label);
+				add_section("Spamfilter");
+				for (let key in data.spamfilter)
+				{
+					let r = data.spamfilter[key];
+					add_result(r.name, r.label, r.data, BASE_URL+"server-bans/spamfilter.php", true);
+				}
+
+				add_section("Logs");
 				for (let key in data.logs)
 				{
-					console.log(key+": "+data.logs[key].msg);
-					var log_result =document.createElement('div');
-					log_result.classList.add('card','p-3', 'm-1');
-					log_result.onclick = function(){
-						window.location.href = BASE_URL+"logs";
-					};
-					log_result.innerHTML = data.logs[key].msg;
-					searchResults.appendChild(log_result);
+					let r = data.logs[key];
+					add_result(r.msg, null, "", BASE_URL+"logs/", false);
 				}
-				
 			})
 			.catch(error => {
 				// Handle any errors
@@ -475,7 +497,7 @@ foreach ($pages as $name => $page)
 		else
 		{
 			searchResults.hidden = 'true';
-			searchResults.innerHTML = null;
+			searchResults.textContent = '';
 		} 
 	});
 	function nav_resize_check()

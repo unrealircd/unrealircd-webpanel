@@ -23,22 +23,10 @@ class file_db
 
 		file_db::read_db();
 
-		if (defined('DEFAULT_USER')) // we've got a default account
-		{
-			$lkup = new PanelUser(DEFAULT_USER['username']);
-
-			if (!$lkup->id) // doesn't exist, add it with full privileges
-			{
-				$user = [];
-				$user['user_name'] = DEFAULT_USER['username'];
-				$user['user_pass'] = DEFAULT_USER['password'];
-				$user['err'] = "";
-				create_new_user($user);
-			}
-			$lkup = new PanelUser(DEFAULT_USER['username']);
-			if (!user_can($lkup, PERMISSION_MANAGE_USERS))
-				$lkup->add_permission(PERMISSION_MANAGE_USERS);
-		}
+		/* Note: a DEFAULT_USER from a hand-edited config.php is no longer
+		 * created automatically. That ran on every request, also for
+		 * anonymous visitors, and created "default" / "testing".
+		 */
 	}
 
 	public static function add_pre_overview_card($empty)

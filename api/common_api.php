@@ -1,10 +1,12 @@
 <?php
 include "../inc/common.php";
 
-if(session_status() !== PHP_SESSION_ACTIVE) session_start();
-
-if (!isset($_SESSION['id']))
-	die("Access denied");
+/* inc/common.php already refused anonymous requests, this is a second check */
+if (panel_session_uid() === NULL || !unreal_get_current_user())
+{
+	http_response_code(403);
+	die(json_encode(["error" => "Access denied"]));
+}
 
 // Close the session now, otherwise other pages block
 session_write_close();
@@ -64,7 +66,7 @@ if (!defined('NO_EVENT_STREAM_HEADER'))
 function send_sse($json)
 {
 	GLOBAL $fpm_workaround_needed;
-	$str = "data: ".json_encode($json)."\n\n";
+	$str = "data: ".json_encode($json, JSON_INVALID_UTF8_SUBSTITUTE)."\n\n";
 	if ($fpm_workaround_needed)
 		$str .= str_repeat(" ", 4096 - ((strlen($str)+1) % 4096))."\n";
 	echo $str;

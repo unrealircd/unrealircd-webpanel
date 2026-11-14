@@ -21,55 +21,67 @@ if ($can_edit)
 	if (isset($_POST['do_add_server']))
 	{
 		$opts = (object)$_POST;
+		$str = function($name) use ($opts) {
+			return (isset($opts->$name) && is_string($opts->$name)) ? trim($opts->$name) : "";
+		};
+		$displayname = $str('rpc_displayname');
+		$edit_existing = $str('edit_existing');
+		$host = $str('rpc_host');
+		$port = $str('rpc_port');
+		$rpc_user = $str('rpc_user');
+		$rpc_password = (isset($opts->rpc_password) && is_string($opts->rpc_password)) ? $opts->rpc_password : "";
 
-		/* TODO: Server-side validation */
+		$errors = [];
+		if ($displayname === "" || mb_strlen($displayname) > 100 || preg_match('/[\x00-\x1F\x7F]/', $displayname))
+			$errors[] = "Invalid display name";
+		if (!is_valid_rpc_host($host))
+			$errors[] = "Invalid hostname or IP";
+		if (!ctype_digit($port) || ((int)$port < 1) || ((int)$port > 65535))
+			$errors[] = "Invalid port";
+		if ($rpc_user === "" || preg_match('/[\x00-\x20\x7F:]/', $rpc_user))
+			$errors[] = "Invalid RPC username";
+		if (isset($config["unrealircd"][$displayname]) && ($displayname !== $edit_existing))
+			$errors[] = "A server with that name already exists";
+		if (($edit_existing !== "") && !isset($config["unrealircd"][$edit_existing]))
+			$errors[] = "Editing a server that does not exist";
 
-		// TODO: syntax of each item
-
-		// TODO: check server already exists with that (new) displayname
-
-		if (isset($config["unrealircd"][$opts->rpc_displayname]) &&
-			!($opts->rpc_displayname == $opts->edit_existing))
+		if (!empty($errors))
 		{
-			die("Server with that name already exists"); // TODO: pretier :D
-		}
-
-		$new_properties = [
-			"rpc_user" => $opts->rpc_user,
-			"rpc_password" => $opts->rpc_password,
-			"host"=>$opts->rpc_host,
-			"port"=>$opts->rpc_port,
-			"tls_verify_cert"=>isset($opts->rpc_tls_verify_cert)?true:false,
-			"default"=>isset($opts->rpc_default)?true:false,
-		];
-
-		if (!empty($opts->edit_existing))
-		{
-			// Change existing server
-			if (!isset($config["unrealircd"][$opts->edit_existing]))
-				die("Editing a server that does not exist!?"); // not very graceful, isn't it?
-			if ($new_properties["rpc_password"] == "****************")
-				$new_properties["rpc_password"] = $config["unrealircd"][$opts->edit_existing]["rpc_password"];
-			// name change? unset the old one
-			if ($opts->edit_existing != $opts->rpc_displayname)
-				unset($config["unrealircd"][$opts->edit_existing]);
-			// set new properties
-			$config["unrealircd"][$opts->rpc_displayname] = $new_properties;
+			Message::Fail("Could not save the RPC server:", $errors);
 		} else {
-			// Add new server
-			$config["unrealircd"][$opts->rpc_displayname] = $new_properties;
-			// TODO: encrypt pwd ;)
+			$new_properties = [
+				"rpc_user" => $rpc_user,
+				"rpc_password" => $rpc_password,
+				"host"=>$host,
+				"port"=>$port,
+				"tls_verify_cert"=>isset($opts->rpc_tls_verify_cert)?true:false,
+				"default"=>isset($opts->rpc_default)?true:false,
+			];
+
+			if ($edit_existing !== "")
+			{
+				// Change existing server
+				if ($new_properties["rpc_password"] == "****************")
+					$new_properties["rpc_password"] = $config["unrealircd"][$edit_existing]["rpc_password"];
+				// name change? unset the old one
+				if ($edit_existing !== $displayname)
+					unset($config["unrealircd"][$edit_existing]);
+			}
+			/* Store the password encrypted (an existing one may already be) */
+			if (!str_starts_with($new_properties["rpc_password"], "secret:"))
+				$new_properties["rpc_password"] = secret_encrypt($new_properties["rpc_password"]);
+			$config["unrealircd"][$displayname] = $new_properties;
+
+			if ($new_properties["default"])
+				set_default_rpc_server($displayname);
+			else
+				set_at_least_one_default_rpc_server();
+
+			/* And write the new config */
+			write_config();
+
+			Message::Success("RPC Server successfully ". (($edit_existing === "") ? "added" : "modified").".");
 		}
-
-		if ($new_properties["default"])
-			set_default_rpc_server($opts->rpc_displayname);
-		else
-			set_at_least_one_default_rpc_server();
-
-		/* And write the new config */
-		write_config();
-
-		Message::Success("RPC Server successfully ". (empty($opts->edit_existing) ? "added" : "modified").".");
 	}
 }
 
@@ -84,9 +96,9 @@ you can switch to a secondary server in case the primary server goes down.<br>
 <?php
 if (empty($config["unrealircd"]))
 {
-	Message::Info("Let's get your panel linked to UnrealIRCd. ".
+	Message::Info(new RawHTML("Let's get your panel linked to UnrealIRCd. ".
 	              "Read <u><a href=\"https://www.unrealircd.org/docs/UnrealIRCd_webpanel#Configuring_UnrealIRCd\" target=\"_blank\">the UnrealIRCd instructions</a></u> ".
-	              "and then click <i>Add Server</i> below.");
+	              "and then click <i>Add Server</i> below."));
 }
 ?>
 
@@ -235,20 +247,27 @@ border-radius: 3px;
 			$primary = "";
 			if (isset($e["default"]) && $e["default"])
                             $primary = " <span class=\"badge rounded-pill badge-success\">Default</span>";
-                        $name = htmlspecialchars($name);
-                        $default_server = $e["default"] ? "true" : "false";
-                        $host = htmlspecialchars($e["host"]);
-                        $port = htmlspecialchars($e["port"]);
-                        $rpc_user = htmlspecialchars($e["rpc_user"]);
-                        $tls_verify_cert = $e["tls_verify_cert"] ? "true" : "false";
-                        $html_name = "<a href=\"javascript:edit_rpc_server('$name',$default_server,'$host','$port','$rpc_user',$tls_verify_cert)\">$name</a>";
+			/* All values go into data-* attributes (escaped), and are read
+			 * by the event handlers below. Never put them in a javascript:
+			 * URL or an onclick string: the browser decodes the entities
+			 * before running those.
+			 */
+			$server_json = h(js_value([
+				"name" => (string)$name,
+				"default" => !empty($e["default"]),
+				"host" => (string)($e["host"] ?? ""),
+				"port" => (string)($e["port"] ?? ""),
+				"rpc_user" => (string)($e["rpc_user"] ?? ""),
+				"tls_verify_cert" => !empty($e["tls_verify_cert"]),
+			]));
+			$html_name = "<a href=\"#\" class=\"rpc-server-edit\" data-server=\"$server_json\">".h($name)."</a>";
 			echo "<tr>";
 			if ($can_edit)
-				echo "<td scope=\"col\"><button type=\"button\" class=\"btn btn-xs btn-danger\" onclick=\"confirm_delete('".$name."')\"><i class=\"fa fa-trash fa-1\" aria-hidden=\"true\"></i></button></td>";
+				echo "<td scope=\"col\"><button type=\"button\" class=\"btn btn-xs btn-danger rpc-server-delete\" data-server=\"$server_json\"><i class=\"fa fa-trash fa-1\" aria-hidden=\"true\"></i></button></td>";
 			echo "<td scope=\"col\">".$html_name.$primary."</td>";
-			echo "<td scope=\"col\"><code>".$host."</code></td>";
-			echo "<td scope=\"col\"><code>".$port."</code></td>";
-			echo "<td scope=\"col\"><code>".$rpc_user."</code></td>";
+			echo "<td scope=\"col\"><code>".h($e["host"] ?? "")."</code></td>";
+			echo "<td scope=\"col\"><code>".h($e["port"] ?? "")."</code></td>";
+			echo "<td scope=\"col\"><code>".h($e["rpc_user"] ?? "")."</code></td>";
 			echo "</tr>";
 		}
 		?>
@@ -276,7 +295,7 @@ border-radius: 3px;
 	/* The RPC connection tester! */
 	function test_rpc_server()
 	{
-		fetch('<?php echo get_config("base_url"); ?>' + 'api/test_rpc_server.php', {
+		fetch(BASE_URL + 'api/test_rpc_server.php', {
 		      method:'POST',
 		      headers: {'Content-Type':'application/x-www-form-urlencoded'},
 		      body: 'method=rpc&'+
@@ -301,7 +320,6 @@ border-radius: 3px;
 			}
 		})
 		.catch(error => {
-			test_conn.innerHTML = "Failed!";
 				$('#server_add').modal('hide');
 				$('#server_error').modal();
 		});
@@ -350,6 +368,20 @@ border-radius: 3px;
 		$('#del_server_name').val(name);
 		$('#server_confirm_del').modal('show');
 	}
+
+	document.querySelectorAll('.rpc-server-edit').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			var s = JSON.parse(el.dataset.server);
+			edit_rpc_server(s.name, s.default, s.host, s.port, s.rpc_user, s.tls_verify_cert);
+		});
+	});
+	document.querySelectorAll('.rpc-server-delete').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			var s = JSON.parse(el.dataset.server);
+			confirm_delete(s.name);
+		});
+	});
 
 
 </script>

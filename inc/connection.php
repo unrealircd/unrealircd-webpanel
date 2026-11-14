@@ -42,8 +42,8 @@ function connect_to_ircd()
 	{
 		if ($is_api_page)
 			return;
-		Message::Fail("Your RPC password in the DB was encrypted with a different key than config/config.php contains.<br>\n".
-		              "Either restore your previous config/config.php or start with a fresh database.<br>\n");
+		Message::Fail("Your RPC password in the DB was encrypted with a different key than config/config.php contains.",
+		              "Either restore your previous config/config.php or start with a fresh database.");
 		die;
 	}
 
@@ -67,10 +67,13 @@ function connect_to_ircd()
 	{
 		if ($is_api_page)
 			return;
-		Message::Fail("Unable to connect to UnrealIRCd: ".$e->getMessage() . "<br>".
+		Message::Fail("Unable to connect to UnrealIRCd: ".$e->getMessage(),
 		              "Verify that the connection details from Settings - RPC Servers match the ones in UnrealIRCd ".
 		              "and that UnrealIRCd is up and running");
-		throw $e;
+		/* Do not rethrow: with display_errors on, the stack trace
+		 * would show the arguments, which include the RPC password.
+		 */
+		die;
 	}
 }
 

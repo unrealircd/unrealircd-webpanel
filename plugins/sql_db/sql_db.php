@@ -153,22 +153,9 @@ class sql_db
 		}
 		if (!$errors)
 		{
-			if (defined('DEFAULT_USER')) // we've got a default account
-			{
-				$lkup = new PanelUser(DEFAULT_USER['username']);
-
-				if (!$lkup->id) // doesn't exist, add it with full privileges
-				{
-					$user = [];
-					$user['user_name'] = DEFAULT_USER['username'];
-					$user['user_pass'] = DEFAULT_USER['password'];
-					$user['err'] = "";
-					create_new_user($user);
-				}
-				$lkup = new PanelUser(DEFAULT_USER['username']);
-				if (!user_can($lkup, PERMISSION_MANAGE_USERS))
-					$lkup->add_permission(PERMISSION_MANAGE_USERS);
-			}
+			/* Note: a DEFAULT_USER from an old config.php is no longer
+			 * created automatically (it was "default" / "testing").
+			 */
 			return true;
 		}
 		else

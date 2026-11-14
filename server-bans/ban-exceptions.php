@@ -13,9 +13,9 @@ if (!empty($_POST))
 		if (!current_user_can(PERMISSION_BAN_EXCEPTION_DEL))
 			Message::Fail("Could not delete ban exception(s): Permission denied");
 		else
-			foreach ($_POST['tklch'] as $key => $value)
+			foreach ((array)$_POST['tklch'] as $key => $value)
 			{
-				$tok = split($value, ",");
+				$tok = split((string)$value, ",");
 				$iphost = base64_decode($tok[0]);
 				$success = false;
 				$success = $rpc->serverbanexception()->delete($iphost);
@@ -39,7 +39,7 @@ if (!empty($_POST))
 			$bantypes = isset($_POST['bantype']) ? $_POST['bantype'] : "";
 			$bantypes_dup = "";
 			if (!empty($bantypes))
-				foreach ($bantypes as $bt)
+				foreach ((array)$bantypes as $bt)
 					$bantypes_dup .= $bt;
 			$bantypes = $bantypes_dup;
 			/* duplicate code for now [= */
@@ -194,16 +194,16 @@ Here is where you can make an exception to bans, that is, to make it so that the
 			if ($set_in_config)
 				echo "<td scope=\"col\"></td>";
 			else
-				echo "<td scope=\"col\"><input type=\"checkbox\" value='" . base64_encode($ban_exceptions->name).",".base64_encode($ban_exceptions->type) . "' name=\"tklch[]\"></td>";
-			echo "<td scope=\"col\">".$ban_exceptions->name."</td>";
-			echo "<td scope=\"col\">".$ban_exceptions->duration_string."</td>";
-			echo "<td scope=\"col\"><span class=\"badge badge-pill badge-primary\">".$ban_exceptions->type."</span></td>";
+				echo "<td scope=\"col\"><input type=\"checkbox\" value=\"" . h(base64_encode($ban_exceptions->name).",".base64_encode($ban_exceptions->type)) . "\" name=\"tklch[]\"></td>";
+			echo "<td scope=\"col\">".h($ban_exceptions->name)."</td>";
+			echo "<td scope=\"col\">".h($ban_exceptions->duration_string)."</td>";
+			echo "<td scope=\"col\"><span class=\"badge badge-pill badge-primary\">".h($ban_exceptions->type)."</span></td>";
 			echo "<td scope=\"col\">".convert_exceptiontypes_to_badges($ban_exceptions->exception_types)."</td>";
-			echo "<td scope=\"col\">".$ban_exceptions->reason."</td>";
-			$set_by = $set_in_config ? "<span class=\"badge rounded-pill badge-secondary\">Config</span>" : show_nick_only($ban_exceptions->set_by);
+			echo "<td scope=\"col\">".h($ban_exceptions->reason)."</td>";
+			$set_by = $set_in_config ? "<span class=\"badge rounded-pill badge-secondary\">Config</span>" : h(show_nick_only($ban_exceptions->set_by));
 			echo "<td scope=\"col\">".$set_by."</td>";
-			echo "<td scope=\"col\">".$ban_exceptions->set_at_string."</td>";
-			echo "<td scope=\"col\">".$ban_exceptions->expire_at_string."</td>";
+			echo "<td scope=\"col\">".h($ban_exceptions->set_at_string)."</td>";
+			echo "<td scope=\"col\">".h($ban_exceptions->expire_at_string)."</td>";
 			echo "</tr>";
 		}
 	?></tbody></table><p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2" <?php echo (current_user_can(PERMISSION_BAN_EXCEPTION_DEL)) ? "" : "disabled"; ?>>

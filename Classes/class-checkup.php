@@ -121,7 +121,7 @@ class CheckUp
 					if (!strstr($theirchmodes, $m))
 					{
 						++$this->num_of_problems['chanmodes'];
-						$this->problems['chanmodes'][] = "Channel mode <code>$m</code> is present on <code>$s->name</code> but missing on <code>$serv->name</code>";
+						$this->problems['chanmodes'][] = "Channel mode <code>".h($m)."</code> is present on <code>".h($s->name)."</code> but missing on <code>".h($serv->name)."</code>";
 					}
 				}
 			}
@@ -162,7 +162,7 @@ class CheckUp
 					if (!strstr($theirumodes, $m))
 					{
 						++$this->num_of_problems['usermodes'];
-						$this->problems['usermodes'][] = "User mode <code>$m</code> is present on <code>$s->name</code> but missing on <code>$serv->name</code>";
+						$this->problems['usermodes'][] = "User mode <code>".h($m)."</code> is present on <code>".h($s->name)."</code> but missing on <code>".h($serv->name)."</code>";
 					}
 				}
 			}
@@ -208,12 +208,12 @@ class CheckUp
 					if (!isset($ourmods[$name])) // we don't have that module
 					{
 						++$this->num_of_problems['modules'];
-						$this->problems['modules'][] = "Module <code>$name</code> exists on <code>$serv->name</code> but not <code>$s->name</code>";
+						$this->problems['modules'][] = "Module <code>".h($name)."</code> exists on <code>".h($serv->name)."</code> but not <code>".h($s->name)."</code>";
 					}
 					else if ((int)$version > (int)$ourmods[$name])
 					{
 						++$this->num_of_problems['modules'];
-						$this->problems['modules'][] = "Module <code>$name</code> on <code>$serv->name</code> is newer than on <code>$s->name</code>";
+						$this->problems['modules'][] = "Module <code>".h($name)."</code> on <code>".h($serv->name)."</code> is newer than on <code>".h($s->name)."</code>";
 					}
 				}
 			}
@@ -240,7 +240,7 @@ class CheckUp
 				if ($ours < $theirs)
 				{
 					++$this->num_of_problems['servers'];
-					$this->problems['servers'][] = "Protocol mismatch: <code>$serv->name</code> using protocol <code>$theirs</code> but <code>$s->name</code> using protocol <code>$ours</code>. <a href=\"https://www.unrealircd.org/docs/Upgrading\">Click for upgrade documentation.</a>";
+					$this->problems['servers'][] = "Protocol mismatch: <code>".h($serv->name)."</code> using protocol <code>$theirs</code> but <code>".h($s->name)."</code> using protocol <code>$ours</code>. <a href=\"https://www.unrealircd.org/docs/Upgrading\">Click for upgrade documentation.</a>";
 				}
 			}
 
@@ -249,7 +249,7 @@ class CheckUp
 			if ((int)$tok[1] < 6)
 			{
 				++$this->num_of_problems['servers'];
-				$this->problems['servers'][] = "EOL: <code>$s->name</code> (".$s->server->features->software.") is running old unsupported software which is no longer receiving security updates. <a href=\"https://www.unrealircd.org/docs/Upgrading\">Click here for upgrade documentation.</a>";
+				$this->problems['servers'][] = "EOL: <code>".h($s->name)."</code> (".h($s->server->features->software).") is running old unsupported software which is no longer receiving security updates. <a href=\"https://www.unrealircd.org/docs/Upgrading\">Click here for upgrade documentation.</a>";
 			}
 		}
 	}
@@ -257,7 +257,7 @@ class CheckUp
 	function __toString()
 	{
 		return '
-		<a style="width:fit-content" id="health_banner" class="card alert text-dark alert-'.(!$this->total() ? "success" : "danger").'" role="alert" href="'.get_config("base_url").'tools/checkup.php">
+		<a style="width:fit-content" id="health_banner" class="card alert text-dark alert-'.(!$this->total() ? "success" : "danger").'" role="alert" href="'.h(get_config("base_url")).'tools/checkup.php">
 			<i class="fa-solid fa-heart-pulse fa-2x" style="position:absolute;top:10px;left:10px"></i>
 			<h4 class="alert-heading mt-0 mb-0" style="padding-left:40px;">Network Health </h4><span style="position:relative;top:5px;" class="ml-3 badge badge-'.$this->badgestyle().'">'.$this->equivalate().'</span>
 			<p class="ml-4 mt-2 mb-0">Found <b>'.$this->total().'</b> problems in total.</p>

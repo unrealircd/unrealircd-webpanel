@@ -225,7 +225,7 @@ class IRCList {
         }
         else if (!strstr($modes,","))
             $g = [$modes];
-        else $g = split($g,",");
+        else $g = split($modes,",");
         self::$uplink = $g;
     }
     static $uplink = [];

@@ -1,2 +1,8 @@
-Order allow,deny
-Deny from all
+# Nothing in this directory is meant to be requested from the web.
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>

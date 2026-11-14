@@ -20,11 +20,11 @@ function generate_chanbans_table($channel)
 		<?php
 		foreach ($channel->bans as $ban) {
 			echo "<tr>";
-			echo "<td scope=\"row\"><input type=\"checkbox\" value='$ban->name' name=\"cb_checkboxes[]\"></td>";
-			echo "<td><code>".htmlspecialchars($ban->name)."</code></td>";
-			$set_by = htmlspecialchars($ban->set_by);
+			echo "<td scope=\"row\"><input type=\"checkbox\" value=\"".h($ban->name)."\" name=\"cb_checkboxes[]\"></td>";
+			echo "<td><code>".h($ban->name)."</code></td>";
+			$set_by = h($ban->set_by);
 			echo "<td>$set_by</td>";
-			$set_at = $ban->set_at;
+			$set_at = h($ban->set_at);
 			echo "<td>$set_at</td>";
 			echo "<td></td>";
 			echo "</tr>";
@@ -57,11 +57,11 @@ function generate_chaninvites_table($channel)
 		<?php
 		foreach ($channel->invite_exceptions as $inv) {
 			echo "<tr>";
-			echo "<td scope=\"row\"><input type=\"checkbox\" value='$inv->name' name=\"ci_checkboxes[]\"></td>";
-			echo "<td><code>".htmlspecialchars($inv->name)."</code></td>";
-			$set_by = htmlspecialchars($inv->set_by);
+			echo "<td scope=\"row\"><input type=\"checkbox\" value=\"".h($inv->name)."\" name=\"ci_checkboxes[]\"></td>";
+			echo "<td><code>".h($inv->name)."</code></td>";
+			$set_by = h($inv->set_by);
 			echo "<td>$set_by</td>";
-			$set_at = $inv->set_at;
+			$set_at = h($inv->set_at);
 			echo "<td>$set_at</td>";
 			echo "<td></td>";
 			echo "</tr>";
@@ -97,11 +97,11 @@ function generate_chanexcepts_table($channel)
 		<?php
 		foreach ($channel->ban_exemptions as $ex) {
 			echo "<tr>";
-			echo "<td scope=\"row\"><input type=\"checkbox\" value='$ex->name' name=\"ce_checkboxes[]\"></td>";
-			echo "<td><code>".htmlspecialchars($ex->name)."</code></td>";
-			$set_by = htmlspecialchars($ex->set_by);
+			echo "<td scope=\"row\"><input type=\"checkbox\" value=\"".h($ex->name)."\" name=\"ce_checkboxes[]\"></td>";
+			echo "<td><code>".h($ex->name)."</code></td>";
+			$set_by = h($ex->set_by);
 			echo "<td>$set_by</td>";
-			$set_at = $ex->set_at;
+			$set_at = h($ex->set_at);
 			echo "<td>$set_at</td>";
 			echo "<td></td>";
 			echo "</tr>";
@@ -180,10 +180,10 @@ function generate_chan_occupants_table($channel)
 			?><form method="post" action=""><?php
 			$disabled = (current_user_can(PERMISSION_EDIT_CHANNEL_USER)) ? "" : "disabled";
 			$disabledcolor = ($disabled) ? "btn-secondary" : "btn-primary";
-			echo "<td scope=\"row\"><input type=\"checkbox\" value='$member->id' name=\"checkboxes[]\"></td>";
-			echo "<td><a href=\"".get_config("base_url")."users/details.php?nick=$member->id\">".htmlspecialchars($member->name)."</a></td>";
+			echo "<td scope=\"row\"><input type=\"checkbox\" value=\"".h($member->id)."\" name=\"checkboxes[]\"></td>";
+			echo "<td><a href=\"".h(get_config("base_url")."users/details.php?nick=".urlencode($member->id))."\">".h($member->name)."</a></td>";
 			echo "<td class='text-right'>$lvlstring</td>";
-			echo "<td><code>".((property_exists($member, 'hostname')) ? htmlspecialchars($member->hostname) : "")."</code></td>";
+			echo "<td><code>".((property_exists($member, 'hostname')) ? h($member->hostname) : "")."</code></td>";
 			echo "</tr>";
 		}
 
@@ -220,10 +220,10 @@ function generate_html_chansettings($channel)
 						continue;
 					?>
 						<tr>
-							<th><?php echo $modeinfo['name']; ?></th>
-							<td><code><?php echo isset($paramed_modes[$mode]) ? $paramed_modes[$mode] : ""; ?></code></td>
+							<th><?php echo h($modeinfo['name']); ?></th>
+							<td><code><?php echo isset($paramed_modes[$mode]) ? h($paramed_modes[$mode]) : ""; ?></code></td>
 							<td>
-								<?php echo $modeinfo['description']; ?>
+								<?php echo h($modeinfo['description']); ?>
 							</td>
 						</tr>
                 	<?php
@@ -290,7 +290,7 @@ function generate_edit_chmodes($chan)
 		foreach ($groups as $group_name=>$m)
 		{
 			echo "<fieldset class=\"border p-1 col-sm-6\">\n";
-			echo "<legend class=\"w-auto\" style=\"font-size: 16px\">$group_name</legend>\n";
+			echo "<legend class=\"w-auto\" style=\"font-size: 16px\">".h($group_name)."</legend>\n";
 			for ($i=0; ($mode = (isset($m[$i])) ? $m[$i] : NULL); $i++)
 			{
 				$group = get_chmode_group($mode);
@@ -306,7 +306,7 @@ function generate_edit_chmodes($chan)
 				?>
 				<div class="form-group row">
 					<div class="col-sm-5">
-						<input <?php echo $checked.$disabled; ?> type="checkbox" value='<?php echo $mode; ?>' name="newmodes[]">
+						<input <?php echo $checked.$disabled; ?> type="checkbox" value="<?php echo h($mode); ?>" name="newmodes[]">
 						<span data-toggle="tooltip" data-placement="top" title="<?php echo htmlspecialchars($modeinfo['description']); ?>"><?php echo htmlspecialchars($modeinfo['name'])." (<code>+$mode</code>)";  ?>
 					</div>
 					<div class="col-sm-2">
@@ -314,8 +314,8 @@ function generate_edit_chmodes($chan)
 							
 							if ($group == 2 || $group == 3)
 							{ 
-								?><input type="text" class="input-group-sm" name="paramed_modes[<?php echo $mode; ?>]"
-								id="<?php echo $mode; ?>" value="<?php echo ($checked)
+								?><input type="text" class="input-group-sm" name="paramed_modes[<?php echo h($mode); ?>]"
+								id="<?php echo h($mode); ?>" value="<?php echo ($checked)
 								?
 									htmlspecialchars(
 										isset($paramed_modes[$mode])
@@ -395,33 +395,76 @@ function _do_chan_item_delete($chan, string $type, array $list, array &$errors) 
 	else
 		return false;
 
+	if (!$chan)
+	{
+		Message::Fail("Channel not found");
+		return false;
+	}
+
+	/* UnrealIRCd processes at most MAXMODEPARAMS (12) parameters per
+	 * mode line and silently ignores the rest, so send the entries in
+	 * batches of at most 12, and keep each batch well below the
+	 * line length limit.
+	 */
+	$max_per_batch = 12;
+	$max_len = 400;
+	$cnt = 0;
+	$sent_any = false;
 	foreach($list as $l)
 	{
-		// check if the string needs therapy
-		if ((strlen($n) + 1) + (strlen($str) + strlen($l)) > 150)
+		if (!is_string($l) || $l === "" || str_contains($l, " "))
+			continue; /* a list entry never contains a space */
+		if ($cnt && (($cnt >= $max_per_batch) || (strlen($str) + strlen($l) + 1 > $max_len)))
 		{
-			// send what we've got already and prepare for the next lot
-			if (!$rpc->channel()->set_mode($chan->name, htmlspecialchars("-$n"), htmlspecialchars($str)))
+			/* send what we've got already and prepare for the next lot */
+			if (!$rpc->channel()->set_mode($chan->name, "-$n", trim($str)))
 				$errors[] = $rpc->error . " ($rpc->errno)";
-
-			// prepare for the next set
 			$n = "";
 			$str = "";
-		} 
+			$cnt = 0;
+		}
 		$n .= $char;
 		$str .= " ".$l;
+		$cnt++;
+		$sent_any = true;
 	}
-	// if multiple, this will be the last one so we return here
-	if ($rpc->channel()->set_mode($chan->name, htmlspecialchars("-$n"), htmlspecialchars($str)))
+	if ($cnt && !$rpc->channel()->set_mode($chan->name, "-$n", trim($str)))
+		$errors[] = $rpc->error . " ($rpc->errno)";
+
+	if (!$sent_any)
 	{
-		if (!empty($errors))
-			Message::Fail("One or more errors occurred:", $errors);
-		Message::Success("Deleted successfully");
-		return true;
+		Message::Fail("Nothing was selected");
+		return false;
 	}
-	$errors[] = $rpc->error . " ($rpc->errno)";
-		Message::Fail("An error occurred:", $errors);
-	return false;
+
+	/* channel.set_mode always answers 'true', so check the result
+	 * ourselves: re-fetch the channel and see which entries are still there.
+	 * (This also catches entries that cannot be matched, for example
+	 *  ones with invalid UTF-8 that the JSON-RPC output has altered.)
+	 */
+	$after = $rpc->channel()->get($chan->name);
+	$field = ($type == "invite") ? "invite_exceptions" : (($type == "ban") ? "bans" : "ban_exemptions");
+	$remaining = [];
+	if ($after && isset($after->$field))
+	{
+		$still = [];
+		foreach ($after->$field as $e)
+			$still[$e->name] = true;
+		foreach ($list as $l)
+			if (is_string($l) && isset($still[$l]))
+				$remaining[] = $l;
+	}
+
+	if (!empty($remaining))
+		$errors[] = "These entries could not be removed: ".implode(" ", $remaining);
+
+	if (!empty($errors))
+	{
+		Message::Fail("One or more errors occurred:", $errors);
+		return false;
+	}
+	Message::Success("Deleted successfully");
+	return true;
 }
 
 function do_delete_invite($chan, $list)

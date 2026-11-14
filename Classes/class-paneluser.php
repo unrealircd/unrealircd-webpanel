@@ -273,12 +273,24 @@ function create_new_user(array &$user) : bool
 	if (!isset($user['user_name']) || !isset($user['user_pass']))
 		throw new Exception("Attempted to add user without specifying user_name or user_pass");
 
-	$user['user_name'] = htmlspecialchars($user['user_name']);
+	/* Values are stored as they are. They are escaped when they are
+	 * shown (with h()), escaping them here as well would show
+	 * entities like &amp;amp; and make a name with a '&' unable to log in.
+	 */
+	if (!is_string($user['user_name']) || !is_string($user['user_pass']) || ($user['user_name'] === "") || ($user['user_pass'] === ""))
+	{
+		$user['err'] = "Invalid username or password";
+		return false;
+	}
 	$user['user_pass'] = PanelUser::password_hash($user['user_pass']);
-	$user['fname'] = (isset($user['fname'])) ? htmlspecialchars($user['fname']) : NULL;
-	$last['lname'] = (isset($user['lname'])) ? htmlspecialchars($user['lname']) : NULL;
-	$user['user_bio'] = (isset($user['user_bio'])) ? htmlspecialchars($user['user_bio']) : NULL;
-	$user['email'] = (isset($user['user_email'])) ? htmlspecialchars($user['user_email']) : NULL;
+	$user['fname'] = (isset($user['fname'])) ? (string)$user['fname'] : NULL;
+	$user['lname'] = (isset($user['lname'])) ? (string)$user['lname'] : NULL;
+	$user['user_bio'] = (isset($user['user_bio'])) ? (string)$user['user_bio'] : NULL;
+	if (isset($user['user_email']))
+		$user['email'] = (string)$user['user_email'];
+	else
+		$user['email'] = isset($user['email']) ? (string)$user['email'] : NULL;
+	$user['user_email'] = $user['email']; /* the db backends read this one */
 
 	if (($u = new PanelUser($user['user_name']))->id)
 	{
@@ -302,9 +314,13 @@ function create_new_user(array &$user) : bool
  */
 function unreal_get_current_user() : PanelUser|bool
 {
-	if (isset($_SESSION) && isset($_SESSION['id']))
+	/* Only the panel's own session key counts, never a plain 'id' that
+	 * another PHP application on this server may have put in a session.
+	 */
+	$uid = panel_session_uid();
+	if (($uid !== NULL) && is_numeric($uid))
 	{
-		$user = new PanelUser(NULL, $_SESSION['id']);
+		$user = new PanelUser(NULL, (int)$uid);
 		if ($user->id)
 			return $user;
 	}
@@ -343,19 +359,20 @@ function user_can(PanelUser $user, $permission) : bool
 		else if ($user->user_meta['role'] == "Read-Only")
 			return false;
 
-		else if (in_array($permission, $config['user_roles'][$user->user_meta['role']]))
+		/* An unknown role, or a role without permissions, gives nothing
+		 * (and must not crash every page with a TypeError).
+		 */
+		$perms = $config['user_roles'][$user->user_meta['role']] ?? [];
+		if (is_array($perms) && in_array($permission, $perms, true))
 			return true;
-			
+
 		return false;
 	}
 
-	/* compatibility fallback */
-	if (isset($user->user_meta['permissions']))
-	{
-		$perms = unserialize($user->user_meta['permissions']);
-		if (in_array($permission, $perms))
-			return true;
-	}
+	/* Accounts without a role get no permissions.
+	 * (The old 'permissions' meta from early 2023 is no longer honoured:
+	 *  it was mostly used by the old DEFAULT_USER account "default".)
+	 */
 	return false;
 }
 
@@ -420,10 +437,10 @@ function generate_panel_user_permission_table($user)
 					<input <?php
 						$attributes .= (user_can($user, $slug)) ? "checked" : "";
 						echo $attributes;
-					?> name="permissions[]" value="<?php echo $slug; ?>" type="checkbox">
+					?> name="permissions[]" value="<?php echo h($slug); ?>" type="checkbox">
 				</div>
 			</div>
-			<input type="text" readonly  class="form-control" value="<?php echo "$desc ($slug)"; ?>">
+			<input type="text" readonly  class="form-control" value="<?php echo h("$desc ($slug)"); ?>">
 		</div>
 
 		<?php
@@ -457,25 +474,26 @@ function generate_role_list($list)
 		<div class="accordion" id="roles_accord">
 
 <?php foreach($list as $role => $slug) {?>
+	<?php $rslug = h(preg_replace('/[^A-Za-z0-9_-]/', '_', to_slug($role)).'_'.substr(md5($role), 0, 6)); ?>
 	<div class="card">
-		<div class="card-header" id="<?php echo to_slug($role); ?>_heading">
-			<div class="btn-header-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapse_<?php echo to_slug($role); ?>" aria-expanded="true" aria-controls="collapse_<?php echo to_slug($role); ?>">
-				<?php echo $role ?>
-				
+		<div class="card-header" id="<?php echo $rslug; ?>_heading">
+			<div class="btn-header-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapse_<?php echo $rslug; ?>" aria-expanded="true" aria-controls="collapse_<?php echo $rslug; ?>">
+				<?php echo h($role) ?>
+
 			</div>
 		</div>
 
-		<div id="collapse_<?php echo to_slug($role); ?>" class="collapse" aria-labelledby="<?php echo to_slug($role); ?>_heading" data-parent="#roles_accord">
+		<div id="collapse_<?php echo $rslug; ?>" class="collapse" aria-labelledby="<?php echo $rslug; ?>_heading" data-parent="#roles_accord">
 			<div id="results_rpc" class="card-body">
 				<form method="post">
 				<?php if ($role !== "Super-Admin" && $role !== "Read-Only") { ?>
 					<div class="container row mb-2">
-						<button id="update_role" name="update_role" value="<?php echo $role ?>" class="btn btn-primary ml-1 mr-2" >Update</button>
-						<button id="delete_role" name="del_role_name" value="<?php echo $role ?>" class="btn btn-danger"><i class="fa fa-trash fa-1" aria-hidden="true"></i></button>
+						<button id="update_role" name="update_role" value="<?php echo h($role) ?>" class="btn btn-primary ml-1 mr-2" >Update</button>
+						<button id="delete_role" name="del_role_name" value="<?php echo h($role) ?>" class="btn btn-danger"><i class="fa fa-trash fa-1" aria-hidden="true"></i></button>
 					</div>
-					
+
 				<?php } ?>
-				<div id="<?php echo $role; ?>_input_area"><?php
+				<div id="<?php echo $rslug; ?>_input_area"><?php
 					foreach($list2 as $desc => $slug)
 					{
 					$attributes = "";
@@ -486,12 +504,12 @@ function generate_role_list($list)
 							<div class="input-group-prepend">
 								<div class="input-group-text">
 									<input <?php
-										$attributes .= (in_array($slug, $list[$role])) ? "checked" : "";
+										$attributes .= (is_array($list[$role]) && in_array($slug, $list[$role])) ? "checked" : "";
 										echo $attributes;
-									?> name="permissions[]" value="<?php echo $slug; ?>" type="checkbox">
+									?> name="permissions[]" value="<?php echo h($slug); ?>" type="checkbox">
 								</div>
 							</div>
-							<input type="text" readonly class="form-control" value="<?php echo "$desc ($slug)"; ?>">
+							<input type="text" readonly class="form-control" value="<?php echo h("$desc ($slug)"); ?>">
 						</div>
 				
 						<?php

@@ -12,7 +12,7 @@ if (!empty($_POST))
 {
 	do_log($_POST);
 	if (isset($_POST['rehash']) && $can_rehash)
-		foreach ($_POST['serverch'] as $servID)
+		foreach ((array)($_POST['serverch'] ?? []) as $servID)
 			if ($response = $rpc->server()->rehash($servID)) 
 			{
 				$serb = $rpc->server()->get($servID);
@@ -50,27 +50,11 @@ if ($checkforupdates)
 <?php
 	if (isset($_POST['rehash']))
 	{
-	if (!empty($rehash_success)) {
+	if (!empty($rehash_success) || !empty($rehash_errors)) {
 		do_log($rehash_success);
-		$servlist_bullet = "<ol>";
-
-		foreach ($rehash_success as $serv) {
-			$servlist_bullet .= "<li>$serv</li>";
-		}
-		$servlist_bullet .= "</ol>";
-		$servlist_err_bullet = "";
-		foreach ($rehash_errors as $serv => $err) {
-			$servlist_err_bullet .= "<h6>$serv</h6><ol>";
-			foreach ($err as $er)
-				$servlist_err_bullet .= "<li>$er</li>";
-			echo "</ol>";
-		}
-		$servlist_warn_bullet = ""; foreach ($rehash_warnings as $server => $warning) {
-			$servlist_warn_bullet .= "<h6>$serv</h6><ol>";
-			foreach ($warning as $w)
-				$servlist_warn_bullet .= "<li>$w</li>";
-			$servlist_warn_bullet .= "</ol>";
-		}
+		$servlist_bullet = rehash_html_list($rehash_success);
+		$servlist_err_bullet = rehash_html_grouped_list($rehash_errors);
+		$servlist_warn_bullet = rehash_html_grouped_list($rehash_warnings);
 		if (!empty($rehash_success))
 			Message::Success(
 				"The following server(s) were successfully rehashed:",
@@ -163,18 +147,19 @@ Click on a server name to view more information.
 			}
 
 			echo "<tr>";
-			echo "<th scope=\"row\"><input type=\"checkbox\" value='$server->id' name=\"serverch[]\"></th>";
-			echo "<td><a href=\"details.php?server=".$server->id."\">$server->name</a> $update</td>";
-			echo "<td>".$server->server->num_users."</td>";
-			
+			echo "<th scope=\"row\"><input type=\"checkbox\" value=\"".h($server->id)."\" name=\"serverch[]\"></th>";
+			echo "<td><a href=\"details.php?server=".h(urlencode($server->id))."\">".h($server->name)."</a> $update</td>";
+			echo "<td>".h($server->server->num_users)."</td>";
+
 			$s = sinfo_conv_version_string($server);
-			
+
 			echo "<td>$s</td>";
 			if (isset($server->server->uplink))
-				echo "<td>".$server->server->uplink."</td>";
+				echo "<td>".h($server->server->uplink)."</td>";
 			else
 				echo "<td></td>"; /* self */
-			echo "<td>".$server->server->boot_time."</td>";
+			echo "<td>".h($server->server->boot_time)."</td>";
+			echo "</tr>";
 		}
 	?>
 	</form>

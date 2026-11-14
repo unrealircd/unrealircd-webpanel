@@ -1,11 +1,15 @@
 <?php
 
+/* Note: all values are returned raw (not HTML-escaped).
+ * The search box in inc/header.php inserts them as text.
+ */
+define('NO_EVENT_STREAM_HEADER',1);
 require_once('common_api.php');
 
 if (!$rpc)
     die();
 
-if (!$_GET || !isset($_GET['search']))
+if (!$_GET || !isset($_GET['search']) || !is_string($_GET['search']))
 {
     echo json_encode(["error" => "No search query"]);
     die;
@@ -35,8 +39,10 @@ $search_results = [
 
 function strcasestr($haystack, $needle) : bool
 {
-    $needle = strtolower($needle);
-    $haystack = strtolower($haystack);
+    if ($haystack === null || is_array($haystack) || is_object($haystack))
+        return false;
+    $needle = strtolower((string)$needle);
+    $haystack = strtolower((string)$haystack);
     $needle = preg_quote($needle, '/');
     $needle = str_replace('\*', '.*', $needle);
     $pattern = '/.*' . $needle . '.*' . '/';
@@ -69,17 +75,16 @@ foreach ($users as $u)
         $o->label = "GECOS";
         $search_results['users'][] = $o;
     }
-    if (@strcasestr($u->user->account,$search_term))
+    if (isset($u->user->account) && strcasestr($u->user->account,$search_term))
     {
         $o = (object)[];
         $o->name = $u->name;
-        $o->data = $u->account;
+        $o->data = $u->user->account;
         $o->label = "account";
         $search_results['users'][] = $o;
     }
     if (isset($u->geoip))
     {
-        error_log("It's set");
         if (@strcasestr($u->geoip->asn,$search_term))
         {
             $o = (object)[];
@@ -104,9 +109,6 @@ foreach ($users as $u)
             $o->label = "Country Code";
             $search_results['users'][] = $o;
         }
-    }
-    else{
-        error_log(json_encode($u));
     }
 }
 foreach ($chans as $c)
@@ -133,7 +135,6 @@ foreach ($chans as $c)
             $new->topic = $i->name;
             $new->label = "ban (+b)";
             $search_results['channels'][] = $new;
-            error_log("$new->label for $i->name");
         }
     }
     if (isset($c->ban_exemptions))
@@ -148,7 +149,6 @@ foreach ($chans as $c)
             $new->topic = $i->name;
             $new->label = "exempt (+e)";
             $search_results['channels'][] = $new;
-            error_log("$new->label for $i->name");
         }
     }
     if (isset($c->invite_exceptions))
@@ -189,7 +189,7 @@ foreach ($server_bans as $ban)
     {
         $o = (object)[];
         $o->label = $ban->type_string;
-        $o->name = "<code>$ban->name</code>";
+        $o->name = $ban->name;
         $o->data = $ban->reason;
         $search_results['server_bans'][] = $o;
     }
@@ -198,7 +198,7 @@ foreach ($server_bans as $ban)
     {
         $o = (object)[];
         $o->label = $ban->type_string." reason";
-        $o->name = "<code>$ban->name</code>";
+        $o->name = $ban->name;
         $o->data = $ban->reason;
         $search_results['server_bans'][] = $o;
     }
@@ -218,7 +218,7 @@ foreach ($excepts as $ban)
     {
         $o = (object)[];
         $o->label = $ban->type_string;
-        $o->name = "<code>$ban->name</code>";
+        $o->name = $ban->name;
         $o->data = $ban->reason;
         $search_results['excepts'][] = $o;
     }
@@ -247,7 +247,7 @@ foreach ($name_bans as $ban)
     {
         $o = (object)[];
         $o->label = $ban->type_string;
-        $o->name = "<code>$ban->name</code>";
+        $o->name = $ban->name;
         $o->data = $ban->reason;
         $search_results['name_bans'][] = $o;
     }
@@ -275,7 +275,7 @@ foreach ($spamfilter as $ban)
     {
         $o = (object)[];
         $o->label = $ban->type_string;
-        $o->name = "<code>$ban->name</code>";
+        $o->name = $ban->name;
         $o->data = $ban->reason;
         $search_results['spamfilter'][] = $o;
     }
@@ -291,4 +291,5 @@ foreach ($spamfilter as $ban)
 
 
 
-echo json_encode($search_results);
+header("Content-type: application/json; charset=utf-8");
+echo json_encode($search_results, JSON_INVALID_UTF8_SUBSTITUTE);

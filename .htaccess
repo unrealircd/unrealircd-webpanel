@@ -1,4 +1,39 @@
 <Files "unrealircd">
-    Order allow,deny
-    Deny from all
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
 </Files>
+
+# Never serve copies of files that hold secrets or code as plain text:
+# editor backups and swap files (config.php~, .config.php.swp, config.php.bak, ...),
+# and the git, composer and docker metadata.
+# NOTE: this only works when Apache has AllowOverride enabled for this
+# directory. With nginx, or with "AllowOverride None" (the Debian/Ubuntu
+# default), add the same rules to the web server configuration, see
+# doc/webserver-security.md
+<FilesMatch "(~|\.(bak|old|orig|save|swp|swo|tmp|dist|inc|sql|log)|#)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+<FilesMatch "^(composer\.(json|lock)|Dockerfile|\.dockerignore|phpunit\.xml|\.gitignore|\.gitattributes)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule (^|/)\.(git|prism)(/|$) - [F,L]
+</IfModule>

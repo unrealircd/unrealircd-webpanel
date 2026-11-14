@@ -101,38 +101,38 @@ class PluginRepo
             $p->icon = $p->icon ?? get_config("base_url")."img/no-image-available.jpg";
                 ?>
             <!-- Widget for plugins -->
-            <div id="<?php echo $p->name ?>" class="<?php if ($installed) echo "installed" ?> plugin-card card text-dark bg-light ml-4 mb-3 w-25" style="min-width:300px">
+            <div id="<?php echo h($p->name) ?>" class="<?php if ($installed) echo "installed" ?> plugin-card card text-dark bg-light ml-4 mb-3 w-25" style="min-width:300px">
 
                 <!-- Card header -->
                 <div class="card-header">
                     <div class="media">
-                        <img class="align-self-start mr-3" src="<?php echo $p->icon ?>" height="50" width="55">
+                        <img class="align-self-start mr-3" src="<?php echo h($p->icon) ?>" height="50" width="55">
                         <div class="media-body">
                             <div style="position:relative;float:inline-end"><?php echo $this->ifInstalledLabel($p->name); $this->ifCompatible($p) ?></div>
-                            <h4 class="mb-0 mt-0"><?php echo $p->title ?></h4>
-                            <small>By <a href="<?php echo "mailto:$p->contact" ?>" target="_blank"><?php echo $p->author ?></a></small>
+                            <h4 class="mb-0 mt-0"><?php echo h($p->title) ?></h4>
+                            <small>By <a href="<?php echo h("mailto:".$p->contact) ?>" target="_blank"><?php echo h($p->author) ?></a></small>
                         </div>
                     </div>
                 </div>
 
                 <!-- Card body -->
                 <div class="card-body">
-                    <h6 class="card-title"><?php echo $p->title ?> <small><code>v<?php echo $p->version ?></code></small></h6>
-                    <p class="card-text"><?php echo $p->description ?><br><br>  </p>
+                    <h6 class="card-title"><?php echo h($p->title) ?> <small><code>v<?php echo h($p->version) ?></code></small></h6>
+                    <p class="card-text"><?php echo h($p->description) ?><br><br>  </p>
                 </div>
 
                 <!-- Card footer -->
                 <div class="card-footer d-flex justify-content-between">
                     <div id="justALonelyEmptyDivCryEmoji"></div>
                     <div>
-                        <div id="<?php echo $p->name ?>" class="more-info btn btn-info">More Info</div>
+                        <div id="<?php echo h($p->name) ?>" class="more-info btn btn-info">More Info</div>
                         <?php if ($upgradeRequired){
                             ?>
-                                <div id="<?php echo $p->name ?>coming-soon" class="btn-coming-soon btn btn-dark disabled">Panel Upgrade Required</div>
+                                <div id="<?php echo h($p->name) ?>coming-soon" class="btn-coming-soon btn btn-dark disabled">Panel Upgrade Required</div>
                             <?php
                         }
                         ?>
-                        <div id="<?php echo $p->name ?>install" <?php if ($upgradeRequired) echo 'style="display:none" '; ?> class="btn-install-plugin btn btn-primary">Install</div>
+                        <div id="<?php echo h($p->name) ?>install" <?php if ($upgradeRequired) echo 'style="display:none" '; ?> class="btn-install-plugin btn btn-primary">Install</div>
                     </div>
                 </div>
             </div>

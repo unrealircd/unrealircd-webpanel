@@ -16,10 +16,22 @@ $list = get_panel_user_roles_list();
  */
 $errors = [];
 $success = [];
+$builtin_roles = ["Super-Admin", "Read-Only"];
+
+/* Only keep permissions that exist, as a plain list of strings */
+function clean_role_permissions($perms) : array
+{
+    $valid = array_values(get_panel_user_permission_list());
+    $out = [];
+    foreach ((array)$perms as $p)
+        if (is_string($p) && in_array($p, $valid, true) && !in_array($p, $out, true))
+            $out[] = $p;
+    return $out;
+}
 
 
 
-if (isset($_POST['add_role_name']) && $role_name = $_POST['add_role_name'])
+if (isset($_POST['add_role_name']) && is_string($_POST['add_role_name']) && ($role_name = trim($_POST['add_role_name'])) !== "")
 {
     foreach ($list as $name => $u) // don't add it if it already exists
     {
@@ -33,14 +45,13 @@ if (isset($_POST['add_role_name']) && $role_name = $_POST['add_role_name'])
     {
         $msg = "Added user role \"$role_name\"";
         $permissions = [];
-        if (isset($_POST['use_dup_role']) && $dup = $_POST['dup_role']) // if they're duplicating a role
+        if (isset($_POST['use_dup_role']) && isset($_POST['dup_role']) && is_string($_POST['dup_role']) && isset($list[$_POST['dup_role']])) // if they're duplicating a role
         {
+            $dup = $_POST['dup_role'];
             $permissions = $list[$dup];
             $msg .= ", a duplicate of \"$dup\"";
         }
-        $clean_perms = [];
-            foreach($permissions as $k => $v)
-                $clean_perms[] = $v;
+        $clean_perms = clean_role_permissions(array_values((array)$permissions));
 
         $config['user_roles'][$role_name] = $clean_perms;
         write_config('user_roles');
@@ -51,17 +62,10 @@ if (isset($_POST['add_role_name']) && $role_name = $_POST['add_role_name'])
 }
 
 
-elseif (isset($_POST['del_role_name']) && $role_name = $_POST['del_role_name'])
+elseif (isset($_POST['del_role_name']) && is_string($_POST['del_role_name']) && $role_name = $_POST['del_role_name'])
 {
-    $found = 0;
-    foreach ($list as $name => $u) // don't add it if it already exists
-    {
-        if (!strcmp(to_slug($name),to_slug($role_name)))
-        {
-            $found = 1;
-            break;
-        }
-    }
+    /* Exact match only, and never the built-in roles */
+    $found = isset($config['user_roles'][$role_name]) && !in_array($role_name, $builtin_roles, true);
     if ($found) // so far so good
     {
         unset($config['user_roles'][$role_name]);
@@ -73,24 +77,18 @@ elseif (isset($_POST['del_role_name']) && $role_name = $_POST['del_role_name'])
         $errors[] = "Could not delete role \"$role_name\": Role does not exist.";
 }
 
-elseif (isset($_POST['update_role']) && $role_name = $_POST['update_role'])
+elseif (isset($_POST['update_role']) && is_string($_POST['update_role']) && $role_name = $_POST['update_role'])
 {
-    $found = 0;
-    foreach ($list as $name => $u) // don't add it if it already exists
-    {
-        if (!strcmp(to_slug($name),to_slug($role_name)))
-        {
-            $found = 1;
-            break;
-        }
-    }
+    /* Exact match only, and never the built-in roles */
+    $found = isset($config['user_roles'][$role_name]) && !in_array($role_name, $builtin_roles, true);
     if (!$found) // so far so good
     {
         $errors[] = "Could not update role \"$role_name\": Role does not exist.";
     }
     else
     {
-        $config['user_roles'][$role_name] = $_POST['permissions'];
+        /* No box ticked means no permissions (an empty list, not NULL) */
+        $config['user_roles'][$role_name] = clean_role_permissions($_POST['permissions'] ?? []);
         write_config('user_roles');
         $success[] = "Successfully updated role \"$role_name\"";
         $list = get_panel_user_roles_list(); // refresh
@@ -133,7 +131,7 @@ elseif (isset($_POST['update_role']) && $role_name = $_POST['update_role'])
                 <option value="0" selected>None</option>
                 <?php
                     foreach($list as $s => $l)
-                        echo "<option value=\"$s\">$s</option>";
+                        echo "<option value=\"".h($s)."\">".h($s)."</option>";
                 ?>
             </select>
         </div>

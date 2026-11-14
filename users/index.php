@@ -68,9 +68,17 @@ if (!empty($_POST) && $can_ban)
 						else
 							Message::Fail("Could not kill $user->name: $rpc->error");
 					}
-					else if ($rpc->serverban()->add($user->id, $bantype, $duration, $reason))
-						Message::Success($user->name . " (*@" . $user->hostname . ") has been $bantype" . "d $msg_msg: $reason");
-
+					else if (!in_array($bantype, ["gline", "gzline"], true))
+						Message::Fail("Unknown action");
+					else if ($tkl = $rpc->serverban()->add($user->id, $bantype, $duration, $reason))
+					{
+						/* The IRC server decides the mask (set::manual-ban-target,
+						 * and always the IP for a GZ-Line). Show the mask that it
+						 * really used, not one that we guess.
+						 */
+						$mask = (is_object($tkl) && isset($tkl->name)) ? $tkl->name : "(unknown mask)";
+						Message::Success("$user->name has been $bantype" . "d $msg_msg on $mask: $reason");
+					}
 					else
 						Message::Fail("Could not add $bantype against $name: $rpc->error");
 				}
@@ -180,8 +188,9 @@ Click on a username to view more information.
 			</button>
 		</div>
 		<div class="modal-body">
-			Are you sure you want to do this?
-			
+			<p id="ban_confirmation_text">Are you sure you want to do this?</p>
+			<ul id="ban_confirmation_targets"></ul>
+			<small id="ban_confirmation_note" class="text-muted"></small>
 		</div>
 		<div class="modal-footer">
 			<button id="CloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -244,7 +253,7 @@ Click on a username to view more information.
 			event.preventDefault();
 			var { clientX: mouseX, clientY: mouseY } = event;
 			var name = $('#' + scope.id).attr('value')
-			document.getElementById("rclick_opt1").innerHTML = 'View details for ' + name;
+			document.getElementById("rclick_opt1").textContent = 'View details for ' + name;
 			rclickmenu.style.top = `${mouseY}px`;
 			rclickmenu.style.left = `${mouseX}px`;
 			rclickmenu.classList.remove("visible");
@@ -266,7 +275,7 @@ $(document).ready( function () {
 			headerOffset: 53
 		},
 		'ajax': {
-			'url': '<?php echo get_config("base_url"); ?>api/users.php',
+			'url': BASE_URL + 'api/users.php',
 			dataSrc: ''
 		},
 		'pageLength':100,
@@ -296,7 +305,40 @@ $(document).ready( function () {
 		}
 	}
 
-	$('#data_list').DataTable(args);
+	var users_table = $('#data_list').DataTable(args);
+
+	/* Before applying, show exactly who is affected and what will be banned.
+	 * Everything is inserted as text, the values come from IRC.
+	 */
+	$('#ban_confirmation').on('show.bs.modal', function () {
+		var action = $('#bantype').val();
+		var list = document.getElementById('ban_confirmation_targets');
+		list.textContent = '';
+		var n = 0;
+		document.querySelectorAll('input[name="userch[]"]:checked').forEach(function (cb) {
+			var row = users_table.row($(cb).closest('tr')).data();
+			if (!row)
+				return;
+			n++;
+			var li = document.createElement('li');
+			var target;
+			if (action == 'gzline')
+				target = 'GZ-Line on *@' + (row.ip_raw ? row.ip_raw : '(no IP)');
+			else if (action == 'gline')
+				target = 'G-Line on the mask the server picks (default *@' + row.host_raw + ', IP ' + (row.ip_raw ? row.ip_raw : 'none') + ')';
+			else if (action == 'kill')
+				target = 'Kill';
+			else
+				target = '(no action chosen)';
+			li.textContent = row.nick_raw + ': ' + target;
+			list.appendChild(li);
+		});
+		document.getElementById('ban_confirmation_text').textContent =
+			n ? 'Are you sure you want to do this to ' + n + ' user(s)?' : 'No users are selected.';
+		document.getElementById('ban_confirmation_note').textContent =
+			(action == 'gline' || action == 'gzline') ?
+			'A ban hits every user that matches the mask, not only the selected users. A G-Line uses the IRC server\'s set::manual-ban-target setting; the mask that was really used is shown after Apply.' : '';
+	});
 } );
 
 </script>

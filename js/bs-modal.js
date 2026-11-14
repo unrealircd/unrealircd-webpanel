@@ -91,7 +91,7 @@ function create_plugin_info_modal(modname)
             {
                 found = true;
                 const modal = bsModal(
-                    "<i>Information about " + data.list[i].title + "</i>", // title
+                    "<i>Information about " + escapeHTML(data.list[i].title) + "</i>", // title
                     "<div class=\"" + data.list[i].name + "_screenshots\"><i class=\"fa fa-spinner\" aria-hidden=\"true\"></i></div><div class=\"" + data.list[i].name + "_description\"><i class=\"fa fa-spinner\" aria-hidden=\"true\"></i></div>",
                     "<div id=\""+modname+"closebtn\" class=\"btn btn-danger\">Close</div>", null, true, true, true
                 );
@@ -112,27 +112,27 @@ function create_plugin_info_modal(modname)
                                     <table class="table">
                                         <tr>
                                                 <th scope="row">Title</th>
-                                                <td>`+data.list[i].title+`</td>
+                                                <td>`+escapeHTML(data.list[i].title)+`</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Description</th>
-                                                <td>`+data.list[i].description+`</td>
+                                                <td>`+escapeHTML(data.list[i].description)+`</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Version</th>
-                                                <td>`+data.list[i].version+`</td>
+                                                <td>`+escapeHTML(data.list[i].version)+`</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Author</th>
-                                                <td>`+data.list[i].author+`</td>
+                                                <td>`+escapeHTML(data.list[i].author)+`</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Min Version Required</th>
-                                                <td>`+data.list[i].minver+`</td>
+                                                <td>`+escapeHTML(data.list[i].minver)+`</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Max Version</th>
-                                                <td>`+data.list[i].maxver+`</td>
+                                                <td>`+escapeHTML(data.list[i].maxver)+`</td>
                                             </tr>
                                             
                                         </table></small>
@@ -182,8 +182,10 @@ function requestInstall(name, uninstall = false)
         }
     };
 
-    xhr.open('GET', BASE_URL + 'api/plugin.php?'+inst+'=' + name, true);
-    xhr.send();
+    /* POST, so that the CSRF token is needed (added in inc/header.php) */
+    xhr.open('POST', BASE_URL + 'api/plugin.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.send(encodeURIComponent(inst) + '=' + encodeURIComponent(name));
     return true;
 }
 
@@ -200,7 +202,7 @@ function create_plugin_info_modal(modname)
             {
                 found = true;
                 const modal = bsModal(
-                    "<i>Information about " + data.list[i].title + "</i>", // title
+                    "<i>Information about " + escapeHTML(data.list[i].title) + "</i>", // title
                     "<div class=\"" + data.list[i].name + "_screenshots\"><i class=\"fa fa-spinner\" aria-hidden=\"true\"></i></div><div class=\"" + data.list[i].name + "_description\"><i class=\"fa fa-spinner\" aria-hidden=\"true\"></i></div>",
                     "<div id=\""+modname+"closebtn\" class=\"btn btn-danger\">Close</div>", null, true, true, true
                 );
@@ -221,27 +223,27 @@ function create_plugin_info_modal(modname)
                                     <table class="table">
                                         <tr>
                                                 <th scope="row">Title</th>
-                                                <td>`+data.list[i].title+`</td>
+                                                <td>`+escapeHTML(data.list[i].title)+`</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Description</th>
-                                                <td>`+data.list[i].description+`</td>
+                                                <td>`+escapeHTML(data.list[i].description)+`</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Version</th>
-                                                <td>`+data.list[i].version+`</td>
+                                                <td>`+escapeHTML(data.list[i].version)+`</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Author</th>
-                                                <td>`+data.list[i].author+`</td>
+                                                <td>`+escapeHTML(data.list[i].author)+`</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Min Version Required</th>
-                                                <td>`+data.list[i].minver+`</td>
+                                                <td>`+escapeHTML(data.list[i].minver)+`</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Max Version</th>
-                                                <td>`+data.list[i].maxver+`</td>
+                                                <td>`+escapeHTML(data.list[i].maxver)+`</td>
                                             </tr>
                                             
                                         </table></small>

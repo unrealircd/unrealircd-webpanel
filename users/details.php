@@ -8,7 +8,7 @@ $nickname = "";
 $nick = NULL;
 if (isset($_GET['nick']))
 {
-	$nickname = $_GET['nick'];
+	$nickname = is_string($_GET['nick']) ? $_GET['nick'] : "";
 	$nick = $rpc->user()->get($nickname);
 	if (!$nick)
 	{
@@ -19,12 +19,12 @@ if (isset($_GET['nick']))
 	}
 }
 ?>
-<title><?php echo $title; ?></title>
-<h4><?php echo $title; ?></h4>
+<title><?php echo h($title); ?></title>
+<h4><?php echo h($title); ?></h4>
 <br>
 <form method="get" action="details.php">
   <div class="input-group short-form-control">
-    <input class="short-form-control" id="nick" name="nick" type="text" value=<?php echo $nickname; ?>>
+    <input class="short-form-control" id="nick" name="nick" type="text" value="<?php echo h($nickname); ?>">
     <div class="input-group-append">
       <br><button type="submit" class="btn btn-primary">Go</button>
     </div>

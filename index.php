@@ -31,9 +31,23 @@ $num_of_panel_admins = count($userlist);
 $current_user = unreal_get_current_user();
 if (isset($current_user->user_meta['hibp']))
 {
-	$num = $current_user->user_meta['hibp'];
-	Message::Fail("<h6><strong>Urgent</strong></h6>","Your password was found in a data breach $num time(s).",
-		"Please <strong><a href=\"".get_config("base_url")."settings/user-edit.php\">update your password</a></strong> immediately");
+	$num = (int)$current_user->user_meta['hibp'];
+	Message::Fail(new RawHTML("<h6><strong>Urgent</strong></h6>"),"Your password was found in a data breach $num time(s).",
+		new RawHTML("Please <strong><a href=\"".h(get_config("base_url"))."settings/user-edit.php\">update your password</a></strong> immediately"));
+}
+if (current_user_can(PERMISSION_MANAGE_USERS))
+{
+	/* Copies of the secret files with another extension are served as
+	 * plain text by many web server setups (see doc/webserver-security.md)
+	 */
+	$exposed = panel_find_exposed_secret_copies();
+	if (!empty($exposed))
+		Message::Fail(new RawHTML("<h6><strong>Security warning</strong></h6>"),
+			"These files may be readable by anyone over the web, and may contain your database password and encryption key:",
+			implode(", ", $exposed),
+			"Delete them, or move them out of the web root. See doc/webserver-security.md");
+	if (file_exists(UPATH."/config/config.php") && file_exists(UPATH."/config.php"))
+		Message::Warning("There is an old config.php in the panel's main directory. It is no longer used: delete it.");
 }
 ?>
 <style>
@@ -116,7 +130,7 @@ if (isset($current_user->user_meta['hibp']))
 
 		<div class="row mt-3">
 			<div class="col-sm mb-3">
-					<a class="card frosted-glass-success text-center" href="<?php echo get_config("base_url"); ?>users/">
+					<a class="card frosted-glass-success text-center" href="<?php echo h(get_config("base_url")); ?>users/">
 						<div class="card-body text-white">
 							<div class="row text-center">
 								<span id="userRecord" class="position-absolute badge rounded-pill badge-warning" hidden>
@@ -136,7 +150,7 @@ if (isset($current_user->user_meta['hibp']))
 					</a>
 				</div>
 				<div class="col-sm mb-3">
-					<a class="card frosted-glass-info text-center" href="<?php echo get_config("base_url"); ?>channels/">
+					<a class="card frosted-glass-info text-center" href="<?php echo h(get_config("base_url")); ?>channels/">
 						<div class="card-body text-white">
 							<div class="row text-center">
 								<div class="col">
@@ -153,7 +167,7 @@ if (isset($current_user->user_meta['hibp']))
 					</a>
 				</div>
 				<div class="col-sm mb-3">
-					<a class="card frosted-glass-warning text-center" href="<?php echo get_config("base_url"); ?>users/">
+					<a class="card frosted-glass-warning text-center" href="<?php echo h(get_config("base_url")); ?>users/">
 						<div class="card-body text-dark">
 							<div class="row text-center">
 								<div class="col">
@@ -171,7 +185,7 @@ if (isset($current_user->user_meta['hibp']))
 					</a>
 				</div>
 				<div class="col-sm mb-3">
-					<a class="card frosted-glass-secondary text-center" href="<?php echo get_config("base_url"); ?>servers/">
+					<a class="card frosted-glass-secondary text-center" href="<?php echo h(get_config("base_url")); ?>servers/">
 						<div class="card-body text-white">
 							<div class="row text-center">
 								<div class="col">
@@ -193,7 +207,7 @@ if (isset($current_user->user_meta['hibp']))
 
 			<div class="row">
 				<div class="col-sm mb-3">
-					<a class="card frosted-glass-danger text-center" href="<?php echo get_config("base_url"); ?>server-bans/">
+					<a class="card frosted-glass-danger text-center" href="<?php echo h(get_config("base_url")); ?>server-bans/">
 						<div class="card-body text-white">
 							<div class="row text-center">
 								<div class="col">
@@ -210,7 +224,7 @@ if (isset($current_user->user_meta['hibp']))
 					</a>
 				</div>
 				<div class="col-sm mb-3">
-					<a class="card frosted-glass-secondary text-center" href="<?php echo get_config("base_url"); ?>server-bans/spamfilter.php">
+					<a class="card frosted-glass-secondary text-center" href="<?php echo h(get_config("base_url")); ?>server-bans/spamfilter.php">
 						<div class="card-body text-white">
 							<div class="row text-center">
 								<div class="col">
@@ -227,7 +241,7 @@ if (isset($current_user->user_meta['hibp']))
 					</a>
 				</div>
 				<div class="col-sm mb-3">
-					<a class="card frosted-glass-info text-center" href="<?php echo get_config("base_url"); ?>server-bans/ban-exceptions.php">
+					<a class="card frosted-glass-info text-center" href="<?php echo h(get_config("base_url")); ?>server-bans/ban-exceptions.php">
 						<div class="card-body text-white">
 							<div class="row text-center">
 								<div class="col">
@@ -244,7 +258,7 @@ if (isset($current_user->user_meta['hibp']))
 					</a>
 				</div>
 				<div class="col-sm mb-3">
-					<a class="card frosted-glass-success text-center" href="<?php echo get_config("base_url"); ?>servers">
+					<a class="card frosted-glass-success text-center" href="<?php echo h(get_config("base_url")); ?>servers">
 						<div class="card-body text-white">
 							<div class="row text-center">
 								<div class="col">
@@ -277,17 +291,17 @@ if (isset($current_user->user_meta['hibp']))
 			return;
 		}
 		stats_tick = Date.now();
-		document.getElementById("userRecord").innerHTML = "Record: "+data.user.record;
-		document.getElementById("stats_user_total").innerHTML = data.user.total;
+		document.getElementById("userRecord").textContent = "Record: "+data.user.record;
+		document.getElementById("stats_user_total").textContent = data.user.total;
 		document.getElementById("stats_user_total").classList.remove('numberDisplay');
 		document.getElementById("stats_user_total").classList.add('numberDisplay');
-		document.getElementById("stats_channel_total").innerHTML = data.channel.total;
-		document.getElementById("stats_oper_total").innerHTML = data.user.oper;
-		document.getElementById("stats_server_total").innerHTML = data.server.total;
-		document.getElementById("num_server_bans").innerHTML = data.server_ban.server_ban;
-		document.getElementById("num_spamfilter_entries").innerHTML = data.server_ban.spamfilter;
-		document.getElementById("num_ban_exceptions").innerHTML = data.server_ban.server_ban_exception;
-		document.getElementById("stats_uline_total").innerHTML = data.user.ulined + "/" + data.server.ulined;
+		document.getElementById("stats_channel_total").textContent = data.channel.total;
+		document.getElementById("stats_oper_total").textContent = data.user.oper;
+		document.getElementById("stats_server_total").textContent = data.server.total;
+		document.getElementById("num_server_bans").textContent = data.server_ban.server_ban;
+		document.getElementById("num_spamfilter_entries").textContent = data.server_ban.spamfilter;
+		document.getElementById("num_ban_exceptions").textContent = data.server_ban.server_ban_exception;
+		document.getElementById("stats_uline_total").textContent = data.user.ulined + "/" + data.server.ulined;
 	}
 	function checkStatsOutdated()
 	{
@@ -333,7 +347,7 @@ if (isset($current_user->user_meta['hibp']))
 
 			<div class="row">
 				<div class="col-sm mb-3">
-					<a class="card frosted-glass-success text-center" href="<?php echo get_config("base_url"); ?>settings">
+					<a class="card frosted-glass-success text-center" href="<?php echo h(get_config("base_url")); ?>settings">
 						<div class="card-body text-white">
 							<div class="row text-center">
 								<div class="col">
@@ -350,7 +364,7 @@ if (isset($current_user->user_meta['hibp']))
 					</a>
 				</div>
 				<div class="col-sm mb-3">
-					<a class="card frosted-glass-info text-center" href="<?php echo get_config("base_url"); ?>settings/plugins.php">
+					<a class="card frosted-glass-info text-center" href="<?php echo h(get_config("base_url")); ?>settings/plugins.php">
 						<div class="card-body text-light">
 							<div class="row text-center">
 								<div class="col">

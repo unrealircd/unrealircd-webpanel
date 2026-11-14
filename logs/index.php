@@ -62,6 +62,11 @@ require_once "../inc/header.php";
 
 <script src="../js/json-formatter.umd.js"></script>
 <script>
+/* JSONFormatter turns every string that starts with "http" into a link.
+ * Log entries contain text from IRC users (eg a realname), so never do that.
+ */
+Object.defineProperty(JSONFormatter.prototype, 'isUrl', { get: function () { return false; }, configurable: true });
+
 let data_list_table = null;
 
 function level2color(level)
@@ -74,13 +79,20 @@ function level2color(level)
 		return 'red';
 }
 
+/* All log data can contain text from ordinary IRC users (quit reasons,
+ * realnames, failed OPER names, ...), so every render function below
+ * escapes its output, also for the 'filter' type (DataTables uses
+ * innerHTML on filter data that contains a '&').
+ */
 function log_colorizer(data, type, row)
 {
 	if (type == 'display')
 	{
 		var color = level2color(row['Level']);
-		data = '<span style="color: '+color+'">' + data + '</span>';
+		return '<span style="color: '+color+'">' + escapeHTML(data) + '</span>';
 	}
+	if (type == 'filter')
+		return escapeHTML(data);
 	return data;
 }
 
@@ -88,8 +100,10 @@ function log_timestamp(data, type, row)
 {
 	if (type == 'display')
 	{
-		return moment.utc(data).local().format('HH:mm:ss');
+		return escapeHTML(moment.utc(data).local().format('HH:mm:ss'));
 	}
+	if (type == 'filter')
+		return escapeHTML(data);
 	return data;
 }
 
@@ -123,16 +137,13 @@ function resize_check()
 
 function log_text(data, type, row)
 {
-	var esc = function (t) {
-	    return ('' + t)
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;');
-	};
+	var esc = escapeHTML;
 
+	if (type == 'filter')
+		return esc(data);
 	if (type != 'display')
 		return data;
+	data = (data === null || data === undefined) ? '' : ('' + data);
 
 	var color = level2color(row['Level']);
 	var cutoff;
@@ -149,14 +160,15 @@ function log_text(data, type, row)
 	{
 		// stolen from ellipsis
 		var shortened = data.substr(0, cutoff - 1);
+		/* cut first, then escape (cutting escaped text could break an entity) */
 		data = '<span class="ellipsis" style="color: '+color+'" title="' +
 		    esc(data) +
 		    '">' +
-		    shortened +
+		    esc(shortened) +
 		    '&#8230;</span>';
 	} else {
 		// otherwise just like log_colorizer...
-		data = '<span style="color: '+color+'">' + data + '</span>';
+		data = '<span style="color: '+color+'">' + esc(data) + '</span>';
 	}
 	return data;
 }
@@ -175,7 +187,7 @@ $(document).ready( function () {
 			{ 'data': 'Event', 'responsivePriority': 5, 'render': log_colorizer },
 			//{ 'data': 'Message', 'responsivePriority': 2, 'render': DataTable.render.ellipsis(100, false) },
 			{ 'data': 'Message', 'responsivePriority': 2, 'render': log_text },
-			{ 'data': 'Raw', 'visible': false, 'searchable': true },
+			{ 'data': 'Raw', 'visible': false, 'searchable': true, 'render': DataTable.render.text() },
 		],
 		'pageLength':100,
 		'order':[[0,'desc']],
@@ -203,7 +215,7 @@ $(document).ready( function () {
 	resize_check();
 	window.addEventListener('resize', resize_check);
 
-	StartLogStream('<?php echo get_config('base_url'); ?>api/log.php');
+	StartLogStream(BASE_URL + 'api/log.php');
 
 	$('#data_list').on( 'click', 'td', function () {
 		view_log_entry(this);
@@ -213,14 +225,15 @@ $(document).ready( function () {
 function view_log_entry(e)
 {
 	var data = data_list_table.row(e).data();
-	$('#view_log_entry_time').html('<code>' + data['Time'] + '</code>')
-	$('#view_log_entry_level').html('<code>' + data['Level'] + '</code>')
-	$('#view_log_entry_subsystem').html('<code>' + data['Subsystem'] + '</code>')
-	$('#view_log_entry_event').html('<code>' + data['Event'] + '</code>')
-	$('#view_log_entry_message').html('<pre class="tdwrap">' + data['Message'] + '</pre>')
-	j = JSON.parse(data['Raw']);
+	/* Build the elements and set the values as text, never as HTML */
+	$('#view_log_entry_time').empty().append($('<code>').text(data['Time']));
+	$('#view_log_entry_level').empty().append($('<code>').text(data['Level']));
+	$('#view_log_entry_subsystem').empty().append($('<code>').text(data['Subsystem']));
+	$('#view_log_entry_event').empty().append($('<code>').text(data['Event']));
+	$('#view_log_entry_message').empty().append($('<pre class="tdwrap">').text(data['Message']));
+	var j = JSON.parse(data['Raw']);
 	j = new JSONFormatter(j, 99);
-	$('#view_log_entry_json').html(j.render());
+	$('#view_log_entry_json').empty().append(j.render());
 	$('#view_log_entry').modal('show');
 }
 </script>

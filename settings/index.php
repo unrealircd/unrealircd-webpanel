@@ -19,23 +19,36 @@ if (isset($_POST))
 	if (isset($p['delete_user']) && current_user_can(PERMISSION_MANAGE_USERS))
 	{
 		$info = [];
-		foreach ($p['userch'] as $id)
+		$msg = "Message::Fail";
+		foreach ((array)($p['userch'] ?? []) as $id)
 		{
 			$user = new PanelUser(NULL, $id);
 			$us = unreal_get_current_user();
 			$deleted = delete_user($id, $info);
 			if ($us->id == $user->id) // if it's the current user
 			{
-				session_destroy();
-				header("Location: " . get_config("base_url") . "plugins/sql_db/login.php");
+				/* (the page header was already sent, so no Location: header) */
+				panel_session_logout();
+				echo "<script>window.location = BASE_URL + 'login/';</script>";
 				die();
 			}
-			$msg = ($deleted = 1) ? "Message::Success" : "Message::Fail";
+			$msg = ($deleted == 1) ? "Message::Success" : "Message::Fail";
 		}
-		$msg($info);
+		if (!empty($info))
+			$msg($info);
 		unset($info);
 	}
 
+	if (isset($p['do_add_user']) && current_user_can(PERMISSION_MANAGE_USERS))
+	{
+		$user = [];
+		/* Only accept roles that exist */
+		if (!isset($p['user_role']) || !is_string($p['user_role']) || !array_key_exists($p['user_role'], get_panel_user_roles_list()))
+		{
+			Message::Fail("Failed to create user: unknown role");
+			$p['do_add_user'] = NULL;
+		}
+	}
 	if (isset($p['do_add_user']) && current_user_can(PERMISSION_MANAGE_USERS))
 	{
 		$user = [];
@@ -101,7 +114,7 @@ Click on a username to view more information.
 				<select name="user_role" class="custom-select form-control" id="user_role" style="width:170%">
 					<?php
 						foreach(get_panel_user_roles_list() as $s => $l)
-							echo "<option value=\"$s\">$s</option>";
+							echo "<option value=\"".h($s)."\">".h($s)."</option>";
 					?>
 				</select>
 			</div>
@@ -153,15 +166,20 @@ Click on a username to view more information.
 		foreach($userlist as $user)
 		{
 			
-			echo "<td scope=\"col\"><input type=\"checkbox\" value='" .$user->id . "' name=\"userch[]\"></td>";
-			echo "<td scope=\"col\"><a href=\"".get_config("base_url")."settings/user-edit.php?id=$user->id\">$user->username</a></td>";
-			echo "<td scope=\"col\"><code>".((isset($user->user_meta['role'])) ? $user->user_meta['role'] : "")."</code></td>";
-			echo "<td scope=\"col\">".$user->first_name."</td>";
-			echo "<td scope=\"col\">".$user->last_name."</td>";
-			echo "<td scope=\"col\"><a href=\"mailto:$user->email\">$user->email</a></td>";
-			echo "<td scope=\"col\"><code>".$user->created."</code></td>";
-			echo "<td scope=\"col\">".$user->bio."</td>";
-			$last = (isset($user->user_meta['last_login'])) ? "<code>".$user->user_meta['last_login'] . "</code> <span class=\"badge rounded-pill badge-dark\">".how_long_ago($user->user_meta['last_login'])."</span>" : "none";
+			echo "<tr>";
+			echo "<td scope=\"col\"><input type=\"checkbox\" value=\"" .h($user->id) . "\" name=\"userch[]\"></td>";
+			echo "<td scope=\"col\"><a href=\"".h(get_config("base_url")."settings/user-edit.php?id=".urlencode($user->id))."\">".h($user->username)."</a></td>";
+			echo "<td scope=\"col\"><code>".((isset($user->user_meta['role'])) ? h($user->user_meta['role']) : "")."</code></td>";
+			echo "<td scope=\"col\">".h($user->first_name)."</td>";
+			echo "<td scope=\"col\">".h($user->last_name)."</td>";
+			$email = (string)$user->email;
+			if (filter_var($email, FILTER_VALIDATE_EMAIL))
+				echo "<td scope=\"col\"><a href=\"mailto:".h($email)."\">".h($email)."</a></td>";
+			else
+				echo "<td scope=\"col\">".h($email)."</td>";
+			echo "<td scope=\"col\"><code>".h($user->created)."</code></td>";
+			echo "<td scope=\"col\">".h($user->bio)."</td>";
+			$last = (isset($user->user_meta['last_login'])) ? "<code>".h($user->user_meta['last_login']) . "</code> <span class=\"badge rounded-pill badge-dark\">".h(how_long_ago($user->user_meta['last_login']))."</span>" : "none";
 			echo "<td scope=\"col\">$last</td>";
 			echo "</tr>\n";
 		}

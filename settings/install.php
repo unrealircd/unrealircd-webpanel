@@ -1,23 +1,18 @@
 <?php
-/* Log the user out if it was logged in.
- * This is mostly for devs running the install screen and
- * fater succeeding the first screen suddenly being logged in
- * with old credentials/uid weirdness.
- * Code from example #1 at https://www.php.net/manual/en/function.session-destroy.php
- */
-session_start();
-$_SESSION = Array();
-if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000,
-        $params["path"], $params["domain"],
-        $params["secure"], $params["httponly"]
-    );
-}
-session_destroy();
-
+define('PANEL_PAGE_INSTALLER', 1);
 require_once "../inc/common.php";
 require_once "../misc/pwa-manifest.php";
+
+/* Log the user out if it was logged in, but only while the panel is
+ * not configured yet. This is mostly for devs running the install
+ * screen and after succeeding the first screen suddenly being logged in
+ * with old credentials/uid weirdness.
+ * (On a configured panel this page must do nothing at all: otherwise
+ *  any website could log users out by linking to it.)
+ * The session itself is kept, it holds the CSRF token of the form.
+ */
+if (!panel_is_configured())
+	panel_session_logout();
 
 /* Get the base url */
 $uri = $_SERVER['REQUEST_URI'];
@@ -64,7 +59,7 @@ $writable = (is_writable("../config/")) ? true: false;
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 <script src="../js/unrealircd-admin.js"></script>
 <title>UnrealIRCd Panel</title>
-<link rel="icon" type="image/png" href="<?php echo get_config("base_url"); ?>img/unreal.png">
+<link rel="icon" type="image/png" href="../img/unreal.png">
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <!-- Popper.JS -->
@@ -79,21 +74,31 @@ $writable = (is_writable("../config/")) ? true: false;
 		<div class="container mt-4"><div class="row justify-content-center"><img src="../img/unreal.jpg" width="35px" height="35px" style="margin-right: 15px"><h3>UnrealIRCd Admin Panel Configuration and Setup</h3></div></div>
 <?php
 
-	if (file_exists("../config/config.php"))
+	/* Also refuses when only the pre-2023 config.php in the panel root
+	 * exists: the panel still loads that one, so it IS configured.
+	 */
+	if (panel_is_configured())
 	{
 		?><br><div class="container"><?php Message::Fail("You're already configured!"); ?>
 			<br>
-			<a class="text-center btn btn-primary" href="<?php echo BASE_URL; ?>">Take me home!</a>
+			<a class="text-center btn btn-primary" href="<?php echo h(BASE_URL); ?>">Take me home!</a>
 		</div>
 		<?php
 		return;
 	}
+	elseif ($panel_csrf_failed)
+	{
+		?><br><div class="container"><?php Message::Fail("The setup form had expired. Please reload this page and fill it in again."); ?></div><?php
+		return;
+	}
 	elseif (isset($_POST) && !empty($_POST))
 	{
-		?><br><div class="container"><?php 
+		?><br><div class="container"><?php
 		$opts = (object)$_POST;
-		/* pre-load the appropriate auth plugin */
-		$auth_method = (isset($opts->auth_method)) ? $opts->auth_method : NULL;
+		/* pre-load the appropriate auth plugin. Only the two known
+		 * backends: the value is used in a file path.
+		 */
+		$auth_method = (isset($opts->auth_method) && is_string($opts->auth_method)) ? $opts->auth_method : NULL;
 		$auth_method_name = NULL;
 		switch($auth_method)
 		{
@@ -103,6 +108,8 @@ $writable = (is_writable("../config/")) ? true: false;
 			case "file_db":
 				$auth_method_name = "FileDB";
 				break;
+			default:
+				$auth_method = NULL;
 		}
 		if ($auth_method)
 			$am = new Plugin($auth_method);
@@ -173,7 +180,7 @@ $writable = (is_writable("../config/")) ? true: false;
 		?>
 		<br>
 		The configuration file has been written. Now, log in to the panel to proceed with the rest of the installation.<br><br>
-		<a class="text-center btn btn-primary" href="<?php echo BASE_URL; ?>">Let's go!</a></div>
+		<a class="text-center btn btn-primary" href="<?php echo h(BASE_URL); ?>">Let's go!</a></div>
 		<?php
 		return;
 	}
@@ -198,6 +205,7 @@ $writable = (is_writable("../config/")) ? true: false;
 
 <!-- Form start -->
 <form method="post">
+<?php echo panel_csrf_field(); ?>
 <div id="page3" class="container">
 	<h5>Database Backend</h5>
 	<br>
@@ -337,7 +345,8 @@ $writable = (is_writable("../config/")) ? true: false;
 </div>
 
 <script>
-	let BASE_URL = '<?php echo BASE_URL; ?>';
+	let BASE_URL = <?php echo js_value(BASE_URL); ?>;
+	const CSRF_TOKEN = <?php echo js_value(panel_csrf_token()); ?>;
 	let chmod_help = document.getElementById('chmod_help');
 
 	if (chmod_help)
@@ -409,7 +418,7 @@ $writable = (is_writable("../config/")) ? true: false;
 		sql_test_conn.innerHTML = "Checking...";
 		fetch(BASE_URL + 'api/installation.php', {
 		      method:'POST',
-		      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+		      headers: {'Content-Type':'application/x-www-form-urlencoded', 'X-CSRF-Token': CSRF_TOKEN},
 		      body: 'method=sql&'+
 		            'host='+encodeURIComponent(sql_host.value)+
 		            '&database='+encodeURIComponent(sql_db.value)+
@@ -430,7 +439,7 @@ $writable = (is_writable("../config/")) ? true: false;
 			else
 			{
 				sql_test_conn.innerHTML = "Failed!";
-				$('#db_error_text').html(data.error ? data.error : 'An error occured while connecting to the DB server');
+				$('#db_error_text').text(data.error ? data.error : 'An error occured while connecting to the DB server');
 				$('#db_error_modal').modal();
 				setTimeout(function() {
 					sql_test_conn.innerHTML = "Test connection";

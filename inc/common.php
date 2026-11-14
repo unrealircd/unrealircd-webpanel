@@ -45,6 +45,9 @@ function check_requirements()
 check_requirements(); /* very early !! */
 
 define('UPATH', dirname(__DIR__));
+require_once UPATH . "/inc/session.php";
+require_once UPATH . "/inc/install-checks.php";
+$panel_csrf_failed = false;
 
 function get_config($setting)
 {
@@ -95,26 +98,6 @@ function get_current_page(&$title)
 		if ($ret !== null)
 			return $ret;
 	}
-}
-
-function page_requires_no_config()
-{
-	if (str_ends_with($_SERVER['SCRIPT_FILENAME'],"install.php") ||
-		str_ends_with($_SERVER['SCRIPT_FILENAME'],"installation.php"))
-	{
-		return TRUE;
-	}
-	return FALSE;
-}
-
-function page_requires_no_login()
-{
-	if (str_ends_with($_SERVER['SCRIPT_FILENAME'],"login/index.php") ||
-		page_requires_no_config())
-	{
-		return TRUE;
-	}
-	return FALSE;
 }
 
 function read_config_file()
@@ -392,6 +375,24 @@ function upgrade_check()
 			"Primary" => $config['unrealircd']];
 		write_config("unrealircd");
 	}
+	/* - encrypting RPC passwords that were stored in plaintext
+	 *   (servers added before the panel encrypted them)
+	 */
+	if (isset($config['unrealircd']) && is_array($config['unrealircd']))
+	{
+		$changed = false;
+		foreach ($config['unrealircd'] as $name => $e)
+		{
+			if (is_array($e) && isset($e['rpc_password']) && is_string($e['rpc_password']) &&
+			    !str_starts_with($e['rpc_password'], "secret:"))
+			{
+				$config['unrealircd'][$name]['rpc_password'] = secret_encrypt($e['rpc_password']);
+				$changed = true;
+			}
+		}
+		if ($changed)
+			write_config("unrealircd");
+	}
 
 	$version = get_version();
 	if (!isset($config['webpanel_version']))
@@ -410,30 +411,74 @@ function upgrade_check()
 	}
 }
 
+/** Start the session and see if someone is logged in.
+ * If $user is given, that user has just logged in (correct password).
+ */
 function panel_start_session($user = false)
 {
-	if (!isset($_SESSION))
+	if (!panel_session_begin())
+		return false;
+
+	if ($user !== false)
 	{
-		session_set_cookie_params(86400); // can't set this to session_timeout due to catch-22
-		session_start();
+		$timeout = 3600;
+		if (isset($user->user_meta['session_timeout']))
+			$timeout = (INT)$user->user_meta['session_timeout'];
+		panel_session_login($user->id, $timeout);
+		return true;
 	}
 
+	$user = unreal_get_current_user();
 	if ($user === false)
-	{
-		$user = unreal_get_current_user();
-		if ($user === false)
-			return false;
-	}
+		return false;
 
-	$timeout = 3600;
-	if (isset($user->user_meta['session_timeout']))
-		$timeout = (INT)$user->user_meta['session_timeout'];
-
-	if (!isset($_SESSION['session_timeout']))
-		$_SESSION['session_timeout'] = $timeout;
-
-	$_SESSION['last-activity'] = time();
+	/* The event streams (api/log.php, notification.php, overview.php)
+	 * reconnect by themselves, so they do not count as user activity.
+	 */
+	$is_stream = str_contains($_SERVER['SCRIPT_FILENAME'], "/api/") && !defined('NO_EVENT_STREAM_HEADER');
+	if (!$is_stream)
+		$_SESSION['last-activity'] = time();
 	return true;
+}
+
+/** Called when a state changing request has no valid CSRF token */
+function panel_csrf_fail()
+{
+	GLOBAL $panel_csrf_failed;
+
+	/* The login page and the installer deal with it themselves
+	 * (they show their form again with a message).
+	 */
+	if (defined('PANEL_PAGE_LOGIN') || defined('PANEL_PAGE_INSTALLER'))
+	{
+		$panel_csrf_failed = true;
+		$_POST = [];
+		return;
+	}
+	http_response_code(403);
+	if (str_contains($_SERVER['SCRIPT_FILENAME'], "/api/"))
+	{
+		header("Content-type: application/json; charset=utf-8");
+		die(json_encode(["error" => "Invalid or missing CSRF token. Reload the page and try again."]));
+	}
+	/* PHP drops all POST data (including the token) when the request is
+	 * larger than post_max_size, eg for a big file upload: say so.
+	 */
+	$max = ini_get('post_max_size');
+	$max_bytes = function_exists('ini_parse_quantity') ? @ini_parse_quantity($max) : (int)$max * 1024 * 1024;
+	if (empty($_POST) && isset($_SERVER['CONTENT_LENGTH']) && ($max_bytes > 0) && ((int)$_SERVER['CONTENT_LENGTH'] > $max_bytes))
+	{
+		header("Content-type: text/html; charset=utf-8");
+		die("<!DOCTYPE html><html><head><title>UnrealIRCd Panel</title></head><body>".
+		    "<h3>The request was too large</h3>".
+		    "<p>What you sent is larger than this server accepts (post_max_size: ".htmlspecialchars($max)."). Nothing was changed.</p>".
+		    "<p>Go back and try again with a smaller file.</p></body></html>");
+	}
+	header("Content-type: text/html; charset=utf-8");
+	die("<!DOCTYPE html><html><head><title>UnrealIRCd Panel</title></head><body>".
+	    "<h3>This form has expired</h3>".
+	    "<p>The form was too old, or it was sent by another website. Nothing was changed.</p>".
+	    "<p>Go back, reload the page, and try again.</p></body></html>");
 }
 
 /* Now read the config, and redirect to install screen if we don't have it */
@@ -444,7 +489,7 @@ if (!read_config_file())
 	{
 		/* Allow empty conf */
 	} else
-	if (!file_exists(UPATH."/config/config.php") && !file_exists(UPATH."/config.php"))
+	if (!panel_is_configured())
 	{
 		header("Location: settings/install.php");
 		die();
@@ -513,6 +558,12 @@ if (!panel_start_session())
 		if (!is_auth_provided())
 			die("No authentication plugin loaded. You must load either sql_db, file_db, or a similar auth plugin!");
 		$current_page = $_SERVER['REQUEST_URI'];
+		if (str_contains($_SERVER['SCRIPT_FILENAME'], "/api/"))
+		{
+			http_response_code(403);
+			header("Content-type: application/json; charset=utf-8");
+			die(json_encode(["error" => "Access denied", "session" => "none"]));
+		}
 		header("Location: ".get_config("base_url")."login/?redirect=".urlencode($current_page));
 		die;
 	}
@@ -535,13 +586,21 @@ if (!panel_start_session())
 	$user = unreal_get_current_user();
 	if ($user)
 	{
-		/* Add logout page, if logged in */
+		/* Add logout page, if logged in. The token stops other
+		 * websites from logging the user out with a plain link.
+		 */
 		$pages["Logout"] = [
-			"script"=>"login/?logout=true",
+			"script"=>"login/?logout=".urlencode(panel_csrf_token()),
 			"no_irc_server_required"=>true
 		];
 	}
 }
+
+/* CSRF protection: every POST/PUT/PATCH/DELETE needs the token of this session.
+ * (A logged out user posting an old form was already sent to the login page above.)
+ */
+if (panel_request_needs_csrf() && !panel_csrf_valid())
+	panel_csrf_fail();
 
 Hook::run(HOOKTYPE_NAVBAR, $pages);
 

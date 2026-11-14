@@ -8,22 +8,26 @@ if (!$rpc)
 
 $tkls = $rpc->serverban()->getAll();
 
+/* Text values are returned raw (not HTML-escaped): the page escapes them
+ * for display, and uses the raw values to fill in the edit form.
+ * Only 'Select' is HTML, built here with escaped values.
+ */
 $out = [];
 foreach($tkls as $tkl)
 {
     $set_in_config = ((isset($tkl->set_in_config) && $tkl->set_in_config) || ($tkl->set_by == "-config-")) ? true : false;
-    $set_by = $set_in_config ? "<span class=\"badge rounded-pill badge-secondary\">Config</span>" : show_nick_only(htmlspecialchars($tkl->set_by));
     $select = '';
     if (!$set_in_config)
-        $select = "<input type=\"checkbox\" value='" . base64_encode($tkl->name).",".base64_encode($tkl->type) . "' name=\"tklch[]\">";
+        $select = "<input type=\"checkbox\" value=\"" . h(base64_encode($tkl->name).",".base64_encode($tkl->type)) . "\" name=\"tklch[]\">";
 
     $out[] = [
         "Select" => $select,
-        "Mask" => htmlspecialchars($tkl->name),
+        "Mask" => $tkl->name,
         "Type" => $tkl->type_string,
         "Duration" => $tkl->duration_string,
-        "Reason" => htmlspecialchars($tkl->reason),
-        "Set By" => $set_by,
+        "Reason" => $tkl->reason,
+        "Set By" => $set_in_config ? "" : show_nick_only($tkl->set_by),
+        "Config" => $set_in_config,
         "Set On" => $tkl->set_at_string,
         "Expires" => $tkl->expire_at_string,
     ];
@@ -36,4 +40,4 @@ function custom_sort($a,$b)
 
 usort($out, "custom_sort");
 
-echo json_encode($out);
+echo json_encode($out, JSON_INVALID_UTF8_SUBSTITUTE);
