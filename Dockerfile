@@ -7,11 +7,11 @@ COPY . .
 # --no-dev: the test tools (PHPUnit) do not belong in the image
 RUN composer install --no-dev
 
-FROM trafex/php-nginx
+FROM trafex/php-nginx:3.11.1
 
 USER root
 
-RUN apk add --no-cache php83-sodium
+RUN apk add --no-cache php85-sodium
 
 # nginx ignores the .htaccess files of the panel: block the same things here
 # (secrets in config/ and data/, backup copies, and .git), see doc/webserver-security.md
