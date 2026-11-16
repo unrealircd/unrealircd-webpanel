@@ -90,39 +90,51 @@ if (current_user_can(PERMISSION_MANAGE_USERS))
 	}
 
 	.frosted-glass-success {
-		/* From https://css.glass */
-		background: rgba(63, 162, 36, 0.73);
-		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-		backdrop-filter: blur(9.8px);
-		-webkit-backdrop-filter: blur(9.8px);
+	    /* From https://css.glass */
+	    background:
+	        linear-gradient(135deg, rgba(110, 231, 80, 0.75) 0%, rgba(63, 162, 36, 0.73) 50%, rgba(20, 90, 30, 0.80) 100%);
+	    border: 1px solid rgba(255, 255, 255, 0.25);
+	    box-shadow:
+	        0 4px 30px rgba(0, 0, 0, 0.1),
+	        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+	    backdrop-filter: blur(9.8px);
+	    -webkit-backdrop-filter: blur(9.8px);
 	}
+
 	.frosted-glass-info {
-		/* From https://css.glass */
-		background: rgba(57, 127, 207, 0.73);
-		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-		backdrop-filter: blur(9.8px);
-		-webkit-backdrop-filter: blur(9.8px);
+	    /* From https://css.glass */
+	    background: rgba(57, 127, 207, 0.73);
+	    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	    backdrop-filter: blur(9.8px);
+	    -webkit-backdrop-filter: blur(9.8px);
 	}
+
 	.frosted-glass-danger {
-		/* From https://css.glass */
-		background: rgba(207, 57, 57, 0.73);
-		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-		backdrop-filter: blur(9.8px);
-		-webkit-backdrop-filter: blur(9.8px);
+	    /* From https://css.glass */
+	    background: rgba(207, 57, 57, 0.73);
+	    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	    backdrop-filter: blur(9.8px);
+	    -webkit-backdrop-filter: blur(9.8px);
 	}
+
 	.frosted-glass-warning {
-		/* From https://css.glass */
-		background: rgba(207, 194, 57, 0.73);
-		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-		backdrop-filter: blur(9.8px);
-		-webkit-backdrop-filter: blur(9.8px);
+	    /* From https://css.glass */
+	    background: rgba(207, 194, 57, 0.73);
+	    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	    backdrop-filter: blur(9.8px);
+	    -webkit-backdrop-filter: blur(9.8px);
 	}
+
 	.frosted-glass-secondary {
-		/* From https://css.glass */
-		background: rgba(75, 75, 75, 0.73);
-		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-		backdrop-filter: blur(9.8px);
-		-webkit-backdrop-filter: blur(9.8px);
+	    /* From https://css.glass */
+	    background:
+	        linear-gradient(135deg, rgba(75, 75, 75, 0.75) 0%, rgba(83, 83, 83, 0.73) 50%, rgba(36, 36, 36, 0.8) 100%);
+	    border: 1px solid rgba(198, 197, 197, 0.25);
+	    box-shadow:
+	        0 4px 30px rgba(0, 0, 0, 0.1),
+	        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+	    backdrop-filter: blur(9.8px);
+	    -webkit-backdrop-filter: blur(9.8px);
 	}
 
 	</style>
