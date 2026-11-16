@@ -176,6 +176,10 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 	.list-group-item-action:visited{
 		color: black;
 	}
+
+	.list-group .active {
+		background: #5c5c5c;
+	}
 </style>
 <?php $a = []; Hook::run(HOOKTYPE_HEADER, $a); ?>
 <nav id="sidebarlol" style="left:0;overflow:auto" class="w3-sidebar navbar-expand-md bg-dark padding-top me-5 ma-5">
@@ -183,17 +187,33 @@ $arr = []; Hook::run(HOOKTYPE_PRE_HEADER, $arr);
 	<div class="badge badge-secondary rounded-pill">Main Menu</div>
 	<?php 
 
-function show_page_item($name, $page, $nestlevel, $small = false)
+function normalize_script($s)
 {
-	$active_page = NULL;
-	$icon = $style = "";
-	$class = "nav-link nav-item";
-	if ($small)
-		$class .= " list-group-item-action";
-	//if (is_string($active_page) && $page == $active_page)
-	//	$class .= " active";
+    $s = trim($s, '/');
+    if ($s === 'index.php')
+        return '';
+    if (str_ends_with($s, '/index.php'))
+        $s = substr($s, 0, -strlen('/index.php'));
+    return $s;
+}
 
-	$is_link = isset($page["script"]) ? true : false;
+$base = parse_url(get_config("base_url"), PHP_URL_PATH) ?? '';
+$active_page = normalize_script(
+    substr($_SERVER['SCRIPT_NAME'], strlen(rtrim($base, '/')))
+);
+
+function show_page_item($name, $page, $nestlevel, $small = false, $active_page = null)
+{
+    $icon = $style = "";
+    $class = "nav-link nav-item";
+    if ($small)
+        $class .= " list-group-item-action";
+
+    $is_link = isset($page["script"]);
+
+	if ($is_link && is_string($active_page)
+		&& normalize_script($page["script"]) === $active_page)
+		$class .= " active";
 
 	if ($nestlevel > 0)
 	{
@@ -227,7 +247,7 @@ function show_page_item($name, $page, $nestlevel, $small = false)
 	if (!$is_link)
 	{
 		foreach ($page as $subname=>$subpage)
-			show_page_item($subname, $subpage, 1, $small);
+			show_page_item($subname, $subpage, 1, $small, $active_page);
 	}
 }
 
@@ -266,7 +286,7 @@ function show_page_item_mobile($name, $page, $nestlevel)
 	if (is_array($page))
 	{
 		foreach ($page as $subname=>$subpage)
-			show_page_item($subname, $subpage, 1);
+			show_page_item($subname, $subpage, 1, false, $active_page);
 	}
 }
 
@@ -312,7 +332,7 @@ function rpc_server_nav()
 
 
 foreach($pages as $name=>$page)
-	show_page_item($name, $page, 0, true);
+	show_page_item($name, $page, 0, true, $active_page);
 ?>
 </div>
 </nav>
@@ -335,7 +355,7 @@ foreach($pages as $name=>$page)
 <?php
 
 foreach ($pages as $name => $page)
-	show_page_item($name, $page, 0);
+	show_page_item($name, $page, 0, false, $active_page);
 
 
 ?>
