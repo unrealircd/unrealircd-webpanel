@@ -274,7 +274,7 @@ body {
 
 
 /* ==========================================================
-   style pour #data_list
+   style pour .table-striped
    ========================================================== */
 
 :root {
@@ -322,7 +322,7 @@ body {
 }
 
 /* ---------- Conteneur ---------- */
-#data_list {
+.table-striped {
   width: 100% !important;
   border-collapse: separate;
   border-spacing: 0;
@@ -338,13 +338,13 @@ body {
 }
 
 /* ---------- En-tête ---------- */
-#data_list thead.table-primary,
-#data_list thead th {
+.table-striped thead.table-primary,
+.table-striped thead th {
   background: linear-gradient(135deg, var(--ul-head-1), var(--ul-head-2));
   color: #fff;
 }
 
-#data_list thead th {
+.table-striped thead th {
   padding: 0.85rem 0.9rem;
   font-weight: 600;
   font-size: 0.82rem;
@@ -356,80 +356,80 @@ body {
   position: relative;
 }
 
-#data_list thead th.sorting,
-#data_list thead th.sorting_asc,
-#data_list thead th.sorting_desc {
+.table-striped thead th.sorting,
+.table-striped thead th.sorting_asc,
+.table-striped thead th.sorting_desc {
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
 
-#data_list thead th.sorting:hover {
+.table-striped thead th.sorting:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Colonne triée : petit repère */
-#data_list thead th.sorting_asc,
-#data_list thead th.sorting_desc {
+.table-striped thead th.sorting_asc,
+.table-striped thead th.sorting_desc {
   box-shadow: inset 0 -3px 0 rgba(255, 255, 255, 0.75);
 }
 
 /* Infobulles pointillées de l'en-tête (Account, Rep.) */
-#data_list thead th span[data-toggle="tooltip"] {
+.table-striped thead th span[data-toggle="tooltip"] {
   border-bottom: 1px dotted rgba(255, 255, 255, 0.7) !important;
   cursor: help;
 }
 
-#data_list thead th a {
+.table-striped thead th a {
   text-decoration: none;
   margin-left: 0.15rem;
 }
 
-#data_list thead input[type="checkbox"] {
+.table-striped thead input[type="checkbox"] {
   accent-color: #ffd166;
 }
 
 /* ---------- Lignes ---------- */
-#data_list tbody tr {
+.table-striped tbody tr {
   background: var(--ul-surface);
   transition: background-color 0.12s ease;
 }
 
-#data_list tbody tr.even {
+.table-striped tbody tr.even {
   background: var(--ul-surface-alt);
 }
 
-#data_list tbody tr:hover {
+.table-striped tbody tr:hover {
   background: var(--ul-hover);
 }
 
-#data_list tbody td {
+.table-striped tbody td {
   padding: 0.55rem 0.9rem;
   border-top: 1px solid var(--ul-line);
   vertical-align: middle;
   color: var(--ul-ink);
 }
 
-#data_list tbody tr:first-child td {
+.table-striped tbody tr:first-child td {
   border-top: 0;
 }
 
 /* Barre de couleur à gauche selon le sexe (via :has, navigateurs récents) */
-#data_list tbody td.dtr-control {
+.table-striped tbody td.dtr-control {
   width: 18px;
   padding-left: 0.9rem;
   box-shadow: inset 4px 0 0 var(--ul-neutral-soft);
 }
 
-#data_list tbody tr:has(a.girl) td.dtr-control {
+.table-striped tbody tr:has(a.girl) td.dtr-control {
   box-shadow: inset 4px 0 0 var(--ul-girl);
 }
 
-#data_list tbody tr:has(a.boy) td.dtr-control {
+.table-striped tbody tr:has(a.boy) td.dtr-control {
   box-shadow: inset 4px 0 0 var(--ul-boy);
 }
 
 /* Cases à cocher */
-#data_list input[type="checkbox"] {
+.table-striped input[type="checkbox"] {
   width: 1rem;
   height: 1rem;
   cursor: pointer;
@@ -437,7 +437,7 @@ body {
 }
 
 /* ---------- Pseudos (colonne Nick) ---------- */
-#data_list td.sorting_1 a {
+.table-striped td.sorting_1 a {
   display: inline-block;
   padding: 0.15rem 0.6rem;
   border-radius: 999px;
@@ -448,30 +448,30 @@ body {
   transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
-#data_list td.sorting_1 a.girl {
+.table-striped td.sorting_1 a.girl {
   color: var(--ul-girl);
   background: var(--ul-girl-soft);
 }
 
-#data_list td.sorting_1 a.boy {
+.table-striped td.sorting_1 a.boy {
   color: var(--ul-boy);
   background: var(--ul-boy-soft);
 }
 
-#data_list td.sorting_1 a:hover {
+.table-striped td.sorting_1 a:hover {
   transform: translateY(-1px);
   box-shadow: 0 3px 10px rgba(20, 24, 50, 0.15);
 }
 
 /* ---------- Pays ---------- */
-#data_list td.countrycol {
+.table-striped td.countrycol {
   white-space: nowrap;
   color: var(--ul-muted);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 
-#data_list td.countrycol img {
+.table-striped td.countrycol img {
   margin-right: 0.4rem;
   border-radius: 3px;
   vertical-align: -2px;
@@ -479,7 +479,7 @@ body {
 }
 
 /* ---------- Hôte / IP (si affiché par le mode responsive) ---------- */
-#data_list td.hostname {
+.table-striped td.hostname {
   font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   font-size: 0.8rem;
   color: var(--ul-muted);
@@ -487,7 +487,7 @@ body {
 }
 
 /* ---------- Compte ---------- */
-#data_list td.accountcol a {
+.table-striped td.accountcol a {
   color: var(--ul-head-2);
   font-weight: 500;
   text-decoration: none;
@@ -495,18 +495,18 @@ body {
   transition: border-color 0.12s ease;
 }
 
-#data_list td.accountcol a:hover {
+.table-striped td.accountcol a:hover {
   border-bottom-color: currentColor;
 }
 
 @media (prefers-color-scheme: dark) {
-  #data_list td.accountcol a {
+  .table-striped td.accountcol a {
     color: #a9a4ff;
   }
 }
 
 /* ---------- Badges ---------- */
-#data_list .badge {
+.table-striped .badge {
   display: inline-block;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
@@ -516,30 +516,30 @@ body {
   vertical-align: middle;
 }
 
-#data_list .badge-primary {
+.table-striped .badge-primary {
   background: var(--ul-neutral-soft);
   color: var(--ul-muted);
   font-weight: 500;
 }
 
-#data_list .badge-secondary {
+.table-striped .badge-secondary {
   background: color-mix(in srgb, var(--ul-oper) 14%, transparent);
   color: var(--ul-oper);
 }
 
-#data_list .badge-dark {
+.table-striped .badge-dark {
   background: var(--ul-bot);
   color: #fff;
   margin-left: 0.25rem;
 }
 
-#data_list .badge-warning {
+.table-striped .badge-warning {
   background: color-mix(in srgb, var(--ul-warn) 16%, transparent);
   color: var(--ul-warn);
 }
 
 /* ---------- Réputation ---------- */
-#data_list td.reputationcol {
+.table-striped td.reputationcol {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
   text-align: right;
@@ -547,68 +547,68 @@ body {
   white-space: nowrap;
 }
 
-#data_list thead th.reputationcol {
+.table-striped thead th.reputationcol {
   text-align: right;
 }
 
 /* ---------- Mode responsive DataTables (ligne dépliée) ---------- */
-#data_list.dtr-inline.collapsed > tbody > tr > td.dtr-control {
+.table-striped.dtr-inline.collapsed > tbody > tr > td.dtr-control {
   position: relative;
   cursor: pointer;
 }
 
-#data_list tbody tr.child td {
+.table-striped tbody tr.child td {
   background: var(--ul-surface-alt);
   box-shadow: none;
 }
 
-#data_list tbody tr.child ul.dtr-details {
+.table-striped tbody tr.child ul.dtr-details {
   margin: 0;
   padding: 0.25rem 0;
   list-style: none;
 }
 
-#data_list tbody tr.child ul.dtr-details li {
+.table-striped tbody tr.child ul.dtr-details li {
   padding: 0.35rem 0;
   border-bottom: 1px dashed var(--ul-line);
 }
 
-#data_list tbody tr.child ul.dtr-details li:last-child {
+.table-striped tbody tr.child ul.dtr-details li:last-child {
   border-bottom: 0;
 }
 
-#data_list tbody tr.child .dtr-title {
+.table-striped tbody tr.child .dtr-title {
   font-weight: 600;
   color: var(--ul-muted);
   margin-right: 0.5rem;
 }
 
 /* ---------- Accessibilité ---------- */
-#data_list a:focus-visible,
-#data_list input:focus-visible,
-#data_list th:focus-visible {
+.table-striped a:focus-visible,
+.table-striped input:focus-visible,
+.table-striped th:focus-visible {
   outline: 2px solid #ffb703;
   outline-offset: 2px;
   border-radius: 6px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #data_list *,
-  #data_list *::before,
-  #data_list *::after {
+  .table-striped *,
+  .table-striped *::before,
+  .table-striped *::after {
     transition: none !important;
   }
 }
 
 /* ---------- Petits écrans ---------- */
 @media (max-width: 600px) {
-  #data_list {
+  .table-striped {
     font-size: 0.85rem;
     border-radius: 10px;
   }
 
-  #data_list thead th,
-  #data_list tbody td {
+  .table-striped thead th,
+  .table-striped tbody td {
     padding: 0.5rem 0.55rem;
   }
 }
