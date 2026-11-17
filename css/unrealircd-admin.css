@@ -271,3 +271,344 @@ body {
 .tdwrap {
   white-space: normal !important;
 }
+
+
+/* ==========================================================
+   style pour #data_list
+   ========================================================== */
+
+:root {
+  --ul-bg: #f5f6fa;
+  --ul-surface: #ffffff;
+  --ul-surface-alt: #f9faff;
+  --ul-ink: #1d2433;
+  --ul-muted: #6b7388;
+  --ul-line: #e3e6ef;
+  --ul-head-1: #26307a;
+  --ul-head-2: #3b3f9e;
+  --ul-hover: #eaecff;
+
+  --ul-girl: #c2255c;
+  --ul-girl-soft: #fde8f0;
+  --ul-boy: #1c6dd0;
+  --ul-boy-soft: #e5f0fd;
+  --ul-neutral: #5b6378;
+  --ul-neutral-soft: #eceef4;
+
+  --ul-bot: #4b5263;
+  --ul-oper: #7a3fc4;
+  --ul-warn: #b36b00;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ul-bg: #12141c;
+    --ul-surface: #1a1d28;
+    --ul-surface-alt: #1e2230;
+    --ul-ink: #e7e9f3;
+    --ul-muted: #9aa1b8;
+    --ul-line: #2a2f41;
+    --ul-head-1: #2b3190;
+    --ul-head-2: #4a3fb0;
+    --ul-hover: #272c45;
+
+    --ul-girl: #ff7fab;
+    --ul-girl-soft: #3a1f2b;
+    --ul-boy: #7db4ff;
+    --ul-boy-soft: #1c2a40;
+    --ul-neutral: #a9b0c6;
+    --ul-neutral-soft: #262a39;
+  }
+}
+
+/* ---------- Conteneur ---------- */
+#data_list {
+  width: 100% !important;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--ul-surface);
+  color: var(--ul-ink);
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  border: 1px solid var(--ul-line);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(20, 24, 50, 0.06), 0 8px 24px rgba(20, 24, 50, 0.06);
+}
+
+/* ---------- En-tête ---------- */
+#data_list thead.table-primary,
+#data_list thead th {
+  background: linear-gradient(135deg, var(--ul-head-1), var(--ul-head-2));
+  color: #fff;
+}
+
+#data_list thead th {
+  padding: 0.85rem 0.9rem;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  text-align: left;
+  border: 0;
+  white-space: nowrap;
+  user-select: none;
+  position: relative;
+}
+
+#data_list thead th.sorting,
+#data_list thead th.sorting_asc,
+#data_list thead th.sorting_desc {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+#data_list thead th.sorting:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Colonne triée : petit repère */
+#data_list thead th.sorting_asc,
+#data_list thead th.sorting_desc {
+  box-shadow: inset 0 -3px 0 rgba(255, 255, 255, 0.75);
+}
+
+/* Infobulles pointillées de l'en-tête (Account, Rep.) */
+#data_list thead th span[data-toggle="tooltip"] {
+  border-bottom: 1px dotted rgba(255, 255, 255, 0.7) !important;
+  cursor: help;
+}
+
+#data_list thead th a {
+  text-decoration: none;
+  margin-left: 0.15rem;
+}
+
+#data_list thead input[type="checkbox"] {
+  accent-color: #ffd166;
+}
+
+/* ---------- Lignes ---------- */
+#data_list tbody tr {
+  background: var(--ul-surface);
+  transition: background-color 0.12s ease;
+}
+
+#data_list tbody tr.even {
+  background: var(--ul-surface-alt);
+}
+
+#data_list tbody tr:hover {
+  background: var(--ul-hover);
+}
+
+#data_list tbody td {
+  padding: 0.55rem 0.9rem;
+  border-top: 1px solid var(--ul-line);
+  vertical-align: middle;
+  color: var(--ul-ink);
+}
+
+#data_list tbody tr:first-child td {
+  border-top: 0;
+}
+
+/* Barre de couleur à gauche selon le sexe (via :has, navigateurs récents) */
+#data_list tbody td.dtr-control {
+  width: 18px;
+  padding-left: 0.9rem;
+  box-shadow: inset 4px 0 0 var(--ul-neutral-soft);
+}
+
+#data_list tbody tr:has(a.girl) td.dtr-control {
+  box-shadow: inset 4px 0 0 var(--ul-girl);
+}
+
+#data_list tbody tr:has(a.boy) td.dtr-control {
+  box-shadow: inset 4px 0 0 var(--ul-boy);
+}
+
+/* Cases à cocher */
+#data_list input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  accent-color: var(--ul-head-2);
+}
+
+/* ---------- Pseudos (colonne Nick) ---------- */
+#data_list td.sorting_1 a {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--ul-neutral);
+  background: var(--ul-neutral-soft);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+#data_list td.sorting_1 a.girl {
+  color: var(--ul-girl);
+  background: var(--ul-girl-soft);
+}
+
+#data_list td.sorting_1 a.boy {
+  color: var(--ul-boy);
+  background: var(--ul-boy-soft);
+}
+
+#data_list td.sorting_1 a:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(20, 24, 50, 0.15);
+}
+
+/* ---------- Pays ---------- */
+#data_list td.countrycol {
+  white-space: nowrap;
+  color: var(--ul-muted);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+#data_list td.countrycol img {
+  margin-right: 0.4rem;
+  border-radius: 3px;
+  vertical-align: -2px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+/* ---------- Hôte / IP (si affiché par le mode responsive) ---------- */
+#data_list td.hostname {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  color: var(--ul-muted);
+  word-break: break-all;
+}
+
+/* ---------- Compte ---------- */
+#data_list td.accountcol a {
+  color: var(--ul-head-2);
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.12s ease;
+}
+
+#data_list td.accountcol a:hover {
+  border-bottom-color: currentColor;
+}
+
+@media (prefers-color-scheme: dark) {
+  #data_list td.accountcol a {
+    color: #a9a4ff;
+  }
+}
+
+/* ---------- Badges ---------- */
+#data_list .badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.2;
+  vertical-align: middle;
+}
+
+#data_list .badge-primary {
+  background: var(--ul-neutral-soft);
+  color: var(--ul-muted);
+  font-weight: 500;
+}
+
+#data_list .badge-secondary {
+  background: color-mix(in srgb, var(--ul-oper) 14%, transparent);
+  color: var(--ul-oper);
+}
+
+#data_list .badge-dark {
+  background: var(--ul-bot);
+  color: #fff;
+  margin-left: 0.25rem;
+}
+
+#data_list .badge-warning {
+  background: color-mix(in srgb, var(--ul-warn) 16%, transparent);
+  color: var(--ul-warn);
+}
+
+/* ---------- Réputation ---------- */
+#data_list td.reputationcol {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  text-align: right;
+  color: var(--ul-muted);
+  white-space: nowrap;
+}
+
+#data_list thead th.reputationcol {
+  text-align: right;
+}
+
+/* ---------- Mode responsive DataTables (ligne dépliée) ---------- */
+#data_list.dtr-inline.collapsed > tbody > tr > td.dtr-control {
+  position: relative;
+  cursor: pointer;
+}
+
+#data_list tbody tr.child td {
+  background: var(--ul-surface-alt);
+  box-shadow: none;
+}
+
+#data_list tbody tr.child ul.dtr-details {
+  margin: 0;
+  padding: 0.25rem 0;
+  list-style: none;
+}
+
+#data_list tbody tr.child ul.dtr-details li {
+  padding: 0.35rem 0;
+  border-bottom: 1px dashed var(--ul-line);
+}
+
+#data_list tbody tr.child ul.dtr-details li:last-child {
+  border-bottom: 0;
+}
+
+#data_list tbody tr.child .dtr-title {
+  font-weight: 600;
+  color: var(--ul-muted);
+  margin-right: 0.5rem;
+}
+
+/* ---------- Accessibilité ---------- */
+#data_list a:focus-visible,
+#data_list input:focus-visible,
+#data_list th:focus-visible {
+  outline: 2px solid #ffb703;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #data_list *,
+  #data_list *::before,
+  #data_list *::after {
+    transition: none !important;
+  }
+}
+
+/* ---------- Petits écrans ---------- */
+@media (max-width: 600px) {
+  #data_list {
+    font-size: 0.85rem;
+    border-radius: 10px;
+  }
+
+  #data_list thead th,
+  #data_list tbody td {
+    padding: 0.5rem 0.55rem;
+  }
+}
